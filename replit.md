@@ -1,98 +1,134 @@
 # MedLink Yemen — Flutter App
 
-A B2B medical supply ordering platform for Yemen, built in Flutter (web-served on Replit). Supports three user roles: **client (pharmacist/buyer)**, **branch manager**, and **driver/delivery**.
+## Project Overview
 
----
+MedLink Yemen is a Flutter mobile application (running as Flutter Web on Replit) for B2B pharmaceutical and medical supply distribution in Yemen.
 
-## How to run
+### User Roles
 
-The app runs via the **"Flutter MedLink App"** workflow:
+| Role | Description |
+|------|-------------|
+| `client` | Pharmacist / buyer — browse catalog, place orders, track deliveries |
+| `branch_manager` | Branch manager — manage orders, inventory, invoices, and drivers |
+| `driver` | Delivery driver — view assigned orders, earnings, chat |
+| `company_director` | Blocked in this app — web platform only |
+
+### Backend
+
+**Supabase** (PostgreSQL + Auth + Edge Functions):
+- URL and anon key are embedded in `lib/utils/constants.dart` (safe — RLS enforces auth).
+- Authentication: email/password and Google Sign-In.
+- New user rows are created by the `handle_new_user` database trigger — never insert into `public.users` from client code.
+- Migrations are in `supabase/migrations/` at the repo root (applied via Supabase CLI or dashboard).
+- Edge Functions are in `supabase/functions/` at the repo root (deployed via Supabase CLI).
+
+### Running the App
+
+**Workflow**: `Flutter MedLink App`
 
 ```
 cd medlink_app && flutter run -d web-server --web-port=3000 --web-hostname=0.0.0.0
 ```
 
-It launches at **port 3000** as Flutter Web. It is not a standard Replit artifact (Flutter Web is not a supported artifact type), so it does not appear in the Preview dropdown — it runs as a plain workflow. View it from the Workflows panel.
+The app is not a standard artifact — it shows in the Workflows panel, not the Preview dropdown.
 
 ---
 
-## Stack
+## Development Phases
 
-| Layer | Technology |
-|---|---|
-| UI framework | Flutter (Dart) |
-| State management | Provider + ChangeNotifier |
-| Navigation | GoRouter (role-guarded routes) |
-| Backend | Supabase (Postgres + Auth + RLS) |
-| Localisation | flutter_localizations + ARB (Arabic default, RTL) |
-| Code gen | freezed + json_serializable |
-
----
-
-## Architecture rules (from CLAUDE.md / project spec)
-
-- Every Supabase call logs via `AppConstants.supabaseDebugTag` (`'SUPABASE_DEBUG'`).
-- **Never** `INSERT`/`UPSERT` into `public.users` manually — the DB trigger handles profile creation on auth sign-up.
-- All business logic lives in `*Service` classes; `*Controller` classes are `ChangeNotifier` wrappers for UI state only.
-- `flutter analyze` must exit with **`No issues found!`** before closing any phase.
-- Role `company_director` is recognised and immediately rejected (auto sign-out) — no UI is ever rendered for it.
+| # | Phase | Status |
+|---|-------|--------|
+| 1 | Foundation + Auth + Approval gateway | ✅ Done |
+| 2 | Product catalog + inventory | ✅ Done |
+| 3 | Cart + bonus logic + order placement | ✅ Done |
+| 4 | Branch manager panel (orders, inventory, invoices, drivers) | ✅ Done |
+| 5 | Driver account management via Edge Function | ✅ Done |
+| 6 | Driver interface (orders, maps, earnings) | ⏳ Next |
+| 7 | Notifications center + promotional offers | ⏳ |
+| 8 | Driver rating + help & support | ⏳ |
+| 9 | Live chat + live location | ⏳ |
 
 ---
 
-## Project structure
+## Phase 5 — Driver Account Management (Supabase Edge Function)
 
-```
-medlink_app/lib/
-├── l10n/              # ARB translation files (app_ar.arb, app_en.arb)
-├── models/            # freezed data models (product, order, branch, user_profile, …)
-├── routing/           # app_router.dart — GoRouter + role/status guards
-├── screens/
-│   ├── auth/          # login, register, terms, pending_approval, account_status
-│   ├── client/        # home_tab, catalog_tab, product_detail, cart, checkout, orders, order_detail
-│   ├── branch_manager/# branch_manager_home_shell (Phase 4: dashboard, orders, inventory, invoices, drivers)
-│   ├── driver/        # driver_home_shell (Phase 6: assigned orders, map, rating)
-│   └── shared/        # splash_screen, coming_soon_scaffold
-├── services/          # auth_service/controller, catalog_service/controller,
-│                      # order_service/controller, cart_controller
-├── utils/             # constants.dart, theme.dart, error_mapper.dart
-└── widgets/           # shared UI components
+### Edge Function: `manage-driver-account`
+
+Located at `supabase/functions/manage-driver-account/index.ts` (repo root — same level as `supabase/migrations/`).
+
+**Deploy with (run from repo root):**
+```bash
+supabase link --project-ref lmkomzqioneuyvatzsov
+supabase functions deploy manage-driver-account
 ```
 
----
+**Actions:**
+- `create` — creates a new driver auth account with temp password, sets `account_status=active`, `requires_password_change=true`, `branch_id=manager's branch`
+- `update_status` — activates or suspends a driver (`active` | `suspended`)
+- `reset_password` — resets the driver's password and flags `requires_password_change=true`
 
-## Supabase configuration
+### First-Login Password Change
 
-Credentials live in `medlink_app/lib/utils/constants.dart`. The anon key is safe to embed in Flutter client code — security is enforced entirely via Postgres RLS policies, not key secrecy.
+Drivers created by a branch manager have `requires_password_change = true` in `public.users`. The router redirects them to `/change-password` before they can access any other screen.
 
-- **URL**: `https://lmkomzqioneuyvatzsov.supabase.co`
-- Migrations: `0001_initial_schema.sql` and `0003_bonus_commission_approval_notifications.sql` are already applied to the live database.
-- `0002_catalog_inventory_orders.sql` (products, inventory, promotional_offers, client_addresses, orders, order_items) was also applied as part of Phase 2.
+### Testing Phase 5
 
----
-
-## Development phases
-
-| Phase | Status | Description |
-|---|---|---|
-| 1 | ✅ Done | Foundation: Supabase auth, GoRouter, i18n, role guards, pending-approval gate |
-| 2 | ✅ Done | Catalog, product detail, cart, bonus rules, checkout, order success (client) |
-| 3 | 🔜 Next | Branch manager dashboard: orders, inventory, invoices, drivers |
-| 4 | — | Driver account management (via Edge Function) |
-| 5 | — | Driver interface: assigned orders, maps, earnings |
-| 6 | — | Notifications + promotional offers |
-| 7 | — | Driver ratings + help/support |
-| 8 | — | Live chat + live driver location |
+1. Log in as a branch manager.
+2. Go to the **Drivers** tab → tap the **+** FAB to create a driver.
+3. Share the email + temp password with the driver.
+4. Log in as the driver — you will be forced to `/change-password`.
+5. After changing the password, you land on the driver home.
+6. As the branch manager: tap a driver card to activate/suspend or reset their password.
 
 ---
 
-## Testing accounts
+## Architecture Rules (from CLAUDE.md)
 
-Register accounts directly in the app, then set `role` and `account_status = 'active'` manually in the Supabase Table Editor for `public.users`. No hardcoded test credentials exist in the app.
+- Every Supabase call must log through the `SUPABASE_DEBUG` tag (see `AppConstants.supabaseDebugTag`).
+- Success is only reported after a verified real response.
+- No fake/demo accounts or hardcoded test data in production code.
+- Never insert manually into `public.users` — the `handle_new_user` trigger owns that row.
+- `company_director` role is always immediately rejected and signed out.
+- Branch manager never needs to sign out to manage driver accounts — Edge Function handles it.
 
 ---
 
-## User preferences
+## Key Files
 
-- Arabic is the default and only active locale; RTL layout is enforced globally.
-- Keep the existing folder structure (`screens/auth`, `screens/client`, etc.) — do not restructure.
-- Do not add mock/fake data or bypass auth for development; use real Supabase test accounts.
+```
+supabase/                                 ← Supabase project root (repo root)
+├── migrations/                           ← SQL schema migrations (0001–0005)
+└── functions/
+    └── manage-driver-account/            ← Phase 5 Edge Function (index.ts)
+
+medlink_app/                              ← Flutter app
+└── lib/
+    ├── main.dart                         ← App entry, provider setup
+    ├── routing/app_router.dart           ← GoRouter + role-based redirects
+    ├── utils/constants.dart              ← Supabase URL, anon key, roles, statuses
+    ├── utils/theme.dart                  ← Colors, typography, spacing
+    ├── l10n/app_ar.arb                   ← Arabic strings (default)
+    ├── l10n/app_en.arb                   ← English strings
+    ├── models/                           ← Freezed models (user, order, product, …)
+    ├── services/
+    │   ├── auth_service.dart             ← Supabase auth wrapper
+    │   ├── auth_controller.dart          ← Auth state (ChangeNotifier)
+    │   ├── driver_service.dart           ← Edge Function calls + password change
+    │   ├── branch_service.dart           ← Branch manager DB operations
+    │   └── branch_controller.dart        ← Branch state (ChangeNotifier)
+    └── screens/
+        ├── auth/                         ← Login, register, pending, change_password
+        ├── client/                       ← Home, catalog, cart, checkout, orders
+        ├── branch_manager/               ← Dashboard, orders, inventory, invoices, drivers
+        └── driver/                       ← Driver shell (Phase 6)
+```
+
+---
+
+## User Preferences
+
+- App language: Arabic RTL by default (`const Locale('ar')`).
+- All Supabase calls must use the `SUPABASE_DEBUG` log tag.
+- No mock data or fake accounts in code — always use real Supabase auth.
+- Driver accounts are created by branch managers, not through self-registration.
+- The edge function deploy step must be done from the Supabase CLI (not from Replit).

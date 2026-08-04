@@ -6,16 +6,22 @@ import '../models/order.dart';
 import '../models/user_profile.dart';
 import 'branch_service.dart';
 import 'catalog_service.dart';
+import 'driver_service.dart';
 
 /// State holder for every branch-manager screen: dashboard, orders,
 /// inventory, invoices, and drivers. One controller, one branchId, shared
 /// across all tabs so data fetched for one section (e.g. orders) can also
 /// power the dashboard stat cards without a duplicate query.
 class BranchController extends ChangeNotifier {
-  BranchController(this._branchService, this._catalogService);
+  BranchController(
+    this._branchService,
+    this._catalogService,
+    this._driverService,
+  );
 
   final BranchService _branchService;
   final CatalogService _catalogService;
+  final DriverService _driverService;
 
   String? _branchId;
 
@@ -208,5 +214,36 @@ class BranchController extends ChangeNotifier {
   Future<void> updateInventoryQuantity(String inventoryId, int quantity) async {
     await _branchService.updateInventoryQuantity(inventoryId, quantity);
     await loadInventory();
+  }
+
+  // ── Driver management (Phase 5 — via Edge Function) ───────────────────────
+
+  /// Creates a new driver account under this branch. Refreshes the driver
+  /// roster on success.
+  Future<void> createDriver({
+    required String name,
+    required String email,
+    required String phone,
+    required String tempPassword,
+  }) async {
+    await _driverService.createDriver(
+      name: name,
+      email: email,
+      phone: phone,
+      tempPassword: tempPassword,
+    );
+    await loadDrivers();
+  }
+
+  /// Activates or suspends a driver. [status] = `'active'` or `'suspended'`.
+  Future<void> updateDriverStatus(String driverId, String status) async {
+    await _driverService.updateDriverStatus(driverId, status);
+    await loadDrivers();
+  }
+
+  /// Resets a driver's password and sets requires_password_change = true.
+  Future<void> resetDriverPassword(String driverId, String newPassword) async {
+    await _driverService.resetDriverPassword(driverId, newPassword);
+    await loadDrivers();
   }
 }

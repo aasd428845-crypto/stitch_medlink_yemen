@@ -276,6 +276,70 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverChatLabel => 'Chat';
 
   @override
+  String get driverCreateTitle => 'Add New Driver';
+
+  @override
+  String get driverCreateButton => 'Create Driver Account';
+
+  @override
+  String get driverTempPasswordLabel => 'Temporary Password';
+
+  @override
+  String get driverTempPasswordHint => 'You will share this with the driver';
+
+  @override
+  String get driverCreatedSuccess => 'Driver account created successfully';
+
+  @override
+  String get driverCreatedMessage => 'Share these credentials with the driver:';
+
+  @override
+  String get driverManageTitle => 'Manage Driver';
+
+  @override
+  String get driverActivate => 'Activate Account';
+
+  @override
+  String get driverSuspend => 'Suspend Account';
+
+  @override
+  String get driverResetPassword => 'Reset Password';
+
+  @override
+  String get driverResetPasswordNew => 'New Password';
+
+  @override
+  String get driverResetPasswordConfirm => 'Confirm New Password';
+
+  @override
+  String get driverStatusActive => 'Active';
+
+  @override
+  String get driverStatusSuspended => 'Suspended';
+
+  @override
+  String get driverStatusPending => 'Pending';
+
+  @override
+  String get driverActionSuccess => 'Action completed successfully';
+
+  @override
+  String get changePasswordTitle => 'Change Password';
+
+  @override
+  String get changePasswordSubtitle =>
+      'You must set a new password before continuing';
+
+  @override
+  String get newPasswordLabel => 'New Password';
+
+  @override
+  String get confirmNewPasswordLabel => 'Confirm New Password';
+
+  @override
+  String get changePasswordButton => 'Change Password';
+
+  @override
   String get catalogTitle => 'Product Catalog';
 
   @override

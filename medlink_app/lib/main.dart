@@ -12,6 +12,7 @@ import 'services/branch_service.dart';
 import 'services/cart_controller.dart';
 import 'services/catalog_controller.dart';
 import 'services/catalog_service.dart';
+import 'services/driver_service.dart';
 import 'services/order_controller.dart';
 import 'services/order_service.dart';
 import 'services/supabase_bootstrap.dart';
@@ -39,6 +40,7 @@ class _MedLinkAppState extends State<MedLinkApp> {
   late final CartController _cartController;
   late final OrderController _orderController;
   late final BranchService _branchService;
+  late final DriverService _driverService;
   late final BranchController _branchController;
   late final GoRouter _router;
 
@@ -53,7 +55,8 @@ class _MedLinkAppState extends State<MedLinkApp> {
     _cartController = CartController();
     _orderController = OrderController(_orderService);
     _branchService = BranchService(supabase);
-    _branchController = BranchController(_branchService, _catalogService);
+    _driverService = DriverService(supabase);
+    _branchController = BranchController(_branchService, _catalogService, _driverService);
     _router = buildRouter(_authController);
 
     // Load bonus rules into cart controller on start
@@ -86,6 +89,7 @@ class _MedLinkAppState extends State<MedLinkApp> {
         ChangeNotifierProvider<CartController>.value(value: _cartController),
         ChangeNotifierProvider<OrderController>.value(value: _orderController),
         Provider<BranchService>.value(value: _branchService),
+        Provider<DriverService>.value(value: _driverService),
         ChangeNotifierProvider<BranchController>.value(value: _branchController),
       ],
       child: MaterialApp.router(

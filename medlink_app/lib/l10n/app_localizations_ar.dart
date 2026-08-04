@@ -275,6 +275,70 @@ class AppLocalizationsAr extends AppLocalizations {
   String get driverChatLabel => 'الدردشة';
 
   @override
+  String get driverCreateTitle => 'إضافة سائق جديد';
+
+  @override
+  String get driverCreateButton => 'إنشاء حساب السائق';
+
+  @override
+  String get driverTempPasswordLabel => 'كلمة المرور المؤقتة';
+
+  @override
+  String get driverTempPasswordHint => 'ستشاركها مع السائق';
+
+  @override
+  String get driverCreatedSuccess => 'تم إنشاء حساب السائق بنجاح';
+
+  @override
+  String get driverCreatedMessage => 'شارك بيانات الدخول التالية مع السائق:';
+
+  @override
+  String get driverManageTitle => 'إدارة السائق';
+
+  @override
+  String get driverActivate => 'تفعيل الحساب';
+
+  @override
+  String get driverSuspend => 'إيقاف الحساب';
+
+  @override
+  String get driverResetPassword => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get driverResetPasswordNew => 'كلمة المرور الجديدة';
+
+  @override
+  String get driverResetPasswordConfirm => 'تأكيد كلمة المرور الجديدة';
+
+  @override
+  String get driverStatusActive => 'نشط';
+
+  @override
+  String get driverStatusSuspended => 'موقوف';
+
+  @override
+  String get driverStatusPending => 'قيد المراجعة';
+
+  @override
+  String get driverActionSuccess => 'تم تنفيذ الإجراء بنجاح';
+
+  @override
+  String get changePasswordTitle => 'تغيير كلمة المرور';
+
+  @override
+  String get changePasswordSubtitle =>
+      'يجب عليك تعيين كلمة مرور جديدة قبل المتابعة';
+
+  @override
+  String get newPasswordLabel => 'كلمة المرور الجديدة';
+
+  @override
+  String get confirmNewPasswordLabel => 'تأكيد كلمة المرور الجديدة';
+
+  @override
+  String get changePasswordButton => 'تغيير كلمة المرور';
+
+  @override
   String get catalogTitle => 'كتالوج المنتجات';
 
   @override

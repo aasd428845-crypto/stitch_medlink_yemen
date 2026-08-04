@@ -614,6 +614,132 @@ abstract class AppLocalizations {
   /// **'الدردشة'**
   String get driverChatLabel;
 
+  /// No description provided for @driverCreateTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة سائق جديد'**
+  String get driverCreateTitle;
+
+  /// No description provided for @driverCreateButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء حساب السائق'**
+  String get driverCreateButton;
+
+  /// No description provided for @driverTempPasswordLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور المؤقتة'**
+  String get driverTempPasswordLabel;
+
+  /// No description provided for @driverTempPasswordHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستشاركها مع السائق'**
+  String get driverTempPasswordHint;
+
+  /// No description provided for @driverCreatedSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إنشاء حساب السائق بنجاح'**
+  String get driverCreatedSuccess;
+
+  /// No description provided for @driverCreatedMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'شارك بيانات الدخول التالية مع السائق:'**
+  String get driverCreatedMessage;
+
+  /// No description provided for @driverManageTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إدارة السائق'**
+  String get driverManageTitle;
+
+  /// No description provided for @driverActivate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفعيل الحساب'**
+  String get driverActivate;
+
+  /// No description provided for @driverSuspend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيقاف الحساب'**
+  String get driverSuspend;
+
+  /// No description provided for @driverResetPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة تعيين كلمة المرور'**
+  String get driverResetPassword;
+
+  /// No description provided for @driverResetPasswordNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الجديدة'**
+  String get driverResetPasswordNew;
+
+  /// No description provided for @driverResetPasswordConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد كلمة المرور الجديدة'**
+  String get driverResetPasswordConfirm;
+
+  /// No description provided for @driverStatusActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط'**
+  String get driverStatusActive;
+
+  /// No description provided for @driverStatusSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'موقوف'**
+  String get driverStatusSuspended;
+
+  /// No description provided for @driverStatusPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get driverStatusPending;
+
+  /// No description provided for @driverActionSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تنفيذ الإجراء بنجاح'**
+  String get driverActionSuccess;
+
+  /// No description provided for @changePasswordTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير كلمة المرور'**
+  String get changePasswordTitle;
+
+  /// No description provided for @changePasswordSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'يجب عليك تعيين كلمة مرور جديدة قبل المتابعة'**
+  String get changePasswordSubtitle;
+
+  /// No description provided for @newPasswordLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الجديدة'**
+  String get newPasswordLabel;
+
+  /// No description provided for @confirmNewPasswordLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد كلمة المرور الجديدة'**
+  String get confirmNewPasswordLabel;
+
+  /// No description provided for @changePasswordButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير كلمة المرور'**
+  String get changePasswordButton;
+
   /// No description provided for @catalogTitle.
   ///
   /// In ar, this message translates to:

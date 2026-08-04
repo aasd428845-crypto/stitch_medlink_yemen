@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../services/auth_controller.dart';
 import '../utils/constants.dart';
 import '../screens/auth/account_status_screen.dart';
+import '../screens/auth/change_password_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/pending_approval_screen.dart';
 import '../screens/auth/register_screen.dart';
@@ -59,6 +60,10 @@ GoRouter buildRouter(AuthController authController) {
             message: l10n.suspendedMessage,
           );
         },
+      ),
+      GoRoute(
+        path: '/change-password',
+        builder: (context, state) => const ChangePasswordScreen(),
       ),
       GoRoute(
         path: '/director-blocked',
@@ -156,6 +161,19 @@ GoRouter buildRouter(AuthController authController) {
         case AccountStatus.suspended:
           return loc == '/suspended' ? null : '/suspended';
         case AccountStatus.active:
+          // Drivers who haven't changed their temp password yet are held here.
+          if (profile.requiresPasswordChange) {
+            return loc == '/change-password' ? null : '/change-password';
+          }
+          // Once password is changed, bounce away from the change-password screen.
+          if (loc == '/change-password') {
+            return switch (profile.role) {
+              UserRole.client => '/client',
+              UserRole.branchManager => '/branch',
+              UserRole.driver => '/driver',
+              UserRole.companyDirector => '/director-blocked',
+            };
+          }
           final homeRoute = switch (profile.role) {
             UserRole.client => '/client',
             UserRole.branchManager => '/branch',
