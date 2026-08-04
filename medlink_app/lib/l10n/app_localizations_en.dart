@@ -180,4 +180,152 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get driverChatLabel => 'Chat';
+
+  @override
+  String get catalogTitle => 'Product Catalog';
+
+  @override
+  String get searchHint => 'Search for a product...';
+
+  @override
+  String get allCategories => 'All';
+
+  @override
+  String get noProductsFound => 'No products match your search';
+
+  @override
+  String get noOffersFound => 'No offers available at this time';
+
+  @override
+  String get productDetails => 'Product Details';
+
+  @override
+  String get unitPrice => 'Price per unit';
+
+  @override
+  String get manufacturer => 'Manufacturer';
+
+  @override
+  String get dosageForm => 'Dosage form';
+
+  @override
+  String get unit => 'Unit';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get addToCart => 'Add to Cart';
+
+  @override
+  String get addedToCart => 'Added to cart';
+
+  @override
+  String get offersSection => 'Promotional Offers';
+
+  @override
+  String get viewOffer => 'View details';
+
+  @override
+  String get homeGreeting => 'Welcome,';
+
+  @override
+  String get homeSubtitle => 'Explore our products and offers';
+
+  @override
+  String get quickOrderSection => 'Quick Order';
+
+  @override
+  String get exploreCategories => 'Browse categories';
+
+  @override
+  String get retry => 'Try again';
+
+  @override
+  String get cartTitle => 'Shopping Cart';
+
+  @override
+  String get emptyCart => 'Your cart is currently empty';
+
+  @override
+  String get subtotal => 'Subtotal';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get freeDelivery => '100% Free Delivery';
+
+  @override
+  String get proceedToCheckout => 'Proceed to Checkout';
+
+  @override
+  String get autoBonusBadge => '🎁 Free Bonus';
+
+  @override
+  String get clearCart => 'Clear Cart';
+
+  @override
+  String get checkoutTitle => 'Order Confirmation';
+
+  @override
+  String get deliveryAddress => 'Delivery Address';
+
+  @override
+  String get addNewAddress => 'Add New Address';
+
+  @override
+  String get addressLabel => 'Label (e.g. Pharmacy)';
+
+  @override
+  String get addressText => 'Detailed Address';
+
+  @override
+  String get saveAddress => 'Save Address';
+
+  @override
+  String get orderNotes => 'Order Notes (Optional)';
+
+  @override
+  String get confirmOrder => 'Confirm & Send Order';
+
+  @override
+  String get orderSuccessTitle => 'Order Sent Successfully!';
+
+  @override
+  String get orderSuccessSubtitle =>
+      'Your order will be routed to the nearest branch for preparation and delivery.';
+
+  @override
+  String get viewOrderDetails => 'Track Order Details';
+
+  @override
+  String get ordersTitle => 'My Orders';
+
+  @override
+  String get noOrdersFound => 'No orders yet';
+
+  @override
+  String get orderNumber => 'Order #';
+
+  @override
+  String get orderStatusPending => 'Pending Review';
+
+  @override
+  String get orderStatusAssigned => 'Assigned to Driver';
+
+  @override
+  String get orderStatusInProgress => 'Out for Delivery';
+
+  @override
+  String get orderStatusDelivered => 'Delivered';
+
+  @override
+  String get orderStatusCancelled => 'Cancelled';
+
+  @override
+  String get orderItemsCount => 'Items';
+
+  @override
+  String get deliveredTo => 'Delivered to';
 }

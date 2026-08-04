@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../services/cart_controller.dart';
 import '../shared/coming_soon_scaffold.dart';
+import 'catalog_tab.dart';
+import 'home_tab.dart';
+import 'orders_tab.dart';
 
-/// Bottom-nav shell for the `client` role. Tabs are wired now; each body is
-/// a real screen once its own batch lands (catalog, orders, profile).
+/// Bottom-nav shell for the `client` role.
+/// Tab 0 → HomeTab (offers + categories + products)
+/// Tab 1 → CatalogTab (full catalog + search + filter)
+/// Tab 2 → OrdersTab (active & previous orders)
+/// Tab 3 → Profile (Phase 4+)
 class ClientHomeShell extends StatefulWidget {
   const ClientHomeShell({super.key});
 
@@ -15,28 +24,57 @@ class ClientHomeShell extends StatefulWidget {
 class _ClientHomeShellState extends State<ClientHomeShell> {
   int _index = 0;
 
+  static const _tabs = [
+    HomeTab(),
+    CatalogTab(),
+    OrdersTab(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final tabs = [
+    final cart = context.watch<CartController>();
+
+    final tabDefs = [
       (l10n.clientHomeLabel, Icons.home_outlined, Icons.home_rounded),
       (l10n.clientCatalogLabel, Icons.grid_view_outlined, Icons.grid_view_rounded),
       (l10n.clientOrdersLabel, Icons.receipt_long_outlined, Icons.receipt_long_rounded),
       (l10n.clientProfileLabel, Icons.person_outline, Icons.person_rounded),
     ];
 
+    Widget body;
+    if (_index < _tabs.length) {
+      body = _tabs[_index];
+    } else {
+      body = ComingSoonBody(label: tabDefs[_index].$1);
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(tabs[_index].$1),
-        actions: const [RoleAppBarActions()],
+        title: Text(tabDefs[_index].$1),
+        actions: [
+          IconButton(
+            icon: Badge(
+              isLabelVisible: cart.totalItemCount > 0,
+              label: Text('${cart.totalItemCount}'),
+              child: const Icon(Icons.shopping_cart_outlined),
+            ),
+            onPressed: () => context.push('/client/cart'),
+          ),
+          const RoleAppBarActions(),
+        ],
       ),
-      body: ComingSoonBody(label: tabs[_index].$1),
+      body: body,
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
         destinations: [
-          for (final tab in tabs)
-            NavigationDestination(icon: Icon(tab.$2), selectedIcon: Icon(tab.$3), label: tab.$1),
+          for (final tab in tabDefs)
+            NavigationDestination(
+              icon: Icon(tab.$2),
+              selectedIcon: Icon(tab.$3),
+              label: tab.$1,
+            ),
         ],
       ),
     );

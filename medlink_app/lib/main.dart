@@ -7,6 +7,11 @@ import 'l10n/app_localizations.dart';
 import 'routing/app_router.dart';
 import 'services/auth_controller.dart';
 import 'services/auth_service.dart';
+import 'services/cart_controller.dart';
+import 'services/catalog_controller.dart';
+import 'services/catalog_service.dart';
+import 'services/order_controller.dart';
+import 'services/order_service.dart';
 import 'services/supabase_bootstrap.dart';
 import 'utils/theme.dart';
 
@@ -26,6 +31,11 @@ class MedLinkApp extends StatefulWidget {
 class _MedLinkAppState extends State<MedLinkApp> {
   late final AuthService _authService;
   late final AuthController _authController;
+  late final CatalogService _catalogService;
+  late final CatalogController _catalogController;
+  late final OrderService _orderService;
+  late final CartController _cartController;
+  late final OrderController _orderController;
   late final GoRouter _router;
 
   @override
@@ -33,12 +43,25 @@ class _MedLinkAppState extends State<MedLinkApp> {
     super.initState();
     _authService = AuthService(supabase);
     _authController = AuthController(_authService);
+    _catalogService = CatalogService(supabase);
+    _catalogController = CatalogController(_catalogService);
+    _orderService = OrderService(supabase);
+    _cartController = CartController();
+    _orderController = OrderController(_orderService);
     _router = buildRouter(_authController);
+
+    // Load bonus rules into cart controller on start
+    _orderService.fetchBonusRules().then((rules) {
+      _cartController.updateBonusRules(rules);
+    }).catchError((_) {});
   }
 
   @override
   void dispose() {
     _authController.dispose();
+    _catalogController.dispose();
+    _cartController.dispose();
+    _orderController.dispose();
     super.dispose();
   }
 
@@ -48,6 +71,13 @@ class _MedLinkAppState extends State<MedLinkApp> {
       providers: [
         Provider<AuthService>.value(value: _authService),
         ChangeNotifierProvider<AuthController>.value(value: _authController),
+        Provider<CatalogService>.value(value: _catalogService),
+        ChangeNotifierProvider<CatalogController>.value(
+          value: _catalogController,
+        ),
+        Provider<OrderService>.value(value: _orderService),
+        ChangeNotifierProvider<CartController>.value(value: _cartController),
+        ChangeNotifierProvider<OrderController>.value(value: _orderController),
       ],
       child: MaterialApp.router(
         title: 'MedLink Yemen',

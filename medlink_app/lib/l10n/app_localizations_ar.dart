@@ -180,4 +180,152 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get driverChatLabel => 'الدردشة';
+
+  @override
+  String get catalogTitle => 'كتالوج المنتجات';
+
+  @override
+  String get searchHint => 'ابحث عن منتج...';
+
+  @override
+  String get allCategories => 'الكل';
+
+  @override
+  String get noProductsFound => 'لا توجد منتجات مطابقة للبحث';
+
+  @override
+  String get noOffersFound => 'لا توجد عروض متاحة حالياً';
+
+  @override
+  String get productDetails => 'تفاصيل المنتج';
+
+  @override
+  String get unitPrice => 'السعر للوحدة';
+
+  @override
+  String get manufacturer => 'الشركة المصنّعة';
+
+  @override
+  String get dosageForm => 'الشكل الدوائي';
+
+  @override
+  String get unit => 'الوحدة';
+
+  @override
+  String get category => 'الفئة';
+
+  @override
+  String get addToCart => 'أضف إلى السلة';
+
+  @override
+  String get addedToCart => 'تمت الإضافة إلى السلة';
+
+  @override
+  String get offersSection => 'العروض الترويجية';
+
+  @override
+  String get viewOffer => 'عرض التفاصيل';
+
+  @override
+  String get homeGreeting => 'أهلاً،';
+
+  @override
+  String get homeSubtitle => 'اكتشف منتجاتنا وعروضنا';
+
+  @override
+  String get quickOrderSection => 'طلب سريع';
+
+  @override
+  String get exploreCategories => 'تصفّح الفئات';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get cartTitle => 'سلة الشراء';
+
+  @override
+  String get emptyCart => 'السلة فارغة حالياً';
+
+  @override
+  String get subtotal => 'الإجمالي الفرعي';
+
+  @override
+  String get total => 'المجموع الكلي';
+
+  @override
+  String get freeDelivery => 'التوصيل مجاني 100%';
+
+  @override
+  String get proceedToCheckout => 'متابعة الطلب';
+
+  @override
+  String get autoBonusBadge => '🎁 بونص تلقائي';
+
+  @override
+  String get clearCart => 'تفريغ السلة';
+
+  @override
+  String get checkoutTitle => 'تأكيد الطلب المباشر';
+
+  @override
+  String get deliveryAddress => 'عنوان التسليم';
+
+  @override
+  String get addNewAddress => 'إضافة عنوان جديد';
+
+  @override
+  String get addressLabel => 'اسم العنوان (مثال: الصيدلية)';
+
+  @override
+  String get addressText => 'العنوان بالتفصيل';
+
+  @override
+  String get saveAddress => 'حفظ العنوان';
+
+  @override
+  String get orderNotes => 'ملاحظات الطلب (اختياري)';
+
+  @override
+  String get confirmOrder => 'تأكيد وإرسال الطلب';
+
+  @override
+  String get orderSuccessTitle => 'تم إرسال طلبك بنجاح!';
+
+  @override
+  String get orderSuccessSubtitle =>
+      'سيتم توجيه الطلب لأقرب فرع للبدء بالتجهيز والتوصيل.';
+
+  @override
+  String get viewOrderDetails => 'متابعة تفاصيل الطلب';
+
+  @override
+  String get ordersTitle => 'طلباتي';
+
+  @override
+  String get noOrdersFound => 'لا توجد طلبات حتى الآن';
+
+  @override
+  String get orderNumber => 'طلب رقم';
+
+  @override
+  String get orderStatusPending => 'قيد المراجعة';
+
+  @override
+  String get orderStatusAssigned => 'مُسند لسائق';
+
+  @override
+  String get orderStatusInProgress => 'جاري التوصيل';
+
+  @override
+  String get orderStatusDelivered => 'تم التسليم';
+
+  @override
+  String get orderStatusCancelled => 'ملغي';
+
+  @override
+  String get orderItemsCount => 'عدد البنود';
+
+  @override
+  String get deliveredTo => 'موجه إلى';
 }

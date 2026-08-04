@@ -66,5 +66,62 @@
 
   "driverOrdersLabel": "طلباتي",
   "driverEarningsLabel": "أرباحي",
-  "driverChatLabel": "الدردشة"
+  "driverChatLabel": "الدردشة",
+
+  "catalogTitle": "كتالوج المنتجات",
+  "searchHint": "ابحث عن منتج...",
+  "allCategories": "الكل",
+  "noProductsFound": "لا توجد منتجات مطابقة للبحث",
+  "noOffersFound": "لا توجد عروض متاحة حالياً",
+
+  "productDetails": "تفاصيل المنتج",
+  "unitPrice": "السعر للوحدة",
+  "manufacturer": "الشركة المصنّعة",
+  "dosageForm": "الشكل الدوائي",
+  "unit": "الوحدة",
+  "category": "الفئة",
+  "addToCart": "أضف إلى السلة",
+  "addedToCart": "تمت الإضافة إلى السلة",
+
+  "offersSection": "العروض الترويجية",
+  "viewOffer": "عرض التفاصيل",
+
+  "homeGreeting": "أهلاً،",
+  "homeSubtitle": "اكتشف منتجاتنا وعروضنا",
+  "quickOrderSection": "طلب سريع",
+  "exploreCategories": "تصفّح الفئات",
+  "retry": "إعادة المحاولة",
+
+  "cartTitle": "سلة الشراء",
+  "emptyCart": "السلة فارغة حالياً",
+  "subtotal": "الإجمالي الفرعي",
+  "total": "المجموع الكلي",
+  "freeDelivery": "التوصيل مجاني 100%",
+  "proceedToCheckout": "متابعة الطلب",
+  "autoBonusBadge": "🎁 بونص تلقائي",
+  "clearCart": "تفريغ السلة",
+
+  "checkoutTitle": "تأكيد الطلب المباشر",
+  "deliveryAddress": "عنوان التسليم",
+  "addNewAddress": "إضافة عنوان جديد",
+  "addressLabel": "اسم العنوان (مثال: الصيدلية)",
+  "addressText": "العنوان بالتفصيل",
+  "saveAddress": "حفظ العنوان",
+  "orderNotes": "ملاحظات الطلب (اختياري)",
+  "confirmOrder": "تأكيد وإرسال الطلب",
+  "orderSuccessTitle": "تم إرسال طلبك بنجاح!",
+  "orderSuccessSubtitle": "سيتم توجيه الطلب لأقرب فرع للبدء بالتجهيز والتوصيل.",
+  "viewOrderDetails": "متابعة تفاصيل الطلب",
+
+  "ordersTitle": "طلباتي",
+  "noOrdersFound": "لا توجد طلبات حتى الآن",
+  "orderNumber": "طلب رقم",
+  "orderStatusPending": "قيد المراجعة",
+  "orderStatusAssigned": "مُسند لسائق",
+  "orderStatusInProgress": "جاري التوصيل",
+  "orderStatusDelivered": "تم التسليم",
+  "orderStatusCancelled": "ملغي",
+  "orderItemsCount": "عدد البنود",
+  "deliveredTo": "موجه إلى"
 }
+

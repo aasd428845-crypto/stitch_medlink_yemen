@@ -10,7 +10,12 @@ import '../screens/auth/pending_approval_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/auth/terms_screen.dart';
 import '../screens/branch_manager/branch_manager_home_shell.dart';
+import '../screens/client/cart_screen.dart';
+import '../screens/client/checkout_screen.dart';
 import '../screens/client/client_home_shell.dart';
+import '../screens/client/order_detail_screen.dart';
+import '../screens/client/order_success_screen.dart';
+import '../screens/client/product_detail_screen.dart';
 import '../screens/driver/driver_home_shell.dart';
 import '../screens/shared/splash_screen.dart';
 import '../utils/theme.dart';
@@ -67,11 +72,48 @@ GoRouter buildRouter(AuthController authController) {
           );
         },
       ),
-      GoRoute(path: '/client', builder: (context, state) => const ClientHomeShell()),
+
+      // ── Client ───────────────────────────────────────────────────────────
+      GoRoute(
+        path: '/client',
+        builder: (context, state) => const ClientHomeShell(),
+        routes: [
+          GoRoute(
+            path: 'product/:id',
+            builder: (context, state) => ProductDetailScreen(
+              productId: state.pathParameters['id']!,
+            ),
+          ),
+          GoRoute(
+            path: 'cart',
+            builder: (context, state) => const CartScreen(),
+          ),
+          GoRoute(
+            path: 'checkout',
+            builder: (context, state) => const CheckoutScreen(),
+          ),
+          GoRoute(
+            path: 'order-success/:id',
+            builder: (context, state) => OrderSuccessScreen(
+              orderId: state.pathParameters['id']!,
+            ),
+          ),
+          GoRoute(
+            path: 'order/:id',
+            builder: (context, state) => OrderDetailScreen(
+              orderId: state.pathParameters['id']!,
+            ),
+          ),
+        ],
+      ),
+
+      // ── Branch manager ───────────────────────────────────────────────────
       GoRoute(
         path: '/branch',
         builder: (context, state) => const BranchManagerHomeShell(),
       ),
+
+      // ── Driver ───────────────────────────────────────────────────────────
       GoRoute(path: '/driver', builder: (context, state) => const DriverHomeShell()),
     ],
     redirect: (context, state) {
@@ -87,17 +129,12 @@ GoRouter buildRouter(AuthController authController) {
         return '/login';
       }
 
-      // Signed in from here on.
       final profile = authController.profile;
       if (profile == null) {
-        // Auth session exists but the users row hasn't been readable yet
-        // (e.g. transient error) — keep on splash rather than guessing.
         return loc == '/splash' ? null : '/splash';
       }
 
       if (profile.role == UserRole.companyDirector) {
-        // Out of scope for this app entirely — reject immediately and sign
-        // out so no director session lingers on a mobile device.
         Future.microtask(() => authController.signOut());
         return loc == '/director-blocked' ? null : '/director-blocked';
       }
@@ -116,8 +153,7 @@ GoRouter buildRouter(AuthController authController) {
             UserRole.driver => '/driver',
             UserRole.companyDirector => '/director-blocked',
           };
-          final activeRoutes = {'/client', '/branch', '/driver'};
-          if (activeRoutes.contains(loc)) return null;
+          if (loc.startsWith(homeRoute)) return null;
           if (publicRoutes.contains(loc) || loc == '/splash') return homeRoute;
           return null;
       }

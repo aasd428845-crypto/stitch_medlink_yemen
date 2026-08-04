@@ -427,6 +427,300 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'الدردشة'**
   String get driverChatLabel;
+
+  /// No description provided for @catalogTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كتالوج المنتجات'**
+  String get catalogTitle;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث عن منتج...'**
+  String get searchHint;
+
+  /// No description provided for @allCategories.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get allCategories;
+
+  /// No description provided for @noProductsFound.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد منتجات مطابقة للبحث'**
+  String get noProductsFound;
+
+  /// No description provided for @noOffersFound.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد عروض متاحة حالياً'**
+  String get noOffersFound;
+
+  /// No description provided for @productDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل المنتج'**
+  String get productDetails;
+
+  /// No description provided for @unitPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر للوحدة'**
+  String get unitPrice;
+
+  /// No description provided for @manufacturer.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشركة المصنّعة'**
+  String get manufacturer;
+
+  /// No description provided for @dosageForm.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشكل الدوائي'**
+  String get dosageForm;
+
+  /// No description provided for @unit.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوحدة'**
+  String get unit;
+
+  /// No description provided for @category.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفئة'**
+  String get category;
+
+  /// No description provided for @addToCart.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف إلى السلة'**
+  String get addToCart;
+
+  /// No description provided for @addedToCart.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت الإضافة إلى السلة'**
+  String get addedToCart;
+
+  /// No description provided for @offersSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'العروض الترويجية'**
+  String get offersSection;
+
+  /// No description provided for @viewOffer.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض التفاصيل'**
+  String get viewOffer;
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In ar, this message translates to:
+  /// **'أهلاً،'**
+  String get homeGreeting;
+
+  /// No description provided for @homeSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتشف منتجاتنا وعروضنا'**
+  String get homeSubtitle;
+
+  /// No description provided for @quickOrderSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب سريع'**
+  String get quickOrderSection;
+
+  /// No description provided for @exploreCategories.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصفّح الفئات'**
+  String get exploreCategories;
+
+  /// No description provided for @retry.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة المحاولة'**
+  String get retry;
+
+  /// No description provided for @cartTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سلة الشراء'**
+  String get cartTitle;
+
+  /// No description provided for @emptyCart.
+  ///
+  /// In ar, this message translates to:
+  /// **'السلة فارغة حالياً'**
+  String get emptyCart;
+
+  /// No description provided for @subtotal.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإجمالي الفرعي'**
+  String get subtotal;
+
+  /// No description provided for @total.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموع الكلي'**
+  String get total;
+
+  /// No description provided for @freeDelivery.
+  ///
+  /// In ar, this message translates to:
+  /// **'التوصيل مجاني 100%'**
+  String get freeDelivery;
+
+  /// No description provided for @proceedToCheckout.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة الطلب'**
+  String get proceedToCheckout;
+
+  /// No description provided for @autoBonusBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'🎁 بونص تلقائي'**
+  String get autoBonusBadge;
+
+  /// No description provided for @clearCart.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفريغ السلة'**
+  String get clearCart;
+
+  /// No description provided for @checkoutTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الطلب المباشر'**
+  String get checkoutTitle;
+
+  /// No description provided for @deliveryAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان التسليم'**
+  String get deliveryAddress;
+
+  /// No description provided for @addNewAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة عنوان جديد'**
+  String get addNewAddress;
+
+  /// No description provided for @addressLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم العنوان (مثال: الصيدلية)'**
+  String get addressLabel;
+
+  /// No description provided for @addressText.
+  ///
+  /// In ar, this message translates to:
+  /// **'العنوان بالتفصيل'**
+  String get addressText;
+
+  /// No description provided for @saveAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ العنوان'**
+  String get saveAddress;
+
+  /// No description provided for @orderNotes.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات الطلب (اختياري)'**
+  String get orderNotes;
+
+  /// No description provided for @confirmOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد وإرسال الطلب'**
+  String get confirmOrder;
+
+  /// No description provided for @orderSuccessTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلبك بنجاح!'**
+  String get orderSuccessTitle;
+
+  /// No description provided for @orderSuccessSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم توجيه الطلب لأقرب فرع للبدء بالتجهيز والتوصيل.'**
+  String get orderSuccessSubtitle;
+
+  /// No description provided for @viewOrderDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة تفاصيل الطلب'**
+  String get viewOrderDetails;
+
+  /// No description provided for @ordersTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلباتي'**
+  String get ordersTitle;
+
+  /// No description provided for @noOrdersFound.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات حتى الآن'**
+  String get noOrdersFound;
+
+  /// No description provided for @orderNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب رقم'**
+  String get orderNumber;
+
+  /// No description provided for @orderStatusPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get orderStatusPending;
+
+  /// No description provided for @orderStatusAssigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'مُسند لسائق'**
+  String get orderStatusAssigned;
+
+  /// No description provided for @orderStatusInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري التوصيل'**
+  String get orderStatusInProgress;
+
+  /// No description provided for @orderStatusDelivered.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التسليم'**
+  String get orderStatusDelivered;
+
+  /// No description provided for @orderStatusCancelled.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملغي'**
+  String get orderStatusCancelled;
+
+  /// No description provided for @orderItemsCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد البنود'**
+  String get orderItemsCount;
+
+  /// No description provided for @deliveredTo.
+  ///
+  /// In ar, this message translates to:
+  /// **'موجه إلى'**
+  String get deliveredTo;
 }
 
 class _AppLocalizationsDelegate
