@@ -1,45 +1,98 @@
-# [Project name]
+# MedLink Yemen — Flutter App
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A B2B medical supply ordering platform for Yemen, built in Flutter (web-served on Replit). Supports three user roles: **client (pharmacist/buyer)**, **branch manager**, and **driver/delivery**.
 
-## Run & Operate
+---
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+## How to run
+
+The app runs via the **"Flutter MedLink App"** workflow:
+
+```
+cd medlink_app && flutter run -d web-server --web-port=3000 --web-hostname=0.0.0.0
+```
+
+It launches at **port 3000** as Flutter Web. It is not a standard Replit artifact (Flutter Web is not a supported artifact type), so it does not appear in the Preview dropdown — it runs as a plain workflow. View it from the Workflows panel.
+
+---
 
 ## Stack
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+| Layer | Technology |
+|---|---|
+| UI framework | Flutter (Dart) |
+| State management | Provider + ChangeNotifier |
+| Navigation | GoRouter (role-guarded routes) |
+| Backend | Supabase (Postgres + Auth + RLS) |
+| Localisation | flutter_localizations + ARB (Arabic default, RTL) |
+| Code gen | freezed + json_serializable |
 
-## Where things live
+---
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+## Architecture rules (from CLAUDE.md / project spec)
 
-## Architecture decisions
+- Every Supabase call logs via `AppConstants.supabaseDebugTag` (`'SUPABASE_DEBUG'`).
+- **Never** `INSERT`/`UPSERT` into `public.users` manually — the DB trigger handles profile creation on auth sign-up.
+- All business logic lives in `*Service` classes; `*Controller` classes are `ChangeNotifier` wrappers for UI state only.
+- `flutter analyze` must exit with **`No issues found!`** before closing any phase.
+- Role `company_director` is recognised and immediately rejected (auto sign-out) — no UI is ever rendered for it.
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+---
 
-## Product
+## Project structure
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+```
+medlink_app/lib/
+├── l10n/              # ARB translation files (app_ar.arb, app_en.arb)
+├── models/            # freezed data models (product, order, branch, user_profile, …)
+├── routing/           # app_router.dart — GoRouter + role/status guards
+├── screens/
+│   ├── auth/          # login, register, terms, pending_approval, account_status
+│   ├── client/        # home_tab, catalog_tab, product_detail, cart, checkout, orders, order_detail
+│   ├── branch_manager/# branch_manager_home_shell (Phase 4: dashboard, orders, inventory, invoices, drivers)
+│   ├── driver/        # driver_home_shell (Phase 6: assigned orders, map, rating)
+│   └── shared/        # splash_screen, coming_soon_scaffold
+├── services/          # auth_service/controller, catalog_service/controller,
+│                      # order_service/controller, cart_controller
+├── utils/             # constants.dart, theme.dart, error_mapper.dart
+└── widgets/           # shared UI components
+```
+
+---
+
+## Supabase configuration
+
+Credentials live in `medlink_app/lib/utils/constants.dart`. The anon key is safe to embed in Flutter client code — security is enforced entirely via Postgres RLS policies, not key secrecy.
+
+- **URL**: `https://lmkomzqioneuyvatzsov.supabase.co`
+- Migrations: `0001_initial_schema.sql` and `0003_bonus_commission_approval_notifications.sql` are already applied to the live database.
+- `0002_catalog_inventory_orders.sql` (products, inventory, promotional_offers, client_addresses, orders, order_items) was also applied as part of Phase 2.
+
+---
+
+## Development phases
+
+| Phase | Status | Description |
+|---|---|---|
+| 1 | ✅ Done | Foundation: Supabase auth, GoRouter, i18n, role guards, pending-approval gate |
+| 2 | ✅ Done | Catalog, product detail, cart, bonus rules, checkout, order success (client) |
+| 3 | 🔜 Next | Branch manager dashboard: orders, inventory, invoices, drivers |
+| 4 | — | Driver account management (via Edge Function) |
+| 5 | — | Driver interface: assigned orders, maps, earnings |
+| 6 | — | Notifications + promotional offers |
+| 7 | — | Driver ratings + help/support |
+| 8 | — | Live chat + live driver location |
+
+---
+
+## Testing accounts
+
+Register accounts directly in the app, then set `role` and `account_status = 'active'` manually in the Supabase Table Editor for `public.users`. No hardcoded test credentials exist in the app.
+
+---
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
-
-## Gotchas
-
-_Populate as you build — sharp edges, "always run X before Y" rules._
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Arabic is the default and only active locale; RTL layout is enforced globally.
+- Keep the existing folder structure (`screens/auth`, `screens/client`, etc.) — do not restructure.
+- Do not add mock/fake data or bypass auth for development; use real Supabase test accounts.

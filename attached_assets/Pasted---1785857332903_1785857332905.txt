@@ -1,0 +1,170 @@
+انظر الي سيق المحدثه هل يمكنك ان تبدا با تنفيذ المرحله الثانيه من المشروع حسب الخطه التي وضعها الوكيل                                             بكفاءة؟ تأكد من أن التنقل بين الشاشات يعمل بسلاسة ويتوافق تماماً مع التصميم. ثم قم بتشغيله محلياً لأتمكن من اختباره. ملاحظة راجع ملف. CLAUDE.md يحتوي تعليمات برمجيه قم با تفعيل وضع التخطيط قبل البدا في البناء اريد ان اطلع علا الخطة قبل البدا
+
+2 hours ago
+Analyzing project files and requirements
+
+Analyzing project files and requirements
+سأقوم أولاً بفحص ملفات التصاميم وملف CLAUDE.md لفهم المتطلبات قبل وضع الخطة.
+
+
+20 actions
+لقد استعرضت كامل الملفات المرفوعة (70+ شاشة). لم أجد ملف CLAUDE.md في الأرشيف — الملفات الموجودة هي DESIGN.md فقط لكل نظام تصميم. إليك الخطة الكاملة قبل أي بناء:
+
+📋 خطة بناء تطبيق MedLink Yemen — Flutter
+🔍 تحليل التصاميم (ما رأيته)
+التطبيق: منصة B2B لتوريد الأدوية والمستلزمات الطبية في اليمن — عربي RTL بالكامل.
+
+3 أدوار مستخدمين:
+
+الدور	الوصف
+🏪 صيدلاني / مشتري	الدور الرئيسي — تصفح، طلب، فواتير
+🚗 سائق / توصيل	الطلبات المُسندة، التقييم، المحادثة
+🏭 مشرف / مستودع	مخزون، إحصائيات، أرباح، تخصيص
+📱 الشاشات المُحددة (مجمّعة)
+المصادقة:
+
+تسجيل الدخول (3 تصاميم مختلفة)، إنشاء حساب، إعداد الملف الشخصي، الشروط والخصوصية، انتظار المراجعة
+الصيدلاني (الرئيسي):
+
+الصفحة الرئيسية/Dashboard، كتالوج الأدوية، طلباتي، تفاصيل الطلب، سجل الفواتير، التنبيهات، إدارة العناوين، البطاقة الرقمية، الدردشة، طلب خاص، إعدادات اللغة، الدعم والمساعدة، الخريطة
+السائق:
+
+الطلبات المُسندة، دردشة السائقين، تقييم السائق
+المشرف/المستودع:
+
+مخزون المستودع، الإحصائيات والتقارير، الأرباح، التخصيص والطلبات الواردة
+🎨 نظام التصميم
+العنصر	القيمة
+اللون الأساسي	#004ac6 / #2563eb (أزرق طبي)
+الخط	Be Vietnam Pro
+الاتجاه	RTL عربي كامل
+الأسلوب	Material Design 3 + Functional Minimalism
+🏗️ الهيكل التقني المقترح
+medlink_app/
+├── lib/
+│   ├── core/
+│   │   ├── theme/          ← الألوان، الخطوط، نظام التصميم
+│   │   ├── widgets/        ← مكونات مشتركة (بطاقات، أزرار، إدخالات)
+│   │   └── router/         ← GoRouter + حماية المسارات بالأدوار
+│   └── features/
+│       ├── auth/            ← تسجيل دخول، تسجيل، إعداد الملف
+│       ├── catalog/         ← الرئيسية، كتالوج الأدوية
+│       ├── orders/          ← طلباتي، تفاصيل الطلب
+│       ├── invoices/        ← سجل الفواتير
+│       ├── chat/            ← الدردشة، محادثات السائقين
+│       ├── warehouse/       ← المخزون، التخصيص
+│       ├── reports/         ← الإحصائيات، الأرباح
+│       └── profile/         ← الإعدادات، البطاقة الرقمية
+
+📦 المكتبات المقترحة
+المكتبة	الغرض
+go_router	التنقل بين الشاشات
+flutter_riverpod	إدارة الحالة
+google_fonts	خط Be Vietnam Pro
+fl_chart	الرسوم البيانية (الإحصائيات)
+cached_network_image	تحميل الصور
+intl	تنسيق التاريخ والأرقام (عربي)
+📝 مراحل البناء
+تثبيت Flutter SDK في Replit + إنشاء المشروع
+نظام التصميم — ألوان، خطوط، مكونات مشتركة
+شاشات المصادقة — تسجيل دخول، تسجيل، انتظار المراجعة
+التنقل الرئيسي — Bottom Navigation Bar بالأدوار الثلاثة
+شاشات الصيدلاني — الرئيسية، الكتالوج، الطلبات، الفواتير
+شاشات السائق — الطلبات المسندة، الدردشة، التقييم
+شاشات المشرف — المخزون، الإحصائيات، الأرباح
+تشغيل Flutter Web في Replit للاختبار المرئي
+⚠️ ملاحظة مهمة
+لم أجد ملف CLAUDE.md في الأرشيف المرفوع. إذا كان لديك هذا الملف في مكان آخر، أرجو مشاركته.
+Flutter غير مثبّت حالياً في البيئة — سأقوم بتثبيته تلقائياً عبر Nix.
+التشغيل سيكون كـ Flutter Web داخل Replit (لا يمكن تشغيل محاكي Android/iOS في Replit).
+هل الخطة مناسبة؟ هل تريد تعديلاً في الشاشات أو الأولويات قبل أن أبدأ؟
+
+هل تريد المتابعة ببناء التطبيق وفق هذه الخطة؟
+الخطة جاهزة — ما الذي تريد فعله؟
+ملاحظات إضافية (اختياري)
+This prompt is for another responder.
+
+Worked for 2 minutes
+
+Checkpoint made
+2 hours ago
+Planning the development roadmap
+
+Planning the development roadmap
+تم. الآن اكتملت كل عناصر الخطة. بما أن جداول products/orders/inventory/promotional_offers غير موجودة بعد، سأصممها أنا كجزء من 0002_catalog_inventory_orders.sql وفق الشاشات المطلوبة وقواعد العمل المذكورة (البونص، التحويل بين الفروع).
+
+📋 الخطة النهائية الكاملة
+1. تصميم 0002_catalog_inventory_orders.sql (جديد — سأكتبه)
+الجدول	الأعمدة الأساسية
+products	id, name, description, category, manufacturer, dosage_form, unit_price, image_url, is_active, created_at
+inventory	id, branch_id, product_id, quantity, updated_at — مخزون كل فرع مستقل
+promotional_offers	id, title, description, image_url, discount_text, start_date, end_date, target_governorate, is_active
+client_addresses	id, client_id, label, address_text, latitude, longitude, is_default
+orders	id, client_id, branch_id, parent_order_id, target_branches, status, delivery_address_id, assigned_driver_id, total_amount, scheduled_delivery_at, created_at
+order_items	id, order_id, product_id, quantity, unit_price, is_bonus
+هذه ستُربط لاحقاً بـbonus_rules وdriver_commissions وdriver_ratings وnotifications الموجودة أصلاً في 0003.
+
+2. الإعداد التقني
+تثبيت Flutter SDK داخل Replit
+ربط supabase_flutter بالمفاتيح المعطاة (URL + Anon Key — آمنة للتضمين المباشر كما أكدت)
+flutter_localizations + ARB (عربي/إنجليزي) من الشاشة الأولى
+go_router مع حراسة مسارات حسب role وaccount_status
+رفض فوري وواضح لأي دخول بدور company_director
+3. هيكلة المجلدات (كما حددتها بالضبط)
+lib/
+  models/       screens/auth, client, branch_manager, driver, shared
+  services/     widgets/   utils/   l10n/   routing/
+supabase/migrations/  0001 (موجود) → 0002 (سأكتبه) → 0003 (موجود)
+
+4. ترتيب التنفيذ (دفعة واحدة = ميزة كاملة، لا أنتقل للتالية دون تأكيدك)
+#	الدفعة
+1	تأسيس المشروع + i18n + مصادقة Supabase حقيقية + بوابة الموافقة (pending_approval)
+2	كتابة 0002 + الكتالوج + المخزون
+3	السلة + منطق البونص التلقائي + تأكيد الطلب + التوجيه لأقرب فرع
+4	لوحة مدير الفرع (تخصيص/تحويل، فواتير، مخزون)
+5	إدارة حسابات السائقين (عبر Edge Function، بدون تسجيل خروج المدير)
+6	واجهة السائق (طلبات، خرائط، أرباحي)
+7	مركز التنبيهات + العروض
+8	تقييم السائق + المساعدة والدعم
+9	الدردشة الحية + الموقع الحي (آخر شيء)
+5. الاختبار أثناء التطوير
+سأسجّل 3 حسابات فعلية من داخل التطبيق (test.client/branch/driver@medlink.dev)، وسأطلب منك تعديل role وaccount_status='active' يدوياً من Supabase Table Editor كما وضّحت — لن أضع أي كود تجريبي أو حسابات وهمية بالتطبيق.
+
+6. ملاحظة على Flutter في Replit
+سأشغّله كـ Flutter Web للمعاينة والاختبار (لا يوجد محاكي Android في Replit)؛ منطق الكود والخدمات مطابق تماماً لما سيعمل على Android.
+
+هل أبدأ الآن بالدفعة الأولى (التأسيس + المصادقة الحقيقية + بوابة الموافقة)؟
+
+هل أبدأ بالدفعة الأولى: تأسيس المشروع + i18n + مصادقة Supabase حقيقية + بوابة الموافقة؟
+نعم، ابدأ الآن
+
+Worked for 33 seconds
+
+70 actions
+Dependencies resolved. Now generating the localization and freezed/json model code.
+
+
+2 actions
+Build succeeded. Now let's check for analysis errors and set up a workflow to run this Flutter app.
+
+
+26 actions
+Server is up. Let's screenshot the preview to confirm it renders correctly.
+
+
+16 actions
+تم إنجاز المرحلة 1 (الإعداد الأساسي + المصادقة الحقيقية + بوابة الموافقة) وفق الترتيب المتفق عليه. هذا تقرير دقيق بالملفات التي تم إنشاؤها وحالة الاختبار:
+
+الملفات المُنشأة/المعدّلة:
+
+medlink_app/pubspec.yaml — إضافة supabase_flutter, go_router, google_fonts, provider, freezed/json_serializable, إلخ.
+medlink_app/l10n.yaml + lib/l10n/app_ar.arb + lib/l10n/app_en.arb — الترجمة الكاملة (العربية هي اللغة الافتراضية RTL).
+lib/utils/constants.dart, lib/utils/theme.dart (الألوان والخطوط من DESIGN.md)، lib/utils/error_mapper.dart.
+lib/models/user_profile.dart, lib/models/branch.dart — مطابقة تماماً لأعمدة public.users وpublic.branches (snake_case عبر @JsonKey، freezed).
+lib/services/auth_service.dart (تسجيل دخول/تسجيل حساب/جوجل/خروج، بدون أي إدراج يدوي في public.users، تسجيل كل الأخطاء بوسم SUPABASE_DEBUG)، lib/services/auth_controller.dart، lib/services/supabase_bootstrap.dart.
+lib/routing/app_router.dart — go_router مع حراسة تلقيائية حسب role/account_status، ورفض فوري لأي حساب company_director مع تسجيل خروج تلقائي.
+شاشات: screens/auth/{login,register,terms,pending_approval,account_status}_screen.dart، screens/shared/splash_screen.dart، وهياكل الصفحة الرئيسية (تبويبات فقط، المحتوى "قيد الإنشاء") لكل من client, branch_manager, driver.
+supabase/migrations/0001_initial_schema.sql و0003_bonus_commission_approval_notifications.sql — نسخ حرفي كما زوّدتني بهما (لم يتم تنفيذهما من هنا؛ حسب كلامك هما منفذان بالفعل على القاعدة الحقيقية).
+حالة الاختبار الفعلي: شغّلت التطبيق فعلياً عبر flutter run -d web-server على المنفذ 3000، وflutter analyze نظيف تماماً (لا أخطاء ولا تحذيرات)، والخادم يستجيب فعلياً (تحقّقت بـ curl، HTTP 200 مع HTML صحيح لتطبيق Flutter). لكن يوجد قيد بيئي مهم: Flutter ليس نوع "artifact" مدعوم في هذا المشروع، لذا لا يظهر في قائمة المعاينة (Preview) المعتادة التي يستخدمها بقية المشروع — فقط أنواع محددة (React, Expo, إلخ) تظهر هناك. التطبيق يعمل الآن كـ"workflow" باسم "Flutter MedLink App"، ويمكنك فتح تبويب الـ webview الخاص به مباشرة من لوحة الـ Workflows لرؤيته والتفاعل معه.
+
+ملاحظة مهمة: شاشات client/branch_manager/driver الرئيسية حالياً مجرد هيكل تنقّل فارغ ("قيد الإنشاء") — سيتم بناء محتواها الفعلي في المراحل التالية حسب الترتيب المتفق عليه (الكتالوج والمخزون في المرحلة 2).                             
