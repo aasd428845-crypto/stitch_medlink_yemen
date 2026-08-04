@@ -30,6 +30,14 @@ _$OrderModelImpl _$$OrderModelImplFromJson(Map<String, dynamic> json) =>
       items: (json['items'] as List<dynamic>?)
           ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
           .toList(),
+      client: json['client'] == null
+          ? null
+          : UserProfile.fromJson(json['client'] as Map<String, dynamic>),
+      assignedDriver: json['assigned_driver'] == null
+          ? null
+          : UserProfile.fromJson(
+              json['assigned_driver'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$$OrderModelImplToJson(_$OrderModelImpl instance) =>
@@ -48,4 +56,6 @@ Map<String, dynamic> _$$OrderModelImplToJson(_$OrderModelImpl instance) =>
       'created_at': instance.createdAt,
       'delivery_address': instance.deliveryAddress?.toJson(),
       'items': instance.items?.map((e) => e.toJson()).toList(),
+      'client': instance.client?.toJson(),
+      'assigned_driver': instance.assignedDriver?.toJson(),
     };

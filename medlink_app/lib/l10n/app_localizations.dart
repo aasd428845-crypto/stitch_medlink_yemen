@@ -392,6 +392,12 @@ abstract class AppLocalizations {
   /// **'لوحة التحكم'**
   String get branchDashboardLabel;
 
+  /// No description provided for @branchOrdersLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلبات'**
+  String get branchOrdersLabel;
+
   /// No description provided for @branchInventoryLabel.
   ///
   /// In ar, this message translates to:
@@ -409,6 +415,186 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'السائقون'**
   String get branchDriversLabel;
+
+  /// No description provided for @branchDashboardNewOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات جديدة'**
+  String get branchDashboardNewOrders;
+
+  /// No description provided for @branchDashboardInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد التوصيل'**
+  String get branchDashboardInProgress;
+
+  /// No description provided for @branchDashboardCompletedToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتملة اليوم'**
+  String get branchDashboardCompletedToday;
+
+  /// No description provided for @branchDashboardRecentOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'أحدث الطلبات'**
+  String get branchDashboardRecentOrders;
+
+  /// No description provided for @branchAssignDriver.
+  ///
+  /// In ar, this message translates to:
+  /// **'إسناد سائق'**
+  String get branchAssignDriver;
+
+  /// No description provided for @branchTransferOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل الطلب'**
+  String get branchTransferOrder;
+
+  /// No description provided for @branchRejectOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض الطلب'**
+  String get branchRejectOrder;
+
+  /// No description provided for @branchSelectDriver.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر السائق'**
+  String get branchSelectDriver;
+
+  /// No description provided for @branchSelectBranch.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر الفرع'**
+  String get branchSelectBranch;
+
+  /// No description provided for @branchConfirmTransfer.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد التحويل'**
+  String get branchConfirmTransfer;
+
+  /// No description provided for @branchNoDriversAvailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد سائق مسند'**
+  String get branchNoDriversAvailable;
+
+  /// No description provided for @branchNoOtherBranches.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد فروع أخرى متاحة'**
+  String get branchNoOtherBranches;
+
+  /// No description provided for @branchDriverBusy.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشغول'**
+  String get branchDriverBusy;
+
+  /// No description provided for @branchDriverAvailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'متاح'**
+  String get branchDriverAvailable;
+
+  /// No description provided for @branchDriverActiveOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب نشط'**
+  String get branchDriverActiveOrders;
+
+  /// No description provided for @branchOrderFilterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get branchOrderFilterAll;
+
+  /// No description provided for @branchOrderFilterPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get branchOrderFilterPending;
+
+  /// No description provided for @branchOrderFilterAssigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'مُسند'**
+  String get branchOrderFilterAssigned;
+
+  /// No description provided for @branchOrderFilterInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري التوصيل'**
+  String get branchOrderFilterInProgress;
+
+  /// No description provided for @branchOrderFilterDelivered.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التسليم'**
+  String get branchOrderFilterDelivered;
+
+  /// No description provided for @branchOrderFilterCancelled.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملغي'**
+  String get branchOrderFilterCancelled;
+
+  /// No description provided for @branchInventoryEditQuantity.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل الكمية'**
+  String get branchInventoryEditQuantity;
+
+  /// No description provided for @branchInventoryCurrentQuantity.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكمية الحالية'**
+  String get branchInventoryCurrentQuantity;
+
+  /// No description provided for @branchInventoryUpdate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث'**
+  String get branchInventoryUpdate;
+
+  /// No description provided for @branchNoInventory.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد أصناف في المخزون بعد'**
+  String get branchNoInventory;
+
+  /// No description provided for @branchNoInvoices.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد فواتير مكتملة بعد'**
+  String get branchNoInvoices;
+
+  /// No description provided for @branchNoDrivers.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد سائقون في هذا الفرع بعد'**
+  String get branchNoDrivers;
+
+  /// No description provided for @branchOrderDetailTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الطلب'**
+  String get branchOrderDetailTitle;
+
+  /// No description provided for @branchChangeStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث الحالة'**
+  String get branchChangeStatus;
+
+  /// No description provided for @branchStatusUpdateConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل أنت متأكد من تنفيذ هذا الإجراء؟'**
+  String get branchStatusUpdateConfirm;
 
   /// No description provided for @driverOrdersLabel.
   ///

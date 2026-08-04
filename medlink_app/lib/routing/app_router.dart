@@ -10,6 +10,7 @@ import '../screens/auth/pending_approval_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/auth/terms_screen.dart';
 import '../screens/branch_manager/branch_manager_home_shell.dart';
+import '../screens/branch_manager/branch_order_detail_screen.dart';
 import '../screens/client/cart_screen.dart';
 import '../screens/client/checkout_screen.dart';
 import '../screens/client/client_home_shell.dart';
@@ -111,6 +112,14 @@ GoRouter buildRouter(AuthController authController) {
       GoRoute(
         path: '/branch',
         builder: (context, state) => const BranchManagerHomeShell(),
+        routes: [
+          GoRoute(
+            path: 'order/:id',
+            builder: (context, state) => BranchOrderDetailScreen(
+              orderId: state.pathParameters['id']!,
+            ),
+          ),
+        ],
       ),
 
       // ── Driver ───────────────────────────────────────────────────────────

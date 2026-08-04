@@ -59,9 +59,46 @@
   "clientProfileLabel": "Profile",
 
   "branchDashboardLabel": "Dashboard",
+  "branchOrdersLabel": "Orders",
   "branchInventoryLabel": "Inventory",
   "branchInvoicesLabel": "Invoices",
   "branchDriversLabel": "Drivers",
+
+  "branchDashboardNewOrders": "New Orders",
+  "branchDashboardInProgress": "In Progress",
+  "branchDashboardCompletedToday": "Completed Today",
+  "branchDashboardRecentOrders": "Recent Orders",
+
+  "branchAssignDriver": "Assign Driver",
+  "branchTransferOrder": "Transfer Order",
+  "branchRejectOrder": "Reject Order",
+  "branchSelectDriver": "Select Driver",
+  "branchSelectBranch": "Select Branch",
+  "branchConfirmTransfer": "Confirm Transfer",
+  "branchNoDriversAvailable": "No driver assigned",
+  "branchNoOtherBranches": "No other branches available",
+  "branchDriverBusy": "Busy",
+  "branchDriverAvailable": "Available",
+  "branchDriverActiveOrders": "active orders",
+
+  "branchOrderFilterAll": "All",
+  "branchOrderFilterPending": "Pending",
+  "branchOrderFilterAssigned": "Assigned",
+  "branchOrderFilterInProgress": "In Progress",
+  "branchOrderFilterDelivered": "Delivered",
+  "branchOrderFilterCancelled": "Cancelled",
+
+  "branchInventoryEditQuantity": "Edit Quantity",
+  "branchInventoryCurrentQuantity": "Current Quantity",
+  "branchInventoryUpdate": "Update",
+  "branchNoInventory": "No inventory items yet",
+
+  "branchNoInvoices": "No completed invoices yet",
+  "branchNoDrivers": "No drivers at this branch yet",
+
+  "branchOrderDetailTitle": "Order Details",
+  "branchChangeStatus": "Update Status",
+  "branchStatusUpdateConfirm": "Are you sure you want to perform this action?",
 
   "driverOrdersLabel": "Orders",
   "driverEarningsLabel": "Earnings",

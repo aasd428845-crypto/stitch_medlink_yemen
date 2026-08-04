@@ -7,6 +7,8 @@ import 'l10n/app_localizations.dart';
 import 'routing/app_router.dart';
 import 'services/auth_controller.dart';
 import 'services/auth_service.dart';
+import 'services/branch_controller.dart';
+import 'services/branch_service.dart';
 import 'services/cart_controller.dart';
 import 'services/catalog_controller.dart';
 import 'services/catalog_service.dart';
@@ -36,6 +38,8 @@ class _MedLinkAppState extends State<MedLinkApp> {
   late final OrderService _orderService;
   late final CartController _cartController;
   late final OrderController _orderController;
+  late final BranchService _branchService;
+  late final BranchController _branchController;
   late final GoRouter _router;
 
   @override
@@ -48,6 +52,8 @@ class _MedLinkAppState extends State<MedLinkApp> {
     _orderService = OrderService(supabase);
     _cartController = CartController();
     _orderController = OrderController(_orderService);
+    _branchService = BranchService(supabase);
+    _branchController = BranchController(_branchService, _catalogService);
     _router = buildRouter(_authController);
 
     // Load bonus rules into cart controller on start
@@ -62,6 +68,7 @@ class _MedLinkAppState extends State<MedLinkApp> {
     _catalogController.dispose();
     _cartController.dispose();
     _orderController.dispose();
+    _branchController.dispose();
     super.dispose();
   }
 
@@ -78,6 +85,8 @@ class _MedLinkAppState extends State<MedLinkApp> {
         Provider<OrderService>.value(value: _orderService),
         ChangeNotifierProvider<CartController>.value(value: _cartController),
         ChangeNotifierProvider<OrderController>.value(value: _orderController),
+        Provider<BranchService>.value(value: _branchService),
+        ChangeNotifierProvider<BranchController>.value(value: _branchController),
       ],
       child: MaterialApp.router(
         title: 'MedLink Yemen',

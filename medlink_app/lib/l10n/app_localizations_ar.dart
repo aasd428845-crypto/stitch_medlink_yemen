@@ -164,6 +164,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get branchDashboardLabel => 'لوحة التحكم';
 
   @override
+  String get branchOrdersLabel => 'الطلبات';
+
+  @override
   String get branchInventoryLabel => 'المخزون';
 
   @override
@@ -171,6 +174,96 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get branchDriversLabel => 'السائقون';
+
+  @override
+  String get branchDashboardNewOrders => 'طلبات جديدة';
+
+  @override
+  String get branchDashboardInProgress => 'قيد التوصيل';
+
+  @override
+  String get branchDashboardCompletedToday => 'مكتملة اليوم';
+
+  @override
+  String get branchDashboardRecentOrders => 'أحدث الطلبات';
+
+  @override
+  String get branchAssignDriver => 'إسناد سائق';
+
+  @override
+  String get branchTransferOrder => 'تحويل الطلب';
+
+  @override
+  String get branchRejectOrder => 'رفض الطلب';
+
+  @override
+  String get branchSelectDriver => 'اختر السائق';
+
+  @override
+  String get branchSelectBranch => 'اختر الفرع';
+
+  @override
+  String get branchConfirmTransfer => 'تأكيد التحويل';
+
+  @override
+  String get branchNoDriversAvailable => 'لا يوجد سائق مسند';
+
+  @override
+  String get branchNoOtherBranches => 'لا توجد فروع أخرى متاحة';
+
+  @override
+  String get branchDriverBusy => 'مشغول';
+
+  @override
+  String get branchDriverAvailable => 'متاح';
+
+  @override
+  String get branchDriverActiveOrders => 'طلب نشط';
+
+  @override
+  String get branchOrderFilterAll => 'الكل';
+
+  @override
+  String get branchOrderFilterPending => 'قيد المراجعة';
+
+  @override
+  String get branchOrderFilterAssigned => 'مُسند';
+
+  @override
+  String get branchOrderFilterInProgress => 'جاري التوصيل';
+
+  @override
+  String get branchOrderFilterDelivered => 'تم التسليم';
+
+  @override
+  String get branchOrderFilterCancelled => 'ملغي';
+
+  @override
+  String get branchInventoryEditQuantity => 'تعديل الكمية';
+
+  @override
+  String get branchInventoryCurrentQuantity => 'الكمية الحالية';
+
+  @override
+  String get branchInventoryUpdate => 'تحديث';
+
+  @override
+  String get branchNoInventory => 'لا توجد أصناف في المخزون بعد';
+
+  @override
+  String get branchNoInvoices => 'لا توجد فواتير مكتملة بعد';
+
+  @override
+  String get branchNoDrivers => 'لا يوجد سائقون في هذا الفرع بعد';
+
+  @override
+  String get branchOrderDetailTitle => 'تفاصيل الطلب';
+
+  @override
+  String get branchChangeStatus => 'تحديث الحالة';
+
+  @override
+  String get branchStatusUpdateConfirm => 'هل أنت متأكد من تنفيذ هذا الإجراء؟';
 
   @override
   String get driverOrdersLabel => 'طلباتي';

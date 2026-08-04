@@ -44,7 +44,12 @@ mixin _$OrderModel {
   String? get createdAt => throw _privateConstructorUsedError; // Joined relations
   @JsonKey(name: 'delivery_address')
   ClientAddress? get deliveryAddress => throw _privateConstructorUsedError;
-  List<OrderItem>? get items => throw _privateConstructorUsedError;
+  List<OrderItem>? get items =>
+      throw _privateConstructorUsedError; // Joined relations — only populated by BranchService queries
+  // (branch manager screens); null for client-facing queries.
+  UserProfile? get client => throw _privateConstructorUsedError;
+  @JsonKey(name: 'assigned_driver')
+  UserProfile? get assignedDriver => throw _privateConstructorUsedError;
 
   /// Serializes this OrderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -78,9 +83,13 @@ abstract class $OrderModelCopyWith<$Res> {
     @JsonKey(name: 'created_at') String? createdAt,
     @JsonKey(name: 'delivery_address') ClientAddress? deliveryAddress,
     List<OrderItem>? items,
+    UserProfile? client,
+    @JsonKey(name: 'assigned_driver') UserProfile? assignedDriver,
   });
 
   $ClientAddressCopyWith<$Res>? get deliveryAddress;
+  $UserProfileCopyWith<$Res>? get client;
+  $UserProfileCopyWith<$Res>? get assignedDriver;
 }
 
 /// @nodoc
@@ -112,6 +121,8 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
     Object? createdAt = freezed,
     Object? deliveryAddress = freezed,
     Object? items = freezed,
+    Object? client = freezed,
+    Object? assignedDriver = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -171,6 +182,14 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
                 ? _value.items
                 : items // ignore: cast_nullable_to_non_nullable
                       as List<OrderItem>?,
+            client: freezed == client
+                ? _value.client
+                : client // ignore: cast_nullable_to_non_nullable
+                      as UserProfile?,
+            assignedDriver: freezed == assignedDriver
+                ? _value.assignedDriver
+                : assignedDriver // ignore: cast_nullable_to_non_nullable
+                      as UserProfile?,
           )
           as $Val,
     );
@@ -187,6 +206,34 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
 
     return $ClientAddressCopyWith<$Res>(_value.deliveryAddress!, (value) {
       return _then(_value.copyWith(deliveryAddress: value) as $Val);
+    });
+  }
+
+  /// Create a copy of OrderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserProfileCopyWith<$Res>? get client {
+    if (_value.client == null) {
+      return null;
+    }
+
+    return $UserProfileCopyWith<$Res>(_value.client!, (value) {
+      return _then(_value.copyWith(client: value) as $Val);
+    });
+  }
+
+  /// Create a copy of OrderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserProfileCopyWith<$Res>? get assignedDriver {
+    if (_value.assignedDriver == null) {
+      return null;
+    }
+
+    return $UserProfileCopyWith<$Res>(_value.assignedDriver!, (value) {
+      return _then(_value.copyWith(assignedDriver: value) as $Val);
     });
   }
 }
@@ -215,10 +262,16 @@ abstract class _$$OrderModelImplCopyWith<$Res>
     @JsonKey(name: 'created_at') String? createdAt,
     @JsonKey(name: 'delivery_address') ClientAddress? deliveryAddress,
     List<OrderItem>? items,
+    UserProfile? client,
+    @JsonKey(name: 'assigned_driver') UserProfile? assignedDriver,
   });
 
   @override
   $ClientAddressCopyWith<$Res>? get deliveryAddress;
+  @override
+  $UserProfileCopyWith<$Res>? get client;
+  @override
+  $UserProfileCopyWith<$Res>? get assignedDriver;
 }
 
 /// @nodoc
@@ -249,6 +302,8 @@ class __$$OrderModelImplCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? deliveryAddress = freezed,
     Object? items = freezed,
+    Object? client = freezed,
+    Object? assignedDriver = freezed,
   }) {
     return _then(
       _$OrderModelImpl(
@@ -308,6 +363,14 @@ class __$$OrderModelImplCopyWithImpl<$Res>
             ? _value._items
             : items // ignore: cast_nullable_to_non_nullable
                   as List<OrderItem>?,
+        client: freezed == client
+            ? _value.client
+            : client // ignore: cast_nullable_to_non_nullable
+                  as UserProfile?,
+        assignedDriver: freezed == assignedDriver
+            ? _value.assignedDriver
+            : assignedDriver // ignore: cast_nullable_to_non_nullable
+                  as UserProfile?,
       ),
     );
   }
@@ -331,6 +394,8 @@ class _$OrderModelImpl extends _OrderModel {
     @JsonKey(name: 'created_at') this.createdAt,
     @JsonKey(name: 'delivery_address') this.deliveryAddress,
     final List<OrderItem>? items,
+    this.client,
+    @JsonKey(name: 'assigned_driver') this.assignedDriver,
   }) : _targetBranches = targetBranches,
        _items = items,
        super._();
@@ -394,9 +459,17 @@ class _$OrderModelImpl extends _OrderModel {
     return EqualUnmodifiableListView(value);
   }
 
+  // Joined relations — only populated by BranchService queries
+  // (branch manager screens); null for client-facing queries.
+  @override
+  final UserProfile? client;
+  @override
+  @JsonKey(name: 'assigned_driver')
+  final UserProfile? assignedDriver;
+
   @override
   String toString() {
-    return 'OrderModel(id: $id, clientId: $clientId, branchId: $branchId, parentOrderId: $parentOrderId, targetBranches: $targetBranches, status: $status, deliveryAddressId: $deliveryAddressId, assignedDriverId: $assignedDriverId, totalAmount: $totalAmount, scheduledDeliveryAt: $scheduledDeliveryAt, notes: $notes, createdAt: $createdAt, deliveryAddress: $deliveryAddress, items: $items)';
+    return 'OrderModel(id: $id, clientId: $clientId, branchId: $branchId, parentOrderId: $parentOrderId, targetBranches: $targetBranches, status: $status, deliveryAddressId: $deliveryAddressId, assignedDriverId: $assignedDriverId, totalAmount: $totalAmount, scheduledDeliveryAt: $scheduledDeliveryAt, notes: $notes, createdAt: $createdAt, deliveryAddress: $deliveryAddress, items: $items, client: $client, assignedDriver: $assignedDriver)';
   }
 
   @override
@@ -429,7 +502,10 @@ class _$OrderModelImpl extends _OrderModel {
                 other.createdAt == createdAt) &&
             (identical(other.deliveryAddress, deliveryAddress) ||
                 other.deliveryAddress == deliveryAddress) &&
-            const DeepCollectionEquality().equals(other._items, _items));
+            const DeepCollectionEquality().equals(other._items, _items) &&
+            (identical(other.client, client) || other.client == client) &&
+            (identical(other.assignedDriver, assignedDriver) ||
+                other.assignedDriver == assignedDriver));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -450,6 +526,8 @@ class _$OrderModelImpl extends _OrderModel {
     createdAt,
     deliveryAddress,
     const DeepCollectionEquality().hash(_items),
+    client,
+    assignedDriver,
   );
 
   /// Create a copy of OrderModel
@@ -482,6 +560,8 @@ abstract class _OrderModel extends OrderModel {
     @JsonKey(name: 'created_at') final String? createdAt,
     @JsonKey(name: 'delivery_address') final ClientAddress? deliveryAddress,
     final List<OrderItem>? items,
+    final UserProfile? client,
+    @JsonKey(name: 'assigned_driver') final UserProfile? assignedDriver,
   }) = _$OrderModelImpl;
   const _OrderModel._() : super._();
 
@@ -525,7 +605,13 @@ abstract class _OrderModel extends OrderModel {
   @JsonKey(name: 'delivery_address')
   ClientAddress? get deliveryAddress;
   @override
-  List<OrderItem>? get items;
+  List<OrderItem>? get items; // Joined relations — only populated by BranchService queries
+  // (branch manager screens); null for client-facing queries.
+  @override
+  UserProfile? get client;
+  @override
+  @JsonKey(name: 'assigned_driver')
+  UserProfile? get assignedDriver;
 
   /// Create a copy of OrderModel
   /// with the given fields replaced by the non-null parameter values.

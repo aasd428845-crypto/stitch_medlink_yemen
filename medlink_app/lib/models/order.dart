@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'client_address.dart';
 import 'order_item.dart';
+import 'user_profile.dart';
 
 part 'order.freezed.dart';
 part 'order.g.dart';
@@ -24,6 +25,10 @@ class OrderModel with _$OrderModel {
     // Joined relations
     @JsonKey(name: 'delivery_address') ClientAddress? deliveryAddress,
     List<OrderItem>? items,
+    // Joined relations — only populated by BranchService queries
+    // (branch manager screens); null for client-facing queries.
+    UserProfile? client,
+    @JsonKey(name: 'assigned_driver') UserProfile? assignedDriver,
   }) = _OrderModel;
 
   const OrderModel._();

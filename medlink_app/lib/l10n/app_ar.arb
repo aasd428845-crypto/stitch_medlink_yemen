@@ -60,9 +60,46 @@
   "clientProfileLabel": "حسابي",
 
   "branchDashboardLabel": "لوحة التحكم",
+  "branchOrdersLabel": "الطلبات",
   "branchInventoryLabel": "المخزون",
   "branchInvoicesLabel": "الفواتير",
   "branchDriversLabel": "السائقون",
+
+  "branchDashboardNewOrders": "طلبات جديدة",
+  "branchDashboardInProgress": "قيد التوصيل",
+  "branchDashboardCompletedToday": "مكتملة اليوم",
+  "branchDashboardRecentOrders": "أحدث الطلبات",
+
+  "branchAssignDriver": "إسناد سائق",
+  "branchTransferOrder": "تحويل الطلب",
+  "branchRejectOrder": "رفض الطلب",
+  "branchSelectDriver": "اختر السائق",
+  "branchSelectBranch": "اختر الفرع",
+  "branchConfirmTransfer": "تأكيد التحويل",
+  "branchNoDriversAvailable": "لا يوجد سائق مسند",
+  "branchNoOtherBranches": "لا توجد فروع أخرى متاحة",
+  "branchDriverBusy": "مشغول",
+  "branchDriverAvailable": "متاح",
+  "branchDriverActiveOrders": "طلب نشط",
+
+  "branchOrderFilterAll": "الكل",
+  "branchOrderFilterPending": "قيد المراجعة",
+  "branchOrderFilterAssigned": "مُسند",
+  "branchOrderFilterInProgress": "جاري التوصيل",
+  "branchOrderFilterDelivered": "تم التسليم",
+  "branchOrderFilterCancelled": "ملغي",
+
+  "branchInventoryEditQuantity": "تعديل الكمية",
+  "branchInventoryCurrentQuantity": "الكمية الحالية",
+  "branchInventoryUpdate": "تحديث",
+  "branchNoInventory": "لا توجد أصناف في المخزون بعد",
+
+  "branchNoInvoices": "لا توجد فواتير مكتملة بعد",
+  "branchNoDrivers": "لا يوجد سائقون في هذا الفرع بعد",
+
+  "branchOrderDetailTitle": "تفاصيل الطلب",
+  "branchChangeStatus": "تحديث الحالة",
+  "branchStatusUpdateConfirm": "هل أنت متأكد من تنفيذ هذا الإجراء؟",
 
   "driverOrdersLabel": "طلباتي",
   "driverEarningsLabel": "أرباحي",

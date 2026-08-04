@@ -164,6 +164,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get branchDashboardLabel => 'Dashboard';
 
   @override
+  String get branchOrdersLabel => 'Orders';
+
+  @override
   String get branchInventoryLabel => 'Inventory';
 
   @override
@@ -171,6 +174,97 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get branchDriversLabel => 'Drivers';
+
+  @override
+  String get branchDashboardNewOrders => 'New Orders';
+
+  @override
+  String get branchDashboardInProgress => 'In Progress';
+
+  @override
+  String get branchDashboardCompletedToday => 'Completed Today';
+
+  @override
+  String get branchDashboardRecentOrders => 'Recent Orders';
+
+  @override
+  String get branchAssignDriver => 'Assign Driver';
+
+  @override
+  String get branchTransferOrder => 'Transfer Order';
+
+  @override
+  String get branchRejectOrder => 'Reject Order';
+
+  @override
+  String get branchSelectDriver => 'Select Driver';
+
+  @override
+  String get branchSelectBranch => 'Select Branch';
+
+  @override
+  String get branchConfirmTransfer => 'Confirm Transfer';
+
+  @override
+  String get branchNoDriversAvailable => 'No driver assigned';
+
+  @override
+  String get branchNoOtherBranches => 'No other branches available';
+
+  @override
+  String get branchDriverBusy => 'Busy';
+
+  @override
+  String get branchDriverAvailable => 'Available';
+
+  @override
+  String get branchDriverActiveOrders => 'active orders';
+
+  @override
+  String get branchOrderFilterAll => 'All';
+
+  @override
+  String get branchOrderFilterPending => 'Pending';
+
+  @override
+  String get branchOrderFilterAssigned => 'Assigned';
+
+  @override
+  String get branchOrderFilterInProgress => 'In Progress';
+
+  @override
+  String get branchOrderFilterDelivered => 'Delivered';
+
+  @override
+  String get branchOrderFilterCancelled => 'Cancelled';
+
+  @override
+  String get branchInventoryEditQuantity => 'Edit Quantity';
+
+  @override
+  String get branchInventoryCurrentQuantity => 'Current Quantity';
+
+  @override
+  String get branchInventoryUpdate => 'Update';
+
+  @override
+  String get branchNoInventory => 'No inventory items yet';
+
+  @override
+  String get branchNoInvoices => 'No completed invoices yet';
+
+  @override
+  String get branchNoDrivers => 'No drivers at this branch yet';
+
+  @override
+  String get branchOrderDetailTitle => 'Order Details';
+
+  @override
+  String get branchChangeStatus => 'Update Status';
+
+  @override
+  String get branchStatusUpdateConfirm =>
+      'Are you sure you want to perform this action?';
 
   @override
   String get driverOrdersLabel => 'Orders';
