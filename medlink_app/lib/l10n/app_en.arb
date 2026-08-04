@@ -1,0 +1,69 @@
+{
+  "@@locale": "en",
+  "appName": "MedLink Yemen",
+
+  "loginTitle": "Sign In",
+  "loginSubtitle": "Enter your details to access your account",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "loginButton": "Sign In",
+  "orDivider": "or",
+  "continueWithGoogle": "Continue with Google",
+  "noAccountYet": "Don't have an account?",
+  "createAccountLink": "Create a new account",
+  "forgotPassword": "Forgot password?",
+
+  "registerTitle": "Create Account",
+  "registerSubtitle": "Register your details; your account will be reviewed by management",
+  "nameLabel": "Full name",
+  "phoneLabel": "Phone number",
+  "confirmPasswordLabel": "Confirm password",
+  "registerButton": "Create account",
+  "alreadyHaveAccount": "Already have an account?",
+  "loginLink": "Sign in",
+  "acceptTermsPrefix": "I agree to the",
+  "termsAndConditions": "Terms & Privacy Policy",
+
+  "pendingApprovalTitle": "Pending Review",
+  "pendingApprovalMessage": "Your registration request has been received. Your account is now under review by management, and you will be notified once it is approved.",
+  "pendingApprovalRefresh": "Refresh status",
+  "logoutButton": "Sign out",
+
+  "rejectedTitle": "Account Rejected",
+  "rejectedMessage": "We're sorry, your registration request was rejected by management. Please contact support for details.",
+  "suspendedTitle": "Account Suspended",
+  "suspendedMessage": "This account has been temporarily suspended by management. Please contact support for details.",
+
+  "directorNotSupportedTitle": "Sign-in unavailable",
+  "directorNotSupportedMessage": "Company director accounts are managed exclusively through the dedicated web platform and cannot sign in from the mobile app.",
+  "backToLogin": "Back to sign in",
+
+  "validationRequired": "This field is required",
+  "validationEmailInvalid": "Invalid email format",
+  "validationPasswordShort": "Password must be at least 6 characters",
+  "validationPasswordMismatch": "Passwords do not match",
+  "validationTermsRequired": "You must accept the Terms & Privacy Policy to continue",
+
+  "genericErrorTitle": "Something went wrong",
+  "networkError": "Could not connect to the server. Check your connection and try again",
+  "invalidCredentials": "Incorrect email or password",
+  "emailAlreadyRegistered": "This email is already registered",
+  "unknownError": "An unexpected error occurred, please try again",
+
+  "homeTitle": "Home",
+  "comingSoon": "This section is under construction",
+
+  "clientHomeLabel": "Home",
+  "clientCatalogLabel": "Catalog",
+  "clientOrdersLabel": "Orders",
+  "clientProfileLabel": "Profile",
+
+  "branchDashboardLabel": "Dashboard",
+  "branchInventoryLabel": "Inventory",
+  "branchInvoicesLabel": "Invoices",
+  "branchDriversLabel": "Drivers",
+
+  "driverOrdersLabel": "Orders",
+  "driverEarningsLabel": "Earnings",
+  "driverChatLabel": "Chat"
+}

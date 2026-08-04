@@ -1,0 +1,70 @@
+{
+  "@@locale": "ar",
+  "appName": "ميدلينك اليمن",
+  "@appName": {"description": "App name shown on splash and login"},
+
+  "loginTitle": "تسجيل الدخول",
+  "loginSubtitle": "أدخل بياناتك للوصول إلى حسابك",
+  "emailLabel": "البريد الإلكتروني",
+  "passwordLabel": "كلمة المرور",
+  "loginButton": "تسجيل الدخول",
+  "orDivider": "أو",
+  "continueWithGoogle": "المتابعة عبر جوجل",
+  "noAccountYet": "ليس لديك حساب؟",
+  "createAccountLink": "إنشاء حساب جديد",
+  "forgotPassword": "نسيت كلمة المرور؟",
+
+  "registerTitle": "إنشاء حساب جديد",
+  "registerSubtitle": "سجّل بياناتك، وسيتم مراجعة حسابك من قبل الإدارة",
+  "nameLabel": "الاسم الكامل",
+  "phoneLabel": "رقم الهاتف",
+  "confirmPasswordLabel": "تأكيد كلمة المرور",
+  "registerButton": "إنشاء الحساب",
+  "alreadyHaveAccount": "لديك حساب بالفعل؟",
+  "loginLink": "تسجيل الدخول",
+  "acceptTermsPrefix": "أوافق على",
+  "termsAndConditions": "الشروط وسياسة الخصوصية",
+
+  "pendingApprovalTitle": "بانتظار المراجعة",
+  "pendingApprovalMessage": "تم استلام طلب تسجيلك بنجاح. حسابك الآن قيد المراجعة من قبل الإدارة، وسيتم إشعارك فور الموافقة عليه.",
+  "pendingApprovalRefresh": "تحديث الحالة",
+  "logoutButton": "تسجيل الخروج",
+
+  "rejectedTitle": "تم رفض الحساب",
+  "rejectedMessage": "نعتذر، تم رفض طلب تسجيل حسابك من قبل الإدارة. للاستفسار، يرجى التواصل مع الدعم.",
+  "suspendedTitle": "الحساب موقوف",
+  "suspendedMessage": "تم إيقاف هذا الحساب مؤقتاً من قبل الإدارة. يرجى التواصل مع الدعم لمزيد من التفاصيل.",
+
+  "directorNotSupportedTitle": "الدخول غير متاح",
+  "directorNotSupportedMessage": "حسابات مدير الشركة العام تُدار حصراً عبر منصة الويب المخصصة، ولا يمكن الدخول بهذا الدور من تطبيق الجوال.",
+  "backToLogin": "العودة لتسجيل الدخول",
+
+  "validationRequired": "هذا الحقل مطلوب",
+  "validationEmailInvalid": "صيغة البريد الإلكتروني غير صحيحة",
+  "validationPasswordShort": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
+  "validationPasswordMismatch": "كلمتا المرور غير متطابقتين",
+  "validationTermsRequired": "يجب الموافقة على الشروط وسياسة الخصوصية للمتابعة",
+
+  "genericErrorTitle": "حدث خطأ",
+  "networkError": "تعذّر الاتصال بالخادم. تحقق من اتصالك بالإنترنت وحاول مجدداً",
+  "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+  "emailAlreadyRegistered": "هذا البريد الإلكتروني مسجّل بالفعل",
+  "unknownError": "حدث خطأ غير متوقع، حاول مرة أخرى",
+
+  "homeTitle": "الرئيسية",
+  "comingSoon": "هذا القسم قيد الإنشاء",
+
+  "clientHomeLabel": "الرئيسية",
+  "clientCatalogLabel": "الكتالوج",
+  "clientOrdersLabel": "طلباتي",
+  "clientProfileLabel": "حسابي",
+
+  "branchDashboardLabel": "لوحة التحكم",
+  "branchInventoryLabel": "المخزون",
+  "branchInvoicesLabel": "الفواتير",
+  "branchDriversLabel": "السائقون",
+
+  "driverOrdersLabel": "طلباتي",
+  "driverEarningsLabel": "أرباحي",
+  "driverChatLabel": "الدردشة"
+}
