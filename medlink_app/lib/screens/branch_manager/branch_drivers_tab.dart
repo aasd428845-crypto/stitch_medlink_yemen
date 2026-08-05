@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/user_profile.dart';
 import '../../services/branch_controller.dart';
+import '../../services/branch_service.dart';
 import '../../utils/constants.dart';
 import '../../utils/theme.dart';
+import '../../widgets/driver_rating_badge.dart';
 import '../../widgets/error_banner.dart';
 import 'create_driver_sheet.dart';
 import 'manage_driver_sheet.dart';
@@ -98,6 +100,7 @@ class BranchDriversTab extends StatelessWidget {
                   driver: driver,
                   isBusy: branch.isDriverBusy(driver.id),
                   activeCount: branch.activeOrderCountFor(driver.id),
+                  branchService: context.read<BranchService>(),
                   onTap: () => _openManageSheet(context, driver),
                 ),
           ],
@@ -114,40 +117,65 @@ class BranchDriversTab extends StatelessWidget {
   }
 }
 
-class _DriverCard extends StatelessWidget {
+class _DriverCard extends StatefulWidget {
   const _DriverCard({
     required this.driver,
     required this.isBusy,
     required this.activeCount,
+    required this.branchService,
     required this.onTap,
   });
 
   final UserProfile driver;
   final bool isBusy;
   final int activeCount;
+  final BranchService branchService;
   final VoidCallback onTap;
+
+  @override
+  State<_DriverCard> createState() => _DriverCardState();
+}
+
+class _DriverCardState extends State<_DriverCard> {
+  ({double? average, int count})? _ratingSummary;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRating();
+  }
+
+  Future<void> _loadRating() async {
+    try {
+      final summary =
+          await widget.branchService.fetchDriverRatingSummary(widget.driver.id);
+      if (mounted) setState(() => _ratingSummary = summary);
+    } catch (_) {
+      // Non-critical — badge silently absent on failure
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isActive = driver.accountStatus == AccountStatus.active;
+    final isActive = widget.driver.accountStatus == AccountStatus.active;
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.xs),
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
         borderRadius: BorderRadius.circular(AppRadius.md),
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Row(
             children: [
               CircleAvatar(
-                backgroundColor: isBusy
+                backgroundColor: widget.isBusy
                     ? AppColors.warningContainer
                     : AppColors.successContainer,
                 child: Icon(
                   Icons.local_shipping_rounded,
-                  color: isBusy ? AppColors.warning : AppColors.success,
+                  color: widget.isBusy ? AppColors.warning : AppColors.success,
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -156,18 +184,25 @@ class _DriverCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      driver.name?.isNotEmpty == true
-                          ? driver.name!
-                          : driver.email,
+                      widget.driver.name?.isNotEmpty == true
+                          ? widget.driver.name!
+                          : widget.driver.email,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                     ),
-                    if (driver.phone?.isNotEmpty == true)
+                    if (widget.driver.phone?.isNotEmpty == true)
                       Text(
-                        driver.phone!,
+                        widget.driver.phone!,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
+                    const SizedBox(height: 4),
+                    // Rating badge
+                    DriverRatingBadge(
+                      average: _ratingSummary?.average,
+                      count: _ratingSummary?.count ?? 0,
+                      noRatingsLabel: l10n.noRatingsYet,
+                    ),
                   ],
                 ),
               ),
@@ -179,17 +214,21 @@ class _DriverCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.sm, vertical: 2),
                     decoration: BoxDecoration(
-                      color: isBusy
+                      color: widget.isBusy
                           ? AppColors.warningContainer
                           : AppColors.successContainer,
                       borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
                     child: Text(
-                      isBusy ? l10n.branchDriverBusy : l10n.branchDriverAvailable,
+                      widget.isBusy
+                          ? l10n.branchDriverBusy
+                          : l10n.branchDriverAvailable,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 11,
-                        color: isBusy ? AppColors.warning : AppColors.success,
+                        color: widget.isBusy
+                            ? AppColors.warning
+                            : AppColors.success,
                       ),
                     ),
                   ),
@@ -214,7 +253,7 @@ class _DriverCard extends StatelessWidget {
                     ),
                   const SizedBox(height: 2),
                   Text(
-                    '$activeCount ${l10n.branchDriverActiveOrders}',
+                    '${ widget.activeCount} ${l10n.branchDriverActiveOrders}',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],

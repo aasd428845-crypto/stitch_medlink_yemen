@@ -6,6 +6,7 @@ import '../../models/order.dart';
 import '../../services/order_service.dart';
 import '../../utils/theme.dart';
 import '../../widgets/order_status_chip.dart';
+import '../../widgets/rate_driver_sheet.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   const OrderDetailScreen({super.key, required this.orderId});
@@ -21,6 +22,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   bool _isLoading = true;
   String? _error;
 
+  /// null = not yet loaded; Map = rating data; empty Map = no rating yet.
+  Map<String, dynamic>? _existingRating;
+  bool _ratingLoaded = false;
+
   @override
   void initState() {
     super.initState();
@@ -35,11 +40,59 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     try {
       final service = context.read<OrderService>();
       _order = await service.fetchOrderDetails(widget.orderId);
+      // Also load rating state if delivered
+      if (_order?.status == 'delivered') {
+        await _loadRating();
+      }
     } catch (e) {
       _error = e.toString();
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  Future<void> _loadRating() async {
+    try {
+      final service = context.read<OrderService>();
+      final rating = await service.fetchRatingForOrder(widget.orderId);
+      if (mounted) {
+        setState(() {
+          _existingRating = rating ?? {};
+          _ratingLoaded = true;
+        });
+      }
+    } catch (_) {
+      // Non-critical — silently ignore
+      if (mounted) setState(() => _ratingLoaded = true);
+    }
+  }
+
+  void _openRatingSheet() {
+    final order = _order;
+    if (order == null) return;
+    // Resolve driverId from the order model; skip if absent
+    final driverId = order.assignedDriverId;
+    if (driverId == null) return;
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.md)),
+      ),
+      builder: (_) => Provider.value(
+        value: context.read<OrderService>(),
+        child: RateDriverSheet(
+          orderId: order.id,
+          driverId: driverId,
+          onRated: (rating, comment) {
+            setState(() {
+              _existingRating = {'rating': rating, 'comment': comment};
+            });
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -76,20 +129,37 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 )
               : _order == null
                   ? Center(child: Text(l10n.noOrdersFound))
-                  : _OrderContent(order: _order!, l10n: l10n),
+                  : _OrderContent(
+                      order: _order!,
+                      l10n: l10n,
+                      existingRating: _existingRating,
+                      ratingLoaded: _ratingLoaded,
+                      onRatePressed: _openRatingSheet,
+                    ),
     );
   }
 }
 
 class _OrderContent extends StatelessWidget {
-  const _OrderContent({required this.order, required this.l10n});
+  const _OrderContent({
+    required this.order,
+    required this.l10n,
+    required this.existingRating,
+    required this.ratingLoaded,
+    required this.onRatePressed,
+  });
 
   final OrderModel order;
   final AppLocalizations l10n;
+  final Map<String, dynamic>? existingRating;
+  final bool ratingLoaded;
+  final VoidCallback onRatePressed;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDelivered = order.status == 'delivered';
+    final hasRating = existingRating != null && existingRating!.isNotEmpty;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -126,6 +196,19 @@ class _OrderContent extends StatelessWidget {
           ),
 
           const SizedBox(height: AppSpacing.md),
+
+          // ── Rating section (delivered orders only) ───────────────────────
+          if (isDelivered && ratingLoaded) ...[
+            if (hasRating)
+              _RatingDisplay(
+                rating: existingRating!['rating'] as int,
+                comment: existingRating!['comment'] as String?,
+                l10n: l10n,
+              )
+            else
+              _RateDriverButton(l10n: l10n, onPressed: onRatePressed),
+            const SizedBox(height: AppSpacing.md),
+          ],
 
           // Address Card
           if (order.deliveryAddress != null) ...[
@@ -272,6 +355,89 @@ class _OrderContent extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ── Rating display (read-only) ───────────────────────────────────────────────
+
+class _RatingDisplay extends StatelessWidget {
+  const _RatingDisplay({
+    required this.rating,
+    required this.comment,
+    required this.l10n,
+  });
+
+  final int rating;
+  final String? comment;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      color: AppColors.successContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.star_rounded,
+                    color: AppColors.warning, size: 20),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  l10n.yourRatingLabel,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Row(
+              children: List.generate(5, (i) {
+                return Icon(
+                  i < rating ? Icons.star_rounded : Icons.star_outline_rounded,
+                  size: 22,
+                  color: AppColors.warning,
+                );
+              }),
+            ),
+            if (comment != null && comment!.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                comment!,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Rate driver button ───────────────────────────────────────────────────────
+
+class _RateDriverButton extends StatelessWidget {
+  const _RateDriverButton({required this.l10n, required this.onPressed});
+
+  final AppLocalizations l10n;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        icon: const Icon(Icons.star_outline_rounded),
+        label: Text(l10n.rateDriverTitle),
+        onPressed: onPressed,
       ),
     );
   }

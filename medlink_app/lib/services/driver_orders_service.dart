@@ -83,6 +83,31 @@ class DriverOrdersService {
     }
   }
 
+  // ── Ratings ─────────────────────────────────────────────────────────────────
+
+  /// Returns the current driver's average rating and total review count.
+  Future<({double? average, int count})> fetchMyRatingSummary() async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return (average: null, count: 0);
+
+    try {
+      final rows = await _client
+          .from('driver_ratings')
+          .select('rating')
+          .eq('driver_id', userId);
+      _logSuccess('fetchMyRatingSummary');
+      final list = rows as List;
+      if (list.isEmpty) return (average: null, count: 0);
+      final sum =
+          list.fold<int>(0, (s, r) => s + (r['rating'] as int));
+      final avg = sum / list.length;
+      return (average: avg, count: list.length);
+    } catch (e, st) {
+      _logError('fetchMyRatingSummary', e, st);
+      rethrow;
+    }
+  }
+
   // ── Earnings ────────────────────────────────────────────────────────────────
 
   /// Fetches driver commissions for a given calendar month.

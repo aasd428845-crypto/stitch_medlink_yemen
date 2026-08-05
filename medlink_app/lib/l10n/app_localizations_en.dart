@@ -622,4 +622,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get driverStatusPending => 'Pending Review';
+
+  @override
+  String get rateDriverTitle => 'Rate Driver';
+
+  @override
+  String get rateDriverPrompt => 'How was your experience with the driver?';
+
+  @override
+  String get rateDriverCommentHint => 'Write your comment (optional)';
+
+  @override
+  String get rateDriverSubmit => 'Submit Rating';
+
+  @override
+  String get rateDriverSuccess => 'Thank you for your rating';
+
+  @override
+  String get rateDriverAlreadyRated => 'This order has already been rated';
+
+  @override
+  String get ratingAverageLabel => 'Average Rating';
+
+  @override
+  String get ratingCountLabel => 'Total Ratings';
+
+  @override
+  String get noRatingsYet => 'No ratings yet';
+
+  @override
+  String get yourRatingLabel => 'Your Rating';
+
+  @override
+  String get helpSupportTitle => 'Help & Support';
+
+  @override
+  String get helpFaqSection => 'Frequently Asked Questions';
+
+  @override
+  String get helpContactSection => 'Contact Us';
+
+  @override
+  String get helpCallUs => 'Call Us';
+
+  @override
+  String get helpWhatsapp => 'Message us on WhatsApp';
+
+  @override
+  String get helpEmailUs => 'Email Us';
 }

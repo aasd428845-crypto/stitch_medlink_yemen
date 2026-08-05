@@ -19,7 +19,11 @@ class _DriverEarningsTabState extends State<DriverEarningsTab> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) context.read<DriverOrdersController>().loadEarnings();
+      if (mounted) {
+        final ctrl = context.read<DriverOrdersController>();
+        ctrl.loadEarnings();
+        ctrl.loadMyRatingSummary();
+      }
     });
   }
 
@@ -64,6 +68,16 @@ class _DriverEarningsTabState extends State<DriverEarningsTab> {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
+
+          // ── Rating summary card ──────────────────────────────────────────
+          if (!ctrl.isLoadingRating) ...[
+            _RatingSummaryCard(
+              average: ctrl.ratingAverage,
+              count: ctrl.ratingCount,
+              l10n: l10n,
+            ),
+            const SizedBox(height: AppSpacing.md),
+          ],
 
           // ── Error ────────────────────────────────────────────────────────
           if (ctrl.earningsError != null) ...[
@@ -141,6 +155,78 @@ class _DriverEarningsTabState extends State<DriverEarningsTab> {
             ],
           ],
         ],
+      ),
+    );
+  }
+}
+
+// ── Rating summary card ────────────────────────────────────────────────────────
+
+class _RatingSummaryCard extends StatelessWidget {
+  const _RatingSummaryCard({
+    required this.average,
+    required this.count,
+    required this.l10n,
+  });
+
+  final double? average;
+  final int count;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.star_rounded, color: AppColors.warning, size: 28),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.ratingAverageLabel,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    count == 0
+                        ? l10n.noRatingsYet
+                        : '${average!.toStringAsFixed(1)} / 5.0',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.warning,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '$count',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primary,
+                  ),
+                ),
+                Text(
+                  l10n.ratingCountLabel,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -223,4 +223,51 @@ class OrderService {
       rethrow;
     }
   }
+
+  // ── Driver Ratings ─────────────────────────────────────────────────────────
+
+  /// Submits a driver rating for a delivered order.
+  /// [client_id] is derived from the current session — never passed from UI.
+  /// Throws if the order has already been rated (unique constraint on order_id).
+  Future<void> submitDriverRating({
+    required String orderId,
+    required String driverId,
+    required int rating,
+    String? comment,
+  }) async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) {
+      throw const AuthException('المستخدم غير مسجل الدخول');
+    }
+
+    try {
+      await _client.from('driver_ratings').insert({
+        'order_id': orderId,
+        'driver_id': driverId,
+        'client_id': userId,
+        'rating': rating,
+        'comment': comment,
+      });
+      _logSuccess('submitDriverRating');
+    } catch (e, st) {
+      _logError('submitDriverRating', e, st);
+      rethrow;
+    }
+  }
+
+  /// Returns the existing rating row for [orderId], or null if not yet rated.
+  Future<Map<String, dynamic>?> fetchRatingForOrder(String orderId) async {
+    try {
+      final row = await _client
+          .from('driver_ratings')
+          .select('rating, comment')
+          .eq('order_id', orderId)
+          .maybeSingle();
+      _logSuccess('fetchRatingForOrder');
+      return row;
+    } catch (e, st) {
+      _logError('fetchRatingForOrder', e, st);
+      rethrow;
+    }
+  }
 }

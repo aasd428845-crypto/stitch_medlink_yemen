@@ -227,5 +227,22 @@
   "driverResetPasswordConfirm": "تأكيد كلمة المرور الجديدة",
   "driverStatusActive": "نشط",
   "driverStatusSuspended": "موقوف",
-  "driverStatusPending": "بانتظار المراجعة"
+  "driverStatusPending": "بانتظار المراجعة",
+
+  "rateDriverTitle": "قيّم السائق",
+  "rateDriverPrompt": "كيف كانت تجربتك مع السائق؟",
+  "rateDriverCommentHint": "اكتب تعليقك (اختياري)",
+  "rateDriverSubmit": "إرسال التقييم",
+  "rateDriverSuccess": "شكراً لتقييمك",
+  "rateDriverAlreadyRated": "تم تقييم هذا الطلب مسبقاً",
+  "ratingAverageLabel": "متوسط التقييم",
+  "ratingCountLabel": "عدد التقييمات",
+  "noRatingsYet": "لا توجد تقييمات بعد",
+  "yourRatingLabel": "تقييمك",
+  "helpSupportTitle": "المساعدة والدعم",
+  "helpFaqSection": "الأسئلة الشائعة",
+  "helpContactSection": "تواصل معنا",
+  "helpCallUs": "اتصل بنا",
+  "helpWhatsapp": "راسلنا عبر واتساب",
+  "helpEmailUs": "راسلنا عبر البريد الإلكتروني"
 }

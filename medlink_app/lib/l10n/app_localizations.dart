@@ -1303,6 +1303,102 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'بانتظار المراجعة'**
   String get driverStatusPending;
+
+  /// No description provided for @rateDriverTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيّم السائق'**
+  String get rateDriverTitle;
+
+  /// No description provided for @rateDriverPrompt.
+  ///
+  /// In ar, this message translates to:
+  /// **'كيف كانت تجربتك مع السائق؟'**
+  String get rateDriverPrompt;
+
+  /// No description provided for @rateDriverCommentHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب تعليقك (اختياري)'**
+  String get rateDriverCommentHint;
+
+  /// No description provided for @rateDriverSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال التقييم'**
+  String get rateDriverSubmit;
+
+  /// No description provided for @rateDriverSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'شكراً لتقييمك'**
+  String get rateDriverSuccess;
+
+  /// No description provided for @rateDriverAlreadyRated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تقييم هذا الطلب مسبقاً'**
+  String get rateDriverAlreadyRated;
+
+  /// No description provided for @ratingAverageLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوسط التقييم'**
+  String get ratingAverageLabel;
+
+  /// No description provided for @ratingCountLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد التقييمات'**
+  String get ratingCountLabel;
+
+  /// No description provided for @noRatingsYet.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد تقييمات بعد'**
+  String get noRatingsYet;
+
+  /// No description provided for @yourRatingLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييمك'**
+  String get yourRatingLabel;
+
+  /// No description provided for @helpSupportTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المساعدة والدعم'**
+  String get helpSupportTitle;
+
+  /// No description provided for @helpFaqSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأسئلة الشائعة'**
+  String get helpFaqSection;
+
+  /// No description provided for @helpContactSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل معنا'**
+  String get helpContactSection;
+
+  /// No description provided for @helpCallUs.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصل بنا'**
+  String get helpCallUs;
+
+  /// No description provided for @helpWhatsapp.
+  ///
+  /// In ar, this message translates to:
+  /// **'راسلنا عبر واتساب'**
+  String get helpWhatsapp;
+
+  /// No description provided for @helpEmailUs.
+  ///
+  /// In ar, this message translates to:
+  /// **'راسلنا عبر البريد الإلكتروني'**
+  String get helpEmailUs;
 }
 
 class _AppLocalizationsDelegate

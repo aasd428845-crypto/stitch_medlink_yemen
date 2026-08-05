@@ -22,6 +22,7 @@ import '../models/promotional_offer.dart';
 import '../screens/client/offer_detail_screen.dart';
 import '../screens/driver/driver_home_shell.dart';
 import '../screens/driver/driver_order_detail_screen.dart';
+import '../screens/shared/help_support_screen.dart';
 import '../screens/shared/notifications_screen.dart';
 import '../screens/shared/splash_screen.dart';
 import '../utils/theme.dart';
@@ -132,6 +133,15 @@ GoRouter buildRouter(AuthController authController) {
       GoRoute(
         path: '/notifications',
         builder: (context, state) => const NotificationsScreen(),
+      ),
+
+      // ── Help & Support (shared across all roles) ─────────────────────────
+      GoRoute(
+        path: '/help',
+        builder: (context, state) {
+          final role = state.extra as UserRole? ?? UserRole.client;
+          return HelpSupportScreen(role: role);
+        },
       ),
 
       // ── Branch manager ───────────────────────────────────────────────────

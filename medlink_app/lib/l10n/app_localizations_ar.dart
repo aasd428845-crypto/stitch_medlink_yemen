@@ -622,4 +622,52 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get driverStatusPending => 'بانتظار المراجعة';
+
+  @override
+  String get rateDriverTitle => 'قيّم السائق';
+
+  @override
+  String get rateDriverPrompt => 'كيف كانت تجربتك مع السائق؟';
+
+  @override
+  String get rateDriverCommentHint => 'اكتب تعليقك (اختياري)';
+
+  @override
+  String get rateDriverSubmit => 'إرسال التقييم';
+
+  @override
+  String get rateDriverSuccess => 'شكراً لتقييمك';
+
+  @override
+  String get rateDriverAlreadyRated => 'تم تقييم هذا الطلب مسبقاً';
+
+  @override
+  String get ratingAverageLabel => 'متوسط التقييم';
+
+  @override
+  String get ratingCountLabel => 'عدد التقييمات';
+
+  @override
+  String get noRatingsYet => 'لا توجد تقييمات بعد';
+
+  @override
+  String get yourRatingLabel => 'تقييمك';
+
+  @override
+  String get helpSupportTitle => 'المساعدة والدعم';
+
+  @override
+  String get helpFaqSection => 'الأسئلة الشائعة';
+
+  @override
+  String get helpContactSection => 'تواصل معنا';
+
+  @override
+  String get helpCallUs => 'اتصل بنا';
+
+  @override
+  String get helpWhatsapp => 'راسلنا عبر واتساب';
+
+  @override
+  String get helpEmailUs => 'راسلنا عبر البريد الإلكتروني';
 }

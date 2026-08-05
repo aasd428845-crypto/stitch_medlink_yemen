@@ -75,6 +75,30 @@ class BranchService {
     }
   }
 
+  // ── Driver Ratings ─────────────────────────────────────────────────────────
+
+  /// Returns average rating and total count for [driverId].
+  /// Returns `{average: null, count: 0}` when no ratings exist yet.
+  Future<({double? average, int count})> fetchDriverRatingSummary(
+      String driverId) async {
+    try {
+      final rows = await _client
+          .from('driver_ratings')
+          .select('rating')
+          .eq('driver_id', driverId);
+      _logSuccess('fetchDriverRatingSummary');
+      final list = rows as List;
+      if (list.isEmpty) return (average: null, count: 0);
+      final sum =
+          list.fold<int>(0, (s, r) => s + (r['rating'] as int));
+      final avg = sum / list.length;
+      return (average: avg, count: list.length);
+    } catch (e, st) {
+      _logError('fetchDriverRatingSummary', e, st);
+      rethrow;
+    }
+  }
+
   /// Assigns [driverId] to [orderId] and advances its status to `assigned`.
   Future<void> assignDriverToOrder(String orderId, String driverId) async {
     try {

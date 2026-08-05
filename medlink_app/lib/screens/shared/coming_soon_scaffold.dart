@@ -6,6 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../services/auth_controller.dart';
 import '../../services/notification_controller.dart';
 import '../../utils/theme.dart';
+import '../../utils/constants.dart';
 
 /// Placeholder body used by role home screens for sections not yet built in
 /// this batch. Each role screen still owns its real bottom navigation so the
@@ -39,6 +40,7 @@ class ComingSoonBody extends StatelessWidget {
 }
 
 /// AppBar actions shared across all role home shells:
+/// - Help icon → /help
 /// - Bell icon with unread badge → /notifications
 /// - Logout
 class RoleAppBarActions extends StatelessWidget {
@@ -47,11 +49,20 @@ class RoleAppBarActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final unread = context.watch<NotificationController>().unreadCount;
+    final l10n = AppLocalizations.of(context)!;
+    final authCtrl = context.read<AuthController>();
+    final role = authCtrl.profile?.role ?? UserRole.client;
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
-          tooltip: AppLocalizations.of(context)!.notificationsTitle,
+          tooltip: l10n.helpSupportTitle,
+          icon: const Icon(Icons.help_outline_rounded),
+          onPressed: () => context.push('/help', extra: role),
+        ),
+        IconButton(
+          tooltip: l10n.notificationsTitle,
           icon: Badge(
             isLabelVisible: unread > 0,
             label: Text(
@@ -64,7 +75,7 @@ class RoleAppBarActions extends StatelessWidget {
         ),
         IconButton(
           icon: const Icon(Icons.logout),
-          onPressed: () => context.read<AuthController>().signOut(),
+          onPressed: () => authCtrl.signOut(),
         ),
       ],
     );

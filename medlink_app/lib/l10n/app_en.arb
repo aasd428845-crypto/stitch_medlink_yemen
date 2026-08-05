@@ -227,5 +227,22 @@
   "driverResetPasswordConfirm": "Confirm New Password",
   "driverStatusActive": "Active",
   "driverStatusSuspended": "Suspended",
-  "driverStatusPending": "Pending Review"
+  "driverStatusPending": "Pending Review",
+
+  "rateDriverTitle": "Rate Driver",
+  "rateDriverPrompt": "How was your experience with the driver?",
+  "rateDriverCommentHint": "Write your comment (optional)",
+  "rateDriverSubmit": "Submit Rating",
+  "rateDriverSuccess": "Thank you for your rating",
+  "rateDriverAlreadyRated": "This order has already been rated",
+  "ratingAverageLabel": "Average Rating",
+  "ratingCountLabel": "Total Ratings",
+  "noRatingsYet": "No ratings yet",
+  "yourRatingLabel": "Your Rating",
+  "helpSupportTitle": "Help & Support",
+  "helpFaqSection": "Frequently Asked Questions",
+  "helpContactSection": "Contact Us",
+  "helpCallUs": "Call Us",
+  "helpWhatsapp": "Message us on WhatsApp",
+  "helpEmailUs": "Email Us"
 }

@@ -31,6 +31,16 @@ class DriverOrdersController extends ChangeNotifier {
     return _orders.where((o) => o.status == _orderFilter).toList();
   }
 
+  // ── Rating summary state ─────────────────────────────────────────────────────
+
+  double? _ratingAverage;
+  int _ratingCount = 0;
+  bool _isLoadingRating = false;
+
+  double? get ratingAverage => _ratingAverage;
+  int get ratingCount => _ratingCount;
+  bool get isLoadingRating => _isLoadingRating;
+
   // ── Earnings state ───────────────────────────────────────────────────────────
 
   List<DriverCommission> _earnings = [];
@@ -94,6 +104,23 @@ class DriverOrdersController extends ChangeNotifier {
       _ordersError = e.toString();
       notifyListeners();
       return false;
+    }
+  }
+
+  // ── Rating actions ───────────────────────────────────────────────────────────
+
+  Future<void> loadMyRatingSummary() async {
+    _isLoadingRating = true;
+    notifyListeners();
+    try {
+      final result = await _service.fetchMyRatingSummary();
+      _ratingAverage = result.average;
+      _ratingCount = result.count;
+    } catch (_) {
+      // Non-critical — silently fail; badge simply won't show
+    } finally {
+      _isLoadingRating = false;
+      notifyListeners();
     }
   }
 
