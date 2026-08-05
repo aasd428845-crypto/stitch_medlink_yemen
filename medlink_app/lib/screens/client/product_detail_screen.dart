@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/product.dart';
+import '../../services/cart_controller.dart';
 import '../../services/catalog_service.dart';
 import '../../utils/theme.dart';
 
@@ -192,7 +193,7 @@ class _ProductBody extends StatelessWidget {
             ),
             child: ElevatedButton.icon(
               onPressed: () {
-                // Cart logic comes in Phase 3
+                context.read<CartController>().addItem(product);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(l10n.addedToCart),

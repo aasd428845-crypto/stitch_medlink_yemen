@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../services/auth_controller.dart';
+import '../../services/cart_controller.dart';
 import '../../services/catalog_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/offer_banner_card.dart';
@@ -226,7 +227,7 @@ class _HomeTabState extends State<HomeTab> {
                       onTap: () =>
                           context.push('/client/product/${product.id}'),
                       onAdd: () {
-                        // Cart logic comes in Phase 3 — show snackbar for now
+                        context.read<CartController>().addItem(product);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(l10n.addedToCart),

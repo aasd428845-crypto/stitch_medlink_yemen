@@ -1,16 +1,11 @@
 ---
-name: Flutter/Dart pubspec gotchas
-description: Two recurring pubspec/analyzer issues when scaffolding a fresh Flutter app with localization and freezed models.
+name: Flutter/Dart pubspec and build-cache gotchas
+description: intl version pinning by flutter_localizations, freezed @JsonKey analyzer override, and a stale-build-cache compile failure signature.
 ---
 
-1. **intl version pin.** `flutter_localizations` (from the Flutter SDK) pins an exact `intl` version (e.g. `0.20.2` on Flutter 3.32). If `pubspec.yaml` declares an older `intl` constraint (e.g. `^0.19.0`), `flutter pub get` fails version solving. Fix: match whatever version `flutter pub get`'s error message names, don't guess.
-
-2. **freezed + `@JsonKey` on constructor params.** Using `@JsonKey(name: '...')` directly on a `@freezed` class's constructor parameters (the common pattern for snake_case DB column mapping) triggers `invalid_annotation_target` warnings from the analyzer — this is a known/expected freezed limitation, not a real bug. Suppress it project-wide via `analysis_options.yaml`:
-   ```yaml
-   analyzer:
-     errors:
-       invalid_annotation_target: ignore
-   ```
-   Also add a `build.yaml` with `json_serializable: options: explicit_to_json: true` if models nest other `@freezed`/`@JsonSerializable` types.
-
-**Why:** both cost a full debug cycle if hit blind; keeping this here means matching pubspec/analyzer setup on the next Flutter scaffold is instant instead of trial-and-error.
+- `flutter_localizations` pins an exact `intl` version per Flutter SDK release — pubspec must match exactly or `pub get` fails.
+- `freezed` + `@JsonKey` on constructor params triggers harmless `invalid_annotation_target` warnings; suppress via `analysis_options.yaml`'s `analyzer.errors.invalid_annotation_target: ignore` plus a `build.yaml` with `json_serializable.explicit_to_json: true`.
+- **Stale build cache compile failure**: if `flutter run -d web-server` fails with errors like `'Matrix4' isn't a type`, `Method not found: 'DateSymbols'`, or `Unsupported invalid type InvalidType` deep in `flutter`/`flutter_localizations`/`vector_math` package files (not the app's own code), this is a corrupted/stale `.dart_tool`/`build` cache, not a real dependency conflict.
+  **Why:** happens after long-idle workspaces resume or after unrelated dependency edits; the DDC/frontend_server cache gets out of sync with the resolved package versions.
+  **How to apply:** run `flutter clean && rm -rf .dart_tool build && flutter pub get`, then restart the workflow. Do not try to fix it by pinning/downgrading packages — the versions are usually fine.
+</content>

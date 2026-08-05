@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../services/cart_controller.dart';
 import '../../services/catalog_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/product_card.dart';
@@ -184,6 +185,7 @@ class _CatalogTabState extends State<CatalogTab> {
             product: product,
             onTap: () => context.push('/client/product/${product.id}'),
             onAdd: () {
+              context.read<CartController>().addItem(product);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(l10n.addedToCart),

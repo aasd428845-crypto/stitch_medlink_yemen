@@ -1,2 +1,2 @@
 - [Flutter has no artifact type](flutter-non-artifact-workflow.md) — Flutter apps must run as a plain (non-artifact) workflow; they never appear in the artifact Preview dropdown.
-- [Flutter/Dart pubspec gotchas](flutter-pubspec-gotchas.md) — intl version pinned by flutter_localizations; freezed `@JsonKey` on constructor params needs an analyzer override.
+- [Flutter/Dart pubspec gotchas](flutter-pubspec-gotchas.md) — intl/freezed version quirks; also covers a stale-build-cache compile failure (`Matrix4 isn't a type` etc.) fixed by `flutter clean`.

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../../services/auth_controller.dart';
 import '../../utils/theme.dart';
+import '../shared/coming_soon_scaffold.dart';
 import 'driver_earnings_tab.dart';
 import 'driver_orders_tab.dart';
 
@@ -29,12 +28,7 @@ class _DriverHomeShellState extends State<DriverHomeShell> {
     return Scaffold(
       appBar: AppBar(
         title: Text(tabs[_index].$1),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => context.read<AuthController>().signOut(),
-          ),
-        ],
+        actions: const [RoleAppBarActions()],
       ),
       body: IndexedStack(
         index: _index,
