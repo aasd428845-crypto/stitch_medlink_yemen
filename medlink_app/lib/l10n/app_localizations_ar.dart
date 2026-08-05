@@ -254,170 +254,106 @@ class AppLocalizationsAr extends AppLocalizations {
   String get branchNoInvoices => 'لا توجد فواتير مكتملة بعد';
 
   @override
-  String get branchNoDrivers => 'لا يوجد سائقون في هذا الفرع بعد';
+  String get branchNoOrders => 'لا توجد طلبات واردة';
 
   @override
   String get branchOrderDetailTitle => 'تفاصيل الطلب';
 
   @override
-  String get branchChangeStatus => 'تحديث الحالة';
+  String get branchChangeStatus => 'تغيير الحالة';
 
   @override
-  String get branchStatusUpdateConfirm => 'هل أنت متأكد من تنفيذ هذا الإجراء؟';
+  String get branchStatusUpdateConfirm => 'تأكيد تغيير الحالة';
 
   @override
-  String get driverOrdersLabel => 'طلباتي';
+  String get branchNoDrivers => 'لا يوجد سائقون في هذا الفرع بعد';
 
   @override
-  String get driverEarningsLabel => 'أرباحي';
+  String get homeGreeting => 'مرحباً';
 
   @override
-  String get driverChatLabel => 'الدردشة';
-
-  @override
-  String get driverCreateTitle => 'إضافة سائق جديد';
-
-  @override
-  String get driverCreateButton => 'إنشاء حساب السائق';
-
-  @override
-  String get driverTempPasswordLabel => 'كلمة المرور المؤقتة';
-
-  @override
-  String get driverTempPasswordHint => 'ستشاركها مع السائق';
-
-  @override
-  String get driverCreatedSuccess => 'تم إنشاء حساب السائق بنجاح';
-
-  @override
-  String get driverCreatedMessage => 'شارك بيانات الدخول التالية مع السائق:';
-
-  @override
-  String get driverManageTitle => 'إدارة السائق';
-
-  @override
-  String get driverActivate => 'تفعيل الحساب';
-
-  @override
-  String get driverSuspend => 'إيقاف الحساب';
-
-  @override
-  String get driverResetPassword => 'إعادة تعيين كلمة المرور';
-
-  @override
-  String get driverResetPasswordNew => 'كلمة المرور الجديدة';
-
-  @override
-  String get driverResetPasswordConfirm => 'تأكيد كلمة المرور الجديدة';
-
-  @override
-  String get driverStatusActive => 'نشط';
-
-  @override
-  String get driverStatusSuspended => 'موقوف';
-
-  @override
-  String get driverStatusPending => 'قيد المراجعة';
-
-  @override
-  String get driverActionSuccess => 'تم تنفيذ الإجراء بنجاح';
-
-  @override
-  String get changePasswordTitle => 'تغيير كلمة المرور';
-
-  @override
-  String get changePasswordSubtitle =>
-      'يجب عليك تعيين كلمة مرور جديدة قبل المتابعة';
-
-  @override
-  String get newPasswordLabel => 'كلمة المرور الجديدة';
-
-  @override
-  String get confirmNewPasswordLabel => 'تأكيد كلمة المرور الجديدة';
-
-  @override
-  String get changePasswordButton => 'تغيير كلمة المرور';
-
-  @override
-  String get catalogTitle => 'كتالوج المنتجات';
-
-  @override
-  String get searchHint => 'ابحث عن منتج...';
-
-  @override
-  String get allCategories => 'الكل';
-
-  @override
-  String get noProductsFound => 'لا توجد منتجات مطابقة للبحث';
-
-  @override
-  String get noOffersFound => 'لا توجد عروض متاحة حالياً';
-
-  @override
-  String get productDetails => 'تفاصيل المنتج';
-
-  @override
-  String get unitPrice => 'السعر للوحدة';
-
-  @override
-  String get manufacturer => 'الشركة المصنّعة';
-
-  @override
-  String get dosageForm => 'الشكل الدوائي';
-
-  @override
-  String get unit => 'الوحدة';
-
-  @override
-  String get category => 'الفئة';
-
-  @override
-  String get addToCart => 'أضف إلى السلة';
-
-  @override
-  String get addedToCart => 'تمت الإضافة إلى السلة';
+  String get homeSubtitle => 'ما الذي تحتاجه اليوم؟';
 
   @override
   String get offersSection => 'العروض الترويجية';
 
   @override
+  String get noOffersFound => 'لا توجد عروض متاحة حالياً';
+
+  @override
   String get viewOffer => 'عرض التفاصيل';
 
   @override
-  String get homeGreeting => 'أهلاً،';
+  String get categoriesSection => 'التصفح حسب الفئة';
 
   @override
-  String get homeSubtitle => 'اكتشف منتجاتنا وعروضنا';
+  String get featuredProducts => 'منتجات مميزة';
 
   @override
-  String get quickOrderSection => 'طلب سريع';
+  String get catalogTitle => 'الكتالوج';
 
   @override
-  String get exploreCategories => 'تصفّح الفئات';
+  String get searchHint => 'ابحث عن دواء أو منتج...';
 
   @override
-  String get retry => 'إعادة المحاولة';
+  String get filterByCategory => 'تصفية حسب الفئة';
 
   @override
-  String get cartTitle => 'سلة الشراء';
+  String get allCategories => 'الكل';
 
   @override
-  String get emptyCart => 'السلة فارغة حالياً';
+  String get noProductsFound => 'لا توجد منتجات مطابقة';
 
   @override
-  String get subtotal => 'الإجمالي الفرعي';
+  String get productDetailTitle => 'تفاصيل المنتج';
 
   @override
-  String get total => 'المجموع الكلي';
+  String get addToCart => 'أضف إلى السلة';
 
   @override
-  String get freeDelivery => 'التوصيل مجاني 100%';
+  String get addedToCart => 'تم إضافته إلى السلة';
 
   @override
-  String get proceedToCheckout => 'متابعة الطلب';
+  String get outOfStock => 'غير متوفر';
 
   @override
-  String get autoBonusBadge => '🎁 بونص تلقائي';
+  String get inStock => 'متوفر';
+
+  @override
+  String get stockQuantity => 'الكمية المتوفرة';
+
+  @override
+  String get bonusTag => 'هدية';
+
+  @override
+  String get productCategory => 'الفئة';
+
+  @override
+  String get productManufacturer => 'الشركة المصنعة';
+
+  @override
+  String get productDosageForm => 'الشكل الدوائي';
+
+  @override
+  String get productUnitPrice => 'سعر الوحدة';
+
+  @override
+  String get cartTitle => 'سلة المشتريات';
+
+  @override
+  String get cartEmpty => 'السلة فارغة';
+
+  @override
+  String get cartTotal => 'الإجمالي';
+
+  @override
+  String get cartItemCount => 'عدد الأصناف';
+
+  @override
+  String get proceedToCheckout => 'المتابعة للطلب';
+
+  @override
+  String get removeFromCart => 'حذف';
 
   @override
   String get clearCart => 'تفريغ السلة';
@@ -555,4 +491,135 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get driverUpdateError => 'فشل تحديث الحالة، حاول مجدداً';
+
+  @override
+  String get notificationsTitle => 'التنبيهات';
+
+  @override
+  String get notificationsMarkAllRead => 'تعليم الكل مقروءاً';
+
+  @override
+  String get notificationsEmpty => 'لا توجد تنبيهات حتى الآن';
+
+  @override
+  String get offerDetailTitle => 'تفاصيل العرض';
+
+  @override
+  String get offerValidFrom => 'يبدأ من';
+
+  @override
+  String get offerValidUntil => 'ينتهي في';
+
+  @override
+  String get offerGovernorate => 'المحافظة المستهدفة';
+
+  @override
+  String get changePasswordTitle => 'تغيير كلمة المرور';
+
+  @override
+  String get changePasswordSubtitle =>
+      'يجب عليك تغيير كلمة المرور المؤقتة قبل الاستمرار';
+
+  @override
+  String get newPasswordLabel => 'كلمة المرور الجديدة';
+
+  @override
+  String get confirmNewPasswordLabel => 'تأكيد كلمة المرور الجديدة';
+
+  @override
+  String get changePasswordButton => 'تغيير كلمة المرور';
+
+  @override
+  String get changePasswordSuccess => 'تم تغيير كلمة المرور بنجاح';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get total => 'الإجمالي';
+
+  @override
+  String get subtotal => 'المجموع الجزئي';
+
+  @override
+  String get freeDelivery => 'التوصيل مجاني';
+
+  @override
+  String get emptyCart => 'السلة فارغة';
+
+  @override
+  String get exploreCategories => 'تصفح حسب الفئة';
+
+  @override
+  String get autoBonusBadge => 'هدية تلقائية 🎁';
+
+  @override
+  String get category => 'الفئة';
+
+  @override
+  String get dosageForm => 'الشكل الدوائي';
+
+  @override
+  String get manufacturer => 'الشركة المصنعة';
+
+  @override
+  String get productDetails => 'تفاصيل المنتج';
+
+  @override
+  String get unit => 'وحدة';
+
+  @override
+  String get unitPrice => 'سعر الوحدة';
+
+  @override
+  String get driverOrdersLabel => 'طلباتي';
+
+  @override
+  String get driverEarningsLabel => 'أرباحي';
+
+  @override
+  String get driverChatLabel => 'الدردشة';
+
+  @override
+  String get driverCreateTitle => 'إضافة سائق جديد';
+
+  @override
+  String get driverTempPasswordLabel => 'كلمة المرور المؤقتة';
+
+  @override
+  String get driverCreateButton => 'إنشاء الحساب';
+
+  @override
+  String get driverCreatedSuccess => 'تم بنجاح';
+
+  @override
+  String get driverCreatedMessage =>
+      'تم إنشاء حساب السائق بنجاح، يمكنه الآن تسجيل الدخول بكلمة المرور المؤقتة.';
+
+  @override
+  String get driverActionSuccess => 'تمت العملية بنجاح';
+
+  @override
+  String get driverSuspend => 'إيقاف';
+
+  @override
+  String get driverActivate => 'تفعيل';
+
+  @override
+  String get driverResetPassword => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get driverResetPasswordNew => 'كلمة المرور الجديدة';
+
+  @override
+  String get driverResetPasswordConfirm => 'تأكيد كلمة المرور الجديدة';
+
+  @override
+  String get driverStatusActive => 'نشط';
+
+  @override
+  String get driverStatusSuspended => 'موقوف';
+
+  @override
+  String get driverStatusPending => 'بانتظار المراجعة';
 }

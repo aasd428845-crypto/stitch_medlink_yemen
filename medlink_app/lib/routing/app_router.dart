@@ -18,8 +18,11 @@ import '../screens/client/client_home_shell.dart';
 import '../screens/client/order_detail_screen.dart';
 import '../screens/client/order_success_screen.dart';
 import '../screens/client/product_detail_screen.dart';
+import '../models/promotional_offer.dart';
+import '../screens/client/offer_detail_screen.dart';
 import '../screens/driver/driver_home_shell.dart';
 import '../screens/driver/driver_order_detail_screen.dart';
+import '../screens/shared/notifications_screen.dart';
 import '../screens/shared/splash_screen.dart';
 import '../utils/theme.dart';
 
@@ -111,7 +114,24 @@ GoRouter buildRouter(AuthController authController) {
               orderId: state.pathParameters['id']!,
             ),
           ),
+          GoRoute(
+            path: 'offer/:id',
+            builder: (context, state) {
+              final offer = state.extra as PromotionalOffer?;
+              if (offer == null) {
+                // Fallback: shouldn't happen in normal flow but guard anyway.
+                return const SizedBox.shrink();
+              }
+              return OfferDetailScreen(offer: offer);
+            },
+          ),
         ],
+      ),
+
+      // ── Notifications (shared across all roles) ──────────────────────────
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsScreen(),
       ),
 
       // ── Branch manager ───────────────────────────────────────────────────

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../services/auth_controller.dart';
+import '../../services/notification_controller.dart';
 import '../../utils/theme.dart';
 
 /// Placeholder body used by role home screens for sections not yet built in
@@ -36,14 +38,35 @@ class ComingSoonBody extends StatelessWidget {
   }
 }
 
+/// AppBar actions shared across all role home shells:
+/// - Bell icon with unread badge → /notifications
+/// - Logout
 class RoleAppBarActions extends StatelessWidget {
   const RoleAppBarActions({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.logout),
-      onPressed: () => context.read<AuthController>().signOut(),
+    final unread = context.watch<NotificationController>().unreadCount;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          tooltip: AppLocalizations.of(context)!.notificationsTitle,
+          icon: Badge(
+            isLabelVisible: unread > 0,
+            label: Text(
+              unread > 9 ? '9+' : '$unread',
+              style: const TextStyle(fontSize: 10),
+            ),
+            child: const Icon(Icons.notifications_outlined),
+          ),
+          onPressed: () => context.push('/notifications'),
+        ),
+        IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () => context.read<AuthController>().signOut(),
+        ),
+      ],
     );
   }
 }

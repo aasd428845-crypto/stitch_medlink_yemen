@@ -572,11 +572,11 @@ abstract class AppLocalizations {
   /// **'لا توجد فواتير مكتملة بعد'**
   String get branchNoInvoices;
 
-  /// No description provided for @branchNoDrivers.
+  /// No description provided for @branchNoOrders.
   ///
   /// In ar, this message translates to:
-  /// **'لا يوجد سائقون في هذا الفرع بعد'**
-  String get branchNoDrivers;
+  /// **'لا توجد طلبات واردة'**
+  String get branchNoOrders;
 
   /// No description provided for @branchOrderDetailTitle.
   ///
@@ -587,170 +587,80 @@ abstract class AppLocalizations {
   /// No description provided for @branchChangeStatus.
   ///
   /// In ar, this message translates to:
-  /// **'تحديث الحالة'**
+  /// **'تغيير الحالة'**
   String get branchChangeStatus;
 
   /// No description provided for @branchStatusUpdateConfirm.
   ///
   /// In ar, this message translates to:
-  /// **'هل أنت متأكد من تنفيذ هذا الإجراء؟'**
+  /// **'تأكيد تغيير الحالة'**
   String get branchStatusUpdateConfirm;
 
-  /// No description provided for @driverOrdersLabel.
+  /// No description provided for @branchNoDrivers.
   ///
   /// In ar, this message translates to:
-  /// **'طلباتي'**
-  String get driverOrdersLabel;
+  /// **'لا يوجد سائقون في هذا الفرع بعد'**
+  String get branchNoDrivers;
 
-  /// No description provided for @driverEarningsLabel.
+  /// No description provided for @homeGreeting.
   ///
   /// In ar, this message translates to:
-  /// **'أرباحي'**
-  String get driverEarningsLabel;
+  /// **'مرحباً'**
+  String get homeGreeting;
 
-  /// No description provided for @driverChatLabel.
+  /// No description provided for @homeSubtitle.
   ///
   /// In ar, this message translates to:
-  /// **'الدردشة'**
-  String get driverChatLabel;
+  /// **'ما الذي تحتاجه اليوم؟'**
+  String get homeSubtitle;
 
-  /// No description provided for @driverCreateTitle.
+  /// No description provided for @offersSection.
   ///
   /// In ar, this message translates to:
-  /// **'إضافة سائق جديد'**
-  String get driverCreateTitle;
+  /// **'العروض الترويجية'**
+  String get offersSection;
 
-  /// No description provided for @driverCreateButton.
+  /// No description provided for @noOffersFound.
   ///
   /// In ar, this message translates to:
-  /// **'إنشاء حساب السائق'**
-  String get driverCreateButton;
+  /// **'لا توجد عروض متاحة حالياً'**
+  String get noOffersFound;
 
-  /// No description provided for @driverTempPasswordLabel.
+  /// No description provided for @viewOffer.
   ///
   /// In ar, this message translates to:
-  /// **'كلمة المرور المؤقتة'**
-  String get driverTempPasswordLabel;
+  /// **'عرض التفاصيل'**
+  String get viewOffer;
 
-  /// No description provided for @driverTempPasswordHint.
+  /// No description provided for @categoriesSection.
   ///
   /// In ar, this message translates to:
-  /// **'ستشاركها مع السائق'**
-  String get driverTempPasswordHint;
+  /// **'التصفح حسب الفئة'**
+  String get categoriesSection;
 
-  /// No description provided for @driverCreatedSuccess.
+  /// No description provided for @featuredProducts.
   ///
   /// In ar, this message translates to:
-  /// **'تم إنشاء حساب السائق بنجاح'**
-  String get driverCreatedSuccess;
-
-  /// No description provided for @driverCreatedMessage.
-  ///
-  /// In ar, this message translates to:
-  /// **'شارك بيانات الدخول التالية مع السائق:'**
-  String get driverCreatedMessage;
-
-  /// No description provided for @driverManageTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'إدارة السائق'**
-  String get driverManageTitle;
-
-  /// No description provided for @driverActivate.
-  ///
-  /// In ar, this message translates to:
-  /// **'تفعيل الحساب'**
-  String get driverActivate;
-
-  /// No description provided for @driverSuspend.
-  ///
-  /// In ar, this message translates to:
-  /// **'إيقاف الحساب'**
-  String get driverSuspend;
-
-  /// No description provided for @driverResetPassword.
-  ///
-  /// In ar, this message translates to:
-  /// **'إعادة تعيين كلمة المرور'**
-  String get driverResetPassword;
-
-  /// No description provided for @driverResetPasswordNew.
-  ///
-  /// In ar, this message translates to:
-  /// **'كلمة المرور الجديدة'**
-  String get driverResetPasswordNew;
-
-  /// No description provided for @driverResetPasswordConfirm.
-  ///
-  /// In ar, this message translates to:
-  /// **'تأكيد كلمة المرور الجديدة'**
-  String get driverResetPasswordConfirm;
-
-  /// No description provided for @driverStatusActive.
-  ///
-  /// In ar, this message translates to:
-  /// **'نشط'**
-  String get driverStatusActive;
-
-  /// No description provided for @driverStatusSuspended.
-  ///
-  /// In ar, this message translates to:
-  /// **'موقوف'**
-  String get driverStatusSuspended;
-
-  /// No description provided for @driverStatusPending.
-  ///
-  /// In ar, this message translates to:
-  /// **'قيد المراجعة'**
-  String get driverStatusPending;
-
-  /// No description provided for @driverActionSuccess.
-  ///
-  /// In ar, this message translates to:
-  /// **'تم تنفيذ الإجراء بنجاح'**
-  String get driverActionSuccess;
-
-  /// No description provided for @changePasswordTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'تغيير كلمة المرور'**
-  String get changePasswordTitle;
-
-  /// No description provided for @changePasswordSubtitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'يجب عليك تعيين كلمة مرور جديدة قبل المتابعة'**
-  String get changePasswordSubtitle;
-
-  /// No description provided for @newPasswordLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'كلمة المرور الجديدة'**
-  String get newPasswordLabel;
-
-  /// No description provided for @confirmNewPasswordLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'تأكيد كلمة المرور الجديدة'**
-  String get confirmNewPasswordLabel;
-
-  /// No description provided for @changePasswordButton.
-  ///
-  /// In ar, this message translates to:
-  /// **'تغيير كلمة المرور'**
-  String get changePasswordButton;
+  /// **'منتجات مميزة'**
+  String get featuredProducts;
 
   /// No description provided for @catalogTitle.
   ///
   /// In ar, this message translates to:
-  /// **'كتالوج المنتجات'**
+  /// **'الكتالوج'**
   String get catalogTitle;
 
   /// No description provided for @searchHint.
   ///
   /// In ar, this message translates to:
-  /// **'ابحث عن منتج...'**
+  /// **'ابحث عن دواء أو منتج...'**
   String get searchHint;
+
+  /// No description provided for @filterByCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصفية حسب الفئة'**
+  String get filterByCategory;
 
   /// No description provided for @allCategories.
   ///
@@ -761,50 +671,14 @@ abstract class AppLocalizations {
   /// No description provided for @noProductsFound.
   ///
   /// In ar, this message translates to:
-  /// **'لا توجد منتجات مطابقة للبحث'**
+  /// **'لا توجد منتجات مطابقة'**
   String get noProductsFound;
 
-  /// No description provided for @noOffersFound.
-  ///
-  /// In ar, this message translates to:
-  /// **'لا توجد عروض متاحة حالياً'**
-  String get noOffersFound;
-
-  /// No description provided for @productDetails.
+  /// No description provided for @productDetailTitle.
   ///
   /// In ar, this message translates to:
   /// **'تفاصيل المنتج'**
-  String get productDetails;
-
-  /// No description provided for @unitPrice.
-  ///
-  /// In ar, this message translates to:
-  /// **'السعر للوحدة'**
-  String get unitPrice;
-
-  /// No description provided for @manufacturer.
-  ///
-  /// In ar, this message translates to:
-  /// **'الشركة المصنّعة'**
-  String get manufacturer;
-
-  /// No description provided for @dosageForm.
-  ///
-  /// In ar, this message translates to:
-  /// **'الشكل الدوائي'**
-  String get dosageForm;
-
-  /// No description provided for @unit.
-  ///
-  /// In ar, this message translates to:
-  /// **'الوحدة'**
-  String get unit;
-
-  /// No description provided for @category.
-  ///
-  /// In ar, this message translates to:
-  /// **'الفئة'**
-  String get category;
+  String get productDetailTitle;
 
   /// No description provided for @addToCart.
   ///
@@ -815,92 +689,92 @@ abstract class AppLocalizations {
   /// No description provided for @addedToCart.
   ///
   /// In ar, this message translates to:
-  /// **'تمت الإضافة إلى السلة'**
+  /// **'تم إضافته إلى السلة'**
   String get addedToCart;
 
-  /// No description provided for @offersSection.
+  /// No description provided for @outOfStock.
   ///
   /// In ar, this message translates to:
-  /// **'العروض الترويجية'**
-  String get offersSection;
+  /// **'غير متوفر'**
+  String get outOfStock;
 
-  /// No description provided for @viewOffer.
+  /// No description provided for @inStock.
   ///
   /// In ar, this message translates to:
-  /// **'عرض التفاصيل'**
-  String get viewOffer;
+  /// **'متوفر'**
+  String get inStock;
 
-  /// No description provided for @homeGreeting.
+  /// No description provided for @stockQuantity.
   ///
   /// In ar, this message translates to:
-  /// **'أهلاً،'**
-  String get homeGreeting;
+  /// **'الكمية المتوفرة'**
+  String get stockQuantity;
 
-  /// No description provided for @homeSubtitle.
+  /// No description provided for @bonusTag.
   ///
   /// In ar, this message translates to:
-  /// **'اكتشف منتجاتنا وعروضنا'**
-  String get homeSubtitle;
+  /// **'هدية'**
+  String get bonusTag;
 
-  /// No description provided for @quickOrderSection.
+  /// No description provided for @productCategory.
   ///
   /// In ar, this message translates to:
-  /// **'طلب سريع'**
-  String get quickOrderSection;
+  /// **'الفئة'**
+  String get productCategory;
 
-  /// No description provided for @exploreCategories.
+  /// No description provided for @productManufacturer.
   ///
   /// In ar, this message translates to:
-  /// **'تصفّح الفئات'**
-  String get exploreCategories;
+  /// **'الشركة المصنعة'**
+  String get productManufacturer;
 
-  /// No description provided for @retry.
+  /// No description provided for @productDosageForm.
   ///
   /// In ar, this message translates to:
-  /// **'إعادة المحاولة'**
-  String get retry;
+  /// **'الشكل الدوائي'**
+  String get productDosageForm;
+
+  /// No description provided for @productUnitPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'سعر الوحدة'**
+  String get productUnitPrice;
 
   /// No description provided for @cartTitle.
   ///
   /// In ar, this message translates to:
-  /// **'سلة الشراء'**
+  /// **'سلة المشتريات'**
   String get cartTitle;
 
-  /// No description provided for @emptyCart.
+  /// No description provided for @cartEmpty.
   ///
   /// In ar, this message translates to:
-  /// **'السلة فارغة حالياً'**
-  String get emptyCart;
+  /// **'السلة فارغة'**
+  String get cartEmpty;
 
-  /// No description provided for @subtotal.
+  /// No description provided for @cartTotal.
   ///
   /// In ar, this message translates to:
-  /// **'الإجمالي الفرعي'**
-  String get subtotal;
+  /// **'الإجمالي'**
+  String get cartTotal;
 
-  /// No description provided for @total.
+  /// No description provided for @cartItemCount.
   ///
   /// In ar, this message translates to:
-  /// **'المجموع الكلي'**
-  String get total;
-
-  /// No description provided for @freeDelivery.
-  ///
-  /// In ar, this message translates to:
-  /// **'التوصيل مجاني 100%'**
-  String get freeDelivery;
+  /// **'عدد الأصناف'**
+  String get cartItemCount;
 
   /// No description provided for @proceedToCheckout.
   ///
   /// In ar, this message translates to:
-  /// **'متابعة الطلب'**
+  /// **'المتابعة للطلب'**
   String get proceedToCheckout;
 
-  /// No description provided for @autoBonusBadge.
+  /// No description provided for @removeFromCart.
   ///
   /// In ar, this message translates to:
-  /// **'🎁 بونص تلقائي'**
-  String get autoBonusBadge;
+  /// **'حذف'**
+  String get removeFromCart;
 
   /// No description provided for @clearCart.
   ///
@@ -1171,6 +1045,264 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'فشل تحديث الحالة، حاول مجدداً'**
   String get driverUpdateError;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التنبيهات'**
+  String get notificationsTitle;
+
+  /// No description provided for @notificationsMarkAllRead.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليم الكل مقروءاً'**
+  String get notificationsMarkAllRead;
+
+  /// No description provided for @notificationsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد تنبيهات حتى الآن'**
+  String get notificationsEmpty;
+
+  /// No description provided for @offerDetailTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل العرض'**
+  String get offerDetailTitle;
+
+  /// No description provided for @offerValidFrom.
+  ///
+  /// In ar, this message translates to:
+  /// **'يبدأ من'**
+  String get offerValidFrom;
+
+  /// No description provided for @offerValidUntil.
+  ///
+  /// In ar, this message translates to:
+  /// **'ينتهي في'**
+  String get offerValidUntil;
+
+  /// No description provided for @offerGovernorate.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحافظة المستهدفة'**
+  String get offerGovernorate;
+
+  /// No description provided for @changePasswordTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير كلمة المرور'**
+  String get changePasswordTitle;
+
+  /// No description provided for @changePasswordSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'يجب عليك تغيير كلمة المرور المؤقتة قبل الاستمرار'**
+  String get changePasswordSubtitle;
+
+  /// No description provided for @newPasswordLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الجديدة'**
+  String get newPasswordLabel;
+
+  /// No description provided for @confirmNewPasswordLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد كلمة المرور الجديدة'**
+  String get confirmNewPasswordLabel;
+
+  /// No description provided for @changePasswordButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير كلمة المرور'**
+  String get changePasswordButton;
+
+  /// No description provided for @changePasswordSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تغيير كلمة المرور بنجاح'**
+  String get changePasswordSuccess;
+
+  /// No description provided for @retry.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة المحاولة'**
+  String get retry;
+
+  /// No description provided for @total.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإجمالي'**
+  String get total;
+
+  /// No description provided for @subtotal.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموع الجزئي'**
+  String get subtotal;
+
+  /// No description provided for @freeDelivery.
+  ///
+  /// In ar, this message translates to:
+  /// **'التوصيل مجاني'**
+  String get freeDelivery;
+
+  /// No description provided for @emptyCart.
+  ///
+  /// In ar, this message translates to:
+  /// **'السلة فارغة'**
+  String get emptyCart;
+
+  /// No description provided for @exploreCategories.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصفح حسب الفئة'**
+  String get exploreCategories;
+
+  /// No description provided for @autoBonusBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'هدية تلقائية 🎁'**
+  String get autoBonusBadge;
+
+  /// No description provided for @category.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفئة'**
+  String get category;
+
+  /// No description provided for @dosageForm.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشكل الدوائي'**
+  String get dosageForm;
+
+  /// No description provided for @manufacturer.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشركة المصنعة'**
+  String get manufacturer;
+
+  /// No description provided for @productDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل المنتج'**
+  String get productDetails;
+
+  /// No description provided for @unit.
+  ///
+  /// In ar, this message translates to:
+  /// **'وحدة'**
+  String get unit;
+
+  /// No description provided for @unitPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'سعر الوحدة'**
+  String get unitPrice;
+
+  /// No description provided for @driverOrdersLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلباتي'**
+  String get driverOrdersLabel;
+
+  /// No description provided for @driverEarningsLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرباحي'**
+  String get driverEarningsLabel;
+
+  /// No description provided for @driverChatLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدردشة'**
+  String get driverChatLabel;
+
+  /// No description provided for @driverCreateTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة سائق جديد'**
+  String get driverCreateTitle;
+
+  /// No description provided for @driverTempPasswordLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور المؤقتة'**
+  String get driverTempPasswordLabel;
+
+  /// No description provided for @driverCreateButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء الحساب'**
+  String get driverCreateButton;
+
+  /// No description provided for @driverCreatedSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم بنجاح'**
+  String get driverCreatedSuccess;
+
+  /// No description provided for @driverCreatedMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إنشاء حساب السائق بنجاح، يمكنه الآن تسجيل الدخول بكلمة المرور المؤقتة.'**
+  String get driverCreatedMessage;
+
+  /// No description provided for @driverActionSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت العملية بنجاح'**
+  String get driverActionSuccess;
+
+  /// No description provided for @driverSuspend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيقاف'**
+  String get driverSuspend;
+
+  /// No description provided for @driverActivate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفعيل'**
+  String get driverActivate;
+
+  /// No description provided for @driverResetPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة تعيين كلمة المرور'**
+  String get driverResetPassword;
+
+  /// No description provided for @driverResetPasswordNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الجديدة'**
+  String get driverResetPasswordNew;
+
+  /// No description provided for @driverResetPasswordConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد كلمة المرور الجديدة'**
+  String get driverResetPasswordConfirm;
+
+  /// No description provided for @driverStatusActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط'**
+  String get driverStatusActive;
+
+  /// No description provided for @driverStatusSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'موقوف'**
+  String get driverStatusSuspended;
+
+  /// No description provided for @driverStatusPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار المراجعة'**
+  String get driverStatusPending;
 }
 
 class _AppLocalizationsDelegate

@@ -15,6 +15,8 @@ import 'services/catalog_service.dart';
 import 'services/driver_orders_controller.dart';
 import 'services/driver_orders_service.dart';
 import 'services/driver_service.dart';
+import 'services/notification_controller.dart';
+import 'services/notification_service.dart';
 import 'services/order_controller.dart';
 import 'services/order_service.dart';
 import 'services/supabase_bootstrap.dart';
@@ -46,6 +48,8 @@ class _MedLinkAppState extends State<MedLinkApp> {
   late final BranchController _branchController;
   late final DriverOrdersService _driverOrdersService;
   late final DriverOrdersController _driverOrdersController;
+  late final NotificationService _notificationService;
+  late final NotificationController _notificationController;
   late final GoRouter _router;
 
   @override
@@ -63,6 +67,9 @@ class _MedLinkAppState extends State<MedLinkApp> {
     _branchController = BranchController(_branchService, _catalogService, _driverService);
     _driverOrdersService = DriverOrdersService(supabase);
     _driverOrdersController = DriverOrdersController(_driverOrdersService);
+    _notificationService = NotificationService(supabase);
+    _notificationController =
+        NotificationController(_notificationService, _authController);
     _router = buildRouter(_authController);
 
     // Load bonus rules into cart controller on start
@@ -79,6 +86,7 @@ class _MedLinkAppState extends State<MedLinkApp> {
     _orderController.dispose();
     _branchController.dispose();
     _driverOrdersController.dispose();
+    _notificationController.dispose();
     super.dispose();
   }
 
@@ -101,6 +109,10 @@ class _MedLinkAppState extends State<MedLinkApp> {
         Provider<DriverOrdersService>.value(value: _driverOrdersService),
         ChangeNotifierProvider<DriverOrdersController>.value(
           value: _driverOrdersController,
+        ),
+        Provider<NotificationService>.value(value: _notificationService),
+        ChangeNotifierProvider<NotificationController>.value(
+          value: _notificationController,
         ),
       ],
       child: MaterialApp.router(

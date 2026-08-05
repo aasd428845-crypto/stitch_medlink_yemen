@@ -15,7 +15,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginTitle => 'Sign In';
 
   @override
-  String get loginSubtitle => 'Enter your details to access your account';
+  String get loginSubtitle => 'Enter your credentials to access your account';
 
   @override
   String get emailLabel => 'Email';
@@ -36,7 +36,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noAccountYet => 'Don\'t have an account?';
 
   @override
-  String get createAccountLink => 'Create a new account';
+  String get createAccountLink => 'Create Account';
 
   @override
   String get forgotPassword => 'Forgot password?';
@@ -46,25 +46,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get registerSubtitle =>
-      'Register your details; your account will be reviewed by management';
+      'Register your details — your account will be reviewed by management';
 
   @override
-  String get nameLabel => 'Full name';
+  String get nameLabel => 'Full Name';
 
   @override
-  String get phoneLabel => 'Phone number';
+  String get phoneLabel => 'Phone Number';
 
   @override
-  String get confirmPasswordLabel => 'Confirm password';
+  String get confirmPasswordLabel => 'Confirm Password';
 
   @override
-  String get registerButton => 'Create account';
+  String get registerButton => 'Create Account';
 
   @override
   String get alreadyHaveAccount => 'Already have an account?';
 
   @override
-  String get loginLink => 'Sign in';
+  String get loginLink => 'Sign In';
 
   @override
   String get acceptTermsPrefix => 'I agree to the';
@@ -73,41 +73,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get termsAndConditions => 'Terms & Privacy Policy';
 
   @override
-  String get pendingApprovalTitle => 'Pending Review';
+  String get pendingApprovalTitle => 'Awaiting Review';
 
   @override
   String get pendingApprovalMessage =>
-      'Your registration request has been received. Your account is now under review by management, and you will be notified once it is approved.';
+      'Your registration has been received. Your account is currently under review by management. You will be notified once approved.';
 
   @override
-  String get pendingApprovalRefresh => 'Refresh status';
+  String get pendingApprovalRefresh => 'Refresh Status';
 
   @override
-  String get logoutButton => 'Sign out';
+  String get logoutButton => 'Sign Out';
 
   @override
   String get rejectedTitle => 'Account Rejected';
 
   @override
   String get rejectedMessage =>
-      'We\'re sorry, your registration request was rejected by management. Please contact support for details.';
+      'Sorry, your account registration has been rejected by management. Please contact support for more information.';
 
   @override
   String get suspendedTitle => 'Account Suspended';
 
   @override
   String get suspendedMessage =>
-      'This account has been temporarily suspended by management. Please contact support for details.';
+      'This account has been temporarily suspended by management. Please contact support for more details.';
 
   @override
-  String get directorNotSupportedTitle => 'Sign-in unavailable';
+  String get directorNotSupportedTitle => 'Access Unavailable';
 
   @override
   String get directorNotSupportedMessage =>
       'Company director accounts are managed exclusively through the dedicated web platform and cannot sign in from the mobile app.';
 
   @override
-  String get backToLogin => 'Back to sign in';
+  String get backToLogin => 'Back to Sign In';
 
   @override
   String get validationRequired => 'This field is required';
@@ -124,14 +124,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validationTermsRequired =>
-      'You must accept the Terms & Privacy Policy to continue';
+      'You must agree to the Terms & Privacy Policy to continue';
 
   @override
-  String get genericErrorTitle => 'Something went wrong';
+  String get genericErrorTitle => 'An Error Occurred';
 
   @override
   String get networkError =>
-      'Could not connect to the server. Check your connection and try again';
+      'Could not connect to the server. Check your internet connection and try again.';
 
   @override
   String get invalidCredentials => 'Incorrect email or password';
@@ -146,7 +146,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeTitle => 'Home';
 
   @override
-  String get comingSoon => 'This section is under construction';
+  String get comingSoon => 'This section is coming soon';
 
   @override
   String get clientHomeLabel => 'Home';
@@ -155,10 +155,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clientCatalogLabel => 'Catalog';
 
   @override
-  String get clientOrdersLabel => 'Orders';
+  String get clientOrdersLabel => 'My Orders';
 
   @override
-  String get clientProfileLabel => 'Profile';
+  String get clientProfileLabel => 'Account';
 
   @override
   String get branchDashboardLabel => 'Dashboard';
@@ -179,7 +179,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get branchDashboardNewOrders => 'New Orders';
 
   @override
-  String get branchDashboardInProgress => 'In Progress';
+  String get branchDashboardInProgress => 'In Transit';
 
   @override
   String get branchDashboardCompletedToday => 'Completed Today';
@@ -218,7 +218,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get branchDriverAvailable => 'Available';
 
   @override
-  String get branchDriverActiveOrders => 'active orders';
+  String get branchDriverActiveOrders => 'active order';
 
   @override
   String get branchOrderFilterAll => 'All';
@@ -230,7 +230,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get branchOrderFilterAssigned => 'Assigned';
 
   @override
-  String get branchOrderFilterInProgress => 'In Progress';
+  String get branchOrderFilterInProgress => 'In Transit';
 
   @override
   String get branchOrderFilterDelivered => 'Delivered';
@@ -254,123 +254,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get branchNoInvoices => 'No completed invoices yet';
 
   @override
-  String get branchNoDrivers => 'No drivers at this branch yet';
+  String get branchNoOrders => 'No incoming orders';
 
   @override
   String get branchOrderDetailTitle => 'Order Details';
 
   @override
-  String get branchChangeStatus => 'Update Status';
+  String get branchChangeStatus => 'Change Status';
 
   @override
-  String get branchStatusUpdateConfirm =>
-      'Are you sure you want to perform this action?';
+  String get branchStatusUpdateConfirm => 'Confirm Status Change';
 
   @override
-  String get driverOrdersLabel => 'Orders';
+  String get branchNoDrivers => 'No drivers in this branch yet';
 
   @override
-  String get driverEarningsLabel => 'Earnings';
+  String get homeGreeting => 'Hello';
 
   @override
-  String get driverChatLabel => 'Chat';
+  String get homeSubtitle => 'What do you need today?';
 
   @override
-  String get driverCreateTitle => 'Add New Driver';
+  String get offersSection => 'Promotional Offers';
 
   @override
-  String get driverCreateButton => 'Create Driver Account';
+  String get noOffersFound => 'No offers available at the moment';
 
   @override
-  String get driverTempPasswordLabel => 'Temporary Password';
+  String get viewOffer => 'View Details';
 
   @override
-  String get driverTempPasswordHint => 'You will share this with the driver';
+  String get categoriesSection => 'Browse by Category';
 
   @override
-  String get driverCreatedSuccess => 'Driver account created successfully';
+  String get featuredProducts => 'Featured Products';
 
   @override
-  String get driverCreatedMessage => 'Share these credentials with the driver:';
+  String get catalogTitle => 'Catalog';
 
   @override
-  String get driverManageTitle => 'Manage Driver';
+  String get searchHint => 'Search for a medicine or product...';
 
   @override
-  String get driverActivate => 'Activate Account';
-
-  @override
-  String get driverSuspend => 'Suspend Account';
-
-  @override
-  String get driverResetPassword => 'Reset Password';
-
-  @override
-  String get driverResetPasswordNew => 'New Password';
-
-  @override
-  String get driverResetPasswordConfirm => 'Confirm New Password';
-
-  @override
-  String get driverStatusActive => 'Active';
-
-  @override
-  String get driverStatusSuspended => 'Suspended';
-
-  @override
-  String get driverStatusPending => 'Pending';
-
-  @override
-  String get driverActionSuccess => 'Action completed successfully';
-
-  @override
-  String get changePasswordTitle => 'Change Password';
-
-  @override
-  String get changePasswordSubtitle =>
-      'You must set a new password before continuing';
-
-  @override
-  String get newPasswordLabel => 'New Password';
-
-  @override
-  String get confirmNewPasswordLabel => 'Confirm New Password';
-
-  @override
-  String get changePasswordButton => 'Change Password';
-
-  @override
-  String get catalogTitle => 'Product Catalog';
-
-  @override
-  String get searchHint => 'Search for a product...';
+  String get filterByCategory => 'Filter by Category';
 
   @override
   String get allCategories => 'All';
 
   @override
-  String get noProductsFound => 'No products match your search';
+  String get noProductsFound => 'No matching products found';
 
   @override
-  String get noOffersFound => 'No offers available at this time';
-
-  @override
-  String get productDetails => 'Product Details';
-
-  @override
-  String get unitPrice => 'Price per unit';
-
-  @override
-  String get manufacturer => 'Manufacturer';
-
-  @override
-  String get dosageForm => 'Dosage form';
-
-  @override
-  String get unit => 'Unit';
-
-  @override
-  String get category => 'Category';
+  String get productDetailTitle => 'Product Details';
 
   @override
   String get addToCart => 'Add to Cart';
@@ -379,52 +314,52 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addedToCart => 'Added to cart';
 
   @override
-  String get offersSection => 'Promotional Offers';
+  String get outOfStock => 'Out of Stock';
 
   @override
-  String get viewOffer => 'View details';
+  String get inStock => 'In Stock';
 
   @override
-  String get homeGreeting => 'Welcome,';
+  String get stockQuantity => 'Available Quantity';
 
   @override
-  String get homeSubtitle => 'Explore our products and offers';
+  String get bonusTag => 'Gift';
 
   @override
-  String get quickOrderSection => 'Quick Order';
+  String get productCategory => 'Category';
 
   @override
-  String get exploreCategories => 'Browse categories';
+  String get productManufacturer => 'Manufacturer';
 
   @override
-  String get retry => 'Try again';
+  String get productDosageForm => 'Dosage Form';
+
+  @override
+  String get productUnitPrice => 'Unit Price';
 
   @override
   String get cartTitle => 'Shopping Cart';
 
   @override
-  String get emptyCart => 'Your cart is currently empty';
+  String get cartEmpty => 'Cart is empty';
 
   @override
-  String get subtotal => 'Subtotal';
+  String get cartTotal => 'Total';
 
   @override
-  String get total => 'Total';
+  String get cartItemCount => 'Items';
 
   @override
-  String get freeDelivery => '100% Free Delivery';
+  String get proceedToCheckout => 'Proceed to Order';
 
   @override
-  String get proceedToCheckout => 'Proceed to Checkout';
-
-  @override
-  String get autoBonusBadge => '🎁 Free Bonus';
+  String get removeFromCart => 'Remove';
 
   @override
   String get clearCart => 'Clear Cart';
 
   @override
-  String get checkoutTitle => 'Order Confirmation';
+  String get checkoutTitle => 'Confirm Direct Order';
 
   @override
   String get deliveryAddress => 'Delivery Address';
@@ -433,7 +368,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addNewAddress => 'Add New Address';
 
   @override
-  String get addressLabel => 'Label (e.g. Pharmacy)';
+  String get addressLabel => 'Address Name (e.g. Pharmacy)';
 
   @override
   String get addressText => 'Detailed Address';
@@ -442,7 +377,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveAddress => 'Save Address';
 
   @override
-  String get orderNotes => 'Order Notes (Optional)';
+  String get orderNotes => 'Order Notes (optional)';
 
   @override
   String get confirmOrder => 'Confirm & Send Order';
@@ -452,7 +387,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get orderSuccessSubtitle =>
-      'Your order will be routed to the nearest branch for preparation and delivery.';
+      'Your order will be directed to the nearest branch for preparation and delivery.';
 
   @override
   String get viewOrderDetails => 'Track Order Details';
@@ -470,10 +405,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orderStatusPending => 'Pending Review';
 
   @override
-  String get orderStatusAssigned => 'Assigned to Driver';
+  String get orderStatusAssigned => 'Driver Assigned';
 
   @override
-  String get orderStatusInProgress => 'Out for Delivery';
+  String get orderStatusInProgress => 'In Transit';
 
   @override
   String get orderStatusDelivered => 'Delivered';
@@ -485,10 +420,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orderItemsCount => 'Items';
 
   @override
-  String get deliveredTo => 'Delivered to';
+  String get deliveredTo => 'Directed to';
 
   @override
-  String get driverNoOrders => 'No orders assigned at the moment';
+  String get driverNoOrders => 'No assigned orders at the moment';
 
   @override
   String get driverStartDelivery => 'Start Delivery';
@@ -521,7 +456,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverFilterAssigned => 'Assigned';
 
   @override
-  String get driverFilterInProgress => 'In Progress';
+  String get driverFilterInProgress => 'In Transit';
 
   @override
   String get driverFilterDelivered => 'Delivered';
@@ -556,4 +491,135 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get driverUpdateError => 'Failed to update status, please try again';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get notificationsMarkAllRead => 'Mark all as read';
+
+  @override
+  String get notificationsEmpty => 'No notifications yet';
+
+  @override
+  String get offerDetailTitle => 'Offer Details';
+
+  @override
+  String get offerValidFrom => 'Valid from';
+
+  @override
+  String get offerValidUntil => 'Valid until';
+
+  @override
+  String get offerGovernorate => 'Target Governorate';
+
+  @override
+  String get changePasswordTitle => 'Change Password';
+
+  @override
+  String get changePasswordSubtitle =>
+      'You must change your temporary password before continuing';
+
+  @override
+  String get newPasswordLabel => 'New Password';
+
+  @override
+  String get confirmNewPasswordLabel => 'Confirm New Password';
+
+  @override
+  String get changePasswordButton => 'Change Password';
+
+  @override
+  String get changePasswordSuccess => 'Password changed successfully';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get subtotal => 'Subtotal';
+
+  @override
+  String get freeDelivery => 'Free Delivery';
+
+  @override
+  String get emptyCart => 'Cart is empty';
+
+  @override
+  String get exploreCategories => 'Browse by Category';
+
+  @override
+  String get autoBonusBadge => 'Auto Bonus 🎁';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get dosageForm => 'Dosage Form';
+
+  @override
+  String get manufacturer => 'Manufacturer';
+
+  @override
+  String get productDetails => 'Product Details';
+
+  @override
+  String get unit => 'unit';
+
+  @override
+  String get unitPrice => 'Unit Price';
+
+  @override
+  String get driverOrdersLabel => 'My Orders';
+
+  @override
+  String get driverEarningsLabel => 'Earnings';
+
+  @override
+  String get driverChatLabel => 'Chat';
+
+  @override
+  String get driverCreateTitle => 'Add New Driver';
+
+  @override
+  String get driverTempPasswordLabel => 'Temporary Password';
+
+  @override
+  String get driverCreateButton => 'Create Account';
+
+  @override
+  String get driverCreatedSuccess => 'Success';
+
+  @override
+  String get driverCreatedMessage =>
+      'Driver account created successfully. They can now sign in with the temporary password.';
+
+  @override
+  String get driverActionSuccess => 'Operation completed successfully';
+
+  @override
+  String get driverSuspend => 'Suspend';
+
+  @override
+  String get driverActivate => 'Activate';
+
+  @override
+  String get driverResetPassword => 'Reset Password';
+
+  @override
+  String get driverResetPasswordNew => 'New Password';
+
+  @override
+  String get driverResetPasswordConfirm => 'Confirm New Password';
+
+  @override
+  String get driverStatusActive => 'Active';
+
+  @override
+  String get driverStatusSuspended => 'Suspended';
+
+  @override
+  String get driverStatusPending => 'Pending Review';
 }

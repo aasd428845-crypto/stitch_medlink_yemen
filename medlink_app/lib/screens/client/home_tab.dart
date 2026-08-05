@@ -110,8 +110,16 @@ class _HomeTabState extends State<HomeTab> {
                         itemCount: catalog.offers.length,
                         separatorBuilder: (_, __) =>
                             const SizedBox(width: AppSpacing.sm),
-                        itemBuilder: (context, i) =>
-                            OfferBannerCard(offer: catalog.offers[i]),
+                        itemBuilder: (context, i) {
+                          final offer = catalog.offers[i];
+                          return GestureDetector(
+                            onTap: () => context.push(
+                              '/client/offer/${offer.id}',
+                              extra: offer,
+                            ),
+                            child: OfferBannerCard(offer: offer),
+                          );
+                        },
                       ),
               ),
             ),
