@@ -486,4 +486,71 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deliveredTo => 'Delivered to';
+
+  @override
+  String get driverNoOrders => 'No orders assigned at the moment';
+
+  @override
+  String get driverStartDelivery => 'Start Delivery';
+
+  @override
+  String get driverConfirmDelivery => 'Confirm Delivery';
+
+  @override
+  String get driverDeliveryStarted => 'Delivery started';
+
+  @override
+  String get driverDeliveryConfirmed => 'Order delivered successfully';
+
+  @override
+  String get driverOrderDetailTitle => 'Order Details';
+
+  @override
+  String get driverClientPhone => 'Client Phone';
+
+  @override
+  String get driverDeliveryAddress => 'Delivery Address';
+
+  @override
+  String get driverFilterAll => 'All';
+
+  @override
+  String get driverFilterAssigned => 'Assigned';
+
+  @override
+  String get driverFilterInProgress => 'In Progress';
+
+  @override
+  String get driverFilterDelivered => 'Delivered';
+
+  @override
+  String get driverEarningsThisMonth => 'Earnings this month';
+
+  @override
+  String get driverTotalDeliveries => 'Total Deliveries';
+
+  @override
+  String get driverNoEarnings => 'No earnings recorded yet';
+
+  @override
+  String get driverOrderEarning => 'Commission Details';
+
+  @override
+  String get driverChatComingSoon =>
+      'Live chat will be available in an upcoming phase';
+
+  @override
+  String get driverThisMonth => 'This Month';
+
+  @override
+  String get driverLastMonth => 'Last Month';
+
+  @override
+  String get driverTotalEarningsLabel => 'Total Earnings';
+
+  @override
+  String get driverOrderItems => 'items';
+
+  @override
+  String get driverUpdateError => 'Failed to update status, please try again';
 }

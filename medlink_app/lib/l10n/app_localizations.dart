@@ -1033,6 +1033,138 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'موجه إلى'**
   String get deliveredTo;
+
+  /// No description provided for @driverNoOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات مُسندة حالياً'**
+  String get driverNoOrders;
+
+  /// No description provided for @driverStartDelivery.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدء التوصيل'**
+  String get driverStartDelivery;
+
+  /// No description provided for @driverConfirmDelivery.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد التسليم'**
+  String get driverConfirmDelivery;
+
+  /// No description provided for @driverDeliveryStarted.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدأت رحلة التوصيل'**
+  String get driverDeliveryStarted;
+
+  /// No description provided for @driverDeliveryConfirmed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسليم الطلب بنجاح'**
+  String get driverDeliveryConfirmed;
+
+  /// No description provided for @driverOrderDetailTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الطلب'**
+  String get driverOrderDetailTitle;
+
+  /// No description provided for @driverClientPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'هاتف العميل'**
+  String get driverClientPhone;
+
+  /// No description provided for @driverDeliveryAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان التسليم'**
+  String get driverDeliveryAddress;
+
+  /// No description provided for @driverFilterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get driverFilterAll;
+
+  /// No description provided for @driverFilterAssigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'مُسند'**
+  String get driverFilterAssigned;
+
+  /// No description provided for @driverFilterInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري التوصيل'**
+  String get driverFilterInProgress;
+
+  /// No description provided for @driverFilterDelivered.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التسليم'**
+  String get driverFilterDelivered;
+
+  /// No description provided for @driverEarningsThisMonth.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرباح هذا الشهر'**
+  String get driverEarningsThisMonth;
+
+  /// No description provided for @driverTotalDeliveries.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي التوصيلات'**
+  String get driverTotalDeliveries;
+
+  /// No description provided for @driverNoEarnings.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد أرباح مسجّلة بعد'**
+  String get driverNoEarnings;
+
+  /// No description provided for @driverOrderEarning.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل العمولات'**
+  String get driverOrderEarning;
+
+  /// No description provided for @driverChatComingSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدردشة المباشرة ستكون متاحة في مرحلة قادمة'**
+  String get driverChatComingSoon;
+
+  /// No description provided for @driverThisMonth.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الشهر'**
+  String get driverThisMonth;
+
+  /// No description provided for @driverLastMonth.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشهر الماضي'**
+  String get driverLastMonth;
+
+  /// No description provided for @driverTotalEarningsLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي الأرباح'**
+  String get driverTotalEarningsLabel;
+
+  /// No description provided for @driverOrderItems.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنود'**
+  String get driverOrderItems;
+
+  /// No description provided for @driverUpdateError.
+  ///
+  /// In ar, this message translates to:
+  /// **'فشل تحديث الحالة، حاول مجدداً'**
+  String get driverUpdateError;
 }
 
 class _AppLocalizationsDelegate

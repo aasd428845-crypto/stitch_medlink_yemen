@@ -182,6 +182,29 @@
   "orderStatusDelivered": "تم التسليم",
   "orderStatusCancelled": "ملغي",
   "orderItemsCount": "عدد البنود",
-  "deliveredTo": "موجه إلى"
+  "deliveredTo": "موجه إلى",
+
+  "driverNoOrders": "لا توجد طلبات مُسندة حالياً",
+  "driverStartDelivery": "بدء التوصيل",
+  "driverConfirmDelivery": "تأكيد التسليم",
+  "driverDeliveryStarted": "بدأت رحلة التوصيل",
+  "driverDeliveryConfirmed": "تم تسليم الطلب بنجاح",
+  "driverOrderDetailTitle": "تفاصيل الطلب",
+  "driverClientPhone": "هاتف العميل",
+  "driverDeliveryAddress": "عنوان التسليم",
+  "driverFilterAll": "الكل",
+  "driverFilterAssigned": "مُسند",
+  "driverFilterInProgress": "جاري التوصيل",
+  "driverFilterDelivered": "تم التسليم",
+  "driverEarningsThisMonth": "أرباح هذا الشهر",
+  "driverTotalDeliveries": "إجمالي التوصيلات",
+  "driverNoEarnings": "لا توجد أرباح مسجّلة بعد",
+  "driverOrderEarning": "تفاصيل العمولات",
+  "driverChatComingSoon": "الدردشة المباشرة ستكون متاحة في مرحلة قادمة",
+  "driverThisMonth": "هذا الشهر",
+  "driverLastMonth": "الشهر الماضي",
+  "driverTotalEarningsLabel": "إجمالي الأرباح",
+  "driverOrderItems": "بنود",
+  "driverUpdateError": "فشل تحديث الحالة، حاول مجدداً"
 }
 

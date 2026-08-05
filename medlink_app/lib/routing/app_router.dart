@@ -19,6 +19,7 @@ import '../screens/client/order_detail_screen.dart';
 import '../screens/client/order_success_screen.dart';
 import '../screens/client/product_detail_screen.dart';
 import '../screens/driver/driver_home_shell.dart';
+import '../screens/driver/driver_order_detail_screen.dart';
 import '../screens/shared/splash_screen.dart';
 import '../utils/theme.dart';
 
@@ -128,7 +129,18 @@ GoRouter buildRouter(AuthController authController) {
       ),
 
       // ── Driver ───────────────────────────────────────────────────────────
-      GoRoute(path: '/driver', builder: (context, state) => const DriverHomeShell()),
+      GoRoute(
+        path: '/driver',
+        builder: (context, state) => const DriverHomeShell(),
+        routes: [
+          GoRoute(
+            path: 'order/:id',
+            builder: (context, state) => DriverOrderDetailScreen(
+              orderId: state.pathParameters['id']!,
+            ),
+          ),
+        ],
+      ),
     ],
     redirect: (context, state) {
       final loc = state.matchedLocation;

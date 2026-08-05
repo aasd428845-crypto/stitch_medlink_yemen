@@ -181,6 +181,29 @@
   "orderStatusDelivered": "Delivered",
   "orderStatusCancelled": "Cancelled",
   "orderItemsCount": "Items",
-  "deliveredTo": "Delivered to"
+  "deliveredTo": "Delivered to",
+
+  "driverNoOrders": "No orders assigned at the moment",
+  "driverStartDelivery": "Start Delivery",
+  "driverConfirmDelivery": "Confirm Delivery",
+  "driverDeliveryStarted": "Delivery started",
+  "driverDeliveryConfirmed": "Order delivered successfully",
+  "driverOrderDetailTitle": "Order Details",
+  "driverClientPhone": "Client Phone",
+  "driverDeliveryAddress": "Delivery Address",
+  "driverFilterAll": "All",
+  "driverFilterAssigned": "Assigned",
+  "driverFilterInProgress": "In Progress",
+  "driverFilterDelivered": "Delivered",
+  "driverEarningsThisMonth": "Earnings this month",
+  "driverTotalDeliveries": "Total Deliveries",
+  "driverNoEarnings": "No earnings recorded yet",
+  "driverOrderEarning": "Commission Details",
+  "driverChatComingSoon": "Live chat will be available in an upcoming phase",
+  "driverThisMonth": "This Month",
+  "driverLastMonth": "Last Month",
+  "driverTotalEarningsLabel": "Total Earnings",
+  "driverOrderItems": "items",
+  "driverUpdateError": "Failed to update status, please try again"
 }
 

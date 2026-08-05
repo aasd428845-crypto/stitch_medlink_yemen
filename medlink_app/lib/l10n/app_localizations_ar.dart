@@ -485,4 +485,71 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get deliveredTo => 'موجه إلى';
+
+  @override
+  String get driverNoOrders => 'لا توجد طلبات مُسندة حالياً';
+
+  @override
+  String get driverStartDelivery => 'بدء التوصيل';
+
+  @override
+  String get driverConfirmDelivery => 'تأكيد التسليم';
+
+  @override
+  String get driverDeliveryStarted => 'بدأت رحلة التوصيل';
+
+  @override
+  String get driverDeliveryConfirmed => 'تم تسليم الطلب بنجاح';
+
+  @override
+  String get driverOrderDetailTitle => 'تفاصيل الطلب';
+
+  @override
+  String get driverClientPhone => 'هاتف العميل';
+
+  @override
+  String get driverDeliveryAddress => 'عنوان التسليم';
+
+  @override
+  String get driverFilterAll => 'الكل';
+
+  @override
+  String get driverFilterAssigned => 'مُسند';
+
+  @override
+  String get driverFilterInProgress => 'جاري التوصيل';
+
+  @override
+  String get driverFilterDelivered => 'تم التسليم';
+
+  @override
+  String get driverEarningsThisMonth => 'أرباح هذا الشهر';
+
+  @override
+  String get driverTotalDeliveries => 'إجمالي التوصيلات';
+
+  @override
+  String get driverNoEarnings => 'لا توجد أرباح مسجّلة بعد';
+
+  @override
+  String get driverOrderEarning => 'تفاصيل العمولات';
+
+  @override
+  String get driverChatComingSoon =>
+      'الدردشة المباشرة ستكون متاحة في مرحلة قادمة';
+
+  @override
+  String get driverThisMonth => 'هذا الشهر';
+
+  @override
+  String get driverLastMonth => 'الشهر الماضي';
+
+  @override
+  String get driverTotalEarningsLabel => 'إجمالي الأرباح';
+
+  @override
+  String get driverOrderItems => 'بنود';
+
+  @override
+  String get driverUpdateError => 'فشل تحديث الحالة، حاول مجدداً';
 }

@@ -12,6 +12,8 @@ import 'services/branch_service.dart';
 import 'services/cart_controller.dart';
 import 'services/catalog_controller.dart';
 import 'services/catalog_service.dart';
+import 'services/driver_orders_controller.dart';
+import 'services/driver_orders_service.dart';
 import 'services/driver_service.dart';
 import 'services/order_controller.dart';
 import 'services/order_service.dart';
@@ -42,6 +44,8 @@ class _MedLinkAppState extends State<MedLinkApp> {
   late final BranchService _branchService;
   late final DriverService _driverService;
   late final BranchController _branchController;
+  late final DriverOrdersService _driverOrdersService;
+  late final DriverOrdersController _driverOrdersController;
   late final GoRouter _router;
 
   @override
@@ -57,6 +61,8 @@ class _MedLinkAppState extends State<MedLinkApp> {
     _branchService = BranchService(supabase);
     _driverService = DriverService(supabase);
     _branchController = BranchController(_branchService, _catalogService, _driverService);
+    _driverOrdersService = DriverOrdersService(supabase);
+    _driverOrdersController = DriverOrdersController(_driverOrdersService);
     _router = buildRouter(_authController);
 
     // Load bonus rules into cart controller on start
@@ -72,6 +78,7 @@ class _MedLinkAppState extends State<MedLinkApp> {
     _cartController.dispose();
     _orderController.dispose();
     _branchController.dispose();
+    _driverOrdersController.dispose();
     super.dispose();
   }
 
@@ -91,6 +98,10 @@ class _MedLinkAppState extends State<MedLinkApp> {
         Provider<BranchService>.value(value: _branchService),
         Provider<DriverService>.value(value: _driverService),
         ChangeNotifierProvider<BranchController>.value(value: _branchController),
+        Provider<DriverOrdersService>.value(value: _driverOrdersService),
+        ChangeNotifierProvider<DriverOrdersController>.value(
+          value: _driverOrdersController,
+        ),
       ],
       child: MaterialApp.router(
         title: 'MedLink Yemen',
