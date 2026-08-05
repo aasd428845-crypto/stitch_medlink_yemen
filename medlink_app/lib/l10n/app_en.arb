@@ -50,6 +50,11 @@
   "invalidCredentials": "Incorrect email or password",
   "emailAlreadyRegistered": "This email is already registered",
   "unknownError": "An unexpected error occurred, please try again",
+  "dbDuplicateError": "This item already exists and cannot be duplicated",
+  "dbColumnNotFoundError": "A data structure error occurred, please try again later",
+  "dbPermissionDeniedError": "You don't have permission to perform this action",
+  "dbForeignKeyError": "This action can't be completed because this item is linked to other data",
+  "dbUnknownError": "A server error occurred, please try again",
 
   "homeTitle": "Home",
   "comingSoon": "This section is coming soon",

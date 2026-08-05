@@ -143,6 +143,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unknownError => 'An unexpected error occurred, please try again';
 
   @override
+  String get dbDuplicateError =>
+      'This item already exists and cannot be duplicated';
+
+  @override
+  String get dbColumnNotFoundError =>
+      'A data structure error occurred, please try again later';
+
+  @override
+  String get dbPermissionDeniedError =>
+      'You don\'t have permission to perform this action';
+
+  @override
+  String get dbForeignKeyError =>
+      'This action can\'t be completed because this item is linked to other data';
+
+  @override
+  String get dbUnknownError => 'A server error occurred, please try again';
+
+  @override
   String get homeTitle => 'Home';
 
   @override

@@ -143,6 +143,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get unknownError => 'حدث خطأ غير متوقع، حاول مرة أخرى';
 
   @override
+  String get dbDuplicateError => 'هذا العنصر مسجّل بالفعل، لا يمكن تكراره';
+
+  @override
+  String get dbColumnNotFoundError =>
+      'حدث خطأ في بنية البيانات، يرجى المحاولة لاحقاً';
+
+  @override
+  String get dbPermissionDeniedError => 'لا تملك صلاحية للقيام بهذا الإجراء';
+
+  @override
+  String get dbForeignKeyError =>
+      'لا يمكن إتمام العملية بسبب ارتباط هذا العنصر ببيانات أخرى';
+
+  @override
+  String get dbUnknownError => 'حدث خطأ أثناء الاتصال بالخادم، حاول مرة أخرى';
+
+  @override
   String get homeTitle => 'الرئيسية';
 
   @override

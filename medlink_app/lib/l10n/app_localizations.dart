@@ -350,6 +350,36 @@ abstract class AppLocalizations {
   /// **'حدث خطأ غير متوقع، حاول مرة أخرى'**
   String get unknownError;
 
+  /// No description provided for @dbDuplicateError.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا العنصر مسجّل بالفعل، لا يمكن تكراره'**
+  String get dbDuplicateError;
+
+  /// No description provided for @dbColumnNotFoundError.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدث خطأ في بنية البيانات، يرجى المحاولة لاحقاً'**
+  String get dbColumnNotFoundError;
+
+  /// No description provided for @dbPermissionDeniedError.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا تملك صلاحية للقيام بهذا الإجراء'**
+  String get dbPermissionDeniedError;
+
+  /// No description provided for @dbForeignKeyError.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يمكن إتمام العملية بسبب ارتباط هذا العنصر ببيانات أخرى'**
+  String get dbForeignKeyError;
+
+  /// No description provided for @dbUnknownError.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدث خطأ أثناء الاتصال بالخادم، حاول مرة أخرى'**
+  String get dbUnknownError;
+
   /// No description provided for @homeTitle.
   ///
   /// In ar, this message translates to:
