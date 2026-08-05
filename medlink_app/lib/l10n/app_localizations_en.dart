@@ -45,8 +45,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registerTitle => 'Create Account';
 
   @override
-  String get registerSubtitle =>
-      'Register your details; your account will be reviewed by management';
+  String get registerSubtitle => 'Register your details; your account will be reviewed by management';
 
   @override
   String get nameLabel => 'Full name';
@@ -76,8 +75,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pendingApprovalTitle => 'Pending Review';
 
   @override
-  String get pendingApprovalMessage =>
-      'Your registration request has been received. Your account is now under review by management, and you will be notified once it is approved.';
+  String get pendingApprovalMessage => 'Your registration request has been received. Your account is now under review by management, and you will be notified once it is approved.';
 
   @override
   String get pendingApprovalRefresh => 'Refresh status';
@@ -89,22 +87,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rejectedTitle => 'Account Rejected';
 
   @override
-  String get rejectedMessage =>
-      'We\'re sorry, your registration request was rejected by management. Please contact support for details.';
+  String get rejectedMessage => 'We\'re sorry, your registration request was rejected by management. Please contact support for details.';
 
   @override
   String get suspendedTitle => 'Account Suspended';
 
   @override
-  String get suspendedMessage =>
-      'This account has been temporarily suspended by management. Please contact support for details.';
+  String get suspendedMessage => 'This account has been temporarily suspended by management. Please contact support for details.';
 
   @override
   String get directorNotSupportedTitle => 'Sign-in unavailable';
 
   @override
-  String get directorNotSupportedMessage =>
-      'Company director accounts are managed exclusively through the dedicated web platform and cannot sign in from the mobile app.';
+  String get directorNotSupportedMessage => 'Company director accounts are managed exclusively through the dedicated web platform and cannot sign in from the mobile app.';
 
   @override
   String get backToLogin => 'Back to sign in';
@@ -116,22 +111,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validationEmailInvalid => 'Invalid email format';
 
   @override
-  String get validationPasswordShort =>
-      'Password must be at least 6 characters';
+  String get validationPasswordShort => 'Password must be at least 6 characters';
 
   @override
   String get validationPasswordMismatch => 'Passwords do not match';
 
   @override
-  String get validationTermsRequired =>
-      'You must accept the Terms & Privacy Policy to continue';
+  String get validationTermsRequired => 'You must accept the Terms & Privacy Policy to continue';
 
   @override
   String get genericErrorTitle => 'Something went wrong';
 
   @override
-  String get networkError =>
-      'Could not connect to the server. Check your connection and try again';
+  String get networkError => 'Could not connect to the server. Check your connection and try again';
 
   @override
   String get invalidCredentials => 'Incorrect email or password';
@@ -263,8 +255,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get branchChangeStatus => 'Update Status';
 
   @override
-  String get branchStatusUpdateConfirm =>
-      'Are you sure you want to perform this action?';
+  String get branchStatusUpdateConfirm => 'Are you sure you want to perform this action?';
 
   @override
   String get driverOrdersLabel => 'Orders';
@@ -451,8 +442,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orderSuccessTitle => 'Order Sent Successfully!';
 
   @override
-  String get orderSuccessSubtitle =>
-      'Your order will be routed to the nearest branch for preparation and delivery.';
+  String get orderSuccessSubtitle => 'Your order will be routed to the nearest branch for preparation and delivery.';
 
   @override
   String get viewOrderDetails => 'Track Order Details';
