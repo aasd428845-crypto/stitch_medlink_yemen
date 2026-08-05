@@ -192,6 +192,7 @@
   "driverOrderDetailTitle": "تفاصيل الطلب",
   "driverClientPhone": "هاتف العميل",
   "driverDeliveryAddress": "عنوان التسليم",
+  "driverScheduledDelivery": "وقت التسليم المتوقع",
   "driverFilterAll": "الكل",
   "driverFilterAssigned": "مُسند",
   "driverFilterInProgress": "جاري التوصيل",

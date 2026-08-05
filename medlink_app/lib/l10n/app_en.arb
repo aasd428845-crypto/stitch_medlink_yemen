@@ -191,6 +191,7 @@
   "driverOrderDetailTitle": "Order Details",
   "driverClientPhone": "Client Phone",
   "driverDeliveryAddress": "Delivery Address",
+  "driverScheduledDelivery": "Expected Delivery Time",
   "driverFilterAll": "All",
   "driverFilterAssigned": "Assigned",
   "driverFilterInProgress": "In Progress",

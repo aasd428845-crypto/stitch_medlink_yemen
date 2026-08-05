@@ -511,6 +511,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get driverDeliveryAddress => 'عنوان التسليم';
 
   @override
+  String get driverScheduledDelivery => 'وقت التسليم المتوقع';
+
+  @override
   String get driverFilterAll => 'الكل';
 
   @override

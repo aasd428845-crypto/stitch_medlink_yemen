@@ -194,6 +194,25 @@ class _DriverOrderCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (order.scheduledDeliveryAt != null &&
+                  order.scheduledDeliveryAt!.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.xs),
+                Row(
+                  children: [
+                    const Icon(Icons.schedule_outlined,
+                        size: 16, color: AppColors.onSurfaceVariant),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      order.scheduledDeliveryAt!
+                          .replaceFirst('T', ' ')
+                          .substring(0, 16),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
               const SizedBox(height: AppSpacing.sm),
               const Divider(height: 1),
               const SizedBox(height: AppSpacing.sm),

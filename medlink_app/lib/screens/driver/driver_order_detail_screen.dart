@@ -115,6 +115,15 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
+                if (order.scheduledDeliveryAt != null &&
+                    order.scheduledDeliveryAt!.isNotEmpty)
+                  _InfoRow(
+                    icon: Icons.schedule_outlined,
+                    label: l10n.driverScheduledDelivery,
+                    value: order.scheduledDeliveryAt!
+                        .replaceFirst('T', ' ')
+                        .substring(0, 16),
+                  ),
               ],
             ),
             const SizedBox(height: AppSpacing.md),

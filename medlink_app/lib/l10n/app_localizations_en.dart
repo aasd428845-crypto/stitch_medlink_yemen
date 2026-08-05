@@ -512,6 +512,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverDeliveryAddress => 'Delivery Address';
 
   @override
+  String get driverScheduledDelivery => 'Expected Delivery Time';
+
+  @override
   String get driverFilterAll => 'All';
 
   @override

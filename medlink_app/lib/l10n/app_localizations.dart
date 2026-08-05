@@ -1082,6 +1082,12 @@ abstract class AppLocalizations {
   /// **'عنوان التسليم'**
   String get driverDeliveryAddress;
 
+  /// No description provided for @driverScheduledDelivery.
+  ///
+  /// In ar, this message translates to:
+  /// **'وقت التسليم المتوقع'**
+  String get driverScheduledDelivery;
+
   /// No description provided for @driverFilterAll.
   ///
   /// In ar, this message translates to:
