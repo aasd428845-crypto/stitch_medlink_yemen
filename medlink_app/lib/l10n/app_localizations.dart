@@ -1364,6 +1364,78 @@ abstract class AppLocalizations {
   /// **'تقييمك'**
   String get yourRatingLabel;
 
+  /// No description provided for @chatTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدردشة'**
+  String get chatTitle;
+
+  /// No description provided for @chatNoConversations.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد محادثات نشطة'**
+  String get chatNoConversations;
+
+  /// No description provided for @chatMessageHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رسالة...'**
+  String get chatMessageHint;
+
+  /// No description provided for @chatSendButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال'**
+  String get chatSendButton;
+
+  /// No description provided for @chatEmptyRoom.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد رسائل بعد — ابدأ المحادثة'**
+  String get chatEmptyRoom;
+
+  /// No description provided for @chatWithDriver.
+  ///
+  /// In ar, this message translates to:
+  /// **'دردشة مع السائق'**
+  String get chatWithDriver;
+
+  /// No description provided for @chatWithBranch.
+  ///
+  /// In ar, this message translates to:
+  /// **'دردشة مع الفرع'**
+  String get chatWithBranch;
+
+  /// No description provided for @driverLocationTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'موقع السائق'**
+  String get driverLocationTitle;
+
+  /// No description provided for @driverLocationUpdate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث موقعي'**
+  String get driverLocationUpdate;
+
+  /// No description provided for @driverLocationUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث موقعك'**
+  String get driverLocationUpdated;
+
+  /// No description provided for @driverLocationPermissionDenied.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُرجى السماح بالوصول لموقعك لتفعيل التوصيل الحي'**
+  String get driverLocationPermissionDenied;
+
+  /// No description provided for @driverLocationUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموقع غير متاح حالياً'**
+  String get driverLocationUnavailable;
+
   /// No description provided for @helpSupportTitle.
   ///
   /// In ar, this message translates to:

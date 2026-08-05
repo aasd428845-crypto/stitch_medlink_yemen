@@ -7,6 +7,7 @@ import '../../services/order_service.dart';
 import '../../utils/theme.dart';
 import '../../widgets/order_status_chip.dart';
 import '../../widgets/rate_driver_sheet.dart';
+import '../../widgets/driver_location_map.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   const OrderDetailScreen({super.key, required this.orderId});
@@ -110,32 +111,35 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.error_outline_rounded,
-                          size: 48, color: AppColors.error),
-                      const SizedBox(height: AppSpacing.sm),
-                      Text(_error!, style: Theme.of(context).textTheme.bodyMedium),
-                      const SizedBox(height: AppSpacing.md),
-                      FilledButton.icon(
-                        onPressed: _load,
-                        icon: const Icon(Icons.refresh_rounded),
-                        label: Text(l10n.retry),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.error_outline_rounded,
+                    size: 48,
+                    color: AppColors.error,
                   ),
-                )
-              : _order == null
-                  ? Center(child: Text(l10n.noOrdersFound))
-                  : _OrderContent(
-                      order: _order!,
-                      l10n: l10n,
-                      existingRating: _existingRating,
-                      ratingLoaded: _ratingLoaded,
-                      onRatePressed: _openRatingSheet,
-                    ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(_error!, style: Theme.of(context).textTheme.bodyMedium),
+                  const SizedBox(height: AppSpacing.md),
+                  FilledButton.icon(
+                    onPressed: _load,
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: Text(l10n.retry),
+                  ),
+                ],
+              ),
+            )
+          : _order == null
+          ? Center(child: Text(l10n.noOrdersFound))
+          : _OrderContent(
+              order: _order!,
+              l10n: l10n,
+              existingRating: _existingRating,
+              ratingLoaded: _ratingLoaded,
+              onRatePressed: _openRatingSheet,
+            ),
     );
   }
 }
@@ -216,13 +220,22 @@ class _OrderContent extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
             Card(
               child: ListTile(
-                leading: const Icon(Icons.location_on_outlined,
-                    color: AppColors.primary),
-                title: Text(order.deliveryAddress!.label,
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                leading: const Icon(
+                  Icons.location_on_outlined,
+                  color: AppColors.primary,
+                ),
+                title: Text(
+                  order.deliveryAddress!.label,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 subtitle: Text(order.deliveryAddress!.addressText),
               ),
             ),
+            const SizedBox(height: AppSpacing.md),
+          ],
+          if (order.status == 'in_progress' &&
+              order.assignedDriverId != null) ...[
+            DriverLocationMap(driverId: order.assignedDriverId!),
             const SizedBox(height: AppSpacing.md),
           ],
 
@@ -250,11 +263,14 @@ class _OrderContent extends StatelessWidget {
                         if (item.isBonus)
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 2),
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.successContainer,
-                              borderRadius:
-                                  BorderRadius.circular(AppRadius.full),
+                              borderRadius: BorderRadius.circular(
+                                AppRadius.full,
+                              ),
                             ),
                             child: Text(
                               l10n.autoBonusBadge,
@@ -321,19 +337,28 @@ class _OrderContent extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.local_shipping_outlined,
-                              size: 18, color: AppColors.success),
+                          const Icon(
+                            Icons.local_shipping_outlined,
+                            size: 18,
+                            color: AppColors.success,
+                          ),
                           const SizedBox(width: 4),
-                          Text(l10n.freeDelivery,
-                              style: const TextStyle(
-                                  color: AppColors.success,
-                                  fontWeight: FontWeight.bold)),
+                          Text(
+                            l10n.freeDelivery,
+                            style: const TextStyle(
+                              color: AppColors.success,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
-                      const Text('0 ﷼',
-                          style: TextStyle(
-                              color: AppColors.success,
-                              fontWeight: FontWeight.bold)),
+                      const Text(
+                        '0 ﷼',
+                        style: TextStyle(
+                          color: AppColors.success,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                   const Divider(height: AppSpacing.md),
@@ -344,9 +369,9 @@ class _OrderContent extends StatelessWidget {
                       Text(
                         '${order.totalAmount.toStringAsFixed(0)} ﷼',
                         style: theme.textTheme.headlineSmall?.copyWith(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ],
                   ),
@@ -385,8 +410,11 @@ class _RatingDisplay extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.star_rounded,
-                    color: AppColors.warning, size: 20),
+                const Icon(
+                  Icons.star_rounded,
+                  color: AppColors.warning,
+                  size: 20,
+                ),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
                   l10n.yourRatingLabel,

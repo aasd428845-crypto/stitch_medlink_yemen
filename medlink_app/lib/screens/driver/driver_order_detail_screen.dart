@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/order.dart';
 import '../../services/driver_orders_controller.dart';
+import '../../services/chat_service.dart';
 import '../../utils/theme.dart';
 
 class DriverOrderDetailScreen extends StatefulWidget {
@@ -19,6 +21,48 @@ class DriverOrderDetailScreen extends StatefulWidget {
 
 class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   bool _isUpdating = false;
+  bool _isUpdatingLocation = false;
+
+  Future<void> _updateLocation() async {
+    if (_isUpdatingLocation) return;
+    final l10n = AppLocalizations.of(context)!;
+    setState(() => _isUpdatingLocation = true);
+    try {
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        throw const _LocationPermissionError();
+      }
+      final position = await Geolocator.getCurrentPosition();
+      if (!mounted) return;
+      await context.read<ChatService>().updateMyLocation(
+        position.latitude,
+        position.longitude,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.driverLocationUpdated)));
+      }
+    } on _LocationPermissionError {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.driverLocationPermissionDenied)),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.driverLocationUnavailable)));
+      }
+    } finally {
+      if (mounted) setState(() => _isUpdatingLocation = false);
+    }
+  }
 
   Future<void> _advance(OrderModel order, String newStatus) async {
     if (_isUpdating) return;
@@ -35,8 +79,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       final msg = newStatus == 'in_progress'
           ? l10n.driverDeliveryStarted
           : l10n.driverDeliveryConfirmed;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(msg)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -53,9 +96,10 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     final ctrl = context.watch<DriverOrdersController>();
 
     // Look up the order from the already-loaded list
-    final order = ctrl.orders
-        .cast<OrderModel?>()
-        .firstWhere((o) => o?.id == widget.orderId, orElse: () => null);
+    final order = ctrl.orders.cast<OrderModel?>().firstWhere(
+      (o) => o?.id == widget.orderId,
+      orElse: () => null,
+    );
 
     if (order == null) {
       // Edge case: arrived here before orders loaded
@@ -85,8 +129,10 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                     label: l10n.driverClientPhone,
                     value: order.client!.phone!,
                     trailing: IconButton(
-                      icon: const Icon(Icons.call_outlined,
-                          color: AppColors.primary),
+                      icon: const Icon(
+                        Icons.call_outlined,
+                        color: AppColors.primary,
+                      ),
                       onPressed: () async {
                         final uri = Uri(
                           scheme: 'tel',
@@ -152,22 +198,22 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                         children: [
                           if (item.isBonus)
                             Container(
-                              margin:
-                                  const EdgeInsets.only(left: AppSpacing.xs),
+                              margin: const EdgeInsets.only(
+                                left: AppSpacing.xs,
+                              ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: AppSpacing.xs,
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
                                 color: AppColors.successContainer,
-                                borderRadius:
-                                    BorderRadius.circular(AppRadius.sm),
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.sm,
+                                ),
                               ),
                               child: Text(
                                 'هدية',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall
+                                style: Theme.of(context).textTheme.labelSmall
                                     ?.copyWith(color: AppColors.success),
                               ),
                             ),
@@ -179,9 +225,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                           ),
                           Text(
                             '× ${item.quantity}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
+                            style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(color: AppColors.onSurfaceVariant),
                           ),
                           const SizedBox(width: AppSpacing.sm),
@@ -189,9 +233,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                             item.isBonus
                                 ? '0 ر.ي'
                                 : '${(item.quantity * item.unitPrice).toStringAsFixed(0)} ر.ي',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
+                            style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(fontWeight: FontWeight.w600),
                           ),
                         ],
@@ -207,17 +249,16 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                     children: [
                       Text(
                         l10n.total,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall
-                            ?.copyWith(fontWeight: FontWeight.w700),
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       Text(
                         '${order.totalAmount.toStringAsFixed(0)} ر.ي',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ],
                   ),
@@ -263,7 +304,11 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     if (order.status == 'delivered') return null;
 
     final (label, icon, nextStatus) = order.status == 'assigned'
-        ? (l10n.driverStartDelivery, Icons.local_shipping_rounded, 'in_progress')
+        ? (
+            l10n.driverStartDelivery,
+            Icons.local_shipping_rounded,
+            'in_progress',
+          )
         : (l10n.driverConfirmDelivery, Icons.check_circle_rounded, 'delivered');
 
     return SafeArea(
@@ -274,29 +319,52 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           AppSpacing.md,
           AppSpacing.md,
         ),
-        child: FilledButton.icon(
-          onPressed: _isUpdating ? null : () => _advance(order, nextStatus),
-          icon: _isUpdating
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: AppColors.onPrimary,
-                  ),
-                )
-              : Icon(icon),
-          label: Text(label),
-          style: FilledButton.styleFrom(
-            minimumSize: const Size.fromHeight(52),
-            backgroundColor: order.status == 'in_progress'
-                ? AppColors.success
-                : AppColors.primary,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (order.status == 'in_progress') ...[
+              OutlinedButton.icon(
+                onPressed: _isUpdatingLocation ? null : _updateLocation,
+                icon: _isUpdatingLocation
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.my_location_rounded),
+                label: Text(l10n.driverLocationUpdate),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
+            FilledButton.icon(
+              onPressed: _isUpdating ? null : () => _advance(order, nextStatus),
+              icon: _isUpdating
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.onPrimary,
+                      ),
+                    )
+                  : Icon(icon),
+              label: Text(label),
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(52),
+                backgroundColor: order.status == 'in_progress'
+                    ? AppColors.success
+                    : AppColors.primary,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+}
+
+class _LocationPermissionError implements Exception {
+  const _LocationPermissionError();
 }
 
 // ── Section card ───────────────────────────────────────────────────────────────
@@ -327,9 +395,9 @@ class _SectionCard extends StatelessWidget {
                 const SizedBox(width: AppSpacing.sm),
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
                 ),
               ],
             ),
@@ -374,16 +442,13 @@ class _InfoRow extends StatelessWidget {
               Text(
                 label,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
+                  color: AppColors.onSurfaceVariant,
+                ),
               ),
               Text(value, style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
-          if (trailing != null) ...[
-            const Spacer(),
-            trailing!,
-          ],
+          if (trailing != null) ...[const Spacer(), trailing!],
         ],
       ),
     );

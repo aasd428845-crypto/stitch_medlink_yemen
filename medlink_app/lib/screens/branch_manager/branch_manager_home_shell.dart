@@ -10,6 +10,7 @@ import 'branch_drivers_tab.dart';
 import 'branch_inventory_tab.dart';
 import 'branch_invoices_tab.dart';
 import 'branch_orders_tab.dart';
+import 'branch_chat_tab.dart';
 
 /// Bottom-nav shell for the `branch_manager` role.
 class BranchManagerHomeShell extends StatefulWidget {
@@ -28,6 +29,7 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
     BranchInventoryTab(),
     BranchInvoicesTab(),
     BranchDriversTab(),
+    BranchChatTab(),
   ];
 
   @override
@@ -45,11 +47,24 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final tabDefs = [
-      (l10n.branchDashboardLabel, Icons.dashboard_outlined, Icons.dashboard_rounded),
+      (
+        l10n.branchDashboardLabel,
+        Icons.dashboard_outlined,
+        Icons.dashboard_rounded,
+      ),
       (l10n.branchOrdersLabel, Icons.list_alt_outlined, Icons.list_alt_rounded),
-      (l10n.branchInventoryLabel, Icons.inventory_2_outlined, Icons.inventory_2_rounded),
+      (
+        l10n.branchInventoryLabel,
+        Icons.inventory_2_outlined,
+        Icons.inventory_2_rounded,
+      ),
       (l10n.branchInvoicesLabel, Icons.receipt_outlined, Icons.receipt_rounded),
-      (l10n.branchDriversLabel, Icons.local_shipping_outlined, Icons.local_shipping_rounded),
+      (
+        l10n.branchDriversLabel,
+        Icons.local_shipping_outlined,
+        Icons.local_shipping_rounded,
+      ),
+      (l10n.chatTitle, Icons.chat_bubble_outline, Icons.chat_bubble_rounded),
     ];
 
     final branchId = context.watch<AuthController>().profile?.branchId;
@@ -67,7 +82,11 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
         onDestinationSelected: (i) => setState(() => _index = i),
         destinations: [
           for (final tab in tabDefs)
-            NavigationDestination(icon: Icon(tab.$2), selectedIcon: Icon(tab.$3), label: tab.$1),
+            NavigationDestination(
+              icon: Icon(tab.$2),
+              selectedIcon: Icon(tab.$3),
+              label: tab.$1,
+            ),
         ],
       ),
     );

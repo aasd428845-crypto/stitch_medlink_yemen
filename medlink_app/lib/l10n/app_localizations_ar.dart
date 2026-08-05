@@ -654,6 +654,43 @@ class AppLocalizationsAr extends AppLocalizations {
   String get yourRatingLabel => 'تقييمك';
 
   @override
+  String get chatTitle => 'الدردشة';
+
+  @override
+  String get chatNoConversations => 'لا توجد محادثات نشطة';
+
+  @override
+  String get chatMessageHint => 'اكتب رسالة...';
+
+  @override
+  String get chatSendButton => 'إرسال';
+
+  @override
+  String get chatEmptyRoom => 'لا توجد رسائل بعد — ابدأ المحادثة';
+
+  @override
+  String get chatWithDriver => 'دردشة مع السائق';
+
+  @override
+  String get chatWithBranch => 'دردشة مع الفرع';
+
+  @override
+  String get driverLocationTitle => 'موقع السائق';
+
+  @override
+  String get driverLocationUpdate => 'تحديث موقعي';
+
+  @override
+  String get driverLocationUpdated => 'تم تحديث موقعك';
+
+  @override
+  String get driverLocationPermissionDenied =>
+      'يُرجى السماح بالوصول لموقعك لتفعيل التوصيل الحي';
+
+  @override
+  String get driverLocationUnavailable => 'الموقع غير متاح حالياً';
+
+  @override
   String get helpSupportTitle => 'المساعدة والدعم';
 
   @override

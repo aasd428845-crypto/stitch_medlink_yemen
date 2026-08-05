@@ -654,6 +654,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourRatingLabel => 'Your Rating';
 
   @override
+  String get chatTitle => 'Chat';
+
+  @override
+  String get chatNoConversations => 'No active conversations';
+
+  @override
+  String get chatMessageHint => 'Write a message...';
+
+  @override
+  String get chatSendButton => 'Send';
+
+  @override
+  String get chatEmptyRoom => 'No messages yet — start the conversation';
+
+  @override
+  String get chatWithDriver => 'Chat with driver';
+
+  @override
+  String get chatWithBranch => 'Chat with branch';
+
+  @override
+  String get driverLocationTitle => 'Driver location';
+
+  @override
+  String get driverLocationUpdate => 'Update my location';
+
+  @override
+  String get driverLocationUpdated => 'Your location has been updated';
+
+  @override
+  String get driverLocationPermissionDenied =>
+      'Please allow location access to enable live delivery';
+
+  @override
+  String get driverLocationUnavailable => 'Location is currently unavailable';
+
+  @override
   String get helpSupportTitle => 'Help & Support';
 
   @override

@@ -10,6 +10,8 @@ import 'services/auth_service.dart';
 import 'services/branch_controller.dart';
 import 'services/branch_service.dart';
 import 'services/cart_controller.dart';
+import 'services/chat_controller.dart';
+import 'services/chat_service.dart';
 import 'services/catalog_controller.dart';
 import 'services/catalog_service.dart';
 import 'services/driver_orders_controller.dart';
@@ -50,6 +52,8 @@ class _MedLinkAppState extends State<MedLinkApp> {
   late final DriverOrdersController _driverOrdersController;
   late final NotificationService _notificationService;
   late final NotificationController _notificationController;
+  late final ChatService _chatService;
+  late final ChatController _chatController;
   late final GoRouter _router;
 
   @override
@@ -64,18 +68,29 @@ class _MedLinkAppState extends State<MedLinkApp> {
     _orderController = OrderController(_orderService);
     _branchService = BranchService(supabase);
     _driverService = DriverService(supabase);
-    _branchController = BranchController(_branchService, _catalogService, _driverService);
+    _branchController = BranchController(
+      _branchService,
+      _catalogService,
+      _driverService,
+    );
     _driverOrdersService = DriverOrdersService(supabase);
     _driverOrdersController = DriverOrdersController(_driverOrdersService);
     _notificationService = NotificationService(supabase);
-    _notificationController =
-        NotificationController(_notificationService, _authController);
+    _notificationController = NotificationController(
+      _notificationService,
+      _authController,
+    );
+    _chatService = ChatService(supabase);
+    _chatController = ChatController(_chatService);
     _router = buildRouter(_authController);
 
     // Load bonus rules into cart controller on start
-    _orderService.fetchBonusRules().then((rules) {
-      _cartController.updateBonusRules(rules);
-    }).catchError((_) {});
+    _orderService
+        .fetchBonusRules()
+        .then((rules) {
+          _cartController.updateBonusRules(rules);
+        })
+        .catchError((_) {});
   }
 
   @override
@@ -87,6 +102,7 @@ class _MedLinkAppState extends State<MedLinkApp> {
     _branchController.dispose();
     _driverOrdersController.dispose();
     _notificationController.dispose();
+    _chatController.dispose();
     super.dispose();
   }
 
@@ -105,7 +121,9 @@ class _MedLinkAppState extends State<MedLinkApp> {
         ChangeNotifierProvider<OrderController>.value(value: _orderController),
         Provider<BranchService>.value(value: _branchService),
         Provider<DriverService>.value(value: _driverService),
-        ChangeNotifierProvider<BranchController>.value(value: _branchController),
+        ChangeNotifierProvider<BranchController>.value(
+          value: _branchController,
+        ),
         Provider<DriverOrdersService>.value(value: _driverOrdersService),
         ChangeNotifierProvider<DriverOrdersController>.value(
           value: _driverOrdersController,
@@ -114,6 +132,8 @@ class _MedLinkAppState extends State<MedLinkApp> {
         ChangeNotifierProvider<NotificationController>.value(
           value: _notificationController,
         ),
+        Provider<ChatService>.value(value: _chatService),
+        ChangeNotifierProvider<ChatController>.value(value: _chatController),
       ],
       child: MaterialApp.router(
         title: 'MedLink Yemen',

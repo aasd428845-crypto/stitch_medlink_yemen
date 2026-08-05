@@ -25,6 +25,7 @@ import '../screens/driver/driver_order_detail_screen.dart';
 import '../screens/shared/help_support_screen.dart';
 import '../screens/shared/notifications_screen.dart';
 import '../screens/shared/splash_screen.dart';
+import '../screens/shared/chat_room_screen.dart';
 import '../utils/theme.dart';
 
 GoRouter buildRouter(AuthController authController) {
@@ -32,9 +33,15 @@ GoRouter buildRouter(AuthController authController) {
     initialLocation: '/splash',
     refreshListenable: authController,
     routes: [
-      GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
+      GoRoute(
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
-      GoRoute(path: '/register', builder: (context, state) => const RegisterScreen()),
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterScreen(),
+      ),
       GoRoute(path: '/terms', builder: (context, state) => const TermsScreen()),
       GoRoute(
         path: '/pending-approval',
@@ -91,9 +98,8 @@ GoRouter buildRouter(AuthController authController) {
         routes: [
           GoRoute(
             path: 'product/:id',
-            builder: (context, state) => ProductDetailScreen(
-              productId: state.pathParameters['id']!,
-            ),
+            builder: (context, state) =>
+                ProductDetailScreen(productId: state.pathParameters['id']!),
           ),
           GoRoute(
             path: 'cart',
@@ -105,15 +111,13 @@ GoRouter buildRouter(AuthController authController) {
           ),
           GoRoute(
             path: 'order-success/:id',
-            builder: (context, state) => OrderSuccessScreen(
-              orderId: state.pathParameters['id']!,
-            ),
+            builder: (context, state) =>
+                OrderSuccessScreen(orderId: state.pathParameters['id']!),
           ),
           GoRoute(
             path: 'order/:id',
-            builder: (context, state) => OrderDetailScreen(
-              orderId: state.pathParameters['id']!,
-            ),
+            builder: (context, state) =>
+                OrderDetailScreen(orderId: state.pathParameters['id']!),
           ),
           GoRoute(
             path: 'offer/:id',
@@ -143,6 +147,17 @@ GoRouter buildRouter(AuthController authController) {
           return HelpSupportScreen(role: role);
         },
       ),
+      GoRoute(
+        path: '/chat/:roomId',
+        builder: (context, state) {
+          final info = state.extra as Map<String, String>? ?? const {};
+          return ChatRoomScreen(
+            roomId: state.pathParameters['roomId']!,
+            orderNumber: info['orderNumber'] ?? '#',
+            otherPartyName: info['otherPartyName'] ?? '',
+          );
+        },
+      ),
 
       // ── Branch manager ───────────────────────────────────────────────────
       GoRoute(
@@ -151,9 +166,8 @@ GoRouter buildRouter(AuthController authController) {
         routes: [
           GoRoute(
             path: 'order/:id',
-            builder: (context, state) => BranchOrderDetailScreen(
-              orderId: state.pathParameters['id']!,
-            ),
+            builder: (context, state) =>
+                BranchOrderDetailScreen(orderId: state.pathParameters['id']!),
           ),
         ],
       ),
@@ -165,9 +179,8 @@ GoRouter buildRouter(AuthController authController) {
         routes: [
           GoRoute(
             path: 'order/:id',
-            builder: (context, state) => DriverOrderDetailScreen(
-              orderId: state.pathParameters['id']!,
-            ),
+            builder: (context, state) =>
+                DriverOrderDetailScreen(orderId: state.pathParameters['id']!),
           ),
         ],
       ),
@@ -203,6 +216,11 @@ GoRouter buildRouter(AuthController authController) {
         case AccountStatus.suspended:
           return loc == '/suspended' ? null : '/suspended';
         case AccountStatus.active:
+          if (loc.startsWith('/chat') &&
+              profile.role != UserRole.driver &&
+              profile.role != UserRole.branchManager) {
+            return '/client';
+          }
           // Drivers who haven't changed their temp password yet are held here.
           if (profile.requiresPasswordChange) {
             return loc == '/change-password' ? null : '/change-password';
