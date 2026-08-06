@@ -261,5 +261,7 @@
   "helpContactSection": "Contact Us",
   "helpCallUs": "Call Us",
   "helpWhatsapp": "Message us on WhatsApp",
-  "helpEmailUs": "Email Us"
+  "helpEmailUs": "Email Us",
+  "branchNotAssignedTitle": "No branch assigned to your account",
+  "branchNotAssignedMessage": "This section couldn't load because your account isn't linked to a branch yet. Please contact company management to assign your branch."
 }

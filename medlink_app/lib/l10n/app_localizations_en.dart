@@ -726,4 +726,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get helpEmailUs => 'Email Us';
+
+  @override
+  String get branchNotAssignedTitle => 'No branch assigned to your account';
+
+  @override
+  String get branchNotAssignedMessage =>
+      'This section couldn\'t load because your account isn\'t linked to a branch yet. Please contact company management to assign your branch.';
 }

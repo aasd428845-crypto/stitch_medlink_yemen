@@ -261,5 +261,7 @@
   "helpContactSection": "تواصل معنا",
   "helpCallUs": "اتصل بنا",
   "helpWhatsapp": "راسلنا عبر واتساب",
-  "helpEmailUs": "راسلنا عبر البريد الإلكتروني"
+  "helpEmailUs": "راسلنا عبر البريد الإلكتروني",
+  "branchNotAssignedTitle": "لم يتم تعيين فرع لحسابك",
+  "branchNotAssignedMessage": "تعذّر تحميل بيانات هذا القسم لأن حسابك غير مرتبط بأي فرع بعد. يرجى التواصل مع إدارة الشركة لتعيين فرعك."
 }

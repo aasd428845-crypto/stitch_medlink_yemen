@@ -1501,6 +1501,18 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'راسلنا عبر البريد الإلكتروني'**
   String get helpEmailUs;
+
+  /// No description provided for @branchNotAssignedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يتم تعيين فرع لحسابك'**
+  String get branchNotAssignedTitle;
+
+  /// No description provided for @branchNotAssignedMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تحميل بيانات هذا القسم لأن حسابك غير مرتبط بأي فرع بعد. يرجى التواصل مع إدارة الشركة لتعيين فرعك.'**
+  String get branchNotAssignedMessage;
 }
 
 class _AppLocalizationsDelegate

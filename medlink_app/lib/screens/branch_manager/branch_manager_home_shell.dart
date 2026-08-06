@@ -75,7 +75,10 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
         actions: const [RoleAppBarActions()],
       ),
       body: branchId == null
-          ? ComingSoonBody(label: tabDefs[_index].$1)
+          ? MissingAccountDataBody(
+              title: l10n.branchNotAssignedTitle,
+              message: l10n.branchNotAssignedMessage,
+            )
           : _tabs[_index],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,

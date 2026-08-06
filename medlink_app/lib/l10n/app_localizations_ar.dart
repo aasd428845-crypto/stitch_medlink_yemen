@@ -724,4 +724,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get helpEmailUs => 'راسلنا عبر البريد الإلكتروني';
+
+  @override
+  String get branchNotAssignedTitle => 'لم يتم تعيين فرع لحسابك';
+
+  @override
+  String get branchNotAssignedMessage =>
+      'تعذّر تحميل بيانات هذا القسم لأن حسابك غير مرتبط بأي فرع بعد. يرجى التواصل مع إدارة الشركة لتعيين فرعك.';
 }

@@ -39,6 +39,51 @@ class ComingSoonBody extends StatelessWidget {
   }
 }
 
+/// Body shown instead of a role tab when the signed-in account is missing
+/// data required to load that tab (e.g. a branch_manager whose `branch_id`
+/// is null). This is deliberately distinct from [ComingSoonBody]: the
+/// feature IS built, the account is just missing required setup — showing
+/// the "under construction" wording here would be misleading.
+class MissingAccountDataBody extends StatelessWidget {
+  const MissingAccountDataBody({
+    super.key,
+    required this.title,
+    required this.message,
+  });
+
+  final String title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.outline),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// AppBar actions shared across all role home shells:
 /// - Help icon → /help
 /// - Bell icon with unread badge → /notifications
