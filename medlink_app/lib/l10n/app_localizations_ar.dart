@@ -45,8 +45,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get registerTitle => 'إنشاء حساب جديد';
 
   @override
-  String get registerSubtitle =>
-      'سجّل بياناتك، وسيتم مراجعة حسابك من قبل الإدارة';
+  String get registerSubtitle => 'سجّل بياناتك، وسيتم مراجعة حسابك من قبل الإدارة';
 
   @override
   String get nameLabel => 'الاسم الكامل';
@@ -76,8 +75,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pendingApprovalTitle => 'بانتظار المراجعة';
 
   @override
-  String get pendingApprovalMessage =>
-      'تم استلام طلب تسجيلك بنجاح. حسابك الآن قيد المراجعة من قبل الإدارة، وسيتم إشعارك فور الموافقة عليه.';
+  String get pendingApprovalMessage => 'تم استلام طلب تسجيلك بنجاح. حسابك الآن قيد المراجعة من قبل الإدارة، وسيتم إشعارك فور الموافقة عليه.';
 
   @override
   String get pendingApprovalRefresh => 'تحديث الحالة';
@@ -89,22 +87,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get rejectedTitle => 'تم رفض الحساب';
 
   @override
-  String get rejectedMessage =>
-      'نعتذر، تم رفض طلب تسجيل حسابك من قبل الإدارة. للاستفسار، يرجى التواصل مع الدعم.';
+  String get rejectedMessage => 'نعتذر، تم رفض طلب تسجيل حسابك من قبل الإدارة. للاستفسار، يرجى التواصل مع الدعم.';
 
   @override
   String get suspendedTitle => 'الحساب موقوف';
 
   @override
-  String get suspendedMessage =>
-      'تم إيقاف هذا الحساب مؤقتاً من قبل الإدارة. يرجى التواصل مع الدعم لمزيد من التفاصيل.';
+  String get suspendedMessage => 'تم إيقاف هذا الحساب مؤقتاً من قبل الإدارة. يرجى التواصل مع الدعم لمزيد من التفاصيل.';
 
   @override
   String get directorNotSupportedTitle => 'الدخول غير متاح';
 
   @override
-  String get directorNotSupportedMessage =>
-      'حسابات مدير الشركة العام تُدار حصراً عبر منصة الويب المخصصة، ولا يمكن الدخول بهذا الدور من تطبيق الجوال.';
+  String get directorNotSupportedMessage => 'حسابات مدير الشركة العام تُدار حصراً عبر منصة الويب المخصصة، ولا يمكن الدخول بهذا الدور من تطبيق الجوال.';
 
   @override
   String get backToLogin => 'العودة لتسجيل الدخول';
@@ -116,22 +111,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get validationEmailInvalid => 'صيغة البريد الإلكتروني غير صحيحة';
 
   @override
-  String get validationPasswordShort =>
-      'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+  String get validationPasswordShort => 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
 
   @override
   String get validationPasswordMismatch => 'كلمتا المرور غير متطابقتين';
 
   @override
-  String get validationTermsRequired =>
-      'يجب الموافقة على الشروط وسياسة الخصوصية للمتابعة';
+  String get validationTermsRequired => 'يجب الموافقة على الشروط وسياسة الخصوصية للمتابعة';
 
   @override
   String get genericErrorTitle => 'حدث خطأ';
 
   @override
-  String get networkError =>
-      'تعذّر الاتصال بالخادم. تحقق من اتصالك بالإنترنت وحاول مجدداً';
+  String get networkError => 'تعذّر الاتصال بالخادم. تحقق من اتصالك بالإنترنت وحاول مجدداً';
 
   @override
   String get invalidCredentials => 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
@@ -146,15 +138,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dbDuplicateError => 'هذا العنصر مسجّل بالفعل، لا يمكن تكراره';
 
   @override
-  String get dbColumnNotFoundError =>
-      'حدث خطأ في بنية البيانات، يرجى المحاولة لاحقاً';
+  String get dbColumnNotFoundError => 'حدث خطأ في بنية البيانات، يرجى المحاولة لاحقاً';
 
   @override
   String get dbPermissionDeniedError => 'لا تملك صلاحية للقيام بهذا الإجراء';
 
   @override
-  String get dbForeignKeyError =>
-      'لا يمكن إتمام العملية بسبب ارتباط هذا العنصر ببيانات أخرى';
+  String get dbForeignKeyError => 'لا يمكن إتمام العملية بسبب ارتباط هذا العنصر ببيانات أخرى';
 
   @override
   String get dbUnknownError => 'حدث خطأ أثناء الاتصال بالخادم، حاول مرة أخرى';
@@ -403,8 +393,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get orderSuccessTitle => 'تم إرسال طلبك بنجاح!';
 
   @override
-  String get orderSuccessSubtitle =>
-      'سيتم توجيه الطلب لأقرب فرع للبدء بالتجهيز والتوصيل.';
+  String get orderSuccessSubtitle => 'سيتم توجيه الطلب لأقرب فرع للبدء بالتجهيز والتوصيل.';
 
   @override
   String get viewOrderDetails => 'متابعة تفاصيل الطلب';
@@ -491,8 +480,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get driverOrderEarning => 'تفاصيل العمولات';
 
   @override
-  String get driverChatComingSoon =>
-      'الدردشة المباشرة ستكون متاحة في مرحلة قادمة';
+  String get driverChatComingSoon => 'الدردشة المباشرة ستكون متاحة في مرحلة قادمة';
 
   @override
   String get driverThisMonth => 'هذا الشهر';
@@ -534,8 +522,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get changePasswordTitle => 'تغيير كلمة المرور';
 
   @override
-  String get changePasswordSubtitle =>
-      'يجب عليك تغيير كلمة المرور المؤقتة قبل الاستمرار';
+  String get changePasswordSubtitle => 'يجب عليك تغيير كلمة المرور المؤقتة قبل الاستمرار';
 
   @override
   String get newPasswordLabel => 'كلمة المرور الجديدة';
@@ -610,8 +597,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get driverCreatedSuccess => 'تم بنجاح';
 
   @override
-  String get driverCreatedMessage =>
-      'تم إنشاء حساب السائق بنجاح، يمكنه الآن تسجيل الدخول بكلمة المرور المؤقتة.';
+  String get driverCreatedMessage => 'تم إنشاء حساب السائق بنجاح، يمكنه الآن تسجيل الدخول بكلمة المرور المؤقتة.';
 
   @override
   String get driverActionSuccess => 'تمت العملية بنجاح';
@@ -701,8 +687,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get driverLocationUpdated => 'تم تحديث موقعك';
 
   @override
-  String get driverLocationPermissionDenied =>
-      'يُرجى السماح بالوصول لموقعك لتفعيل التوصيل الحي';
+  String get driverLocationPermissionDenied => 'يُرجى السماح بالوصول لموقعك لتفعيل التوصيل الحي';
 
   @override
   String get driverLocationUnavailable => 'الموقع غير متاح حالياً';
@@ -729,6 +714,5 @@ class AppLocalizationsAr extends AppLocalizations {
   String get branchNotAssignedTitle => 'لم يتم تعيين فرع لحسابك';
 
   @override
-  String get branchNotAssignedMessage =>
-      'تعذّر تحميل بيانات هذا القسم لأن حسابك غير مرتبط بأي فرع بعد. يرجى التواصل مع إدارة الشركة لتعيين فرعك.';
+  String get branchNotAssignedMessage => 'تعذّر تحميل بيانات هذا القسم لأن حسابك غير مرتبط بأي فرع بعد. يرجى التواصل مع إدارة الشركة لتعيين فرعك.';
 }
