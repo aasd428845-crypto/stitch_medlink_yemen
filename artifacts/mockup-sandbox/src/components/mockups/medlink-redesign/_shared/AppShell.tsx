@@ -7,7 +7,7 @@ export function TopBar({ role: _role, onBell }: { role: string; onBell: () => vo
 
 export function Nav({ role, active, onChange }: { role: "client"|"branch"|"driver"; active: string; onChange: (key: string) => void }) {
   const items = role === "client" ? [["home","الرئيسية",Home],["catalog","الكتالوج",Grid2X2],["orders","طلباتي",ClipboardList],["profile","حسابي",UserRound]] : role === "branch" ? [["dashboard","الموجز",Home],["orders","الطلبات",ClipboardList],["inventory","المخزون",Package],["drivers","السائقون",Truck]] : [["orders","التوصيلات",Truck],["earnings","الأرباح",Wallet],["chat","الدعم",Headphones]];
-  return <nav className={`ml-nav ${role === "driver" ? "three" : ""}`}>{items.map(([key,label,Icon]) => <button key={key as string} className={active === key ? "active" : ""} onClick={() => onChange(key as string)}><Icon as="svg"/><span>{label as string}</span></button>)}</nav>;
+  return <nav className={`ml-nav ${role === "driver" ? "three" : ""}`}>{items.map(([key,label,Icon]) => <button key={key as string} className={active === key ? "active" : ""} onClick={() => onChange(key as string)}><Icon size={18} strokeWidth={1.8}/><span>{label as string}</span></button>)}</nav>;
 }
 
 export function Screen({ children }: { children: ReactNode }) { return <div className="medlink-frame"><div className="ml-phone">{children}</div></div>; }
