@@ -11,6 +11,7 @@ import 'branch_inventory_tab.dart';
 import 'branch_invoices_tab.dart';
 import 'branch_orders_tab.dart';
 import 'branch_chat_tab.dart';
+import '../../widgets/medlink_design.dart';
 
 /// Bottom-nav shell for the `branch_manager` role.
 class BranchManagerHomeShell extends StatefulWidget {
@@ -69,9 +70,9 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
 
     final branchId = context.watch<AuthController>().profile?.branchId;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(tabDefs[_index].$1),
+    return MedLinkScaffold(
+      appBar: MedLinkTopBar(
+        title: tabDefs[_index].$1,
         actions: const [RoleAppBarActions()],
       ),
       body: branchId == null
@@ -80,7 +81,7 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
               message: l10n.branchNotAssignedMessage,
             )
           : _tabs[_index],
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: MedLinkBottomNav(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
         destinations: [

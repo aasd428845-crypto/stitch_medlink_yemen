@@ -9,6 +9,7 @@ import '../../services/cart_controller.dart';
 import '../../services/catalog_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/product_card.dart';
+import '../../widgets/medlink_design.dart';
 
 /// The "Catalog" tab inside ClientHomeShell.
 /// Provides full-text search (debounced) + category filter chips + product grid.
@@ -60,22 +61,10 @@ class _CatalogTabState extends State<CatalogTab> {
             AppSpacing.md,
             AppSpacing.sm,
           ),
-          child: TextField(
+          child: SearchField(
             controller: _searchController,
+            hintText: l10n.searchHint,
             onChanged: (v) => _onSearchChanged(v, catalog),
-            decoration: InputDecoration(
-              hintText: l10n.searchHint,
-              prefixIcon: const Icon(Icons.search_rounded),
-              suffixIcon: _searchController.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.close_rounded),
-                      onPressed: () {
-                        _searchController.clear();
-                        catalog.updateSearch('');
-                      },
-                    )
-                  : null,
-            ),
           ),
         ),
 
@@ -85,11 +74,9 @@ class _CatalogTabState extends State<CatalogTab> {
             height: 44,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               itemCount: catalog.categories.length + 1, // +1 for "All"
-              separatorBuilder: (_, __) =>
-                  const SizedBox(width: AppSpacing.xs),
+              separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.xs),
               itemBuilder: (context, i) {
                 if (i == 0) {
                   // "All" chip
@@ -116,9 +103,7 @@ class _CatalogTabState extends State<CatalogTab> {
         const Divider(height: 1),
 
         // ── Product grid ──────────────────────────────────────────────
-        Expanded(
-          child: _buildGrid(context, l10n, catalog),
-        ),
+        Expanded(child: _buildGrid(context, l10n, catalog)),
       ],
     );
   }
@@ -137,8 +122,11 @@ class _CatalogTabState extends State<CatalogTab> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline_rounded,
-                size: 48, color: AppColors.error),
+            const Icon(
+              Icons.error_outline_rounded,
+              size: 48,
+              color: AppColors.error,
+            ),
             const SizedBox(height: AppSpacing.sm),
             Text(
               catalog.error!,
@@ -160,10 +148,9 @@ class _CatalogTabState extends State<CatalogTab> {
       return Center(
         child: Text(
           l10n.noProductsFound,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: AppColors.onSurfaceVariant),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppColors.onSurfaceVariant),
         ),
       );
     }

@@ -5,6 +5,7 @@ import '../shared/coming_soon_scaffold.dart';
 import 'driver_earnings_tab.dart';
 import 'driver_chat_tab.dart';
 import 'driver_orders_tab.dart';
+import '../../widgets/medlink_design.dart';
 
 class DriverHomeShell extends StatefulWidget {
   const DriverHomeShell({super.key});
@@ -37,9 +38,9 @@ class _DriverHomeShellState extends State<DriverHomeShell> {
       ),
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(tabs[_index].$1),
+    return MedLinkScaffold(
+      appBar: MedLinkTopBar(
+        title: tabs[_index].$1,
         actions: const [RoleAppBarActions()],
       ),
       body: IndexedStack(
@@ -50,7 +51,7 @@ class _DriverHomeShellState extends State<DriverHomeShell> {
           const DriverChatTab(),
         ],
       ),
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: MedLinkBottomNav(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
         destinations: [

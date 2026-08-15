@@ -138,7 +138,7 @@ class _MedLinkAppState extends State<MedLinkApp> {
       child: MaterialApp.router(
         title: 'MedLink Yemen',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
+        theme: AppTheme.dark,
         routerConfig: _router,
         locale: const Locale('ar'),
         supportedLocales: const [Locale('ar'), Locale('en')],

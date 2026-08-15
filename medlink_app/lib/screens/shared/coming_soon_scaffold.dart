@@ -7,6 +7,7 @@ import '../../services/auth_controller.dart';
 import '../../services/notification_controller.dart';
 import '../../utils/theme.dart';
 import '../../utils/constants.dart';
+import '../../widgets/medlink_design.dart';
 
 /// Placeholder body used by role home screens for sections not yet built in
 /// this batch. Each role screen still owns its real bottom navigation so the
@@ -20,20 +21,35 @@ class ComingSoonBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.construction_rounded, size: 48, color: AppColors.outline),
-          const SizedBox(height: AppSpacing.md),
-          Text(label, style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            l10n.comingSoon,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
-          ),
-        ],
+      child: GlassPanel(
+        margin: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.violet.withValues(alpha: 0.14),
+              ),
+              child: const Icon(
+                Icons.construction_rounded,
+                size: 34,
+                color: AppColors.violet,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(label, style: Theme.of(context).textTheme.headlineSmall),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              l10n.comingSoon,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -59,25 +75,38 @@ class MissingAccountDataBody extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.outline),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
-            ),
-          ],
+        child: GlassPanel(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.warning.withValues(alpha: 0.14),
+                ),
+                child: const Icon(
+                  Icons.account_tree_outlined,
+                  size: 34,
+                  color: AppColors.warning,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

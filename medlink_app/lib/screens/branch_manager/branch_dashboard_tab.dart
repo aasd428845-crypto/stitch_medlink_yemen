@@ -9,6 +9,7 @@ import '../../widgets/branch_order_card.dart';
 import '../../widgets/error_banner.dart';
 import '../../widgets/stat_card.dart';
 import 'branch_order_actions.dart';
+import '../../widgets/medlink_design.dart';
 
 /// Branch manager landing tab: quick stat cards + the 5 most recent orders.
 class BranchDashboardTab extends StatelessWidget {
@@ -59,11 +60,7 @@ class BranchDashboardTab extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text(
-            l10n.branchDashboardRecentOrders,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: AppSpacing.sm),
+          SectionHeading(title: l10n.branchDashboardRecentOrders),
           if (branch.isLoadingOrders && branch.orders.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),

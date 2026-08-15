@@ -9,6 +9,7 @@ import '../../services/catalog_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/offer_banner_card.dart';
 import '../../widgets/product_card.dart';
+import '../../widgets/medlink_design.dart';
 
 /// The "Home" tab inside ClientHomeShell.
 /// Shows promotional offers banner + categories quick-access + recent products.
@@ -69,11 +70,11 @@ class _HomeTabState extends State<HomeTab> {
                         Expanded(
                           child: Text(
                             userName,
-                            style:
-                                Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w700,
+                                ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -83,10 +84,9 @@ class _HomeTabState extends State<HomeTab> {
                   const SizedBox(height: 2),
                   Text(
                     l10n.homeSubtitle,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppColors.onSurfaceVariant),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -96,7 +96,7 @@ class _HomeTabState extends State<HomeTab> {
           // ── Offers section ────────────────────────────────────────────
           if (catalog.offers.isNotEmpty || catalog.isLoading) ...[
             SliverToBoxAdapter(
-              child: _SectionHeader(title: l10n.offersSection),
+              child: SectionHeading(title: l10n.offersSection),
             ),
             SliverToBoxAdapter(
               child: SizedBox(
@@ -130,7 +130,7 @@ class _HomeTabState extends State<HomeTab> {
           // ── Categories quick-access ───────────────────────────────────
           if (catalog.categories.isNotEmpty) ...[
             SliverToBoxAdapter(
-              child: _SectionHeader(title: l10n.exploreCategories),
+              child: SectionHeading(title: l10n.exploreCategories),
             ),
             SliverToBoxAdapter(
               child: SizedBox(
@@ -160,9 +160,7 @@ class _HomeTabState extends State<HomeTab> {
           ],
 
           // ── Featured products ─────────────────────────────────────────
-          SliverToBoxAdapter(
-            child: _SectionHeader(title: l10n.catalogTitle),
-          ),
+          SliverToBoxAdapter(child: SectionHeading(title: l10n.catalogTitle)),
 
           if (catalog.isLoading && catalog.products.isEmpty)
             const SliverFillRemaining(
@@ -174,11 +172,16 @@ class _HomeTabState extends State<HomeTab> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.error_outline_rounded,
-                        size: 48, color: AppColors.error),
+                    const Icon(
+                      Icons.error_outline_rounded,
+                      size: 48,
+                      color: AppColors.error,
+                    ),
                     const SizedBox(height: AppSpacing.sm),
-                    Text(catalog.error!,
-                        style: Theme.of(context).textTheme.bodyMedium),
+                    Text(
+                      catalog.error!,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                     const SizedBox(height: AppSpacing.md),
                     FilledButton.icon(
                       onPressed: catalog.loadProducts,
@@ -196,10 +199,9 @@ class _HomeTabState extends State<HomeTab> {
                 child: Center(
                   child: Text(
                     l10n.noProductsFound,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppColors.onSurfaceVariant),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
                   ),
                 ),
               ),
@@ -219,50 +221,25 @@ class _HomeTabState extends State<HomeTab> {
                   mainAxisSpacing: AppSpacing.sm,
                   childAspectRatio: 0.72,
                 ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, i) {
-                    final product = catalog.products[i];
-                    return ProductCard(
-                      product: product,
-                      onTap: () =>
-                          context.push('/client/product/${product.id}'),
-                      onAdd: () {
-                        context.read<CartController>().addItem(product);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(l10n.addedToCart),
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  childCount: catalog.products.length,
-                ),
+                delegate: SliverChildBuilderDelegate((context, i) {
+                  final product = catalog.products[i];
+                  return ProductCard(
+                    product: product,
+                    onTap: () => context.push('/client/product/${product.id}'),
+                    onAdd: () {
+                      context.read<CartController>().addItem(product);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(l10n.addedToCart),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    },
+                  );
+                }, childCount: catalog.products.length),
               ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title});
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.md,
-        AppSpacing.sm,
-        AppSpacing.md,
-        AppSpacing.sm,
-      ),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.headlineSmall,
       ),
     );
   }

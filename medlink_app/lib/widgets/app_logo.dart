@@ -19,7 +19,7 @@ class AppLogo extends StatelessWidget {
       child: Center(
         child: Icon(
           Icons.local_hospital_rounded,
-          color: Colors.white,
+          color: AppColors.onPrimary,
           size: size * 0.55,
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/cart_controller.dart';
 import '../shared/coming_soon_scaffold.dart';
+import '../../widgets/medlink_design.dart';
 import 'catalog_tab.dart';
 import 'home_tab.dart';
 import 'orders_tab.dart';
@@ -24,11 +25,7 @@ class ClientHomeShell extends StatefulWidget {
 class _ClientHomeShellState extends State<ClientHomeShell> {
   int _index = 0;
 
-  static const _tabs = [
-    HomeTab(),
-    CatalogTab(),
-    OrdersTab(),
-  ];
+  static const _tabs = [HomeTab(), CatalogTab(), OrdersTab()];
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +34,16 @@ class _ClientHomeShellState extends State<ClientHomeShell> {
 
     final tabDefs = [
       (l10n.clientHomeLabel, Icons.home_outlined, Icons.home_rounded),
-      (l10n.clientCatalogLabel, Icons.grid_view_outlined, Icons.grid_view_rounded),
-      (l10n.clientOrdersLabel, Icons.receipt_long_outlined, Icons.receipt_long_rounded),
+      (
+        l10n.clientCatalogLabel,
+        Icons.grid_view_outlined,
+        Icons.grid_view_rounded,
+      ),
+      (
+        l10n.clientOrdersLabel,
+        Icons.receipt_long_outlined,
+        Icons.receipt_long_rounded,
+      ),
       (l10n.clientProfileLabel, Icons.person_outline, Icons.person_rounded),
     ];
 
@@ -49,9 +54,9 @@ class _ClientHomeShellState extends State<ClientHomeShell> {
       body = ComingSoonBody(label: tabDefs[_index].$1);
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(tabDefs[_index].$1),
+    return MedLinkScaffold(
+      appBar: MedLinkTopBar(
+        title: tabDefs[_index].$1,
         actions: [
           IconButton(
             icon: Badge(
@@ -65,7 +70,7 @@ class _ClientHomeShellState extends State<ClientHomeShell> {
         ],
       ),
       body: body,
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: MedLinkBottomNav(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
         destinations: [

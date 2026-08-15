@@ -4,6 +4,7 @@ import '../l10n/app_localizations.dart';
 import '../models/order.dart';
 import '../utils/theme.dart';
 import 'order_status_chip.dart';
+import 'medlink_design.dart';
 
 /// Order card shown in the branch manager's orders tab. Exposes quick
 /// actions (assign driver / transfer / reject) alongside a tap-through to
@@ -30,11 +31,12 @@ class BranchOrderCard extends StatelessWidget {
     final theme = Theme.of(context);
     final canAct = order.status == 'pending' || order.status == 'assigned';
 
-    return Card(
+    return GlassPanel(
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: EdgeInsets.zero,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadius.md),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Column(
@@ -48,8 +50,9 @@ class BranchOrderCard extends StatelessWidget {
                       order.client?.name?.isNotEmpty == true
                           ? order.client!.name!
                           : '${l10n.orderNumber} ${order.id.substring(0, 8)}',
-                      style: theme.textTheme.bodyLarge
-                          ?.copyWith(fontWeight: FontWeight.w700),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -91,7 +94,10 @@ class BranchOrderCard extends StatelessWidget {
                     if (order.status == 'pending')
                       OutlinedButton.icon(
                         onPressed: onAssignDriver,
-                        icon: const Icon(Icons.person_add_alt_1_outlined, size: 18),
+                        icon: const Icon(
+                          Icons.person_add_alt_1_outlined,
+                          size: 18,
+                        ),
                         label: Text(l10n.branchAssignDriver),
                         style: OutlinedButton.styleFrom(
                           minimumSize: const Size(0, 36),
@@ -110,7 +116,11 @@ class BranchOrderCard extends StatelessWidget {
                     if (order.status == 'pending')
                       OutlinedButton.icon(
                         onPressed: onReject,
-                        icon: const Icon(Icons.close_rounded, size: 18, color: AppColors.error),
+                        icon: const Icon(
+                          Icons.close_rounded,
+                          size: 18,
+                          color: AppColors.error,
+                        ),
                         label: Text(
                           l10n.branchRejectOrder,
                           style: const TextStyle(color: AppColors.error),
