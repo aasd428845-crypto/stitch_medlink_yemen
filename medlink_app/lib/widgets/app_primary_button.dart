@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/theme.dart';
+
 class AppPrimaryButton extends StatelessWidget {
   const AppPrimaryButton({
     super.key,
