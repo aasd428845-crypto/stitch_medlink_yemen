@@ -7,9 +7,9 @@ import '../../services/branch_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/branch_order_card.dart';
 import '../../widgets/error_banner.dart';
+import 'branch_manager_design.dart';
 import 'branch_order_actions.dart';
 
-/// Full incoming-orders list with status filter chips.
 class BranchOrdersTab extends StatelessWidget {
   const BranchOrdersTab({super.key});
 
@@ -17,7 +17,6 @@ class BranchOrdersTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final branch = context.watch<BranchController>();
-
     final filters = <String?, String>{
       null: l10n.branchOrderFilterAll,
       'pending': l10n.branchOrderFilterPending,
@@ -29,51 +28,68 @@ class BranchOrdersTab extends StatelessWidget {
 
     return Column(
       children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Row(
+            children: [
+              Expanded(child: Text('الطلبات', style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w800))),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: .10), borderRadius: BorderRadius.circular(99), border: Border.all(color: AppColors.primary.withValues(alpha: .22))),
+                child: Text('${branch.filteredOrders.length} طلب', style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w800)),
+              ),
+            ],
+          ),
+        ),
         SizedBox(
           height: 48,
-          child: ListView(
+          child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.xs,
-            ),
-            children: [
-              for (final entry in filters.entries)
-                Padding(
-                  padding: const EdgeInsets.only(left: AppSpacing.xs),
-                  child: ChoiceChip(
-                    label: Text(entry.value),
-                    selected: branch.orderFilter == entry.key,
-                    onSelected: (_) => branch.setOrderFilter(entry.key),
-                  ),
-                ),
-            ],
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            itemCount: filters.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 7),
+            itemBuilder: (context, index) {
+              final entry = filters.entries.elementAt(index);
+              final selected = branch.orderFilter == entry.key;
+              return ChoiceChip(
+                label: Text(entry.value),
+                selected: selected,
+                onSelected: (_) => branch.setOrderFilter(entry.key),
+                backgroundColor: const Color(0xFF0E1B2B),
+                selectedColor: AppColors.primary.withValues(alpha: .16),
+                side: BorderSide(color: selected ? AppColors.primary.withValues(alpha: .35) : const Color(0xFF29445A)),
+                labelStyle: TextStyle(color: selected ? AppColors.primary : const Color(0xFF9FB1BD), fontWeight: FontWeight.w700, fontSize: 12),
+                showCheckmark: false,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(99)),
+              );
+            },
           ),
         ),
         Expanded(
           child: RefreshIndicator(
+            color: AppColors.primary,
+            backgroundColor: const Color(0xFF102238),
             onRefresh: branch.loadOrders,
             child: ListView(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
               children: [
                 if (branch.ordersError != null) ...[
                   ErrorBanner(message: branch.ordersError!),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: 12),
                 ],
                 if (branch.isLoadingOrders && branch.orders.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
-                    child: Center(child: CircularProgressIndicator()),
-                  )
+                  const Padding(padding: EdgeInsets.symmetric(vertical: 55), child: Center(child: CircularProgressIndicator()))
                 else if (branch.filteredOrders.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
-                    child: Center(
-                      child: Text(
-                        l10n.noOrdersFound,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
+                  const BranchManagerSurface(
+                    margin: EdgeInsets.only(top: 20),
+                    child: Column(children: [
+                      Icon(Icons.inbox_rounded, size: 38, color: Color(0xFF6E8798)),
+                      SizedBox(height: 10),
+                      Text('لا توجد طلبات في هذه الحالة', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                      SizedBox(height: 4),
+                      Text('جرّب تغيير الفلتر أو اسحب للأسفل للتحديث.', style: TextStyle(color: Color(0xFF8EA3B1), fontSize: 12)),
+                    ]),
                   )
                 else
                   for (final order in branch.filteredOrders)

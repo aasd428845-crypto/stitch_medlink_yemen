@@ -6,9 +6,6 @@ import '../utils/theme.dart';
 import 'order_status_chip.dart';
 import 'medlink_design.dart';
 
-/// Order card shown in the branch manager's orders tab. Exposes quick
-/// actions (assign driver / transfer / reject) alongside a tap-through to
-/// the full detail screen.
 class BranchOrderCard extends StatelessWidget {
   const BranchOrderCard({
     super.key,
@@ -30,113 +27,123 @@ class BranchOrderCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final canAct = order.status == 'pending' || order.status == 'assigned';
+    final clientName = order.client?.name?.isNotEmpty == true
+        ? order.client!.name!
+        : '${l10n.orderNumber} ${order.id.substring(0, 8)}';
 
-    return GlassPanel(
-      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-      padding: EdgeInsets.zero,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 2),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0E1B2B).withValues(alpha: .86),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: const Color(0xFF29445A).withValues(alpha: .72)),
+      ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
+        borderRadius: BorderRadius.circular(22),
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: const EdgeInsets.all(15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: .10),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: const Icon(Icons.receipt_long_rounded, color: AppColors.primary, size: 21),
+                  ),
+                  const SizedBox(width: 11),
                   Expanded(
-                    child: Text(
-                      order.client?.name?.isNotEmpty == true
-                          ? order.client!.name!
-                          : '${l10n.orderNumber} ${order.id.substring(0, 8)}',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(clientName, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                        const SizedBox(height: 3),
+                        Text('${l10n.orderNumber} ${order.id.substring(0, 8)}', style: theme.textTheme.labelSmall?.copyWith(color: const Color(0xFF7F96A6))),
+                      ],
                     ),
                   ),
                   OrderStatusChip(status: order.status),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.chevron_left_rounded, color: Color(0xFF71899A)),
                 ],
               ),
-              const SizedBox(height: 2),
-              if (order.deliveryAddress != null)
-                Text(
-                  order.deliveryAddress!.addressText,
-                  style: theme.textTheme.bodySmall,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+              if (order.deliveryAddress != null) ...[
+                const SizedBox(height: 13),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on_outlined, size: 16, color: Color(0xFF7E9CAF)),
+                    const SizedBox(width: 6),
+                    Expanded(child: Text(order.deliveryAddress!.addressText, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFF9EB0BC)))),
+                  ],
                 ),
-              const SizedBox(height: AppSpacing.xs),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${order.totalAmount.toStringAsFixed(0)} ﷼',
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  if (order.assignedDriver?.name?.isNotEmpty == true)
-                    Text(
-                      '${l10n.branchDriversLabel}: ${order.assignedDriver!.name}',
-                      style: theme.textTheme.bodySmall,
-                    ),
-                ],
+              ],
+              const SizedBox(height: 13),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(color: const Color(0xFF091522).withValues(alpha: .72), borderRadius: BorderRadius.circular(15)),
+                child: Row(
+                  children: [
+                    const Icon(Icons.payments_outlined, size: 17, color: Color(0xFF66E4E0)),
+                    const SizedBox(width: 7),
+                    Text('${order.totalAmount.toStringAsFixed(0)} ﷼', style: theme.textTheme.titleSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                    const Spacer(),
+                    if (order.assignedDriver?.name?.isNotEmpty == true) ...[
+                      const Icon(Icons.local_shipping_outlined, size: 16, color: Color(0xFF8299A9)),
+                      const SizedBox(width: 5),
+                      Flexible(child: Text(order.assignedDriver!.name!, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.labelSmall?.copyWith(color: const Color(0xFF9EB0BC)))),
+                    ],
+                  ],
+                ),
               ),
               if (canAct) ...[
-                const Divider(height: AppSpacing.md),
+                const SizedBox(height: 12),
                 Wrap(
-                  spacing: AppSpacing.xs,
+                  spacing: 7,
+                  runSpacing: 7,
                   children: [
                     if (order.status == 'pending')
-                      OutlinedButton.icon(
-                        onPressed: onAssignDriver,
-                        icon: const Icon(
-                          Icons.person_add_alt_1_outlined,
-                          size: 18,
-                        ),
-                        label: Text(l10n.branchAssignDriver),
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: const Size(0, 36),
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                        ),
-                      ),
-                    OutlinedButton.icon(
-                      onPressed: onTransfer,
-                      icon: const Icon(Icons.compare_arrows_rounded, size: 18),
-                      label: Text(l10n.branchTransferOrder),
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: const Size(0, 36),
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                      ),
-                    ),
+                      _ActionButton(icon: Icons.person_add_alt_1_rounded, label: l10n.branchAssignDriver, onTap: onAssignDriver),
+                    _ActionButton(icon: Icons.compare_arrows_rounded, label: l10n.branchTransferOrder, onTap: onTransfer),
                     if (order.status == 'pending')
-                      OutlinedButton.icon(
-                        onPressed: onReject,
-                        icon: const Icon(
-                          Icons.close_rounded,
-                          size: 18,
-                          color: AppColors.error,
-                        ),
-                        label: Text(
-                          l10n.branchRejectOrder,
-                          style: const TextStyle(color: AppColors.error),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: const Size(0, 36),
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          side: const BorderSide(color: AppColors.error),
-                        ),
-                      ),
+                      _ActionButton(icon: Icons.close_rounded, label: l10n.branchRejectOrder, onTap: onReject, danger: true),
                   ],
                 ),
               ],
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({required this.icon, required this.label, required this.onTap, this.danger = false});
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool danger;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = danger ? AppColors.error : AppColors.primary;
+    return OutlinedButton.icon(
+      onPressed: onTap,
+      icon: Icon(icon, size: 16, color: color),
+      label: Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700)),
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(0, 38),
+        padding: const EdgeInsets.symmetric(horizontal: 11),
+        side: BorderSide(color: color.withValues(alpha: .28)),
+        backgroundColor: color.withValues(alpha: .06),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
       ),
     );
   }
