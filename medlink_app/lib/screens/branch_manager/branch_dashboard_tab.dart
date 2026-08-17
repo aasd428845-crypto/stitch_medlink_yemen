@@ -13,7 +13,9 @@ import 'branch_order_actions.dart';
 /// Premium branch-manager dashboard. Business logic and controller contracts
 /// are intentionally preserved; this file changes presentation only.
 class BranchDashboardTab extends StatelessWidget {
-  const BranchDashboardTab({super.key});
+  const BranchDashboardTab({super.key, this.onNavigate});
+
+  final ValueChanged<int>? onNavigate;
 
   @override
   Widget build(BuildContext context) {
@@ -58,17 +60,17 @@ class BranchDashboardTab extends StatelessWidget {
           const SizedBox(height: 10),
           Row(
             children: [
-              Expanded(child: BranchQuickAction(icon: Icons.receipt_long_rounded, label: 'الفواتير', color: const Color(0xFF8C9EFF), onTap: () => _openTab(context, 3))),
+              Expanded(child: BranchQuickAction(icon: Icons.receipt_long_rounded, label: 'الفواتير', color: const Color(0xFF8C9EFF), onTap: () => onNavigate?.call(3))),
               const SizedBox(width: 9),
-              Expanded(child: BranchQuickAction(icon: Icons.inventory_2_rounded, label: 'المخزون', color: const Color(0xFF5AD9B6), onTap: () => _openTab(context, 2))),
+              Expanded(child: BranchQuickAction(icon: Icons.inventory_2_rounded, label: 'المخزون', color: const Color(0xFF5AD9B6), onTap: () => onNavigate?.call(2))),
               const SizedBox(width: 9),
-              Expanded(child: BranchQuickAction(icon: Icons.groups_rounded, label: 'السائقون', color: const Color(0xFFFFB86B), onTap: () => _openTab(context, 4))),
+              Expanded(child: BranchQuickAction(icon: Icons.groups_rounded, label: 'السائقون', color: const Color(0xFFFFB86B), onTap: () => onNavigate?.call(4))),
               const SizedBox(width: 9),
-              Expanded(child: BranchQuickAction(icon: Icons.chat_bubble_rounded, label: 'المحادثات', color: const Color(0xFF66E4E0), onTap: () => _openTab(context, 5))),
+              Expanded(child: BranchQuickAction(icon: Icons.chat_bubble_rounded, label: 'المحادثات', color: const Color(0xFF66E4E0), onTap: () => onNavigate?.call(5))),
             ],
           ),
           const SizedBox(height: 24),
-          BranchSectionTitle(title: l10n.branchDashboardRecentOrders, action: 'كل الطلبات', onAction: () => _openTab(context, 1)),
+          BranchSectionTitle(title: l10n.branchDashboardRecentOrders, action: 'كل الطلبات', onAction: () => onNavigate?.call(1)),
           const SizedBox(height: 10),
           if (branch.isLoadingOrders && branch.orders.isEmpty)
             const Padding(
@@ -100,20 +102,8 @@ class BranchDashboardTab extends StatelessWidget {
                   onReject: () => showRejectOrderConfirm(context, order),
                 ),
               ),
-          const SizedBox(height: 10),
         ],
       ),
     );
   }
-
-  static void _openTab(BuildContext context, int index) {
-    final state = context.findAncestorStateOfType<_BranchManagerHomeShellStateProxy>();
-    state?.select(index);
-  }
-}
-
-/// Interface used by the shell without coupling the dashboard to its private
-/// State implementation.
-abstract class _BranchManagerHomeShellStateProxy extends State<StatefulWidget> {
-  void select(int index);
 }
