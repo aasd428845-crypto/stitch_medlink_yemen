@@ -24,15 +24,6 @@ class BranchManagerHomeShell extends StatefulWidget {
 class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
   int _index = 0;
 
-  static const _tabs = [
-    BranchDashboardTab(),
-    BranchOrdersTab(),
-    BranchInventoryTab(),
-    BranchInvoicesTab(),
-    BranchDriversTab(),
-    BranchChatTab(),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -48,31 +39,28 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final tabDefs = [
-      (
-        l10n.branchDashboardLabel,
-        Icons.dashboard_outlined,
-        Icons.dashboard_rounded,
-      ),
+      (l10n.branchDashboardLabel, Icons.dashboard_outlined, Icons.dashboard_rounded),
       (l10n.branchOrdersLabel, Icons.list_alt_outlined, Icons.list_alt_rounded),
-      (
-        l10n.branchInventoryLabel,
-        Icons.inventory_2_outlined,
-        Icons.inventory_2_rounded,
-      ),
+      (l10n.branchInventoryLabel, Icons.inventory_2_outlined, Icons.inventory_2_rounded),
       (l10n.branchInvoicesLabel, Icons.receipt_outlined, Icons.receipt_rounded),
-      (
-        l10n.branchDriversLabel,
-        Icons.local_shipping_outlined,
-        Icons.local_shipping_rounded,
-      ),
+      (l10n.branchDriversLabel, Icons.local_shipping_outlined, Icons.local_shipping_rounded),
       (l10n.chatTitle, Icons.chat_bubble_outline, Icons.chat_bubble_rounded),
     ];
 
     final branchId = context.watch<AuthController>().profile?.branchId;
+    final tabs = [
+      BranchDashboardTab(onNavigate: (i) => setState(() => _index = i)),
+      const BranchOrdersTab(),
+      const BranchInventoryTab(),
+      const BranchInvoicesTab(),
+      const BranchDriversTab(),
+      const BranchChatTab(),
+    ];
 
     return MedLinkScaffold(
       appBar: MedLinkTopBar(
         title: tabDefs[_index].$1,
+        subtitle: 'MedLink · إدارة الفرع',
         actions: const [RoleAppBarActions()],
       ),
       body: branchId == null
@@ -80,7 +68,7 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
               title: l10n.branchNotAssignedTitle,
               message: l10n.branchNotAssignedMessage,
             )
-          : _tabs[_index],
+          : tabs[_index],
       bottomNavigationBar: MedLinkBottomNav(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
