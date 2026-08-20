@@ -98,7 +98,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.error_outline_rounded,
-                          size: 48, color: AppColors.error),
+                          size: 48, color: BranchColors.error),
                       const SizedBox(height: AppSpacing.sm),
                       Text(_error!, style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: AppSpacing.md),
@@ -147,7 +147,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.phone_outlined, size: 16, color: AppColors.onSurfaceVariant),
+                        const Icon(Icons.phone_outlined, size: 16, color: BranchColors.onSurfaceVariant),
                         const SizedBox(width: 4),
                         Text(order.client!.phone!, style: theme.textTheme.bodySmall),
                       ],
@@ -159,7 +159,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Icon(Icons.location_on_outlined,
-                            size: 16, color: AppColors.onSurfaceVariant),
+                            size: 16, color: BranchColors.onSurfaceVariant),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(order.deliveryAddress!.addressText,
@@ -208,7 +208,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                     ListTile(
                       dense: true,
                       leading: item.isBonus
-                          ? const Icon(Icons.card_giftcard_rounded, color: AppColors.warning)
+                          ? const Icon(Icons.card_giftcard_rounded, color: BranchColors.warning)
                           : const Icon(Icons.medication_outlined),
                       title: Text(item.product?.name ?? '—'),
                       subtitle: Text('${l10n.orderItemsCount}: ${item.quantity}'),
@@ -218,7 +218,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                             : '${(item.unitPrice * item.quantity).toStringAsFixed(0)} ﷼',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: item.isBonus ? AppColors.warning : null,
+                          color: item.isBonus ? BranchColors.warning : null,
                         ),
                       ),
                     ),
@@ -233,7 +233,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                         Text(
                           '${order.totalAmount.toStringAsFixed(0)} ﷼',
                           style: theme.textTheme.headlineSmall
-                              ?.copyWith(color: AppColors.primary, fontWeight: FontWeight.w700),
+                              ?.copyWith(color: BranchColors.primary, fontWeight: FontWeight.w700),
                         ),
                       ],
                     ),

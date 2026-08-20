@@ -4,13 +4,13 @@ import '../l10n/app_localizations.dart';
 import '../models/order.dart';
 import '../utils/theme.dart';
 import 'order_status_chip.dart';
-import 'medlink_design.dart';
 
 class BranchOrderCard extends StatelessWidget {
   const BranchOrderCard({
     super.key,
     required this.order,
     required this.onTap,
+    required this.onAllocate,
     required this.onAssignDriver,
     required this.onTransfer,
     required this.onReject,
@@ -18,6 +18,7 @@ class BranchOrderCard extends StatelessWidget {
 
   final OrderModel order;
   final VoidCallback onTap;
+  final VoidCallback onAllocate;
   final VoidCallback onAssignDriver;
   final VoidCallback onTransfer;
   final VoidCallback onReject;
@@ -34,9 +35,9 @@ class BranchOrderCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 2),
       decoration: BoxDecoration(
-        color: const Color(0xFF0E1B2B).withValues(alpha: .86),
+        color: BranchColors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFF29445A).withValues(alpha: .72)),
+        border: Border.all(color: BranchColors.outlineVariant),
       ),
       child: InkWell(
         onTap: onTap,
@@ -52,51 +53,110 @@ class BranchOrderCard extends StatelessWidget {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: .10),
+                      color: BranchColors.primary.withValues(alpha: .10),
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    child: const Icon(Icons.receipt_long_rounded, color: AppColors.primary, size: 21),
+                    child: const Icon(
+                      Icons.receipt_long_rounded,
+                      color: BranchColors.primary,
+                      size: 21,
+                    ),
                   ),
                   const SizedBox(width: 11),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(clientName, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                        Text(
+                          clientName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: BranchColors.onSurface,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                         const SizedBox(height: 3),
-                        Text('${l10n.orderNumber} ${order.id.substring(0, 8)}', style: theme.textTheme.labelSmall?.copyWith(color: const Color(0xFF7F96A6))),
+                        Text(
+                          '${l10n.orderNumber} ${order.id.substring(0, 8)}',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: BranchColors.onSurfaceVariant,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   OrderStatusChip(status: order.status),
                   const SizedBox(width: 4),
-                  const Icon(Icons.chevron_left_rounded, color: Color(0xFF71899A)),
+                  const Icon(
+                    Icons.chevron_left_rounded,
+                    color: BranchColors.onSurfaceVariant,
+                  ),
                 ],
               ),
               if (order.deliveryAddress != null) ...[
                 const SizedBox(height: 13),
                 Row(
                   children: [
-                    const Icon(Icons.location_on_outlined, size: 16, color: Color(0xFF7E9CAF)),
+                    const Icon(
+                      Icons.location_on_outlined,
+                      size: 16,
+                      color: BranchColors.onSurfaceVariant,
+                    ),
                     const SizedBox(width: 6),
-                    Expanded(child: Text(order.deliveryAddress!.addressText, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFF9EB0BC)))),
+                    Expanded(
+                      child: Text(
+                        order.deliveryAddress!.addressText,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: BranchColors.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],
               const SizedBox(height: 13),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                decoration: BoxDecoration(color: const Color(0xFF091522).withValues(alpha: .72), borderRadius: BorderRadius.circular(15)),
+                decoration: BoxDecoration(
+                  color: BranchColors.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(15),
+                ),
                 child: Row(
                   children: [
-                    const Icon(Icons.payments_outlined, size: 17, color: Color(0xFF66E4E0)),
+                    const Icon(
+                      Icons.payments_outlined,
+                      size: 17,
+                      color: BranchColors.primary,
+                    ),
                     const SizedBox(width: 7),
-                    Text('${order.totalAmount.toStringAsFixed(0)} ﷼', style: theme.textTheme.titleSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                    Text(
+                      '${order.totalAmount.toStringAsFixed(0)} ﷼',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: BranchColors.onSurface,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                     const Spacer(),
                     if (order.assignedDriver?.name?.isNotEmpty == true) ...[
-                      const Icon(Icons.local_shipping_outlined, size: 16, color: Color(0xFF8299A9)),
+                      const Icon(
+                        Icons.local_shipping_outlined,
+                        size: 16,
+                        color: BranchColors.onSurfaceVariant,
+                      ),
                       const SizedBox(width: 5),
-                      Flexible(child: Text(order.assignedDriver!.name!, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.labelSmall?.copyWith(color: const Color(0xFF9EB0BC)))),
+                      Flexible(
+                        child: Text(
+                          order.assignedDriver!.name!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: BranchColors.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
                     ],
                   ],
                 ),
@@ -108,10 +168,29 @@ class BranchOrderCard extends StatelessWidget {
                   runSpacing: 7,
                   children: [
                     if (order.status == 'pending')
-                      _ActionButton(icon: Icons.person_add_alt_1_rounded, label: l10n.branchAssignDriver, onTap: onAssignDriver),
-                    _ActionButton(icon: Icons.compare_arrows_rounded, label: l10n.branchTransferOrder, onTap: onTransfer),
+                      _ActionButton(
+                        icon: Icons.auto_awesome_rounded,
+                        label: 'تخصيص',
+                        onTap: onAllocate,
+                      ),
                     if (order.status == 'pending')
-                      _ActionButton(icon: Icons.close_rounded, label: l10n.branchRejectOrder, onTap: onReject, danger: true),
+                      _ActionButton(
+                        icon: Icons.person_add_alt_1_rounded,
+                        label: l10n.branchAssignDriver,
+                        onTap: onAssignDriver,
+                      ),
+                    _ActionButton(
+                      icon: Icons.compare_arrows_rounded,
+                      label: l10n.branchTransferOrder,
+                      onTap: onTransfer,
+                    ),
+                    if (order.status == 'pending')
+                      _ActionButton(
+                        icon: Icons.close_rounded,
+                        label: l10n.branchRejectOrder,
+                        onTap: onReject,
+                        danger: true,
+                      ),
                   ],
                 ),
               ],
@@ -124,7 +203,12 @@ class BranchOrderCard extends StatelessWidget {
 }
 
 class _ActionButton extends StatelessWidget {
-  const _ActionButton({required this.icon, required this.label, required this.onTap, this.danger = false});
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.danger = false,
+  });
 
   final IconData icon;
   final String label;
@@ -133,11 +217,14 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = danger ? AppColors.error : AppColors.primary;
+    final color = danger ? BranchColors.error : BranchColors.primary;
     return OutlinedButton.icon(
       onPressed: onTap,
       icon: Icon(icon, size: 16, color: color),
-      label: Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700)),
+      label: Text(
+        label,
+        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700),
+      ),
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(0, 38),
         padding: const EdgeInsets.symmetric(horizontal: 11),

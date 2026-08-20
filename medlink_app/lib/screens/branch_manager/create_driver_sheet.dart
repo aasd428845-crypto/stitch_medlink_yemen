@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -67,7 +68,7 @@ class _CreateDriverSheetState extends State<CreateDriverSheet> {
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        icon: const Icon(Icons.check_circle_rounded, color: Colors.green, size: 40),
+        icon: const Icon(Icons.check_circle_rounded, color: BranchColors.success, size: 40),
         title: Text(l10n.driverCreatedSuccess),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -75,10 +76,17 @@ class _CreateDriverSheetState extends State<CreateDriverSheet> {
           children: [
             Text(l10n.driverCreatedMessage),
             const SizedBox(height: AppSpacing.md),
-            _CredentialRow(label: l10n.emailLabel, value: email),
+            _CredentialRow(
+              label: l10n.emailLabel,
+              value: email,
+              onCopy: () => _copy(ctx, email),
+            ),
             const SizedBox(height: AppSpacing.xs),
             _CredentialRow(
-                label: l10n.driverTempPasswordLabel, value: password),
+              label: l10n.driverTempPasswordLabel,
+              value: password,
+              onCopy: () => _copy(ctx, password),
+            ),
           ],
         ),
         actions: [
@@ -91,6 +99,13 @@ class _CreateDriverSheetState extends State<CreateDriverSheet> {
           ),
         ],
       ),
+    );
+  }
+
+  void _copy(BuildContext ctx, String value) {
+    Clipboard.setData(ClipboardData(text: value));
+    ScaffoldMessenger.of(ctx).showSnackBar(
+      const SnackBar(content: Text('تم النسخ'), duration: Duration(seconds: 1)),
     );
   }
 
@@ -180,10 +195,15 @@ class _CreateDriverSheetState extends State<CreateDriverSheet> {
 }
 
 class _CredentialRow extends StatelessWidget {
-  const _CredentialRow({required this.label, required this.value});
+  const _CredentialRow({
+    required this.label,
+    required this.value,
+    required this.onCopy,
+  });
 
   final String label;
   final String value;
+  final VoidCallback onCopy;
 
   @override
   Widget build(BuildContext context) {
@@ -199,6 +219,12 @@ class _CredentialRow extends StatelessWidget {
             value,
             style: const TextStyle(fontFamily: 'monospace'),
           ),
+        ),
+        IconButton(
+          tooltip: 'نسخ',
+          icon: const Icon(Icons.copy_rounded, size: 17),
+          visualDensity: VisualDensity.compact,
+          onPressed: onCopy,
         ),
       ],
     );

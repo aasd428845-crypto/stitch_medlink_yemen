@@ -31,6 +31,7 @@ mixin _$OrderModel {
   @JsonKey(name: 'target_branches')
   List<String>? get targetBranches => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
+  String get priority => throw _privateConstructorUsedError;
   @JsonKey(name: 'delivery_address_id')
   String? get deliveryAddressId => throw _privateConstructorUsedError;
   @JsonKey(name: 'assigned_driver_id')
@@ -39,6 +40,8 @@ mixin _$OrderModel {
   double get totalAmount => throw _privateConstructorUsedError;
   @JsonKey(name: 'scheduled_delivery_at')
   String? get scheduledDeliveryAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'delivered_at')
+  String? get deliveredAt => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   String? get createdAt => throw _privateConstructorUsedError; // Joined relations
@@ -75,10 +78,12 @@ abstract class $OrderModelCopyWith<$Res> {
     @JsonKey(name: 'parent_order_id') String? parentOrderId,
     @JsonKey(name: 'target_branches') List<String>? targetBranches,
     String status,
+    String priority,
     @JsonKey(name: 'delivery_address_id') String? deliveryAddressId,
     @JsonKey(name: 'assigned_driver_id') String? assignedDriverId,
     @JsonKey(name: 'total_amount') double totalAmount,
     @JsonKey(name: 'scheduled_delivery_at') String? scheduledDeliveryAt,
+    @JsonKey(name: 'delivered_at') String? deliveredAt,
     String? notes,
     @JsonKey(name: 'created_at') String? createdAt,
     @JsonKey(name: 'delivery_address') ClientAddress? deliveryAddress,
@@ -113,10 +118,12 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
     Object? parentOrderId = freezed,
     Object? targetBranches = freezed,
     Object? status = null,
+    Object? priority = null,
     Object? deliveryAddressId = freezed,
     Object? assignedDriverId = freezed,
     Object? totalAmount = null,
     Object? scheduledDeliveryAt = freezed,
+    Object? deliveredAt = freezed,
     Object? notes = freezed,
     Object? createdAt = freezed,
     Object? deliveryAddress = freezed,
@@ -150,6 +157,10 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as String,
+            priority: null == priority
+                ? _value.priority
+                : priority // ignore: cast_nullable_to_non_nullable
+                      as String,
             deliveryAddressId: freezed == deliveryAddressId
                 ? _value.deliveryAddressId
                 : deliveryAddressId // ignore: cast_nullable_to_non_nullable
@@ -165,6 +176,10 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
             scheduledDeliveryAt: freezed == scheduledDeliveryAt
                 ? _value.scheduledDeliveryAt
                 : scheduledDeliveryAt // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            deliveredAt: freezed == deliveredAt
+                ? _value.deliveredAt
+                : deliveredAt // ignore: cast_nullable_to_non_nullable
                       as String?,
             notes: freezed == notes
                 ? _value.notes
@@ -254,10 +269,12 @@ abstract class _$$OrderModelImplCopyWith<$Res>
     @JsonKey(name: 'parent_order_id') String? parentOrderId,
     @JsonKey(name: 'target_branches') List<String>? targetBranches,
     String status,
+    String priority,
     @JsonKey(name: 'delivery_address_id') String? deliveryAddressId,
     @JsonKey(name: 'assigned_driver_id') String? assignedDriverId,
     @JsonKey(name: 'total_amount') double totalAmount,
     @JsonKey(name: 'scheduled_delivery_at') String? scheduledDeliveryAt,
+    @JsonKey(name: 'delivered_at') String? deliveredAt,
     String? notes,
     @JsonKey(name: 'created_at') String? createdAt,
     @JsonKey(name: 'delivery_address') ClientAddress? deliveryAddress,
@@ -294,10 +311,12 @@ class __$$OrderModelImplCopyWithImpl<$Res>
     Object? parentOrderId = freezed,
     Object? targetBranches = freezed,
     Object? status = null,
+    Object? priority = null,
     Object? deliveryAddressId = freezed,
     Object? assignedDriverId = freezed,
     Object? totalAmount = null,
     Object? scheduledDeliveryAt = freezed,
+    Object? deliveredAt = freezed,
     Object? notes = freezed,
     Object? createdAt = freezed,
     Object? deliveryAddress = freezed,
@@ -331,6 +350,10 @@ class __$$OrderModelImplCopyWithImpl<$Res>
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as String,
+        priority: null == priority
+            ? _value.priority
+            : priority // ignore: cast_nullable_to_non_nullable
+                  as String,
         deliveryAddressId: freezed == deliveryAddressId
             ? _value.deliveryAddressId
             : deliveryAddressId // ignore: cast_nullable_to_non_nullable
@@ -346,6 +369,10 @@ class __$$OrderModelImplCopyWithImpl<$Res>
         scheduledDeliveryAt: freezed == scheduledDeliveryAt
             ? _value.scheduledDeliveryAt
             : scheduledDeliveryAt // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        deliveredAt: freezed == deliveredAt
+            ? _value.deliveredAt
+            : deliveredAt // ignore: cast_nullable_to_non_nullable
                   as String?,
         notes: freezed == notes
             ? _value.notes
@@ -386,10 +413,12 @@ class _$OrderModelImpl extends _OrderModel {
     @JsonKey(name: 'parent_order_id') this.parentOrderId,
     @JsonKey(name: 'target_branches') final List<String>? targetBranches,
     this.status = 'pending',
+    this.priority = 'standard',
     @JsonKey(name: 'delivery_address_id') this.deliveryAddressId,
     @JsonKey(name: 'assigned_driver_id') this.assignedDriverId,
     @JsonKey(name: 'total_amount') required this.totalAmount,
     @JsonKey(name: 'scheduled_delivery_at') this.scheduledDeliveryAt,
+    @JsonKey(name: 'delivered_at') this.deliveredAt,
     this.notes,
     @JsonKey(name: 'created_at') this.createdAt,
     @JsonKey(name: 'delivery_address') this.deliveryAddress,
@@ -429,6 +458,9 @@ class _$OrderModelImpl extends _OrderModel {
   @JsonKey()
   final String status;
   @override
+  @JsonKey()
+  final String priority;
+  @override
   @JsonKey(name: 'delivery_address_id')
   final String? deliveryAddressId;
   @override
@@ -440,6 +472,9 @@ class _$OrderModelImpl extends _OrderModel {
   @override
   @JsonKey(name: 'scheduled_delivery_at')
   final String? scheduledDeliveryAt;
+  @override
+  @JsonKey(name: 'delivered_at')
+  final String? deliveredAt;
   @override
   final String? notes;
   @override
@@ -469,7 +504,7 @@ class _$OrderModelImpl extends _OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, clientId: $clientId, branchId: $branchId, parentOrderId: $parentOrderId, targetBranches: $targetBranches, status: $status, deliveryAddressId: $deliveryAddressId, assignedDriverId: $assignedDriverId, totalAmount: $totalAmount, scheduledDeliveryAt: $scheduledDeliveryAt, notes: $notes, createdAt: $createdAt, deliveryAddress: $deliveryAddress, items: $items, client: $client, assignedDriver: $assignedDriver)';
+    return 'OrderModel(id: $id, clientId: $clientId, branchId: $branchId, parentOrderId: $parentOrderId, targetBranches: $targetBranches, status: $status, priority: $priority, deliveryAddressId: $deliveryAddressId, assignedDriverId: $assignedDriverId, totalAmount: $totalAmount, scheduledDeliveryAt: $scheduledDeliveryAt, deliveredAt: $deliveredAt, notes: $notes, createdAt: $createdAt, deliveryAddress: $deliveryAddress, items: $items, client: $client, assignedDriver: $assignedDriver)';
   }
 
   @override
@@ -489,6 +524,8 @@ class _$OrderModelImpl extends _OrderModel {
               _targetBranches,
             ) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.priority, priority) ||
+                other.priority == priority) &&
             (identical(other.deliveryAddressId, deliveryAddressId) ||
                 other.deliveryAddressId == deliveryAddressId) &&
             (identical(other.assignedDriverId, assignedDriverId) ||
@@ -497,6 +534,8 @@ class _$OrderModelImpl extends _OrderModel {
                 other.totalAmount == totalAmount) &&
             (identical(other.scheduledDeliveryAt, scheduledDeliveryAt) ||
                 other.scheduledDeliveryAt == scheduledDeliveryAt) &&
+            (identical(other.deliveredAt, deliveredAt) ||
+                other.deliveredAt == deliveredAt) &&
             (identical(other.notes, notes) || other.notes == notes) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
@@ -518,10 +557,12 @@ class _$OrderModelImpl extends _OrderModel {
     parentOrderId,
     const DeepCollectionEquality().hash(_targetBranches),
     status,
+    priority,
     deliveryAddressId,
     assignedDriverId,
     totalAmount,
     scheduledDeliveryAt,
+    deliveredAt,
     notes,
     createdAt,
     deliveryAddress,
@@ -552,10 +593,12 @@ abstract class _OrderModel extends OrderModel {
     @JsonKey(name: 'parent_order_id') final String? parentOrderId,
     @JsonKey(name: 'target_branches') final List<String>? targetBranches,
     final String status,
+    final String priority,
     @JsonKey(name: 'delivery_address_id') final String? deliveryAddressId,
     @JsonKey(name: 'assigned_driver_id') final String? assignedDriverId,
     @JsonKey(name: 'total_amount') required final double totalAmount,
     @JsonKey(name: 'scheduled_delivery_at') final String? scheduledDeliveryAt,
+    @JsonKey(name: 'delivered_at') final String? deliveredAt,
     final String? notes,
     @JsonKey(name: 'created_at') final String? createdAt,
     @JsonKey(name: 'delivery_address') final ClientAddress? deliveryAddress,
@@ -585,6 +628,8 @@ abstract class _OrderModel extends OrderModel {
   @override
   String get status;
   @override
+  String get priority;
+  @override
   @JsonKey(name: 'delivery_address_id')
   String? get deliveryAddressId;
   @override
@@ -596,6 +641,9 @@ abstract class _OrderModel extends OrderModel {
   @override
   @JsonKey(name: 'scheduled_delivery_at')
   String? get scheduledDeliveryAt;
+  @override
+  @JsonKey(name: 'delivered_at')
+  String? get deliveredAt;
   @override
   String? get notes;
   @override

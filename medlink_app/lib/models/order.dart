@@ -16,10 +16,12 @@ class OrderModel with _$OrderModel {
     @JsonKey(name: 'parent_order_id') String? parentOrderId,
     @JsonKey(name: 'target_branches') List<String>? targetBranches,
     @Default('pending') String status,
+    @Default('standard') String priority,
     @JsonKey(name: 'delivery_address_id') String? deliveryAddressId,
     @JsonKey(name: 'assigned_driver_id') String? assignedDriverId,
     @JsonKey(name: 'total_amount') required double totalAmount,
     @JsonKey(name: 'scheduled_delivery_at') String? scheduledDeliveryAt,
+    @JsonKey(name: 'delivered_at') String? deliveredAt,
     String? notes,
     @JsonKey(name: 'created_at') String? createdAt,
     // Joined relations

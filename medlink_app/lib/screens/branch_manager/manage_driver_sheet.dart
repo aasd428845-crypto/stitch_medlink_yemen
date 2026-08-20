@@ -105,10 +105,10 @@ class _ManageDriverSheetState extends State<ManageDriverSheet> {
             children: [
               CircleAvatar(
                 backgroundColor:
-                    isActive ? AppColors.successContainer : AppColors.warningContainer,
+                    isActive ? BranchColors.successContainer : BranchColors.warningContainer,
                 child: Icon(
                   Icons.local_shipping_rounded,
-                  color: isActive ? AppColors.success : AppColors.warning,
+                  color: isActive ? BranchColors.success : BranchColors.warning,
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -147,17 +147,17 @@ class _ManageDriverSheetState extends State<ManageDriverSheet> {
           OutlinedButton.icon(
             icon: Icon(
               isActive ? Icons.pause_circle_outline : Icons.check_circle_outline,
-              color: isActive ? AppColors.warning : AppColors.success,
+              color: isActive ? BranchColors.warning : BranchColors.success,
             ),
             label: Text(
               isActive ? l10n.driverSuspend : l10n.driverActivate,
               style: TextStyle(
-                color: isActive ? AppColors.warning : AppColors.success,
+                color: isActive ? BranchColors.warning : BranchColors.success,
               ),
             ),
             style: OutlinedButton.styleFrom(
               side: BorderSide(
-                color: isActive ? AppColors.warning : AppColors.success,
+                color: isActive ? BranchColors.warning : BranchColors.success,
               ),
             ),
             onPressed: _loadingStatus ? null : _toggleStatus,
@@ -238,18 +238,18 @@ class _StatusBadge extends StatelessWidget {
     final (label, bg, fg) = switch (status) {
       AccountStatus.active => (
           l10n.driverStatusActive,
-          AppColors.successContainer,
-          AppColors.success,
+          BranchColors.successContainer,
+          BranchColors.success,
         ),
       AccountStatus.suspended => (
           l10n.driverStatusSuspended,
-          AppColors.warningContainer,
-          AppColors.warning,
+          BranchColors.warningContainer,
+          BranchColors.warning,
         ),
       _ => (
           l10n.driverStatusPending,
-          AppColors.secondaryContainer,
-          AppColors.secondary,
+          BranchColors.secondaryContainer,
+          BranchColors.secondary,
         ),
     };
     return Container(

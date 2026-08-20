@@ -4,16 +4,18 @@ import 'package:provider/provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/auth_controller.dart';
 import '../../services/branch_controller.dart';
+import '../../utils/theme.dart';
 import '../shared/coming_soon_scaffold.dart';
+import 'branch_chat_tab.dart';
 import 'branch_dashboard_tab.dart';
 import 'branch_drivers_tab.dart';
 import 'branch_inventory_tab.dart';
 import 'branch_invoices_tab.dart';
 import 'branch_orders_tab.dart';
-import 'branch_chat_tab.dart';
-import '../../widgets/medlink_design.dart';
+import 'branch_settings_sheet.dart';
 
-/// Bottom-nav shell for the `branch_manager` role.
+/// Bottom-nav shell for the `branch_manager` role, wrapped in the light
+/// design theme ([AppTheme.branchManagerLight]).
 class BranchManagerHomeShell extends StatefulWidget {
   const BranchManagerHomeShell({super.key});
 
@@ -57,29 +59,55 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
       const BranchChatTab(),
     ];
 
-    return MedLinkScaffold(
-      appBar: MedLinkTopBar(
-        title: tabDefs[_index].$1,
-        subtitle: 'MedLink · إدارة الفرع',
-        actions: const [RoleAppBarActions()],
-      ),
-      body: branchId == null
-          ? MissingAccountDataBody(
-              title: l10n.branchNotAssignedTitle,
-              message: l10n.branchNotAssignedMessage,
-            )
-          : tabs[_index],
-      bottomNavigationBar: MedLinkBottomNav(
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
-        destinations: [
-          for (final tab in tabDefs)
-            NavigationDestination(
-              icon: Icon(tab.$2),
-              selectedIcon: Icon(tab.$3),
-              label: tab.$1,
+    return Theme(
+      data: AppTheme.branchManagerLight,
+      child: Scaffold(
+        backgroundColor: BranchColors.background,
+        appBar: AppBar(
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(tabDefs[_index].$1),
+              Text(
+                'MedLink · إدارة الفرع',
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: BranchColors.onSurfaceVariant,
+                    ),
+              ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              tooltip: 'الإعدادات',
+              icon: const Icon(Icons.settings_rounded),
+              onPressed: () => showModalBottomSheet<void>(
+                context: context,
+                isScrollControlled: true,
+                builder: (_) => const BranchSettingsSheet(),
+              ),
             ),
-        ],
+            const RoleAppBarActions(),
+          ],
+        ),
+        body: branchId == null
+            ? MissingAccountDataBody(
+                title: l10n.branchNotAssignedTitle,
+                message: l10n.branchNotAssignedMessage,
+              )
+            : tabs[_index],
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: _index,
+          onDestinationSelected: (i) => setState(() => _index = i),
+          destinations: [
+            for (final tab in tabDefs)
+              NavigationDestination(
+                icon: Icon(tab.$2),
+                selectedIcon: Icon(tab.$3),
+                label: tab.$1,
+              ),
+          ],
+        ),
       ),
     );
   }

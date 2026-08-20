@@ -5,10 +5,20 @@ import '../../l10n/app_localizations.dart';
 import '../../models/order.dart';
 import '../../services/branch_controller.dart';
 import '../../utils/theme.dart';
+import 'branch_allocate_sheet.dart';
 
-/// Shared dialogs for order actions (assign driver / transfer / reject),
-/// used by both the dashboard's recent-orders list and the full orders tab
-/// so the logic lives in exactly one place.
+/// Shared dialogs for order actions (allocate / assign driver / transfer /
+/// reject), used by both the dashboard's recent-orders list and the full
+/// orders tab so the logic lives in exactly one place.
+
+/// Opens the smart allocation modal ("تفاصيل التخصيص").
+void showAllocateSheet(BuildContext context, OrderModel order) {
+  showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    builder: (_) => BranchAllocateSheet(order: order),
+  );
+}
 
 Future<void> showAssignDriverDialog(BuildContext context, OrderModel order) async {
   final l10n = AppLocalizations.of(context)!;
@@ -30,7 +40,7 @@ Future<void> showAssignDriverDialog(BuildContext context, OrderModel order) asyn
       builder: (dialogCtx, setState) => AlertDialog(
         title: Text(l10n.branchAssignDriver),
         content: DropdownButtonFormField<String>(
-          value: selectedDriverId,
+          initialValue: selectedDriverId,
           decoration: InputDecoration(labelText: l10n.branchSelectDriver),
           items: [
             for (final d in drivers)
@@ -85,7 +95,7 @@ Future<void> showTransferOrderDialog(BuildContext context, OrderModel order) asy
       builder: (dialogCtx, setState) => AlertDialog(
         title: Text(l10n.branchTransferOrder),
         content: DropdownButtonFormField<String>(
-          value: selectedBranchId,
+          initialValue: selectedBranchId,
           decoration: InputDecoration(labelText: l10n.branchSelectBranch),
           items: [
             for (final b in branches)
@@ -128,7 +138,7 @@ Future<void> showRejectOrderConfirm(BuildContext context, OrderModel order) asyn
           child: const Text('إلغاء'),
         ),
         FilledButton(
-          style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+          style: FilledButton.styleFrom(backgroundColor: BranchColors.error),
           onPressed: () => Navigator.pop(dialogCtx, true),
           child: Text(l10n.branchRejectOrder),
         ),

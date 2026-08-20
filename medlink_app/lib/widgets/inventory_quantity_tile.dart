@@ -17,9 +17,9 @@ class InventoryQuantityTile extends StatelessWidget {
   final VoidCallback onEdit;
 
   Color _levelColor() {
-    if (item.quantity <= 0) return AppColors.error;
-    if (item.quantity < 10) return AppColors.warning;
-    return AppColors.success;
+    if (item.quantity <= 0) return BranchColors.error;
+    if (item.quantity < 10) return BranchColors.warning;
+    return BranchColors.success;
   }
 
   @override

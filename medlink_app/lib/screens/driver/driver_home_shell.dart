@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../widgets/medlink_design.dart';
+import '../shared/coming_soon_scaffold.dart';
 import 'driver_earnings_tab.dart';
 import 'driver_chat_tab.dart';
 import 'driver_orders_v2.dart';
@@ -23,7 +24,7 @@ class _DriverHomeShellState extends State<DriverHomeShell> {
       (l10n.driverChatLabel, Icons.chat_bubble_outline, Icons.chat_bubble_rounded),
     ];
     return MedLinkScaffold(
-      appBar: MedLinkTopBar(title: tabs[_index].$1, actions: const [RoleAppBarActions()]),
+      appBar: MedLinkTopBar(title: tabs[_index].$1, actions: [RoleAppBarActions()]),
       body: IndexedStack(index: _index, children: const [DriverOrdersV2(), DriverEarningsTab(), DriverChatTab()]),
       bottomNavigationBar: MedLinkBottomNav(
         selectedIndex: _index,

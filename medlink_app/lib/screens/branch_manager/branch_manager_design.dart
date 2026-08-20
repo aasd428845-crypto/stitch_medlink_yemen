@@ -1,11 +1,18 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../../utils/theme.dart';
 
+/// Shared light widgets for every branch-manager screen.
+///
+/// Rule: this file must never define a `Color(0x…)` — all colors come from
+/// the central tokens (BranchColors / AppTheme.branchManagerLight).
 class BranchManagerSurface extends StatelessWidget {
-  const BranchManagerSurface({super.key, required this.child, this.padding = const EdgeInsets.all(16), this.margin});
+  const BranchManagerSurface({
+    super.key,
+    required this.child,
+    this.padding = const EdgeInsets.all(16),
+    this.margin,
+  });
 
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -17,10 +24,9 @@ class BranchManagerSurface extends StatelessWidget {
       margin: margin,
       padding: padding,
       decoration: BoxDecoration(
-        color: const Color(0xFF0E1B2B).withValues(alpha: .82),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFF2B4359).withValues(alpha: .65)),
-        boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 22, offset: Offset(0, 10))],
+        color: BranchColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: BranchColors.outlineVariant),
       ),
       child: child,
     );
@@ -28,7 +34,11 @@ class BranchManagerSurface extends StatelessWidget {
 }
 
 class BranchManagerHero extends StatelessWidget {
-  const BranchManagerHero({super.key, required this.title, required this.subtitle});
+  const BranchManagerHero({
+    super.key,
+    required this.title,
+    required this.subtitle,
+  });
 
   final String title;
   final String subtitle;
@@ -38,53 +48,57 @@ class BranchManagerHero extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(24),
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF123A54), Color(0xFF0C2437), Color(0xFF0A1727)],
+          colors: BranchColors.heroGradient,
         ),
-        border: Border.all(color: const Color(0xFF4BDDE1).withValues(alpha: .22)),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: -34,
-            top: -52,
-            child: ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.primary.withValues(alpha: .13)),
-              ),
-            ),
+        boxShadow: [
+          BoxShadow(
+            color: BranchColors.heroGradient.first.withValues(alpha: .10),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF66E4E0).withValues(alpha: .12),
-                      borderRadius: BorderRadius.circular(99),
-                      border: Border.all(color: const Color(0xFF66E4E0).withValues(alpha: .25)),
-                    ),
-                    child: const Row(children: [
-                      Icon(Icons.circle, size: 8, color: Color(0xFF66E4E0)),
-                      SizedBox(width: 6),
-                      Text('الفرع يعمل بشكل طبيعي', style: TextStyle(color: Color(0xFFBDF9F5), fontWeight: FontWeight.w700, fontSize: 12)),
-                    ]),
-                  ),
-                ],
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: BranchColors.onPrimary.withValues(alpha: .15),
+              borderRadius: BorderRadius.circular(99),
+            ),
+            child: const Row(children: [
+              Icon(Icons.circle, size: 8, color: BranchColors.onPrimary),
+              SizedBox(width: 6),
+              Text(
+                'الفرع يعمل بشكل طبيعي',
+                style: TextStyle(
+                  color: BranchColors.onPrimary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
+                ),
               ),
-              const SizedBox(height: 18),
-              Text(title, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800, color: Colors.white)),
-              const SizedBox(height: 6),
-              Text(subtitle, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xFFA7BAC8), height: 1.5)),
-            ],
+            ]),
+          ),
+          const SizedBox(height: 18),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: BranchColors.onPrimary,
+                ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            subtitle,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: BranchColors.onPrimary.withValues(alpha: .82),
+                  height: 1.5,
+                ),
           ),
         ],
       ),
@@ -93,7 +107,13 @@ class BranchManagerHero extends StatelessWidget {
 }
 
 class BranchMetricTile extends StatelessWidget {
-  const BranchMetricTile({super.key, required this.label, required this.value, required this.icon, required this.color});
+  const BranchMetricTile({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
 
   final String label;
   final String value;
@@ -110,13 +130,27 @@ class BranchMetricTile extends StatelessWidget {
           Container(
             width: 38,
             height: 38,
-            decoration: BoxDecoration(color: color.withValues(alpha: .12), borderRadius: BorderRadius.circular(13)),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: .12),
+              borderRadius: BorderRadius.circular(13),
+            ),
             child: Icon(icon, color: color, size: 19),
           ),
           const SizedBox(height: 14),
-          Text(value, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800, color: Colors.white)),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: BranchColors.onSurface,
+                ),
+          ),
           const SizedBox(height: 3),
-          Text(label, style: Theme.of(context).textTheme.labelMedium?.copyWith(color: const Color(0xFF9DB0BE))),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: BranchColors.onSurfaceVariant,
+                ),
+          ),
         ],
       ),
     );
@@ -124,7 +158,13 @@ class BranchMetricTile extends StatelessWidget {
 }
 
 class BranchQuickAction extends StatelessWidget {
-  const BranchQuickAction({super.key, required this.icon, required this.label, required this.onTap, required this.color});
+  const BranchQuickAction({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    required this.color,
+  });
 
   final IconData icon;
   final String label;
@@ -134,19 +174,38 @@ class BranchQuickAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: const Color(0xFF0E1B2B).withValues(alpha: .78),
+      color: BranchColors.surfaceContainerLowest,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), border: Border.all(color: const Color(0xFF2B4359).withValues(alpha: .65))),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: BranchColors.outlineVariant),
+          ),
           child: Column(
             children: [
-              Container(width: 42, height: 42, decoration: BoxDecoration(color: color.withValues(alpha: .12), shape: BoxShape.circle), child: Icon(icon, color: color)),
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: .12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: color),
+              ),
               const SizedBox(height: 8),
-              Text(label, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12)),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: BranchColors.onSurface,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
+                ),
+              ),
             ],
           ),
         ),
@@ -156,7 +215,12 @@ class BranchQuickAction extends StatelessWidget {
 }
 
 class BranchSectionTitle extends StatelessWidget {
-  const BranchSectionTitle({super.key, required this.title, this.action, this.onAction});
+  const BranchSectionTitle({
+    super.key,
+    required this.title,
+    this.action,
+    this.onAction,
+  });
 
   final String title;
   final String? action;
@@ -166,10 +230,26 @@ class BranchSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(width: 4, height: 20, decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(99))),
+        Container(
+          width: 4,
+          height: 20,
+          decoration: BoxDecoration(
+            color: BranchColors.primary,
+            borderRadius: BorderRadius.circular(99),
+          ),
+        ),
         const SizedBox(width: 9),
-        Expanded(child: Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w800))),
-        if (action != null) TextButton(onPressed: onAction, child: Text(action!)),
+        Expanded(
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: BranchColors.onSurface,
+                  fontWeight: FontWeight.w800,
+                ),
+          ),
+        ),
+        if (action != null)
+          TextButton(onPressed: onAction, child: Text(action!)),
       ],
     );
   }
