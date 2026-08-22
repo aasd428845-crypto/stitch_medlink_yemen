@@ -15,6 +15,10 @@ import '../screens/branch_manager/branch_order_detail_screen.dart';
 import '../screens/client/cart_screen.dart';
 import '../screens/client/checkout_screen.dart';
 import '../screens/client/client_home_shell.dart';
+import '../screens/client/addresses_screen.dart';
+import '../screens/client/business_profile_screen.dart';
+import '../screens/client/digital_card_screen.dart';
+import '../screens/client/legal_screen.dart';
 import '../screens/client/order_detail_screen.dart';
 import '../screens/client/order_success_screen.dart';
 import '../screens/client/product_detail_screen.dart';
@@ -129,6 +133,22 @@ GoRouter buildRouter(AuthController authController) {
               }
               return OfferDetailScreen(offer: offer);
             },
+          ),
+          GoRoute(
+            path: 'digital-card',
+            builder: (context, state) => const DigitalCardScreen(),
+          ),
+          GoRoute(
+            path: 'addresses',
+            builder: (context, state) => const AddressesScreen(),
+          ),
+          GoRoute(
+            path: 'business-profile',
+            builder: (context, state) => const BusinessProfileScreen(),
+          ),
+          GoRoute(
+            path: 'legal',
+            builder: (context, state) => const LegalScreen(),
           ),
         ],
       ),

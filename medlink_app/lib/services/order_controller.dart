@@ -44,6 +44,11 @@ class OrderController extends ChangeNotifier {
     }
   }
 
+  Future<void> deleteAddress(String addressId) async {
+    await _service.deleteClientAddress(addressId);
+    await loadAddresses();
+  }
+
   void selectAddress(ClientAddress address) {
     _selectedAddress = address;
     notifyListeners();

@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../services/cart_controller.dart';
-import '../shared/coming_soon_scaffold.dart';
 import '../../widgets/medlink_design.dart';
+import 'account_tab.dart';
 import 'catalog_tab.dart';
 import 'home_tab.dart';
 import 'orders_tab.dart';
@@ -14,7 +14,7 @@ import 'orders_tab.dart';
 /// Tab 0 → HomeTab (offers + categories + products)
 /// Tab 1 → CatalogTab (full catalog + search + filter)
 /// Tab 2 → OrdersTab (active & previous orders)
-/// Tab 3 → Profile (Phase 4+)
+/// Tab 3 → Account hub
 class ClientHomeShell extends StatefulWidget {
   const ClientHomeShell({super.key});
 
@@ -25,7 +25,7 @@ class ClientHomeShell extends StatefulWidget {
 class _ClientHomeShellState extends State<ClientHomeShell> {
   int _index = 0;
 
-  static const _tabs = [HomeTab(), CatalogTab(), OrdersTab()];
+  static const _tabs = [HomeTab(), CatalogTab(), OrdersTab(), AccountTab()];
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +47,7 @@ class _ClientHomeShellState extends State<ClientHomeShell> {
       (l10n.clientProfileLabel, Icons.person_outline, Icons.person_rounded),
     ];
 
-    Widget body;
-    if (_index < _tabs.length) {
-      body = _tabs[_index];
-    } else {
-      body = ComingSoonBody(label: tabDefs[_index].$1);
-    }
+    final body = _tabs[_index];
 
     return MedLinkScaffold(
       appBar: MedLinkTopBar(

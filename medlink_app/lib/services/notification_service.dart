@@ -29,12 +29,16 @@ class NotificationService {
   /// Fetches notifications relevant to the current user.
   ///
   /// RLS already filters by [target_role]; we additionally filter by
-  /// [branchId] so branch-scoped notifications are isolated.
+  /// [branchId] so branch-scoped notifications are isolated. The explicit
+  /// client-side target check complements RLS and handles notifications that
+  /// are addressed through target_user_ids.
   /// A left-join on [notification_reads] lets us compute [isRead] in one query.
   Future<List<NotificationModel>> fetchMyNotifications({
     String? branchId,
   }) async {
     try {
+      final userId = _client.auth.currentUser?.id;
+      if (userId == null) return [];
       // PostgREST left-join: notification_reads rows filtered by RLS to the
       // calling user only (policy: user_id = auth.uid()).
       // Note: .or() must be called before .order() (filter vs. transform).
@@ -42,16 +46,23 @@ class NotificationService {
           .from('notifications')
           .select('*, notification_reads!left(read_at)');
 
-      if (branchId != null) {
-        filterQuery = filterQuery.or(
-          'target_branch_id.is.null,target_branch_id.eq.$branchId',
-        );
-      }
-
       final rows = await filterQuery.order('created_at', ascending: false);
       _logSuccess('fetchMyNotifications');
 
-      return (rows as List).map((r) {
+      return (rows as List).where((r) {
+        final map = Map<String, dynamic>.from(r as Map);
+        final role = map['target_role'] as String?;
+        final targetUsers = (map['target_user_ids'] as List?)
+                ?.map((id) => id.toString())
+                .toSet() ??
+            const <String>{};
+        final roleMatches = role == null || role == 'client';
+        final userMatches = targetUsers.isEmpty || targetUsers.contains(userId);
+        final branchMatches = branchId == null ||
+            map['target_branch_id'] == null ||
+            map['target_branch_id'] == branchId;
+        return roleMatches && userMatches && branchMatches;
+      }).map((r) {
         final map = Map<String, dynamic>.from(r as Map);
         final reads = (map['notification_reads'] as List?) ?? [];
         // Remove the join array and inject computed bool before deserialising.
