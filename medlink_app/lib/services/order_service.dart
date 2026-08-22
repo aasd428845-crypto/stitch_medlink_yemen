@@ -5,6 +5,7 @@ import '../models/bonus_rule.dart';
 import '../models/cart_item.dart';
 import '../models/client_address.dart';
 import '../models/order.dart';
+import '../models/product.dart';
 import '../utils/constants.dart';
 
 /// Single source of truth for Order, Address, and Bonus Rule database operations.
@@ -213,6 +214,7 @@ class OrderService {
             '*, delivery_address:client_addresses(*), items:order_items(*, product:products(*))',
           )
           .eq('id', orderId)
+          .eq('client_id', _client.auth.currentUser?.id ?? '')
           .maybeSingle();
 
       _logSuccess('fetchOrderDetails');
@@ -220,6 +222,26 @@ class OrderService {
       return OrderModel.fromJson(row);
     } catch (e, st) {
       _logError('fetchOrderDetails', e, st);
+      rethrow;
+    }
+  }
+
+  /// Fetches current catalog prices for a reorder. The historical
+  /// `order_items.unit_price` values are intentionally not used.
+  Future<List<Product>> fetchCurrentProducts(List<String> productIds) async {
+    if (productIds.isEmpty) return [];
+    try {
+      final rows = await _client
+          .from('products')
+          .select()
+          .inFilter('id', productIds)
+          .eq('is_active', true);
+      _logSuccess('fetchCurrentProducts');
+      return (rows as List)
+          .map((row) => Product.fromJson(row as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      _logError('fetchCurrentProducts', e, st);
       rethrow;
     }
   }

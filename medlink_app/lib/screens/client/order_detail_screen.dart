@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/order.dart';
+import '../../services/cart_controller.dart';
 import '../../services/order_service.dart';
 import '../../utils/theme.dart';
 import '../../widgets/order_status_chip.dart';
@@ -66,6 +67,30 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       // Non-critical — silently ignore
       if (mounted) setState(() => _ratingLoaded = true);
     }
+  }
+
+  Future<void> _reorder() async {
+    final order = _order;
+    if (order == null || order.items == null) return;
+    final l10n = AppLocalizations.of(context)!;
+    final payableItems =
+        order.items!.where((item) => !item.isBonus).toList();
+    if (payableItems.isEmpty) return;
+
+    final service = context.read<OrderService>();
+    final products = await service.fetchCurrentProducts(
+      payableItems.map((item) => item.productId).toSet().toList(),
+    );
+    final byId = {for (final product in products) product.id: product};
+    final cart = context.read<CartController>();
+    for (final item in payableItems) {
+      final product = byId[item.productId];
+      if (product != null) cart.addItem(product, item.quantity);
+    }
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.reorderAddedToCart)),
+    );
   }
 
   void _openRatingSheet() {
@@ -139,6 +164,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               existingRating: _existingRating,
               ratingLoaded: _ratingLoaded,
               onRatePressed: _openRatingSheet,
+              onReorderPressed: () {
+                _reorder();
+              },
             ),
     );
   }
@@ -151,6 +179,7 @@ class _OrderContent extends StatelessWidget {
     required this.existingRating,
     required this.ratingLoaded,
     required this.onRatePressed,
+    required this.onReorderPressed,
   });
 
   final OrderModel order;
@@ -158,6 +187,7 @@ class _OrderContent extends StatelessWidget {
   final Map<String, dynamic>? existingRating;
   final bool ratingLoaded;
   final VoidCallback onRatePressed;
+  final VoidCallback onReorderPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -232,6 +262,15 @@ class _OrderContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.md),
+          ],
+          if (order.scheduledDeliveryAt != null) ...[
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.schedule_rounded, color: AppColors.primary),
+              title: Text(l10n.driverScheduledDelivery),
+              subtitle: Text(order.scheduledDeliveryAt!),
+            ),
+            const SizedBox(height: AppSpacing.sm),
           ],
           if (order.status == 'in_progress' &&
               order.assignedDriverId != null) ...[
@@ -379,6 +418,17 @@ class _OrderContent extends StatelessWidget {
               ),
             ),
           ),
+          if (isDelivered) ...[
+            const SizedBox(height: AppSpacing.md),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: onReorderPressed,
+                icon: const Icon(Icons.replay_rounded),
+                label: Text(l10n.reorderAddedToCart),
+              ),
+            ),
+          ],
         ],
       ),
     );
