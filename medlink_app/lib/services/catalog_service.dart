@@ -123,9 +123,47 @@ class CatalogService {
       _logSuccess('fetchActiveOffers');
       return (rows as List)
           .map((r) => PromotionalOffer.fromJson(r))
+          .where((offer) => offer.isCurrentlyActive)
           .toList();
     } catch (e, st) {
       _logError('fetchActiveOffers', e, st);
+      rethrow;
+    }
+  }
+
+  /// Returns delivered-order dates grouped by product for the current client.
+  ///
+  /// The query uses the existing `orders` and `order_items` columns and is
+  /// intentionally limited to delivered, non-bonus lines.  No purchase cycle
+  /// is inferred until there are at least two delivered orders for a product.
+  Future<Map<String, List<DateTime>>> fetchPurchaseHistory() async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return {};
+
+    try {
+      final rows = await _client
+          .from('orders')
+          .select('created_at, items:order_items(product_id, is_bonus)')
+          .eq('client_id', userId)
+          .eq('status', 'delivered')
+          .order('created_at');
+
+      final history = <String, List<DateTime>>{};
+      for (final row in rows as List) {
+        final date = DateTime.tryParse(row['created_at'] as String? ?? '');
+        if (date == null) continue;
+        final items = row['items'] as List? ?? const [];
+        for (final item in items) {
+          if (item['is_bonus'] == true) continue;
+          final productId = item['product_id'] as String?;
+          if (productId == null) continue;
+          history.putIfAbsent(productId, () => []).add(date);
+        }
+      }
+      _logSuccess('fetchPurchaseHistory');
+      return history;
+    } catch (e, st) {
+      _logError('fetchPurchaseHistory', e, st);
       rethrow;
     }
   }
@@ -146,6 +184,30 @@ class CatalogService {
           .toList();
     } catch (e, st) {
       _logError('fetchInventoryForBranch', e, st);
+      rethrow;
+    }
+  }
+
+  /// Returns the actual quantity for a product in the client's assigned
+  /// branch. The Flutter project uses the existing `inventory` table; no
+  /// fallback to another branch is allowed.
+  Future<int> fetchProductQuantity({
+    required String productId,
+    required String branchId,
+  }) async {
+    try {
+      final rows = await _client
+          .from('inventory')
+          .select('quantity')
+          .eq('branch_id', branchId)
+          .eq('product_id', productId);
+      _logSuccess('fetchProductQuantity');
+      return (rows as List).fold<int>(
+        0,
+        (sum, row) => sum + ((row['quantity'] as num?)?.toInt() ?? 0),
+      );
+    } catch (e, st) {
+      _logError('fetchProductQuantity', e, st);
       rethrow;
     }
   }

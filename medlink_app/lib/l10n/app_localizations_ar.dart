@@ -568,6 +568,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get exploreCategories => 'تصفح حسب الفئة';
 
   @override
+  String get reorderSuggestions => 'قد تحتاج إعادة طلبها قريباً';
+
+  @override
+  String get availableQuantity => 'المتوفر';
+
+  @override
+  String get reorderAddedToCart =>
+      'تمت إعادة إضافة الأصناف إلى السلة بالأسعار الحالية';
+
+  @override
   String get autoBonusBadge => 'هدية تلقائية 🎁';
 
   @override

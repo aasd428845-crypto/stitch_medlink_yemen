@@ -41,7 +41,7 @@ class _OrdersTabState extends State<OrdersTab> {
 
     if (orderCtrl.orders.isEmpty) {
       return Center(child: ClientDesignSurface(child: Column(mainAxisSize: MainAxisSize.min, children: [
-        const Icon(Icons.receipt_long_outlined, size: 54, color: Color(0xFF63D9FF)),
+        const Icon(Icons.receipt_long_outlined, size: 54, color: AppColors.primary),
         const SizedBox(height: AppSpacing.md),
         Text(l10n.noOrdersFound, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
       ])));
@@ -65,21 +65,21 @@ class _OrdersTabState extends State<OrdersTab> {
                 padding: const EdgeInsets.all(16),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
-                    Container(width: 44, height: 44, decoration: BoxDecoration(color: const Color(0x2263D9FF), borderRadius: BorderRadius.circular(15)), child: const Icon(Icons.receipt_long_rounded, color: Color(0xFF63D9FF))),
+                    Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: .14), borderRadius: BorderRadius.circular(15)), child: const Icon(Icons.receipt_long_rounded, color: AppColors.primary)),
                     const SizedBox(width: 12),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text('${l10n.orderNumber} ${order.id.substring(0, 8)}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
-                      if (dateStr.isNotEmpty) Text(dateStr, style: const TextStyle(color: Color(0xFF8FA5B5), fontSize: 12)),
+                      if (dateStr.isNotEmpty) Text(dateStr, style: const TextStyle(color: AppColors.onSurfaceVariant, fontSize: 12)),
                     ])),
                     OrderStatusChip(status: order.status),
                   ]),
                   const SizedBox(height: 14),
-                  const Divider(color: Color(0x223C5A70)),
+                  const Divider(color: AppColors.outlineVariant),
                   const SizedBox(height: 8),
                   Row(children: [
-                    if (order.deliveryAddress != null) Expanded(child: Text('${l10n.deliveredTo}: ${order.deliveryAddress!.label}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Color(0xFFA7BAC8)))),
+                    if (order.deliveryAddress != null) Expanded(child: Text('${l10n.deliveredTo}: ${order.deliveryAddress!.label}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.onSurfaceVariant))),
                     const SizedBox(width: 10),
-                    Text('${order.totalAmount.toStringAsFixed(0)} ﷼', style: const TextStyle(color: Color(0xFF63D9FF), fontWeight: FontWeight.w900)),
+                    Text('${order.totalAmount.toStringAsFixed(0)} ﷼', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w900)),
                   ]),
                 ]),
               ),

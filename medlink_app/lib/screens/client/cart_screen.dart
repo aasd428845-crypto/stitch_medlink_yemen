@@ -22,9 +22,9 @@ class CartScreen extends StatelessWidget {
       ]),
       body: cart.isEmpty
           ? Center(child: ClientDesignSurface(child: Column(mainAxisSize: MainAxisSize.min, children: [
-              const Icon(Icons.shopping_cart_outlined, size: 58, color: Color(0xFF63D9FF)),
+              const Icon(Icons.shopping_cart_outlined, size: 58, color: AppColors.primary),
               const SizedBox(height: AppSpacing.md),
-              Text(l10n.emptyCart, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
+              Text(l10n.emptyCart, style: const TextStyle(color: AppColors.onSurface, fontSize: 18, fontWeight: FontWeight.w800)),
             ])))
           : Column(children: [
               Expanded(child: ListView.separated(
@@ -44,14 +44,14 @@ class CartScreen extends StatelessWidget {
                 margin: const EdgeInsets.fromLTRB(12, 4, 12, 12),
                 child: SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    Text(l10n.subtotal, style: const TextStyle(color: Color(0xFFA7BAC8))),
-                    Text('${cart.subtotalAmount.toStringAsFixed(0)} ﷼', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 18)),
+                    Text(l10n.subtotal, style: const TextStyle(color: AppColors.onSurfaceVariant)),
+                    Text('${cart.subtotalAmount.toStringAsFixed(0)} ﷼', style: const TextStyle(color: AppColors.onSurface, fontWeight: FontWeight.w900, fontSize: 18)),
                   ]),
                   const SizedBox(height: 10),
                   Row(children: [
-                    const Icon(Icons.local_shipping_outlined, size: 18, color: Color(0xFF6DE7C8)),
+                    const Icon(Icons.local_shipping_outlined, size: 18, color: AppColors.success),
                     const SizedBox(width: 7),
-                    Text(l10n.freeDelivery, style: const TextStyle(color: Color(0xFF6DE7C8), fontWeight: FontWeight.w700)),
+                    Text(l10n.freeDelivery, style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.w700)),
                   ]),
                   const SizedBox(height: 14),
                   SizedBox(width: double.infinity, child: FilledButton.icon(icon: const Icon(Icons.arrow_back_rounded), label: Text(l10n.proceedToCheckout), onPressed: () => context.push('/client/checkout'))),

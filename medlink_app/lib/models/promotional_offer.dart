@@ -23,4 +23,19 @@ class PromotionalOffer with _$PromotionalOffer {
 
   factory PromotionalOffer.fromJson(Map<String, dynamic> json) =>
       _$PromotionalOfferFromJson(json);
+
+  /// Defensive client-side check in addition to the server-side filter.
+  /// This prevents an offer outside its date window from being rendered when
+  /// a stale cached response is returned by the API.
+  bool get isCurrentlyActive {
+    if (!isActive) return false;
+    final now = DateTime.now();
+    final start = startDate == null ? null : DateTime.tryParse(startDate!);
+    final end = endDate == null ? null : DateTime.tryParse(endDate!);
+    final endExclusive = end == null
+        ? null
+        : (endDate!.length <= 10 ? end.add(const Duration(days: 1)) : end);
+    return (start == null || !now.isBefore(start)) &&
+        (endExclusive == null || now.isBefore(endExclusive));
+  }
 }

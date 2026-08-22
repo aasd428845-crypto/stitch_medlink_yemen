@@ -46,7 +46,9 @@ class _HomeTabState extends State<HomeTab> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        await Future.wait([catalog.loadProducts(), catalog.loadOffers(), catalog.loadCategories()]);
+        await catalog.loadProducts();
+        await Future.wait([catalog.loadOffers(), catalog.loadCategories()]);
+        await catalog.loadReorderRecommendations();
       },
       child: CustomScrollView(
         slivers: [
@@ -94,10 +96,20 @@ class _HomeTabState extends State<HomeTab> {
                       selected: selected,
                       onSelected: (_) => catalog.selectCategory(selected ? null : cat),
                       showCheckmark: false,
-                      backgroundColor: const Color(0xFF0D1B2A),
-                      selectedColor: const Color(0x2263D9FF),
-                      side: BorderSide(color: selected ? const Color(0xFF63D9FF) : const Color(0xFF29445A)),
-                      labelStyle: TextStyle(color: selected ? const Color(0xFF63D9FF) : const Color(0xFF9FB2BF), fontWeight: FontWeight.w700, fontSize: 12),
+                      backgroundColor: AppColors.surfaceContainerLow,
+                      selectedColor: AppColors.primaryContainer.withValues(alpha: .35),
+                      side: BorderSide(
+                        color: selected
+                            ? AppColors.primary
+                            : AppColors.outlineVariant,
+                      ),
+                      labelStyle: TextStyle(
+                        color: selected
+                            ? AppColors.primary
+                            : AppColors.onSurfaceVariant,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                      ),
                     );
                   },
                 ),
@@ -124,7 +136,12 @@ class _HomeTabState extends State<HomeTab> {
             SliverToBoxAdapter(
               child: ClientDesignSurface(
                 margin: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                child: Center(child: Text(l10n.noProductsFound, style: const TextStyle(color: Color(0xFFA7BAC8))),),
+                child: Center(
+                  child: Text(
+                    l10n.noProductsFound,
+                    style: const TextStyle(color: AppColors.onSurfaceVariant),
+                  ),
+                ),
               ),
             )
           else
@@ -144,7 +161,41 @@ class _HomeTabState extends State<HomeTab> {
                   );
                 }, childCount: catalog.products.length),
               ),
+             ),
+          if (catalog.reorderRecommendations.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: SectionHeading(title: l10n.reorderSuggestions),
             ),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 265,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                  itemCount: catalog.reorderRecommendations.length,
+                  separatorBuilder: (_, __) =>
+                      const SizedBox(width: AppSpacing.sm),
+                  itemBuilder: (context, i) {
+                    final recommendation =
+                        catalog.reorderRecommendations[i];
+                    return SizedBox(
+                      width: 190,
+                      child: ProductCard(
+                        product: recommendation.product,
+                        onTap: () => context.push(
+                          '/client/product/${recommendation.product.id}',
+                        ),
+                        onAdd: () => context
+                            .read<CartController>()
+                            .addItem(recommendation.product),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
+          ],
         ],
       ),
     );

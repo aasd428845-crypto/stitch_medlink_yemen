@@ -1190,6 +1190,15 @@ abstract class AppLocalizations {
   /// **'تصفح حسب الفئة'**
   String get exploreCategories;
 
+  /// No description provided for @reorderSuggestions.
+  String get reorderSuggestions;
+
+  /// No description provided for @availableQuantity.
+  String get availableQuantity;
+
+  /// No description provided for @reorderAddedToCart.
+  String get reorderAddedToCart;
+
   /// No description provided for @autoBonusBadge.
   ///
   /// In ar, this message translates to:

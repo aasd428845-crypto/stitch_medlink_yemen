@@ -570,6 +570,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exploreCategories => 'Browse by Category';
 
   @override
+  String get reorderSuggestions => 'You may need to reorder soon';
+
+  @override
+  String get availableQuantity => 'Available';
+
+  @override
+  String get reorderAddedToCart =>
+      'Items were added to the cart at current prices';
+
+  @override
   String get autoBonusBadge => 'Auto Bonus 🎁';
 
   @override

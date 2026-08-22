@@ -4,6 +4,18 @@ import '../models/product.dart';
 import '../models/promotional_offer.dart';
 import 'catalog_service.dart';
 
+class ReorderRecommendation {
+  const ReorderRecommendation({
+    required this.product,
+    required this.averageCycleDays,
+    required this.daysSinceLastOrder,
+  });
+
+  final Product product;
+  final int averageCycleDays;
+  final int daysSinceLastOrder;
+}
+
 /// State holder for the catalog feature.
 /// Consumed by HomeTab, CatalogTab, and ProductDetailScreen.
 class CatalogController extends ChangeNotifier {
@@ -33,6 +45,10 @@ class CatalogController extends ChangeNotifier {
   String? _error;
   String? get error => _error;
 
+  List<ReorderRecommendation> _reorderRecommendations = [];
+  List<ReorderRecommendation> get reorderRecommendations =>
+      _reorderRecommendations;
+
   bool _initialized = false;
 
   // ── Actions ───────────────────────────────────────────────────────────────
@@ -40,7 +56,9 @@ class CatalogController extends ChangeNotifier {
   /// Call once on first entering the client home area.
   Future<void> initialize() async {
     if (_initialized) return;
-    await Future.wait([loadProducts(), loadOffers(), loadCategories()]);
+    await loadProducts();
+    await Future.wait([loadOffers(), loadCategories()]);
+    await loadReorderRecommendations();
     _initialized = true;
   }
 
@@ -64,6 +82,47 @@ class CatalogController extends ChangeNotifier {
       _offers = await _service.fetchActiveOffers();
     } catch (_) {
       // Offers failure is non-critical — silently ignore, keep list empty.
+    }
+    notifyListeners();
+  }
+
+  /// Calculates a recommendation from the client's real delivered orders.
+  /// A product is shown only after two or more purchase dates establish a
+  /// cycle, and only once the current interval is close to that cycle.
+  Future<void> loadReorderRecommendations() async {
+    try {
+      final history = await _service.fetchPurchaseHistory();
+      final now = DateTime.now();
+      final recommendations = <ReorderRecommendation>[];
+
+      for (final product in _products) {
+        final dates = [...?history[product.id]]..sort();
+        if (dates.length < 2) continue;
+
+        final intervals = <int>[];
+        for (var i = 1; i < dates.length; i++) {
+          final days = dates[i].difference(dates[i - 1]).inDays;
+          if (days > 0) intervals.add(days);
+        }
+        if (intervals.isEmpty) continue;
+
+        final average =
+            (intervals.reduce((a, b) => a + b) / intervals.length).round();
+        final elapsed = now.difference(dates.last).inDays;
+        if (average > 0 && elapsed >= (average * 0.8).round()) {
+          recommendations.add(
+            ReorderRecommendation(
+              product: product,
+              averageCycleDays: average,
+              daysSinceLastOrder: elapsed,
+            ),
+          );
+        }
+      }
+
+      _reorderRecommendations = recommendations;
+    } catch (_) {
+      _reorderRecommendations = [];
     }
     notifyListeners();
   }
