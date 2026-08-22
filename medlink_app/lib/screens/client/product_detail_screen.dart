@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/product.dart';
+import '../../services/auth_controller.dart';
 import '../../services/cart_controller.dart';
 import '../../services/catalog_service.dart';
 import '../../utils/theme.dart';
@@ -20,6 +21,7 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Product? _product;
+  int? _availableQuantity;
   bool _isLoading = true;
   String? _error;
 
@@ -37,6 +39,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     try {
       final service = context.read<CatalogService>();
       _product = await service.fetchProductById(widget.productId);
+      final branchId = context.read<AuthController>().profile?.branchId;
+      if (_product != null && branchId != null) {
+        _availableQuantity = await service.fetchProductQuantity(
+          productId: widget.productId,
+          branchId: branchId,
+        );
+      }
     } catch (e) {
       _error = e.toString();
     } finally {
@@ -58,7 +67,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ? _ErrorView(error: _error!, onRetry: _load, l10n: l10n)
               : _product == null
                   ? Center(child: Text(l10n.noProductsFound))
-                  : _ProductBody(product: _product!, l10n: l10n),
+                  : _ProductBody(
+                      product: _product!,
+                      availableQuantity: _availableQuantity,
+                      l10n: l10n,
+                    ),
     );
   }
 }
@@ -66,9 +79,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _ProductBody extends StatelessWidget {
-  const _ProductBody({required this.product, required this.l10n});
+  const _ProductBody({
+    required this.product,
+    required this.availableQuantity,
+    required this.l10n,
+  });
 
   final Product product;
+  final int? availableQuantity;
   final AppLocalizations l10n;
 
   @override
@@ -192,7 +210,9 @@ class _ProductBody extends StatelessWidget {
               AppSpacing.md,
             ),
             child: ElevatedButton.icon(
-              onPressed: () {
+              onPressed: availableQuantity == 0
+                  ? null
+                  : () {
                 context.read<CartController>().addItem(product);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -200,9 +220,15 @@ class _ProductBody extends StatelessWidget {
                     duration: const Duration(seconds: 1),
                   ),
                 );
-              },
+                    },
               icon: const Icon(Icons.add_shopping_cart_rounded),
-              label: Text(l10n.addToCart),
+              label: Text(
+                availableQuantity == 0
+                    ? l10n.outOfStock
+                    : availableQuantity == null
+                        ? l10n.addToCart
+                        : '${l10n.addToCart} · ${l10n.availableQuantity}: $availableQuantity',
+              ),
             ),
           ),
         ),
