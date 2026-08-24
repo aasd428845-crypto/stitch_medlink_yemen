@@ -1191,12 +1191,21 @@ abstract class AppLocalizations {
   String get exploreCategories;
 
   /// No description provided for @reorderSuggestions.
+  ///
+  /// In ar, this message translates to:
+  /// **'قد تحتاج إعادة طلبها قريباً'**
   String get reorderSuggestions;
 
   /// No description provided for @availableQuantity.
+  ///
+  /// In ar, this message translates to:
+  /// **'المتوفر'**
   String get availableQuantity;
 
   /// No description provided for @reorderAddedToCart.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت إعادة إضافة الأصناف إلى السلة بالأسعار الحالية'**
   String get reorderAddedToCart;
 
   /// No description provided for @autoBonusBadge.

@@ -121,7 +121,7 @@ class _BranchInvoiceCreateSheetState extends State<BranchInvoiceCreateSheet> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 DropdownButtonFormField<String>(
-                  initialValue: _clientId,
+                  value: _clientId,
                   decoration: const InputDecoration(
                     labelText: 'العميل',
                     prefixIcon: Icon(Icons.person_outline),

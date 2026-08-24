@@ -40,7 +40,7 @@ Future<void> showAssignDriverDialog(BuildContext context, OrderModel order) asyn
       builder: (dialogCtx, setState) => AlertDialog(
         title: Text(l10n.branchAssignDriver),
         content: DropdownButtonFormField<String>(
-          initialValue: selectedDriverId,
+          value: selectedDriverId,
           decoration: InputDecoration(labelText: l10n.branchSelectDriver),
           items: [
             for (final d in drivers)
@@ -95,7 +95,7 @@ Future<void> showTransferOrderDialog(BuildContext context, OrderModel order) asy
       builder: (dialogCtx, setState) => AlertDialog(
         title: Text(l10n.branchTransferOrder),
         content: DropdownButtonFormField<String>(
-          initialValue: selectedBranchId,
+          value: selectedBranchId,
           decoration: InputDecoration(labelText: l10n.branchSelectBranch),
           items: [
             for (final b in branches)

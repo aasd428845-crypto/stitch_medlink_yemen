@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>واجهة المندوب - ميدلينك اليمن</title>
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&amp;family=Outfit:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#2563eb",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "surface-variant": "#e1e2ed",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-tertiary-container": "#ffede6",
+                        "inverse-surface": "#2e3039",
+                        "background": "#faf8ff",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#bc4800",
+                        "surface-container": "#ededf9",
+                        "surface-container-highest": "#e1e2ed",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-background": "#191b23",
+                        "surface-dim": "#d9d9e5",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-primary-fixed": "#00174b",
+                        "outline": "#737686",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-primary-container": "#eeefff",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container-high": "#e7e7f3",
+                        "surface": "#faf8ff",
+                        "on-secondary-fixed": "#0b1c30",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-secondary-container": "#54647a",
+                        "tertiary": "#943700",
+                        "secondary": "#505f76",
+                        "outline-variant": "#c3c6d7",
+                        "primary-fixed": "#dbe1ff",
+                        "secondary-container": "#d0e1fb",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#0053db",
+                        "on-surface": "#191b23",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface-container-low": "#f3f3fe",
+                        "primary": "#004ac6",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f0f0fb",
+                        "on-surface-variant": "#434655",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "gutter": "20px",
+                        "md": "16px",
+                        "margin-desktop": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Outfit"],
+                        "label-lg": ["IBM Plex Sans Arabic"],
+                        "headline-lg": ["Outfit"],
+                        "headline-sm": ["Outfit"],
+                        "body-md": ["IBM Plex Sans Arabic"],
+                        "label-md": ["IBM Plex Sans Arabic"],
+                        "body-sm": ["IBM Plex Sans Arabic"],
+                        "body-lg": ["IBM Plex Sans Arabic"],
+                        "headline-lg-mobile": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "headline-lg": ["30px", {"lineHeight": "38px", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+
+<style>
+  .tab-btn { color:#94a3b8; } .tab-btn.active { color:#2563eb; }
+  #bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(255,255,255,.95); backdrop-filter:blur(14px); border-top:1px solid #e2e8f0; z-index:40; }
+  main { padding-bottom:76px; }
+  @keyframes slideup { from{transform:translateY(100%)} to{transform:translateY(0)} }
+  .animate-slideup { animation:slideup .28s ease-out; }
+  #modal-overlay.flex { display:flex !important; }
+</style>
+</head>
+<body class="bg-slate-50">
+<main><div id="tab-orders" class="tab-section">
+<!-- Top App Bar -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-4 h-16 border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-low transition-colors rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">menu</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">ميدلينك اليمن</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-surface-container-low transition-colors rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">qr_code_scanner</span>
+</button>
+</div>
+</header>
+<!-- Tab Navigation (Awaiting Pickup / In Delivery) -->
+<nav class="bg-surface-container-lowest sticky top-16 z-40 w-full border-b border-outline-variant">
+<div class="flex w-full">
+<button class="flex-1 py-4 text-center font-label-lg text-label-lg transition-all relative text-primary font-bold sub-tab-btn" onclick="driverSubTab(this, 'pickup')">
+                بانتظار الاستلام
+                <div class="active-tab-indicator absolute bottom-0 left-0 right-0 bg-primary" id="indicator-pickup"></div>
+</button>
+<button class="flex-1 py-4 text-center font-label-lg text-label-lg transition-all relative text-on-surface-variant sub-tab-btn" onclick="driverSubTab(this, 'delivery')">
+                قيد التوصيل
+                <div class="active-tab-indicator absolute bottom-0 left-0 right-0 bg-transparent" id="indicator-delivery"></div>
+</button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="max-w-2xl mx-auto p-4 md:px-margin-desktop space-y-4">
+<!-- Status Header for Driver Context -->
+<div class="flex items-center justify-between mb-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">الطلبات المُسندة</h2>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">3 طلبات</span>
+</div>
+<!-- Order List -->
+<div class="space-y-4" id="order-container">
+<!-- Order Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm active:scale-[0.98] transition-transform cursor-pointer" onclick="openModal('orderdetail')">
+<div class="flex justify-between items-start mb-3">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">رقم الطلب: <span class="font-headline-md">#ML-8842</span></p>
+<h3 class="font-headline-md text-headline-md text-on-surface leading-tight">صيدلية الأمل</h3>
+</div>
+<div class="flex flex-col items-start">
+<span class="text-primary font-bold text-xl font-headline-md">45,500 ريال</span>
+<span class="font-label-md text-label-md text-secondary">8 أصناف</span>
+</div>
+</div>
+<div class="flex items-center gap-3 mb-5 py-3 border-y border-outline-variant/30">
+<span class="material-symbols-outlined text-primary-container bg-primary-container/10 p-2 rounded-lg">location_on</span>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">مدينة صنعاء</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">شارع حدة، بجانب السعيد مول</p>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-primary text-on-primary py-4 rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+                        بدء الاستلام
+                    </button>
+<button class="w-14 h-14 border border-outline-variant rounded-xl flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">call</span>
+</button>
+</div>
+</div>
+<!-- Order Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm active:scale-[0.98] transition-transform cursor-pointer" onclick="openModal('orderdetail')">
+<div class="flex justify-between items-start mb-3">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">رقم الطلب: <span class="font-headline-md">#ML-9021</span></p>
+<h3 class="font-headline-md text-headline-md text-on-surface leading-tight">المركز الطبي الحديث</h3>
+</div>
+<div class="flex flex-col items-start">
+<span class="text-primary font-bold text-xl font-headline-md">122,800 ريال</span>
+<span class="font-label-md text-label-md text-secondary">24 صنفاً</span>
+</div>
+</div>
+<div class="flex items-center gap-3 mb-5 py-3 border-y border-outline-variant/30">
+<span class="material-symbols-outlined text-primary-container bg-primary-container/10 p-2 rounded-lg">location_on</span>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">محافظة تعز</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">حي الروضة، المربع 4</p>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-primary text-on-primary py-4 rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+                        بدء الاستلام
+                    </button>
+<button class="w-14 h-14 border border-outline-variant rounded-xl flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">call</span>
+</button>
+</div>
+</div>
+<!-- Order Card 3 (Urgent/Cold Chain) -->
+<div class="bg-surface-container-lowest border-2 border-primary/20 rounded-xl p-5 shadow-sm active:scale-[0.98] transition-transform cursor-pointer relative overflow-hidden" onclick="openModal('orderdetail')">
+<div class="absolute right-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<p class="font-label-md text-label-md text-on-surface-variant">رقم الطلب: <span class="font-headline-md">#ML-8812</span></p>
+<span class="bg-error-container text-on-error-container text-[10px] px-2 py-0.5 rounded font-bold uppercase">عاجل</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface leading-tight">مستشفى الشفاء</h3>
+</div>
+<div class="flex flex-col items-start">
+<span class="text-primary font-bold text-xl font-headline-md">8,200 ريال</span>
+<span class="font-label-md text-label-md text-secondary">صنفان</span>
+</div>
+</div>
+<div class="flex items-center gap-3 mb-5 py-3 border-y border-outline-variant/30">
+<span class="material-symbols-outlined text-primary-container bg-primary-container/10 p-2 rounded-lg">location_on</span>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">عدن</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">طريق الميناء الرئيسي، منطقة المستودعات</p>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-primary text-on-primary py-4 rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+                        بدء الاستلام
+                    </button>
+<button class="w-14 h-14 border border-outline-variant rounded-xl flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">call</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<!-- Interactive Layer -->
+</div><div id="tab-earnings" class="tab-section" style="display:none">
+<div class="p-4">
+  <div class="rounded-3xl p-5 mb-4 relative overflow-hidden text-white" style="background:linear-gradient(135deg,#1e3a8a,#2563eb 60%,#3b82f6);">
+    <div class="absolute -left-8 -top-8 w-32 h-32 rounded-full bg-white/10"></div>
+    <p class="text-blue-100 text-xs mb-1 relative">إجمالي أرباح هذا الشهر</p>
+    <p class="text-3xl font-extrabold relative">86,400 <span class="text-lg">ريال</span></p>
+    <div class="grid grid-cols-2 gap-2 mt-4 relative">
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-2.5 text-center">
+        <p class="text-white text-lg font-extrabold">42</p><p class="text-blue-100 text-[11px]">توصيلة مكتملة</p>
+      </div>
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-2.5 text-center">
+        <p class="text-white text-lg font-extrabold">2,057</p><p class="text-blue-100 text-[11px]">متوسط العمولة/توصيلة</p>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center justify-between mb-3">
+    <h3 class="font-extrabold text-slate-800">سجل العمولات</h3>
+    <span class="text-xs font-bold text-primary-container">هذا الشهر ▾</span>
+  </div>
+  <div class="space-y-2">
+    <div class="flex items-center justify-between p-3.5 bg-white border border-slate-100 rounded-2xl shadow-sm">
+      <div><p class="font-bold text-slate-800 text-sm">طلب #ML-8842 — صيدلية الأمل</p><p class="text-xs text-slate-500">اليوم، 2:15م</p></div>
+      <div class="text-left"><p class="font-extrabold text-emerald-600 text-sm">+2,275 ر.ي</p><span class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">مدفوعة</span></div>
+    </div>
+    <div class="flex items-center justify-between p-3.5 bg-white border border-slate-100 rounded-2xl shadow-sm">
+      <div><p class="font-bold text-slate-800 text-sm">طلب #ML-9021 — المركز الطبي الحديث</p><p class="text-xs text-slate-500">أمس، 11:40ص</p></div>
+      <div class="text-left"><p class="font-extrabold text-slate-700 text-sm">+6,140 ر.ي</p><span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold">معلّقة</span></div>
+    </div>
+    <div class="flex items-center justify-between p-3.5 bg-white border border-slate-100 rounded-2xl shadow-sm">
+      <div><p class="font-bold text-slate-800 text-sm">طلب #ML-8812 — مستشفى الشفاء</p><p class="text-xs text-slate-500">أمس، 9:05ص</p></div>
+      <div class="text-left"><p class="font-extrabold text-emerald-600 text-sm">+410 ر.ي</p><span class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">مدفوعة</span></div>
+    </div>
+  </div>
+</div>
+</div><div id="tab-chat" class="tab-section" style="display:none">
+<!-- TopAppBar -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-4 md:px-margin-desktop h-16 border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<button class="p-2 hover:bg-surface-container-low transition-colors rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">المحادثات 💬</h1>
+</div>
+<div class="flex items-center gap-2">
+<div class="relative hidden md:block">
+<input class="bg-surface-container-low border-none rounded-full px-10 py-2 text-label-lg focus:ring-2 focus:ring-primary-container w-64" placeholder="البحث عن مندوب..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-outline">search</span>
+</div>
+<button class="p-2 hover:bg-surface-container-low transition-colors rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</button>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 py-6 mb-24">
+<!-- Mobile Search Bar -->
+<div class="md:hidden mb-6">
+<div class="relative w-full">
+<input class="w-full bg-surface-container border border-outline-variant rounded-xl px-12 py-3 text-body-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="البحث عن مندوب..." type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-3 text-outline">search</span>
+</div>
+</div>
+<!-- Chats List -->
+<div class="space-y-3">
+<!-- Chat Card 1 -->
+<div class="flex items-center gap-4 bg-surface p-4 rounded-xl border border-outline-variant chat-card-hover cursor-pointer hover:bg-surface-container-low transition-all">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-full bg-cover bg-center border-2 border-surface" data-alt="A professional headshot of a middle-aged male delivery driver with a friendly smile, wearing a blue pharmaceutical logistics uniform. The background is a brightly lit medical distribution warehouse with soft focus. High-quality lighting, clinical and authoritative feel." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBSeKKcj6JTL4JJewzIjyKiCuW2qLc4bLHirhCiG_yBsraC52OauYMpuQhokbNOZi8nuiJ-k6GPqk9r-dYV3FU8Oos9RFtu9ERHnGBoKlhQgTO3_y82bjGKgsxsXXKPb9qNTcmAhEj9HSwHQkfwdjSUUJsbLFY2knpJChYd5V7Bu-TkEkXTfEjqki8ab65RuxkCaa9GeUEWkLiZZlYYcoCE3B3cJ9Fi96tU7fgSvnet43nYCyBqetpLHg')">
+</div>
+<!-- Status Indicator (Active) -->
+<span class="absolute bottom-0 left-0 w-3.5 h-3.5 bg-green-500 border-2 border-surface rounded-full"></span>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">أحمد النور</h3>
+<span class="text-label-md font-label-md text-outline">١٠:٤٥ ص</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant truncate">تم الوصول للموقع</p>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-error text-on-error text-xs font-bold px-2 py-1 rounded-full min-w-[20px] text-center">3</span>
+<span class="material-symbols-outlined text-outline text-lg">chevron_left</span>
+</div>
+</div>
+<!-- Chat Card 2 -->
+<div class="flex items-center gap-4 bg-surface p-4 rounded-xl border border-outline-variant chat-card-hover cursor-pointer hover:bg-surface-container-low transition-all">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-full bg-cover bg-center border-2 border-surface" data-alt="A medium shot of a young Yemeni professional delivery staff member, standing next to a clean white logistics van. Bright morning daylight, urban pharmaceutical hub setting. The person looks focused and professional. Corporate blue and white tones dominate the scene." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDqO9PQxX493UNarm8PjYPkpCMCp9kQQHhemVTQeROVkPzCsVZZMWmFOmnraQcARLAQiRKYodSDf97-eBC9tmA5W7pyGg-rbAk5pkU3jlC7XTT7Wc3Oavt2qXiutblkNQ7GW-Hi8b8NpQpllIElZynvzZ_7qwbKsknQLjWYj6hH_aC7eUkOQ2-0FHVhd2K7cwX1lj-oLqGtUC4eL8o5EDMZIDS-gGAZsw70Jr3ByeIUnijz6NElc5cUow')">
+</div>
+<!-- Status Indicator (Offline) -->
+<span class="absolute bottom-0 left-0 w-3.5 h-3.5 bg-slate-400 border-2 border-surface rounded-full"></span>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">خالد الصنعاني</h3>
+<span class="text-label-md font-label-md text-outline">٠٩:١٢ ص</span>
+</div>
+<p class="text-body-sm font-body-sm text-outline truncate">جاري تحميل الشحنة الطبية...</p>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="material-symbols-outlined text-outline text-lg">chevron_left</span>
+</div>
+</div>
+<!-- Chat Card 3 -->
+<div class="flex items-center gap-4 bg-surface p-4 rounded-xl border border-outline-variant chat-card-hover cursor-pointer hover:bg-surface-container-low transition-all">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-full bg-cover bg-center border-2 border-surface" data-alt="A portrait of an experienced logistics personnel wearing a high-visibility medical transport vest. The setting is a sterile, modern healthcare equipment loading bay with bright clinical lighting. The overall mood is reliable and institutional. Colors are muted greys and vibrant blue accents." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAeurhVQS5i4RuZx4AC4S1zXltGjpior2tuQrWad8C4Load-X6wzdWxWiaVlAvHciMYTJPkjAaO95iESjEyvPttVbCSG02_i8iNIFlOpCbcyeB7t3d-Bugfi8PUM42nJfhJmN2LjPAX4LOiG9gfxzgrKfVMk3HLdLJ4mEQsCj8Hy4bJF4MwopqFSRTB2jZ9ozjKYzLu6ba1e62hUk3sIYYErPbW6Z97nToBIwr0ela0_iqeyXLB5Ooqaw')">
+</div>
+<!-- Status Indicator (Active) -->
+<span class="absolute bottom-0 left-0 w-3.5 h-3.5 bg-green-500 border-2 border-surface rounded-full"></span>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">محمد اليافعي</h3>
+<span class="text-label-md font-label-md text-outline">أمس</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant truncate font-semibold">هل توجد طلبيات إضافية اليوم؟</p>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-error text-on-error text-xs font-bold px-2 py-1 rounded-full min-w-[20px] text-center">1</span>
+<span class="material-symbols-outlined text-outline text-lg">chevron_left</span>
+</div>
+</div>
+<!-- Chat Card 4 -->
+<div class="flex items-center gap-4 bg-surface p-4 rounded-xl border border-outline-variant chat-card-hover cursor-pointer hover:bg-surface-container-low transition-all">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-full bg-cover bg-center border-2 border-surface" data-alt="A close-up shot of a courier specialist standing in front of a modern medical facility with glass facades. The lighting is clean and high-key. Professional attire in deep blue. The atmosphere conveys trust and efficiency in pharmaceutical distribution." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC7l-euP-MD28JzvxfUtVIyITnmLGYEmJ3Vp3rew2MZ-Q_Hted8GiGfqJnlXpQBv2Qg0I37KZmYK0QbR_dDwAjmpYZIsFslYMG6HeKA1mCKD681cSmqvzFcUcT7bJ35ICsncTrc_9aFfswJrS69w0_OCHXTLKSsQiYkG_NTJm0qHQzClgn5y7_rwZcSS9CmfrOMw8cC0WxWhaZvnZOZPafCCDbm838-hSFGbtrRxPoTa9bAgf8WUxNE4w')">
+</div>
+<!-- Status Indicator (Offline) -->
+<span class="absolute bottom-0 left-0 w-3.5 h-3.5 bg-slate-400 border-2 border-surface rounded-full"></span>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">علي حسن</h3>
+<span class="text-label-md font-label-md text-outline">أمس</span>
+</div>
+<p class="text-body-sm font-body-sm text-outline truncate">تم تسليم الفاتورة للعميل</p>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="material-symbols-outlined text-outline text-lg">chevron_left</span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+
+
+</div></main>
+<nav id="bottom-nav" class="flex">
+  <button data-tab="orders" class="tab-btn flex-1 flex flex-col items-center gap-1 py-2.5" onclick="showTab('orders')">
+    <span class="material-symbols-outlined text-2xl">local_shipping</span>
+    <span class="text-[11px] font-bold">التوصيلات</span>
+  </button>
+  <button data-tab="earnings" class="tab-btn flex-1 flex flex-col items-center gap-1 py-2.5" onclick="showTab('earnings')">
+    <span class="material-symbols-outlined text-2xl">payments</span>
+    <span class="text-[11px] font-bold">أرباحي</span>
+  </button>
+  <button data-tab="chat" class="tab-btn flex-1 flex flex-col items-center gap-1 py-2.5" onclick="showTab('chat')">
+    <span class="material-symbols-outlined text-2xl">chat</span>
+    <span class="text-[11px] font-bold">المحادثة</span>
+  </button></nav>
+<div id="modal-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-end justify-center" onclick="if(event.target===this) closeModal()">
+  <div id="modal-content-wrap" class="w-full max-w-md bg-white rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto animate-slideup"></div>
+</div>
+<template id="tmpl-orderdetail"><div class="max-h-[85vh] overflow-y-auto">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline flex justify-between items-center w-full px-4 md:px-margin-desktop h-16 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<button aria-label="Back" class="p-2 hover:bg-surface-container-low transition-colors rounded-full">
+<span class="material-symbols-outlined text-primary">arrow_forward</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim">طلب #ML-9921</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">qr_code_scanner</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow p-4 space-y-6 max-w-2xl mx-auto w-full pb-32">
+<!-- Customer & Contact Section -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-4 shadow-sm flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<p class="font-label-md text-on-surface-variant uppercase tracking-wider">العميل</p>
+<h2 class="font-headline-md text-headline-md text-on-surface">د. أحمد المصري</h2>
+<p class="font-body-md text-on-surface-variant" dir="ltr">+967 712 345 678</p>
+</div>
+<div class="bg-primary-container/10 p-3 rounded-full">
+<span class="material-symbols-outlined text-primary text-3xl">person</span>
+</div>
+</div>
+<a class="flex items-center justify-center gap-3 bg-primary text-white py-5 rounded-xl font-bold text-lg shadow-md active:scale-[0.98] transition-all" href="tel:+967712345678">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">call</span>
+<span>اتصال بدكتور أحمد</span>
+</a>
+</section>
+<!-- Address & Navigation Section -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-4 shadow-sm space-y-4">
+<div class="flex gap-4">
+<div class="flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="space-y-1">
+<p class="font-label-md text-on-surface-variant uppercase tracking-wider">عنوان التوصيل</p>
+<p class="font-body-lg text-on-surface leading-tight">حي السبعين، شارع 14، بجانب المركز الطبي الحديث، صنعاء</p>
+</div>
+</div>
+<!-- Map Preview -->
+<div class="relative w-full h-48 rounded-xl overflow-hidden border border-outline-variant">
+<div class="w-full h-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCsiPlDHHM7r5dgvh7cf-kTFmpCofOBrGL-Iw0mkEO0zmy4CD3xqltMSInba0wyxif33fXVQsT4Fo3MNFHciyfVdHxguR1dFMXRAlclhCM85pJoQNCMs72eul-H83r8FYzkI4f8gm_B15-wPi52-GIJqRQ07OkHId8T6qifXQztiVbW9vQwnAbzEHb5LYVcxo9NGTHyqDCeSOKSeilCzbaI9qovDM7ezm93hMoQ1ouSWB7iyY3i8Scm3Q')"></div>
+<div class="absolute inset-0 bg-primary/5 pointer-events-none"></div>
+</div>
+<button class="w-full flex items-center justify-center gap-3 bg-secondary-container text-on-secondary-container py-5 rounded-xl font-bold text-lg border border-outline-variant shadow-sm active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined">directions</span>
+<span>فتح في خرائط Google</span>
+</button>
+</section>
+<!-- Verification List -->
+<section class="space-y-3">
+<h3 class="font-label-lg text-on-surface-variant flex items-center gap-2 px-2">
+<span class="material-symbols-outlined text-sm">inventory_2</span>
+            أصناف الطلب (4 أصناف)
+        </h3>
+<div class="space-y-2">
+<!-- Item 1 -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-xl border border-outline-variant">
+<div class="flex gap-4 items-center">
+<div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary">medication</span>
+</div>
+<div>
+<p class="font-label-lg text-on-surface">أموكسيسيلين 500 ملجم</p>
+<p class="font-body-sm text-on-surface-variant">10 صناديق (دفعة #902)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">check_circle</span>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-xl border border-outline-variant">
+<div class="flex gap-4 items-center">
+<div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary">vaccines</span>
+</div>
+<div>
+<p class="font-label-lg text-on-surface">أنسولين جلارجين</p>
+<p class="font-body-sm text-on-surface-variant">5 فيال (سلسلة تبريد)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">check_circle</span>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-xl border border-outline-variant">
+<div class="flex gap-4 items-center">
+<div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary">medical_services</span>
+</div>
+<div>
+<p class="font-label-lg text-on-surface">شاش معقم</p>
+<p class="font-body-sm text-on-surface-variant">20 عبوة (قياسي)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">check_circle</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Navigation Shell (BottomNavBar) -->
+
+<!-- Status Action Bar (Floating above nav) -->
+<div class="fixed bottom-20 left-0 w-full px-4 z-[60]">
+<button class="w-full py-5 bg-primary text-white rounded-2xl shadow-xl flex items-center justify-center gap-3 active:scale-[0.95] transition-all duration-200" id="statusBtn">
+<span class="material-symbols-outlined" id="statusIcon">package_2</span>
+<span class="font-headline-sm text-headline-sm" id="statusText">📦 تم الاستلام من المستودع</span>
+</button>
+</div>
+
+</div></template>
+<script>
+function openModal(key){const wrap=document.getElementById('modal-content-wrap');const t=document.getElementById('tmpl-'+key);wrap.innerHTML='';wrap.appendChild(t.content.cloneNode(true));document.getElementById('modal-overlay').classList.remove('hidden');document.getElementById('modal-overlay').classList.add('flex');}
+function closeModal(){document.getElementById('modal-overlay').classList.add('hidden');document.getElementById('modal-overlay').classList.remove('flex');}
+function showTab(key){document.querySelectorAll('.tab-section').forEach(el=>el.style.display='none');document.getElementById('tab-'+key).style.display='';document.querySelectorAll('#bottom-nav .tab-btn').forEach(b=>b.classList.remove('active'));document.querySelector('#bottom-nav [data-tab="'+key+'"]').classList.add('active');window.scrollTo({top:0,behavior:'instant'});}
+function driverSubTab(btn, which){document.querySelectorAll('.sub-tab-btn').forEach(b=>{b.classList.remove('text-primary','font-bold');b.classList.add('text-on-surface-variant');});btn.classList.add('text-primary','font-bold');btn.classList.remove('text-on-surface-variant');}
+document.addEventListener('DOMContentLoaded',()=>showTab('orders'));
+</script>
+</body></html>

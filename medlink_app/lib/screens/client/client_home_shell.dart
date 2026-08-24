@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/cart_controller.dart';
 import '../../widgets/medlink_design.dart';
+import '../shared/coming_soon_scaffold.dart';
 import 'account_tab.dart';
 import 'catalog_tab.dart';
 import 'home_tab.dart';
