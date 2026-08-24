@@ -35,13 +35,23 @@ class BranchOrderCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 2),
       decoration: BoxDecoration(
-        color: BranchColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: BranchColors.outlineVariant),
+        color: BranchColors.surfaceContainerLowest.withValues(alpha: .74),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: BranchColors.onPrimary.withValues(alpha: .7),
+          width: 1.1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: BranchColors.primary.withValues(alpha: .06),
+            blurRadius: 22,
+            offset: const Offset(0, 9),
+          ),
+        ],
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(24),
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Column(

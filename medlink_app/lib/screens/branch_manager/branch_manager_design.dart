@@ -24,9 +24,24 @@ class BranchManagerSurface extends StatelessWidget {
       margin: margin,
       padding: padding,
       decoration: BoxDecoration(
-        color: BranchColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: BranchColors.outlineVariant),
+        color: BranchColors.surfaceContainerLowest.withValues(alpha: .74),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: BranchColors.onPrimary.withValues(alpha: .68),
+          width: 1.1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: BranchColors.primary.withValues(alpha: .07),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
+          ),
+          BoxShadow(
+            color: BranchColors.onSurface.withValues(alpha: .035),
+            blurRadius: 3,
+            offset: const Offset(0, 1),
+          ),
+        ],
       ),
       child: child,
     );
@@ -57,8 +72,8 @@ class BranchManagerHero extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: BranchColors.heroGradient.first.withValues(alpha: .10),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
+            blurRadius: 28,
+            offset: const Offset(0, 12),
           ),
         ],
       ),
@@ -174,7 +189,8 @@ class BranchQuickAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: BranchColors.surfaceContainerLowest,
+      color: BranchColors.surfaceContainerLowest.withValues(alpha: .68),
+      elevation: 0,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
@@ -183,7 +199,17 @@ class BranchQuickAction extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: BranchColors.outlineVariant),
+            border: Border.all(
+              color: BranchColors.onPrimary.withValues(alpha: .72),
+              width: 1.1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: BranchColors.primary.withValues(alpha: .06),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
           child: Column(
             children: [

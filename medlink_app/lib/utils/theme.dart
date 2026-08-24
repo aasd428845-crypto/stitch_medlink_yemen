@@ -447,7 +447,7 @@ class AppTheme {
       brightness: Brightness.light,
       textTheme: textTheme,
       appBarTheme: AppBarTheme(
-        backgroundColor: BranchColors.surface,
+        backgroundColor: Colors.transparent,
         foregroundColor: BranchColors.onSurface,
         elevation: 0,
         centerTitle: false,

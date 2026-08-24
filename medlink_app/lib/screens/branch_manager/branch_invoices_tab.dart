@@ -114,10 +114,12 @@ class _BranchInvoicesTabState extends State<BranchInvoicesTab> {
                     prefixIcon: const Icon(Icons.search_rounded),
                     isDense: true,
                     filled: true,
-                    fillColor: BranchColors.surfaceContainerLowest,
+                     fillColor: BranchColors.surfaceContainerLowest.withValues(alpha: .72),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: BranchColors.outlineVariant),
+                       borderRadius: BorderRadius.circular(18),
+                       borderSide: BorderSide(
+                         color: BranchColors.onPrimary.withValues(alpha: .7),
+                       ),
                     ),
                   ),
                 ),
