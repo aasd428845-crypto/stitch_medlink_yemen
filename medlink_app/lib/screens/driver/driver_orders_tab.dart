@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/order.dart';
@@ -16,6 +17,7 @@ class DriverOrdersTab extends StatefulWidget {
 }
 
 class _DriverOrdersTabState extends State<DriverOrdersTab> {
+  int _segment = 0;
   @override
   void initState() {
     super.initState();
@@ -29,34 +31,29 @@ class _DriverOrdersTabState extends State<DriverOrdersTab> {
     final l10n = AppLocalizations.of(context)!;
     final ctrl = context.watch<DriverOrdersController>();
 
-    final filters = <String?, String>{
-      null: l10n.driverFilterAll,
-      'assigned': l10n.driverFilterAssigned,
-      'in_progress': l10n.driverFilterInProgress,
-      'delivered': l10n.driverFilterDelivered,
-    };
+    final filtered = ctrl.orders.where((order) {
+      return _segment == 0
+          ? order.status == 'assigned'
+          : order.status == 'in_progress';
+    }).toList();
 
     return Column(
       children: [
-        // ── Filter chips ───────────────────────────────────────────────────
-        SizedBox(
-          height: 48,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.xs,
-            ),
+        // ── Two delivery stages from the real orders.status values ────────
+        Material(
+          color: AppColors.surfaceContainerLowest,
+          child: Row(
             children: [
-              for (final entry in filters.entries)
-                Padding(
-                  padding: const EdgeInsets.only(left: AppSpacing.xs),
-                  child: ChoiceChip(
-                    label: Text(entry.value),
-                    selected: ctrl.orderFilter == entry.key,
-                    onSelected: (_) => ctrl.setOrderFilter(entry.key),
-                  ),
-                ),
+              _SegmentButton(
+                label: l10n.driverFilterAssigned,
+                selected: _segment == 0,
+                onTap: () => setState(() => _segment = 0),
+              ),
+              _SegmentButton(
+                label: l10n.driverFilterInProgress,
+                selected: _segment == 1,
+                onTap: () => setState(() => _segment = 1),
+              ),
             ],
           ),
         ),
@@ -77,7 +74,7 @@ class _DriverOrdersTabState extends State<DriverOrdersTab> {
                     padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
                     child: Center(child: CircularProgressIndicator()),
                   )
-                else if (ctrl.filteredOrders.isEmpty)
+                else if (filtered.isEmpty)
                   Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: AppSpacing.xl),
@@ -103,10 +100,13 @@ class _DriverOrdersTabState extends State<DriverOrdersTab> {
                     ),
                   )
                 else
-                  for (final order in ctrl.filteredOrders) ...[
+                  for (final order in filtered) ...[
                     _DriverOrderCard(
                       order: order,
                       onTap: () => context.push('/driver/order/${order.id}'),
+                      onAdvance: () => _advanceOrder(context, order),
+                      onCall: () => _callClient(order),
+                      onMap: () => _openMap(order),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                   ],
@@ -117,15 +117,63 @@ class _DriverOrdersTabState extends State<DriverOrdersTab> {
       ],
     );
   }
+
+  Future<void> _advanceOrder(BuildContext context, OrderModel order) async {
+    final next = order.status == 'assigned' ? 'in_progress' : 'delivered';
+    await context.read<DriverOrdersController>().advanceOrderStatus(order.id, next);
+  }
+
+  Future<void> _callClient(OrderModel order) async {
+    final phone = order.client?.phone;
+    if (phone == null || phone.isEmpty) return;
+    final uri = Uri(scheme: 'tel', path: phone);
+    if (await canLaunchUrl(uri)) await launchUrl(uri);
+  }
+
+  Future<void> _openMap(OrderModel order) async {
+    final address = order.deliveryAddress;
+    if (address?.latitude == null || address?.longitude == null) return;
+    final uri = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=${address!.latitude},${address.longitude}',
+    );
+    if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+}
+
+class _SegmentButton extends StatelessWidget {
+  const _SegmentButton({required this.label, required this.selected, required this.onTap});
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context) => Expanded(
+    child: InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: selected ? AppColors.primary : Colors.transparent, width: 3)),
+        ),
+        alignment: Alignment.center,
+        child: Text(label, style: Theme.of(context).textTheme.labelLarge?.copyWith(
+          color: selected ? AppColors.primary : AppColors.onSurfaceVariant,
+          fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+        )),
+      ),
+    ),
+  );
 }
 
 // ── Order card ─────────────────────────────────────────────────────────────────
 
 class _DriverOrderCard extends StatelessWidget {
-  const _DriverOrderCard({required this.order, required this.onTap});
+  const _DriverOrderCard({required this.order, required this.onTap, required this.onAdvance, required this.onCall, required this.onMap});
 
   final OrderModel order;
   final VoidCallback onTap;
+  final VoidCallback onAdvance;
+  final VoidCallback onCall;
+  final VoidCallback onMap;
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +265,23 @@ class _DriverOrderCard extends StatelessWidget {
               const Divider(height: 1),
               const SizedBox(height: AppSpacing.sm),
 
-              // Row 4: item count + total
+               // Actions are available directly on the card.
+               Row(
+                 children: [
+                   Expanded(
+                     child: FilledButton.icon(
+                       onPressed: onAdvance,
+                       icon: Icon(order.status == 'assigned' ? Icons.local_shipping_rounded : Icons.check_circle_rounded),
+                       label: Text(order.status == 'assigned' ? l10n.driverStartDelivery : l10n.driverConfirmDelivery),
+                     ),
+                   ),
+                   const SizedBox(width: AppSpacing.sm),
+                   IconButton.filledTonal(onPressed: onCall, icon: const Icon(Icons.call_outlined), tooltip: l10n.driverClientPhone),
+                   IconButton.filledTonal(onPressed: onMap, icon: const Icon(Icons.directions_outlined), tooltip: l10n.driverDeliveryAddress),
+                 ],
+               ),
+               const SizedBox(height: AppSpacing.sm),
+               // Row 4: item count + total
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

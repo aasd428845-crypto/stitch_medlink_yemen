@@ -185,6 +185,8 @@
   "driverTotalEarningsLabel": "إجمالي الأرباح",
   "driverOrderItems": "بنود",
   "driverUpdateError": "فشل تحديث الحالة، حاول مجدداً",
+  "driverRoleLabel": "مندوب ميدلينك",
+  "driverHeroSubtitle": "تابع مهام التوصيل وحالة الطلبات من شاشة واحدة.",
 
   "notificationsTitle": "التنبيهات",
   "notificationsMarkAllRead": "تعليم الكل مقروءاً",

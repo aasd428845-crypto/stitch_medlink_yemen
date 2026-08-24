@@ -1076,6 +1076,18 @@ abstract class AppLocalizations {
   /// **'فشل تحديث الحالة، حاول مجدداً'**
   String get driverUpdateError;
 
+  /// No description provided for @driverRoleLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'مندوب ميدلينك'**
+  String get driverRoleLabel;
+
+  /// No description provided for @driverHeroSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تابع مهام التوصيل وحالة الطلبات من شاشة واحدة.'**
+  String get driverHeroSubtitle;
+
   /// No description provided for @notificationsTitle.
   ///
   /// In ar, this message translates to:

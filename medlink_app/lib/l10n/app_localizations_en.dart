@@ -512,6 +512,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverUpdateError => 'Failed to update status, please try again';
 
   @override
+  String get driverRoleLabel => 'MedLink Driver';
+
+  @override
+  String get driverHeroSubtitle =>
+      'Track delivery tasks and order status from one screen.';
+
+  @override
   String get notificationsTitle => 'Notifications';
 
   @override

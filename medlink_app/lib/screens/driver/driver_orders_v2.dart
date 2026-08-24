@@ -9,7 +9,7 @@ class DriverOrdersV2 extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Column(children: [
-      DriverHero(title: l10n.driverOrdersLabel, subtitle: 'تابع مهام التوصيل وحالة الطلبات من شاشة واحدة.'),
+      DriverHero(title: l10n.driverOrdersLabel, subtitle: l10n.driverHeroSubtitle),
       const Expanded(child: DriverOrdersTab()),
     ]);
   }

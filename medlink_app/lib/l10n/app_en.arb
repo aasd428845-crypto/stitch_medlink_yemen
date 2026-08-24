@@ -185,6 +185,8 @@
   "driverTotalEarningsLabel": "Total Earnings",
   "driverOrderItems": "items",
   "driverUpdateError": "Failed to update status, please try again",
+  "driverRoleLabel": "MedLink Driver",
+  "driverHeroSubtitle": "Track delivery tasks and order status from one screen.",
 
   "notificationsTitle": "Notifications",
   "notificationsMarkAllRead": "Mark all as read",

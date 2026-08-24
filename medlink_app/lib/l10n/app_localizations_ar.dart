@@ -510,6 +510,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get driverUpdateError => 'فشل تحديث الحالة، حاول مجدداً';
 
   @override
+  String get driverRoleLabel => 'مندوب ميدلينك';
+
+  @override
+  String get driverHeroSubtitle =>
+      'تابع مهام التوصيل وحالة الطلبات من شاشة واحدة.';
+
+  @override
   String get notificationsTitle => 'التنبيهات';
 
   @override
