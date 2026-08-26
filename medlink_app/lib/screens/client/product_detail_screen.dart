@@ -38,8 +38,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     });
     try {
       final service = context.read<CatalogService>();
-      _product = await service.fetchProductById(widget.productId);
       final branchId = context.read<AuthController>().profile?.branchId;
+      _product = await service.fetchProductById(widget.productId);
       if (_product != null && branchId != null) {
         _availableQuantity = await service.fetchProductQuantity(
           productId: widget.productId,

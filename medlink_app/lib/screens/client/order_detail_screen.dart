@@ -78,16 +78,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     if (payableItems.isEmpty) return;
 
     final service = context.read<OrderService>();
+    final cart = context.read<CartController>();
     final products = await service.fetchCurrentProducts(
       payableItems.map((item) => item.productId).toSet().toList(),
     );
+    if (!mounted) return;
     final byId = {for (final product in products) product.id: product};
-    final cart = context.read<CartController>();
     for (final item in payableItems) {
       final product = byId[item.productId];
       if (product != null) cart.addItem(product, item.quantity);
     }
-    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(l10n.reorderAddedToCart)),
     );
