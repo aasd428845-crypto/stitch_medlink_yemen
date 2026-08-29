@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../models/chat_room.dart';
@@ -27,7 +29,9 @@ class ChatController extends ChangeNotifier {
   Future<void> _load(Future<List<ChatRoom>> Function() loader) async {
     isLoading = true;
     error = null;
-    notifyListeners();
+    // Defer notification so callers that trigger this synchronously from
+    // didChangeDependencies/build don't hit "setState called during build".
+    scheduleMicrotask(notifyListeners);
     try {
       rooms = await loader();
     } catch (e) {

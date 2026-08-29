@@ -307,6 +307,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get featuredProducts => 'منتجات مميزة';
 
   @override
+  String get quickReorder => 'قد تحتاج إعادة طلبها قريباً';
+
+  @override
   String get catalogTitle => 'الكتالوج';
 
   @override
@@ -398,6 +401,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get confirmOrder => 'تأكيد وإرسال الطلب';
+
+  @override
+  String get specialRequestTitle => 'طلب خاص';
+
+  @override
+  String get specialRequestSubtitle =>
+      'اطلب دواءً أو منتجاً غير متوفر حالياً في الكتالوج';
+
+  @override
+  String get productNameLabel => 'اسم المنتج';
+
+  @override
+  String get productNameHint => 'مثال: دواء معين بجرعة محددة';
+
+  @override
+  String get specialQuantityLabel => 'الكمية';
+
+  @override
+  String get specialNotesLabel => 'ملاحظات إضافية (اختياري)';
+
+  @override
+  String get specialSubmit => 'إرسال الطلب الخاص';
+
+  @override
+  String get specialSuccess => 'تم إرسال طلبك الخاص بنجاح، وسنوافيك عند توفره';
+
+  @override
+  String get specialEmptyName => 'يرجى إدخال اسم المنتج';
 
   @override
   String get orderSuccessTitle => 'تم إرسال طلبك بنجاح!';

@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import '../models/cart_item.dart';
 import '../models/client_address.dart';
 import '../models/order.dart';
+import '../models/product.dart';
+import '../models/special_request.dart';
 import 'order_service.dart';
 
 /// State holder for addresses, order submission, and client order history.
@@ -19,6 +21,9 @@ class OrderController extends ChangeNotifier {
 
   List<OrderModel> _orders = [];
   List<OrderModel> get orders => _orders;
+
+  List<Product> _reorderProducts = [];
+  List<Product> get reorderProducts => _reorderProducts;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -94,6 +99,23 @@ class OrderController extends ChangeNotifier {
     }
   }
 
+  /// Loads the products the client most recently ordered, for the
+  /// "quick reorder" section. Failures are non-critical and keep the list empty.
+  Future<void> loadReorderProducts() async {
+    try {
+      final products = await _service.fetchRecentReorderProducts();
+      if (_reorderProducts.length == products.length &&
+          _reorderProducts.map((p) => p.id).toSet().length ==
+              products.map((p) => p.id).toSet().length) {
+        return;
+      }
+      _reorderProducts = products;
+      notifyListeners();
+    } catch (_) {
+      // Non-critical — leave the reorder list empty.
+    }
+  }
+
   Future<OrderModel> submitOrder({
     required List<CartItem> cartItems,
     String? notes,
@@ -119,5 +141,28 @@ class OrderController extends ChangeNotifier {
   void _setLoading(bool v) {
     _isLoading = v;
     notifyListeners();
+  }
+
+  /// Submits a special request for a product not in the catalog.
+  Future<SpecialRequest> createSpecialRequest({
+    required String productName,
+    required int quantity,
+    String? notes,
+  }) async {
+    _setLoading(true);
+    try {
+      final created = await _service.createSpecialRequest(
+        productName: productName,
+        quantity: quantity,
+        notes: notes,
+      );
+      _error = null;
+      return created;
+    } catch (e) {
+      _error = e.toString();
+      rethrow;
+    } finally {
+      _setLoading(false);
+    }
   }
 }

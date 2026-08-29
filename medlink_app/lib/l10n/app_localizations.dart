@@ -674,6 +674,12 @@ abstract class AppLocalizations {
   /// **'منتجات مميزة'**
   String get featuredProducts;
 
+  /// No description provided for @quickReorder.
+  ///
+  /// In ar, this message translates to:
+  /// **'قد تحتاج إعادة طلبها قريباً'**
+  String get quickReorder;
+
   /// No description provided for @catalogTitle.
   ///
   /// In ar, this message translates to:
@@ -859,6 +865,60 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تأكيد وإرسال الطلب'**
   String get confirmOrder;
+
+  /// No description provided for @specialRequestTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب خاص'**
+  String get specialRequestTitle;
+
+  /// No description provided for @specialRequestSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اطلب دواءً أو منتجاً غير متوفر حالياً في الكتالوج'**
+  String get specialRequestSubtitle;
+
+  /// No description provided for @productNameLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم المنتج'**
+  String get productNameLabel;
+
+  /// No description provided for @productNameHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مثال: دواء معين بجرعة محددة'**
+  String get productNameHint;
+
+  /// No description provided for @specialQuantityLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكمية'**
+  String get specialQuantityLabel;
+
+  /// No description provided for @specialNotesLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات إضافية (اختياري)'**
+  String get specialNotesLabel;
+
+  /// No description provided for @specialSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال الطلب الخاص'**
+  String get specialSubmit;
+
+  /// No description provided for @specialSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلبك الخاص بنجاح، وسنوافيك عند توفره'**
+  String get specialSuccess;
+
+  /// No description provided for @specialEmptyName.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى إدخال اسم المنتج'**
+  String get specialEmptyName;
 
   /// No description provided for @orderSuccessTitle.
   ///

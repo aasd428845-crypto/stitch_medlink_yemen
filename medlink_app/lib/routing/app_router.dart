@@ -22,6 +22,7 @@ import '../screens/client/legal_screen.dart';
 import '../screens/client/order_detail_screen.dart';
 import '../screens/client/order_success_screen.dart';
 import '../screens/client/product_detail_screen.dart';
+import '../screens/client/special_request_screen.dart';
 import '../models/promotional_offer.dart';
 import '../screens/client/offer_detail_screen.dart';
 import '../screens/driver/driver_home_shell.dart';
@@ -149,6 +150,10 @@ GoRouter buildRouter(AuthController authController) {
           GoRoute(
             path: 'legal',
             builder: (context, state) => const LegalScreen(),
+          ),
+          GoRoute(
+            path: 'special-request',
+            builder: (context, state) => const SpecialRequestScreen(),
           ),
         ],
       ),

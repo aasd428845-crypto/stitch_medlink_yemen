@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +11,8 @@ import 'branch_manager_design.dart';
 import 'branch_order_actions.dart';
 
 /// Premium branch-manager dashboard: live summary, quick access, the real
-/// statistics bento (Section 6) and the recent-orders list.
+/// statistics bento and the recent-orders list. Glassmorphism, safe-area
+/// aware, overflow-proof.
 class BranchDashboardTab extends StatelessWidget {
   const BranchDashboardTab({super.key, this.onNavigate});
 
@@ -22,6 +23,9 @@ class BranchDashboardTab extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final branch = context.watch<BranchController>();
 
+    // 1) SafeArea keeps the pink hero clear of the system status bar; the extra
+    // 76px top padding clears the transparent floating AppBar (settings /
+    // notifications / sign-out) so nothing overlaps.
     return RefreshIndicator(
       color: BranchColors.primary,
       backgroundColor: BranchColors.background,
@@ -29,94 +33,158 @@ class BranchDashboardTab extends StatelessWidget {
         await branch.loadOrders();
         await branch.loadStats();
       },
-      child: ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(16, 10, 16, 120),
-        children: [
-          const BranchManagerHero(
-            title: 'لوحة الفرع',
-            subtitle: 'مركز التحكم اليومي بالطلبات والمخزون والسائقين والفواتير.',
-          ),
-          const SizedBox(height: 18),
-          if (branch.ordersError != null) ...[
-            ErrorBanner(message: branch.ordersError!),
-            const SizedBox(height: 14),
-          ],
-          const BranchSectionTitle(title: 'ملخص اليوم'),
-          const SizedBox(height: 10),
-          GridView.count(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 1.35,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-              BranchMetricTile(label: l10n.branchDashboardNewOrders, value: '${branch.newOrdersCount}', icon: Icons.notifications_active_rounded, color: BranchColors.warning),
-              BranchMetricTile(label: l10n.branchDashboardInProgress, value: '${branch.inProgressOrdersCount}', icon: Icons.local_shipping_rounded, color: BranchColors.primary),
-              BranchMetricTile(label: l10n.branchDashboardCompletedToday, value: '${branch.completedTodayCount}', icon: Icons.task_alt_rounded, color: BranchColors.success),
-              const BranchMetricTile(label: 'مراقبة الفرع', value: 'مباشر', icon: Icons.monitor_heart_rounded, color: BranchColors.primaryContainer),
+      child: SafeArea(
+        top: true,
+        bottom: false,
+        child: ListView(
+          clipBehavior: Clip.none,
+          physics: const AlwaysScrollableScrollPhysics(),
+          // bottom padding (120) clears the floating bottom nav bar.
+          padding: const EdgeInsets.fromLTRB(16, 76, 16, 120),
+          children: [
+            const BranchManagerHero(
+              title: 'لوحة الفرع',
+              subtitle: 'مركز التحكم اليومي بالطلبات والمخزون والسائقين والفواتير.',
+            ),
+            const SizedBox(height: 12),
+            if (branch.ordersError != null) ...[
+              ErrorBanner(message: branch.ordersError!),
+              const SizedBox(height: 12),
             ],
-          ),
-          const SizedBox(height: 22),
-          const BranchSectionTitle(title: 'الوصول السريع'),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(child: BranchQuickAction(icon: Icons.receipt_long_rounded, label: 'الفواتير', color: BranchColors.primary, onTap: () => onNavigate?.call(3))),
-              const SizedBox(width: 9),
-              Expanded(child: BranchQuickAction(icon: Icons.inventory_2_rounded, label: 'المخزون', color: BranchColors.success, onTap: () => onNavigate?.call(2))),
-              const SizedBox(width: 9),
-              Expanded(child: BranchQuickAction(icon: Icons.groups_rounded, label: 'السائقون', color: BranchColors.warning, onTap: () => onNavigate?.call(4))),
-              const SizedBox(width: 9),
-              Expanded(child: BranchQuickAction(icon: Icons.chat_bubble_rounded, label: 'المحادثات', color: BranchColors.primaryContainer, onTap: () => onNavigate?.call(5))),
-            ],
-          ),
-          const SizedBox(height: 24),
-          const BranchSectionTitle(title: 'الإحصائيات والتقارير'),
-          const SizedBox(height: 10),
-          _StatsBento(onNavigate: onNavigate),
-          const SizedBox(height: 24),
-          BranchSectionTitle(title: l10n.branchDashboardRecentOrders, action: 'كل الطلبات', onAction: () => onNavigate?.call(1)),
-          const SizedBox(height: 10),
-          if (branch.isLoadingOrders && branch.orders.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 50),
-              child: Center(child: CircularProgressIndicator()),
-            )
-          else if (branch.recentOrders.isEmpty)
-            const BranchManagerSurface(
-              padding: EdgeInsets.symmetric(vertical: 32, horizontal: 18),
-              child: Column(
-                children: [
-                  Icon(Icons.inbox_rounded, color: BranchColors.onSurfaceVariant, size: 36),
-                  SizedBox(height: 10),
-                  Text('لا توجد طلبات حديثة', style: TextStyle(color: BranchColors.onSurface, fontWeight: FontWeight.w700)),
-                  SizedBox(height: 4),
-                  Text('ستظهر الطلبات الجديدة هنا فور وصولها.', textAlign: TextAlign.center, style: TextStyle(color: BranchColors.onSurfaceVariant, fontSize: 12)),
-                ],
-              ),
-            )
-          else
-            for (final order in branch.recentOrders)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: BranchOrderCard(
-                  order: order,
-                  onTap: () => context.push('/branch/order/${order.id}'),
-                  onAllocate: () => showAllocateSheet(context, order),
-                  onAssignDriver: () => showAssignDriverDialog(context, order),
-                  onTransfer: () => showTransferOrderDialog(context, order),
-                  onReject: () => showRejectOrderConfirm(context, order),
+            const BranchSectionTitle(title: 'ملخص اليوم'),
+            const SizedBox(height: 8),
+            // 2) No fixed height: a 2-column grid sized by childAspectRatio. The
+            // card text is wrapped in FittedBox so it scales down instead of
+            // overflowing its cell.
+            GridView.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 1.3,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                BranchMetricTile(
+                    label: l10n.branchDashboardNewOrders,
+                    value: '${branch.newOrdersCount}',
+                    icon: Icons.notifications_active_rounded,
+                    color: BranchColors.warning),
+                BranchMetricTile(
+                    label: l10n.branchDashboardInProgress,
+                    value: '${branch.inProgressOrdersCount}',
+                    icon: Icons.local_shipping_rounded,
+                    color: BranchColors.primary),
+                BranchMetricTile(
+                    label: l10n.branchDashboardCompletedToday,
+                    value: '${branch.completedTodayCount}',
+                    icon: Icons.check_circle_rounded,
+                    color: BranchColors.success),
+                const BranchMetricTile(
+                    label: 'مراقبة الفرع',
+                    value: 'مباشر',
+                    icon: Icons.monitor_heart_rounded,
+                    color: BranchColors.primaryContainer),
+              ],
+            ),
+            const SizedBox(height: 16),
+            const BranchSectionTitle(title: 'الوصول السريع'),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                    child: BranchQuickAction(
+                        icon: Icons.receipt_long_rounded,
+                        label: 'الفواتير',
+                        color: BranchColors.primary,
+                        onTap: () => onNavigate?.call(3))),
+                const SizedBox(width: 9),
+                Expanded(
+                    child: BranchQuickAction(
+                        icon: Icons.inventory_2_rounded,
+                        label: 'المخزون',
+                        color: BranchColors.success,
+                        onTap: () => onNavigate?.call(2))),
+                const SizedBox(width: 9),
+                Expanded(
+                    child: BranchQuickAction(
+                        icon: Icons.groups_rounded,
+                        label: 'السائقون',
+                        color: BranchColors.warning,
+                        onTap: () => onNavigate?.call(4))),
+                const SizedBox(width: 9),
+                Expanded(
+                    child: BranchQuickAction(
+                        icon: Icons.chat_bubble_rounded,
+                        label: 'المحادثات',
+                        color: BranchColors.primaryContainer,
+                        onTap: () => onNavigate?.call(5))),
+              ],
+            ),
+            const SizedBox(height: 16),
+            const BranchSectionTitle(title: 'الإحصائيات والتقارير'),
+            const SizedBox(height: 8),
+            _StatsBento(onNavigate: onNavigate),
+            const SizedBox(height: 16),
+            BranchSectionTitle(
+                title: l10n.branchDashboardRecentOrders,
+                action: 'كل الطلبات',
+                onAction: () => onNavigate?.call(1)),
+            const SizedBox(height: 8),
+            if (branch.isLoadingOrders && branch.orders.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 40),
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else if (branch.recentOrders.isEmpty)
+              const BranchManagerSurface(
+                padding: EdgeInsets.symmetric(vertical: 28, horizontal: 18),
+                child: Column(
+                  children: [
+                    Icon(Icons.inbox_rounded,
+                        color: BranchColors.onSurfaceVariant, size: 32),
+                    SizedBox(height: 8),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text('لا توجد طلبات حديثة',
+                          style: TextStyle(
+                              color: BranchColors.onSurface,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15)),
+                    ),
+                    SizedBox(height: 4),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text('ستظهر الطلبات الجديدة هنا فور وصولها.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: BranchColors.onSurfaceVariant,
+                              fontSize: 12)),
+                    ),
+                  ],
                 ),
-              ),
-        ],
+              )
+            else
+              for (final order in branch.recentOrders)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: BranchOrderCard(
+                    order: order,
+                    onTap: () => context.push('/branch/order/${order.id}'),
+                    onAllocate: () => showAllocateSheet(context, order),
+                    onAssignDriver: () =>
+                        showAssignDriverDialog(context, order),
+                    onTransfer: () => showTransferOrderDialog(context, order),
+                    onReject: () => showRejectOrderConfirm(context, order),
+                  ),
+                ),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// The Section-6 bento: sales, completed orders, accuracy, the 7-day delivery
+/// The statistics bento: sales, completed orders, accuracy, the 7-day delivery
 /// chart, top drivers, inventory alerts and the financial progress circle —
 /// every number derived from real orders/invoices/catalog data.
 class _StatsBento extends StatelessWidget {
@@ -131,38 +199,50 @@ class _StatsBento extends StatelessWidget {
 
     return Column(
       children: [
-        // Sales — full width
+        // Sales
         BranchManagerSurface(
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              Container(
-                width: 46,
-                height: 46,
-                decoration: BoxDecoration(
-                  color: BranchColors.primary.withValues(alpha: .10),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Icon(Icons.trending_up_rounded, color: BranchColors.primary),
+              PastelIconBadge(
+                icon: Icons.trending_up_rounded,
+                color: BranchColors.primary,
+                shape: BoxShape.circle,
+                size: 48,
+                iconSize: 22,
               ),
               const SizedBox(width: 13),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('مبيعات هذا الشهر',
-                        style: TextStyle(color: BranchColors.onSurfaceVariant, fontSize: 12)),
+                    const FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: Text('مبيعات هذا الشهر',
+                          style: TextStyle(
+                              color: BranchColors.onSurfaceVariant,
+                              fontSize: 12)),
+                    ),
                     const SizedBox(height: 3),
-                    Text('${branch.salesThisMonth.toStringAsFixed(0)} ﷼',
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '${branch.salesThisMonth.toStringAsFixed(0)} ﷼',
                         style: Theme.of(context)
                             .textTheme
                             .headlineSmall
-                            ?.copyWith(fontWeight: FontWeight.w800)),
+                            ?.copyWith(fontWeight: FontWeight.w800),
+                      ),
+                    ),
                   ],
                 ),
               ),
+              const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
                 decoration: BoxDecoration(
                   color: (growth >= 0 ? BranchColors.success : BranchColors.error)
                       .withValues(alpha: .12),
@@ -170,8 +250,11 @@ class _StatsBento extends StatelessWidget {
                 ),
                 child: Text(
                   '${growth >= 0 ? '▲' : '▼'} ${growth.abs()}%',
+                  maxLines: 1,
                   style: TextStyle(
-                    color: growth >= 0 ? BranchColors.success : BranchColors.error,
+                    color: growth >= 0
+                        ? BranchColors.success
+                        : BranchColors.error,
                     fontWeight: FontWeight.w800,
                     fontSize: 12,
                   ),
@@ -194,7 +277,7 @@ class _StatsBento extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: _MiniStat(
-                icon: Icons.rule_rounded,
+                icon: Icons.verified_user_rounded,
                 label: 'دقة التخصيص',
                 value: '${branch.allocationAccuracyPercent}%',
                 color: BranchColors.primary,
@@ -203,15 +286,21 @@ class _StatsBento extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        // Weekly delivery chart — full width
+        // Weekly delivery chart
         BranchManagerSurface(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('سرعة التسليم (آخر ٧ أيام)',
-                  style: TextStyle(color: BranchColors.onSurface, fontWeight: FontWeight.w800)),
-              const SizedBox(height: 14),
+              const FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerRight,
+                child: Text('سرعة التسليم (آخر ٧ أيام)',
+                    style: TextStyle(
+                        color: BranchColors.onSurface,
+                        fontWeight: FontWeight.w800)),
+              ),
+              const SizedBox(height: 12),
               _WeeklyChart(days: branch.weeklyDeliveries),
             ],
           ),
@@ -226,12 +315,24 @@ class _StatsBento extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('أفضل السائقين',
-                        style: TextStyle(color: BranchColors.onSurface, fontWeight: FontWeight.w800)),
+                    const FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: Text('أفضل السائقين',
+                          style: TextStyle(
+                              color: BranchColors.onSurface,
+                              fontWeight: FontWeight.w800)),
+                    ),
                     const SizedBox(height: 10),
                     if (branch.topDrivers.isEmpty)
-                      const Text('لا توجد توصيلات بعد',
-                          style: TextStyle(color: BranchColors.onSurfaceVariant, fontSize: 11))
+                      const FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerRight,
+                        child: Text('لا توجد توصيلات بعد',
+                            style: TextStyle(
+                                color: BranchColors.onSurfaceVariant,
+                                fontSize: 11)),
+                      )
                     else
                       for (final (i, d) in branch.topDrivers.indexed)
                         Padding(
@@ -242,7 +343,8 @@ class _StatsBento extends StatelessWidget {
                                 width: 22,
                                 height: 22,
                                 decoration: BoxDecoration(
-                                  color: BranchColors.warning.withValues(alpha: .15),
+                                  color: BranchColors.warning
+                                      .withValues(alpha: .15),
                                   borderRadius: BorderRadius.circular(7),
                                 ),
                                 child: Center(
@@ -278,8 +380,14 @@ class _StatsBento extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('تنبيهات المخزون',
-                        style: TextStyle(color: BranchColors.onSurface, fontWeight: FontWeight.w800)),
+                    const FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: Text('تنبيهات المخزون',
+                          style: TextStyle(
+                              color: BranchColors.onSurface,
+                              fontWeight: FontWeight.w800)),
+                    ),
                     const SizedBox(height: 10),
                     _AlertRow(
                       icon: Icons.warning_amber_rounded,
@@ -300,10 +408,12 @@ class _StatsBento extends StatelessWidget {
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           minimumSize: const Size.fromHeight(34),
-                          side: const BorderSide(color: BranchColors.outlineVariant),
+                          side: const BorderSide(
+                              color: BranchColors.outlineVariant),
                         ),
                         onPressed: () => onNavigate?.call(2),
-                        child: const Text('فتح المخزون', style: TextStyle(fontSize: 12)),
+                        child: const Text('فتح المخزون',
+                            style: TextStyle(fontSize: 12)),
                       ),
                     ),
                   ],
@@ -313,10 +423,11 @@ class _StatsBento extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        // Financial insights — full width
+        // Financial insights
         BranchManagerSurface(
           padding: const EdgeInsets.all(16),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: 74,
@@ -348,17 +459,29 @@ class _StatsBento extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('رؤى مالية',
-                        style: TextStyle(color: BranchColors.onSurface, fontWeight: FontWeight.w800)),
+                    const FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: Text('رؤى مالية',
+                          style: TextStyle(
+                              color: BranchColors.onSurface,
+                              fontWeight: FontWeight.w800)),
+                    ),
                     const SizedBox(height: 5),
                     Text(
                       '${branch.invoicesPaid.toStringAsFixed(0)} ﷼ مدفوعة من أصل ${branch.invoicesTotal.toStringAsFixed(0)} ﷼ — ${branch.pendingCount + branch.overdueCount} فاتورة قيد الانتظار.',
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          color: BranchColors.onSurfaceVariant, fontSize: 12, height: 1.5),
+                          color: BranchColors.onSurfaceVariant,
+                          fontSize: 12,
+                          height: 1.5),
                     ),
                     if (branch.overdueCount > 0) ...[
                       const SizedBox(height: 5),
                       Text('${branch.overdueCount} متأخرة — تحتاج متابعة.',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                               color: BranchColors.error,
                               fontSize: 12,
@@ -394,28 +517,34 @@ class _MiniStat extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       child: Row(
         children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: .12),
-              borderRadius: BorderRadius.circular(11),
-            ),
-            child: Icon(icon, size: 18, color: color),
-          ),
+          PastelIconBadge(
+              icon: icon,
+              color: color,
+              shape: BoxShape.circle,
+              size: 38,
+              iconSize: 18),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(value,
-                    style: const TextStyle(
-                        color: BranchColors.onSurface,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 16)),
-                Text(label,
-                    style: const TextStyle(
-                        color: BranchColors.onSurfaceVariant, fontSize: 10)),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(value,
+                      style: const TextStyle(
+                          color: BranchColors.onSurface,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16)),
+                ),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(label,
+                      style: const TextStyle(
+                          color: BranchColors.onSurfaceVariant,
+                          fontSize: 10)),
+                ),
               ],
             ),
           ),
@@ -442,16 +571,26 @@ class _AlertRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: color),
-        const SizedBox(width: 7),
+        PastelIconBadge(
+            icon: icon,
+            color: color,
+            shape: BoxShape.circle,
+            size: 26,
+            iconSize: 13),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                   color: BranchColors.onSurfaceVariant, fontSize: 11)),
         ),
         Text('$count',
+            maxLines: 1,
             style: TextStyle(
-                color: color, fontWeight: FontWeight.w800, fontSize: 12)),
+                color: color,
+                fontWeight: FontWeight.w800,
+                fontSize: 12)),
       ],
     );
   }
@@ -464,7 +603,8 @@ class _WeeklyChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maxCount = days.fold<int>(0, (m, d) => d.count > m ? d.count : m);
+    final maxCount =
+        days.fold<int>(0, (m, d) => d.count > m ? d.count : m);
     const weekdays = ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج'];
 
     return Row(
@@ -477,6 +617,7 @@ class _WeeklyChart extends StatelessWidget {
               children: [
                 if (d.count > 0)
                   Text('${d.count}',
+                      maxLines: 1,
                       style: const TextStyle(
                           color: BranchColors.onSurfaceVariant,
                           fontSize: 9,
@@ -487,7 +628,9 @@ class _WeeklyChart extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     width: 16,
-                    height: maxCount == 0 ? 4 : (d.count / maxCount * 60).clamp(4.0, 60.0),
+                    height: maxCount == 0
+                        ? 4
+                        : (d.count / maxCount * 60).clamp(4.0, 60.0),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: BranchColors.tabActiveGradient,
@@ -500,6 +643,7 @@ class _WeeklyChart extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(weekdays[d.day.weekday - 1],
+                    maxLines: 1,
                     style: const TextStyle(
                         color: BranchColors.onSurfaceVariant, fontSize: 9)),
               ],

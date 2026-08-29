@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -9,13 +10,16 @@ import '../shared/coming_soon_scaffold.dart';
 import 'branch_chat_tab.dart';
 import 'branch_dashboard_tab.dart';
 import 'branch_drivers_tab.dart';
+import 'branch_floating_bottom_bar.dart';
 import 'branch_inventory_tab.dart';
 import 'branch_invoices_tab.dart';
+import 'branch_manager_design.dart';
 import 'branch_orders_tab.dart';
 import 'branch_settings_sheet.dart';
 
-/// Bottom-nav shell for the `branch_manager` role, wrapped in the light
-/// design theme ([AppTheme.branchManagerLight]).
+/// Bottom-nav shell for the `branch_manager` role: soft pastel gradient
+/// background, transparent app bar and a floating glass bottom bar with a
+/// central quick-order FAB â€” all wrapped in [AppTheme.branchManagerLight].
 class BranchManagerHomeShell extends StatefulWidget {
   const BranchManagerHomeShell({super.key});
 
@@ -37,21 +41,23 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
     });
   }
 
+  void _select(int i) => setState(() => _index = i);
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final tabDefs = [
-      (l10n.branchDashboardLabel, Icons.dashboard_outlined, Icons.dashboard_rounded),
-      (l10n.branchOrdersLabel, Icons.list_alt_outlined, Icons.list_alt_rounded),
-      (l10n.branchInventoryLabel, Icons.inventory_2_outlined, Icons.inventory_2_rounded),
-      (l10n.branchInvoicesLabel, Icons.receipt_outlined, Icons.receipt_rounded),
-      (l10n.branchDriversLabel, Icons.local_shipping_outlined, Icons.local_shipping_rounded),
-      (l10n.chatTitle, Icons.chat_bubble_outline, Icons.chat_bubble_rounded),
+      (l10n.branchDashboardLabel, LucideIcons.layoutDashboard),
+      (l10n.branchOrdersLabel, LucideIcons.clipboardList),
+      (l10n.branchInventoryLabel, LucideIcons.boxes),
+      (l10n.branchInvoicesLabel, LucideIcons.receipt),
+      (l10n.branchDriversLabel, LucideIcons.truck),
+      (l10n.chatTitle, LucideIcons.messageCircle),
     ];
 
     final branchId = context.watch<AuthController>().profile?.branchId;
     final tabs = [
-      BranchDashboardTab(onNavigate: (i) => setState(() => _index = i)),
+      BranchDashboardTab(onNavigate: _select),
       const BranchOrdersTab(),
       const BranchInventoryTab(),
       const BranchInvoicesTab(),
@@ -61,171 +67,64 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
 
     return Theme(
       data: AppTheme.branchManagerLight,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
+      child: BranchGlassBackground(
+        child: Scaffold(
           backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          elevation: 0,
-          title: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(tabDefs[_index].$1),
-              Text(
-                'MedLink · إدارة الفرع',
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: BranchColors.onSurfaceVariant,
-                    ),
-              ),
-            ],
-          ),
-          actions: [
-            IconButton(
-              tooltip: 'الإعدادات',
-              icon: const Icon(Icons.settings_rounded),
-              onPressed: () => showModalBottomSheet<void>(
-                context: context,
-                isScrollControlled: true,
-                builder: (_) => const BranchSettingsSheet(),
-              ),
-            ),
-            const RoleAppBarActions(),
-          ],
-        ),
-        body: Stack(
-          children: [
-            const _BranchPastelBackdrop(),
-            Positioned.fill(
-              child: branchId == null
-                  ? MissingAccountDataBody(
-                      title: l10n.branchNotAssignedTitle,
-                      message: l10n.branchNotAssignedMessage,
-                    )
-                  : tabs[_index],
-            ),
-          ],
-        ),
-        bottomNavigationBar: SafeArea(
-          minimum: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-          child: Container(
-            decoration: BoxDecoration(
-              color: BranchColors.surfaceContainerLowest.withValues(alpha: .84),
-              borderRadius: BorderRadius.circular(28),
-              border: Border.all(
-                color: BranchColors.onPrimary.withValues(alpha: .8),
-                width: 1.1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: BranchColors.primary.withValues(alpha: .13),
-                  blurRadius: 26,
-                  offset: const Offset(0, 10),
+          extendBody: true,
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            toolbarHeight: 76,
+            title: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  tabDefs[_index].$1,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: BranchColors.onSurface,
+                        fontWeight: FontWeight.w800,
+                      ),
+                ),
+                Text(
+                  'MedLink · إدارة الفرع',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: BranchColors.onSurfaceVariant,
+                      ),
                 ),
               ],
             ),
-            child: NavigationBar(
-              height: 72,
-              backgroundColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
-              elevation: 0,
-              labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-              selectedIndex: _index,
-              onDestinationSelected: (i) => setState(() => _index = i),
-              destinations: [
-                for (final tab in tabDefs)
-                  NavigationDestination(
-                    icon: Icon(tab.$2),
-                    selectedIcon: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: BranchColors.tabActiveGradient,
-                        ),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: BranchColors.primary.withValues(alpha: .24),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Icon(tab.$3, color: BranchColors.onPrimary, size: 20),
-                    ),
-                    label: tab.$1,
-                  ),
-              ],
-            ),
+            actions: [
+              IconButton(
+                tooltip: 'الإعدادات',
+                icon: const Icon(LucideIcons.settings),
+                onPressed: () => showModalBottomSheet<void>(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => const BranchSettingsSheet(),
+                ),
+              ),
+              const RoleAppBarActions(),
+              const SizedBox(width: 4),
+            ],
+          ),
+          body: branchId == null
+              ? MissingAccountDataBody(
+                  title: l10n.branchNotAssignedTitle,
+                  message: l10n.branchNotAssignedMessage,
+                )
+              : tabs[_index],
+          bottomNavigationBar: BranchFloatingBottomBar(
+            items: [
+              for (final tab in tabDefs)
+                BranchBottomBarItem(icon: tab.$2, label: tab.$1),
+            ],
+            selectedIndex: _index,
+            onSelect: _select,
+            onFabPressed: () => _select(1),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _BranchPastelBackdrop extends StatelessWidget {
-  const _BranchPastelBackdrop();
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [
-            Color(0xFFF7F3FF),
-            Color(0xFFF2F8FF),
-            Color(0xFFFFF8F1),
-          ],
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: -90,
-            right: -60,
-            child: _PastelOrb(
-              size: 250,
-              color: BranchColors.primary.withValues(alpha: .08),
-            ),
-          ),
-          Positioned(
-            top: 260,
-            left: -110,
-            child: _PastelOrb(
-              size: 220,
-              color: const Color(0xFFB9EDE3).withValues(alpha: .16),
-            ),
-          ),
-          Positioned(
-            bottom: -120,
-            right: 40,
-            child: _PastelOrb(
-              size: 280,
-              color: const Color(0xFFFFDCCB).withValues(alpha: .16),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PastelOrb extends StatelessWidget {
-  const _PastelOrb({required this.size, required this.color});
-
-  final double size;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
       ),
     );
   }

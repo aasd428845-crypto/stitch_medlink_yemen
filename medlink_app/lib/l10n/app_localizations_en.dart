@@ -309,6 +309,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get featuredProducts => 'Featured Products';
 
   @override
+  String get quickReorder => 'You may need to reorder soon';
+
+  @override
   String get catalogTitle => 'Catalog';
 
   @override
@@ -400,6 +403,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get confirmOrder => 'Confirm & Send Order';
+
+  @override
+  String get specialRequestTitle => 'Special Request';
+
+  @override
+  String get specialRequestSubtitle =>
+      'Request a medicine or product not currently available in the catalog';
+
+  @override
+  String get productNameLabel => 'Product Name';
+
+  @override
+  String get productNameHint =>
+      'e.g. a specific medicine with a specific dosage';
+
+  @override
+  String get specialQuantityLabel => 'Quantity';
+
+  @override
+  String get specialNotesLabel => 'Additional Notes (optional)';
+
+  @override
+  String get specialSubmit => 'Send Special Request';
+
+  @override
+  String get specialSuccess =>
+      'Your special request has been sent. We\'ll notify you when it\'s available.';
+
+  @override
+  String get specialEmptyName => 'Please enter the product name';
 
   @override
   String get orderSuccessTitle => 'Order Sent Successfully!';

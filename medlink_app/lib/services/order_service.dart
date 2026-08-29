@@ -6,6 +6,7 @@ import '../models/cart_item.dart';
 import '../models/client_address.dart';
 import '../models/order.dart';
 import '../models/product.dart';
+import '../models/special_request.dart';
 import '../utils/constants.dart';
 
 /// Single source of truth for Order, Address, and Bonus Rule database operations.
@@ -205,9 +206,94 @@ class OrderService {
     }
   }
 
-  /// Fetches single order details with joined order items & address.
-  Future<OrderModel?> fetchOrderDetails(String orderId) async {
+  /// Fetches the products the client has ordered most recently, deduplicated,
+  /// for the "quick reorder" section on the home screen.
+  Future<List<Product>> fetchRecentReorderProducts() async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return [];
+
     try {
+      final rows = await _client
+          .from('orders')
+          .select('items:order_items(product:products(*))')
+          .eq('client_id', userId)
+          .order('created_at', ascending: false)
+          .limit(3);
+      _logSuccess('fetchRecentReorderProducts');
+
+      final byId = <String, Product>{};
+      for (final order in rows as List) {
+        final items = order['items'] as List? ?? const [];
+        for (final item in items) {
+          final product = item['product'];
+          if (product is Map<String, dynamic> && product['id'] != null) {
+            final p = Product.fromJson(product);
+            byId[p.id] = p;
+          }
+        }
+        if (byId.length >= 8) break;
+      }
+      return byId.values.toList();
+    } catch (e, st) {
+      _logError('fetchRecentReorderProducts', e, st);
+      rethrow;
+    }
+  }
+
+  /// Submits a special request on behalf of the current client for a
+  /// medicine/product not currently available in the catalog.
+  Future<SpecialRequest> createSpecialRequest({
+    required String productName,
+    required int quantity,
+    String? notes,
+  }) async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) {
+      throw const AuthException('المستخدم غير مسجل الدخول');
+    }
+
+    try {
+      final row = await _client
+          .from('special_requests')
+          .insert({
+            'client_id': userId,
+            'product_name': productName,
+            'quantity': quantity,
+            'notes': notes,
+          })
+          .select()
+          .single();
+      _logSuccess('createSpecialRequest');
+      return SpecialRequest.fromJson(row);
+    } catch (e, st) {
+      _logError('createSpecialRequest', e, st);
+      rethrow;
+    }
+  }
+
+  /// Fetches the current client's special requests, newest first.
+  Future<List<SpecialRequest>> fetchClientSpecialRequests() async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return [];
+
+    try {
+      final rows = await _client
+          .from('special_requests')
+          .select()
+          .eq('client_id', userId)
+          .order('created_at', ascending: false);
+      _logSuccess('fetchClientSpecialRequests');
+      return (rows as List)
+          .map((r) => SpecialRequest.fromJson(r as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      _logError('fetchClientSpecialRequests', e, st);
+      rethrow;
+    }
+  }
+
+  /// Fetches single order details with joined order items & address.
+  Future<OrderModel?> fetchOrderDetails(String orderId) async {    try {
       final row = await _client
           .from('orders')
           .select(

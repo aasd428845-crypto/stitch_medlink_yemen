@@ -133,6 +133,31 @@ class BranchColors {
     Color(0xFF3B82F6),
   ];
   static const tabActiveGradient = <Color>[Color(0xFF2563EB), Color(0xFF1E40AF)];
+
+  // ---- Modern Glassmorphism tokens (soft pastel, branch manager) ----
+  static const glassBackgroundStart = Color(0xFFF4F5FA);
+  static const glassBackgroundEnd = Color(0xFFEBF0FF);
+  static const glassSurface = Color(0xFFFFFFFF);
+  static const glassSurfaceOpacity = 0.65;
+  static const glassBorder = Color(0x1FFFFFFF);
+
+  // Soft pastel accent gradient (warm central FAB / hero)
+  static const glassWarmGradient = <Color>[
+    Color(0xFFFF9A8B),
+    Color(0xFFFF6A88),
+    Color(0xFFFF99AC),
+  ];
+  static const glassPrimaryGradient = <Color>[
+    Color(0xFF6FB1FC),
+    Color(0xFF4361EE),
+  ];
+
+  // Decorative background "orbs" (soft pastel blobs behind the glass)
+  static const orbMint = Color(0xFFBFF2E6);
+  static const orbSky = Color(0xFFB9D8FF);
+  static const orbViolet = Color(0xFFE0D4FF);
+  static const orbPink = Color(0xFFFFD9E8);
+  static const orbPeach = Color(0xFFFFE3C7);
 }
 
 class AppRadius {
@@ -359,54 +384,72 @@ class AppTheme {
   /// Applied by wrapping the branch shell body in `Theme(data: …)`; every
   /// branch screen + its dialogs/sheets inherit it.
   static ThemeData get branchManagerLight {
-    final textTheme = GoogleFonts.ibmPlexSansArabicTextTheme().copyWith(
-      headlineLarge: GoogleFonts.outfit(
+    final textTheme = GoogleFonts.tajawalTextTheme().copyWith(
+      headlineLarge: GoogleFonts.tajawal(
         fontSize: 30,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w800,
         height: 38 / 30,
         color: BranchColors.onSurface,
       ),
-      headlineMedium: GoogleFonts.outfit(
-        fontSize: 24,
-        fontWeight: FontWeight.w600,
-        height: 32 / 24,
+      headlineMedium: GoogleFonts.tajawal(
+        fontSize: 26,
+        fontWeight: FontWeight.w800,
+        height: 34 / 26,
         color: BranchColors.onSurface,
       ),
-      headlineSmall: GoogleFonts.outfit(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        height: 28 / 20,
+      headlineSmall: GoogleFonts.tajawal(
+        fontSize: 21,
+        fontWeight: FontWeight.w700,
+        height: 28 / 21,
         color: BranchColors.onSurface,
       ),
-      bodyLarge: GoogleFonts.ibmPlexSansArabic(
+      titleMedium: GoogleFonts.tajawal(
+        fontSize: 17,
+        fontWeight: FontWeight.w700,
+        height: 24 / 17,
+        color: BranchColors.onSurface,
+      ),
+      titleSmall: GoogleFonts.tajawal(
+        fontSize: 15,
+        fontWeight: FontWeight.w700,
+        height: 20 / 15,
+        color: BranchColors.onSurface,
+      ),
+      bodyLarge: GoogleFonts.tajawal(
         fontSize: 18,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w500,
         height: 28 / 18,
         color: BranchColors.onSurface,
       ),
-      bodyMedium: GoogleFonts.ibmPlexSansArabic(
+      bodyMedium: GoogleFonts.tajawal(
         fontSize: 16,
         fontWeight: FontWeight.w400,
         height: 24 / 16,
         color: BranchColors.onSurface,
       ),
-      bodySmall: GoogleFonts.ibmPlexSansArabic(
+      bodySmall: GoogleFonts.tajawal(
         fontSize: 14,
         fontWeight: FontWeight.w400,
         height: 20 / 14,
         color: BranchColors.onSurfaceVariant,
       ),
-      labelLarge: GoogleFonts.ibmPlexSansArabic(
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.02 * 14,
-        height: 20 / 14,
+      labelLarge: GoogleFonts.tajawal(
+        fontSize: 15,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.01 * 15,
+        height: 20 / 15,
         color: BranchColors.onSurface,
       ),
-      labelMedium: GoogleFonts.ibmPlexSansArabic(
+      labelMedium: GoogleFonts.tajawal(
         fontSize: 12,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
         height: 16 / 12,
+        color: BranchColors.onSurfaceVariant,
+      ),
+      labelSmall: GoogleFonts.tajawal(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+        height: 14 / 11,
         color: BranchColors.onSurfaceVariant,
       ),
     );
@@ -443,7 +486,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: BranchColors.background,
+      scaffoldBackgroundColor: Colors.transparent,
       brightness: Brightness.light,
       textTheme: textTheme,
       appBarTheme: AppBarTheme(
@@ -452,30 +495,31 @@ class AppTheme {
         elevation: 0,
         centerTitle: false,
         surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         titleSpacing: AppSpacing.md,
         titleTextStyle: textTheme.headlineSmall,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: BranchColors.surfaceContainerLowest,
+        fillColor: BranchColors.glassSurface.withValues(alpha: .7),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
           vertical: 14,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           borderSide: const BorderSide(color: BranchColors.outlineVariant),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           borderSide: const BorderSide(color: BranchColors.outlineVariant),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           borderSide: const BorderSide(color: BranchColors.primary, width: 1.4),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           borderSide: const BorderSide(color: BranchColors.error),
         ),
         labelStyle: textTheme.bodyMedium?.copyWith(
@@ -489,7 +533,7 @@ class AppTheme {
           minimumSize: const Size.fromHeight(52),
           textStyle: textTheme.labelLarge,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.md),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
           ),
         ),
       ),
@@ -500,7 +544,7 @@ class AppTheme {
           minimumSize: const Size.fromHeight(52),
           textStyle: textTheme.labelLarge,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.md),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
           ),
           elevation: 0,
           shadowColor: Colors.transparent,
@@ -513,7 +557,7 @@ class AppTheme {
           textStyle: textTheme.labelLarge,
           side: const BorderSide(color: BranchColors.outlineVariant),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.md),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
           ),
         ),
       ),
@@ -524,41 +568,30 @@ class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        color: BranchColors.surfaceContainerLowest,
+        color: BranchColors.glassSurface.withValues(alpha: .7),
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          side: const BorderSide(color: BranchColors.outlineVariant),
+          borderRadius: BorderRadius.circular(24),
+          side: BorderSide.none,
         ),
       ),
       dividerTheme: const DividerThemeData(
         color: BranchColors.outlineVariant,
         thickness: 0.7,
       ),
-      navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: BranchColors.surfaceContainerLowest,
-        indicatorColor: BranchColors.primaryContainer.withValues(alpha: 0.18),
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        labelTextStyle: WidgetStatePropertyAll(
-          textTheme.labelMedium?.copyWith(color: BranchColors.onSurfaceVariant),
-        ),
-        iconTheme: WidgetStateProperty.resolveWith(
-          (states) => IconThemeData(
-            color: states.contains(WidgetState.selected)
-                ? BranchColors.primary
-                : BranchColors.onSurfaceVariant,
-          ),
-        ),
       ),
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: BranchColors.surfaceContainerHighest,
+        backgroundColor: BranchColors.slate800,
         contentTextStyle: textTheme.bodyMedium?.copyWith(
-          color: BranchColors.onSurface,
+          color: BranchColors.onPrimary,
         ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
       ),
     );
