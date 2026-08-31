@@ -1,16 +1,18 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../utils/theme.dart';
 
-/// Modern floating glass bottom navigation bar used by the branch manager
-/// shell. A frosted pill floated above the bottom edge with a central warm
-/// gradient FAB for quick actions.
+/// Modern floating glass bottom navigation bar for the branch manager shell.
 ///
-/// Wide layouts (>840) show the FAB between two labelled clusters; compact
-/// layouts show icon-only items packed around the FAB.
+/// A frosted pill floated above the bottom edge, with:
+/// - BackdropFilter blur (sigmaX: 30) for deep glass effect
+/// - AnimatedScale on selected items
+/// - Gradient-coloured indicator dot under the selected icon
+/// - Central warm gradient FAB for quick actions
+/// - Wide layout (>840) shows labels; compact shows icon-only
 class BranchFloatingBottomBar extends StatelessWidget {
   const BranchFloatingBottomBar({
     super.key,
@@ -31,28 +33,35 @@ class BranchFloatingBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final isWide = size.width >= 840;
-    // Split around the FAB.
     final mid = (items.length / 2).ceil();
     final leftItems = items.take(mid).toList();
 
     return SafeArea(
       top: false,
-      minimum: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+      minimum: const EdgeInsets.fromLTRB(20, 0, 20, 18),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(32),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+          filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             decoration: BoxDecoration(
-              color: BranchColors.glassSurface.withValues(alpha: .66),
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: BranchColors.glassBorder),
+              color: Colors.white.withValues(alpha: .78),
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(
+                  color: Colors.white.withValues(alpha: .55), width: 1.2),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: .10),
-                  blurRadius: 24,
-                  offset: const Offset(0, 10),
+                  color: BranchColors.glassHeroGradient.first
+                      .withValues(alpha: .08),
+                  blurRadius: 32,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 12),
+                ),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: .07),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
@@ -86,50 +95,84 @@ class BranchFloatingBottomBar extends StatelessWidget {
   }
 }
 
-class _CentralFab extends StatelessWidget {
+// ─── Central FAB ─────────────────────────────────────────────────────────────
+
+class _CentralFab extends StatefulWidget {
   const _CentralFab({required this.onPressed, required this.icon});
 
   final VoidCallback? onPressed;
   final IconData icon;
 
   @override
+  State<_CentralFab> createState() => _CentralFabState();
+}
+
+class _CentralFabState extends State<_CentralFab>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _scale;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 130),
+      lowerBound: 0.88,
+      upperBound: 1.0,
+      value: 1.0,
+    );
+    _scale = _ctrl;
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: BranchColors.glassWarmGradient,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: BranchColors.glassWarmGradient.first.withValues(alpha: .5),
-              blurRadius: 18,
-              offset: const Offset(0, 6),
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      child: GestureDetector(
+        onTapDown: (_) => _ctrl.reverse(),
+        onTapUp: (_) {
+          _ctrl.forward();
+          widget.onPressed?.call();
+        },
+        onTapCancel: () => _ctrl.forward(),
+        child: ScaleTransition(
+          scale: _scale,
+          child: Container(
+            width: 58,
+            height: 58,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: BranchColors.glassWarmGradient,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: BranchColors.glassWarmGradient.first
+                      .withValues(alpha: .55),
+                  blurRadius: 20,
+                  offset: const Offset(0, 6),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          shape: const CircleBorder(),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onPressed,
-            customBorder: const CircleBorder(),
-            child: SizedBox(
-              width: 56,
-              height: 56,
-              child: Icon(icon, color: BranchColors.onPrimary, size: 26),
-            ),
+            child: const Icon(LucideIcons.plus,
+                color: Colors.white, size: 26),
           ),
         ),
       ),
     );
   }
 }
+
+// ─── Bar Item ─────────────────────────────────────────────────────────────────
 
 class _BarItem extends StatelessWidget {
   const _BarItem({
@@ -148,35 +191,65 @@ class _BarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        selected ? BranchColors.primary : BranchColors.onSurfaceVariant;
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(22),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 240),
+        curve: Curves.easeOutCubic,
         padding:
-            EdgeInsets.symmetric(horizontal: showLabel ? 10 : 6, vertical: 7),
+            EdgeInsets.symmetric(horizontal: showLabel ? 12 : 8, vertical: 8),
         decoration: BoxDecoration(
           color: selected
-              ? BranchColors.primaryContainer.withValues(alpha: .14)
+              ? BranchColors.glassHeroGradient.first.withValues(alpha: .10)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(22),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(item.icon, color: color, size: 20),
+            AnimatedScale(
+              scale: selected ? 1.18 : 1.0,
+              duration: const Duration(milliseconds: 240),
+              curve: Curves.easeOutBack,
+              child: Icon(
+                item.icon,
+                color: selected
+                    ? BranchColors.glassHeroGradient.first
+                    : BranchColors.onSurfaceVariant,
+                size: 22,
+              ),
+            ),
+            const SizedBox(height: 4),
+            // Indicator dot
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 240),
+              curve: Curves.easeOut,
+              width: selected ? 16 : 4,
+              height: 3,
+              decoration: BoxDecoration(
+                gradient: selected
+                    ? const LinearGradient(
+                        colors: BranchColors.glassHeroGradient,
+                      )
+                    : null,
+                color: selected ? null : Colors.transparent,
+                borderRadius: BorderRadius.circular(99),
+              ),
+            ),
             if (showLabel) ...[
-              const SizedBox(height: 3),
-              Text(
-                item.label,
+              const SizedBox(height: 2),
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 200),
                 style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.w700,
+                  color: selected
+                      ? BranchColors.glassHeroGradient.first
+                      : BranchColors.onSurfaceVariant,
+                  fontWeight:
+                      selected ? FontWeight.w800 : FontWeight.w600,
                   fontSize: 10,
                 ),
+                child: Text(item.label),
               ),
             ],
           ],
@@ -185,6 +258,8 @@ class _BarItem extends StatelessWidget {
     );
   }
 }
+
+// ─── Data Class ───────────────────────────────────────────────────────────────
 
 /// A single destination in the floating bar.
 class BranchBottomBarItem {

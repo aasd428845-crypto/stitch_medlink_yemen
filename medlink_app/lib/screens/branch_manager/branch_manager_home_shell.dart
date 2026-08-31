@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../services/auth_controller.dart';
 import '../../services/branch_controller.dart';
+import '../../services/notification_controller.dart';
 import '../../utils/theme.dart';
 import '../shared/coming_soon_scaffold.dart';
 import 'branch_chat_tab.dart';
@@ -17,9 +19,6 @@ import 'branch_manager_design.dart';
 import 'branch_orders_tab.dart';
 import 'branch_settings_sheet.dart';
 
-/// Bottom-nav shell for the `branch_manager` role: soft pastel gradient
-/// background, transparent app bar and a floating glass bottom bar with a
-/// central quick-order FAB â€” all wrapped in [AppTheme.branchManagerLight].
 class BranchManagerHomeShell extends StatefulWidget {
   const BranchManagerHomeShell({super.key});
 
@@ -56,6 +55,9 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
     ];
 
     final branchId = context.watch<AuthController>().profile?.branchId;
+    final unreadCount =
+        context.watch<NotificationController>().unreadCount;
+
     final tabs = [
       BranchDashboardTab(onNavigate: _select),
       const BranchOrdersTab(),
@@ -74,27 +76,53 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
           extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            toolbarHeight: 76,
-            title: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  tabDefs[_index].$1,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: BranchColors.onSurface,
-                        fontWeight: FontWeight.w800,
-                      ),
-                ),
-                Text(
-                  'MedLink · إدارة الفرع',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: BranchColors.onSurfaceVariant,
-                      ),
-                ),
-              ],
-            ),
+            toolbarHeight: 60,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            automaticallyImplyLeading: false,
+            title: null,
             actions: [
+              // ── Notification bell with unread badge ──
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  IconButton(
+                    tooltip: l10n.notificationsTitle,
+                    icon: const Icon(LucideIcons.bell),
+                    onPressed: () => context.push('/notifications'),
+                  ),
+                  if (unreadCount > 0)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: IgnorePointer(
+                        child: Container(
+                          width: 16,
+                          height: 16,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: const LinearGradient(
+                              colors: BranchColors.glassWarmGradient,
+                            ),
+                            border:
+                                Border.all(color: Colors.white, width: 1.5),
+                          ),
+                          child: Text(
+                            unreadCount > 9 ? '9+' : '$unreadCount',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 8,
+                              fontWeight: FontWeight.w900,
+                              height: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              // ── Settings ──
               IconButton(
                 tooltip: 'الإعدادات',
                 icon: const Icon(LucideIcons.settings),
@@ -105,7 +133,6 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
                   builder: (_) => const BranchSettingsSheet(),
                 ),
               ),
-              const RoleAppBarActions(),
               const SizedBox(width: 4),
             ],
           ),

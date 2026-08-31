@@ -135,29 +135,50 @@ class BranchColors {
   static const tabActiveGradient = <Color>[Color(0xFF2563EB), Color(0xFF1E40AF)];
 
   // ---- Modern Glassmorphism tokens (soft pastel, branch manager) ----
-  static const glassBackgroundStart = Color(0xFFF4F5FA);
-  static const glassBackgroundEnd = Color(0xFFEBF0FF);
-  static const glassSurface = Color(0xFFFFFFFF);
-  static const glassSurfaceOpacity = 0.65;
-  static const glassBorder = Color(0x1FFFFFFF);
+  static const glassBackgroundStart = Color(0xFFF2F4FF);
+  static const glassBackgroundEnd   = Color(0xFFE8EEFF);
+  static const glassSurface         = Color(0xFFFFFFFF);
+  static const glassSurfaceOpacity  = 0.75;
+  static const glassBorder          = Color(0x33FFFFFF);
 
-  // Soft pastel accent gradient (warm central FAB / hero)
+  // Hero header: violet → pink → sky
+  static const glassHeroGradient = <Color>[
+    Color(0xFF7B6EF6),
+    Color(0xFFB06AB3),
+    Color(0xFF63B3ED),
+  ];
+
+  // Warm central FAB gradient
   static const glassWarmGradient = <Color>[
     Color(0xFFFF9A8B),
     Color(0xFFFF6A88),
     Color(0xFFFF99AC),
   ];
+
+  // Accent gradients for Quick Action cards
+  static const pastelBluGradient    = <Color>[Color(0xFF4361EE), Color(0xFF60A5FA)];
+  static const pastelGreenGradient  = <Color>[Color(0xFF10B981), Color(0xFF6EE7B7)];
+  static const pastelAmberGradient  = <Color>[Color(0xFFF59E0B), Color(0xFFFCD34D)];
+  static const pastelVioletGradient = <Color>[Color(0xFF8B5CF6), Color(0xFFC4B5FD)];
+
+  // Primary blue gradient (charts / progress)
   static const glassPrimaryGradient = <Color>[
-    Color(0xFF6FB1FC),
     Color(0xFF4361EE),
+    Color(0xFF60A5FA),
   ];
 
-  // Decorative background "orbs" (soft pastel blobs behind the glass)
-  static const orbMint = Color(0xFFBFF2E6);
-  static const orbSky = Color(0xFFB9D8FF);
+  // Metric tile accent gradients
+  static const metricOrangeGradient = <Color>[Color(0xFFF59E0B), Color(0xFFFB923C)];
+  static const metricBlueGradient   = <Color>[Color(0xFF4361EE), Color(0xFF818CF8)];
+  static const metricGreenGradient  = <Color>[Color(0xFF10B981), Color(0xFF34D399)];
+  static const metricPurpleGradient = <Color>[Color(0xFF8B5CF6), Color(0xFFA78BFA)];
+
+  // Decorative background orbs
+  static const orbMint   = Color(0xFFBFF2E6);
+  static const orbSky    = Color(0xFFB9D8FF);
   static const orbViolet = Color(0xFFE0D4FF);
-  static const orbPink = Color(0xFFFFD9E8);
-  static const orbPeach = Color(0xFFFFE3C7);
+  static const orbPink   = Color(0xFFFFD9E8);
+  static const orbPeach  = Color(0xFFFFE3C7);
 }
 
 class AppRadius {
