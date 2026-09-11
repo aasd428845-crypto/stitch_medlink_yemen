@@ -24,19 +24,39 @@ class DriverService {
 
   /// Invokes the edge function and throws a human-readable Arabic message on error.
   Future<void> _invoke(Map<String, dynamic> body) async {
-    final response = await _client.functions.invoke(
-      'manage-driver-account',
-      body: body,
-    );
-    if (response.status != 200) {
-      final rawMsg = (response.data as Map<String, dynamic>?)?['error']
-              as String? ??
-          '';
-      final details = (response.data as Map<String, dynamic>?)?['details']
-              as String? ??
-          '';
-      throw Exception(_translateError(rawMsg.isNotEmpty ? rawMsg : details,
-          response.status ?? 0));
+    try {
+      final response = await _client.functions.invoke(
+        'manage-driver-account',
+        body: body,
+      );
+      if (response.status != 200) {
+        final data = response.data;
+        final rawMsg = data is Map ? data['error']?.toString() ?? '' : '';
+        final details = data is Map ? data['details']?.toString() ?? '' : '';
+        throw Exception(
+          _translateError(
+            rawMsg.isNotEmpty ? rawMsg : details,
+            response.status,
+          ),
+        );
+      }
+    } on FunctionException catch (error) {
+      // functions.invoke throws before returning a response for non-2xx
+      // responses. Extract the Edge Function's JSON error so it can go
+      // through the same Arabic translation as normal responses.
+      final details = error.details;
+      final raw = switch (details) {
+        Map value =>
+          value['error']?.toString() ?? value['details']?.toString() ?? '',
+        String value => value,
+        _ => '',
+      };
+      throw Exception(
+        _translateError(
+          raw.isNotEmpty ? raw : error.reasonPhrase ?? '',
+          error.status,
+        ),
+      );
     }
   }
 
@@ -104,8 +124,7 @@ class DriverService {
   }
 
   /// Resets a driver's password and flags the account for password change.
-  Future<void> resetDriverPassword(
-      String driverId, String newPassword) async {
+  Future<void> resetDriverPassword(String driverId, String newPassword) async {
     try {
       await _invoke({
         'action': 'reset_password',
@@ -127,8 +146,9 @@ class DriverService {
   /// `requires_password_change` for the authenticated caller.
   Future<void> changeMyPassword(String newPassword) async {
     try {
-      final response =
-          await _client.auth.updateUser(UserAttributes(password: newPassword));
+      final response = await _client.auth.updateUser(
+        UserAttributes(password: newPassword),
+      );
       if (response.user == null) {
         throw Exception('تعذّر تغيير كلمة المرور، حاول مجدداً');
       }
