@@ -79,6 +79,14 @@ class OrderService {
     double? latitude,
     double? longitude,
     bool isDefault = false,
+    // Extended fields
+    String? ownerName,
+    String? phone,
+    String? altPhone,
+    String? landmark,
+    String? governorate,
+    String? city,
+    String? district,
   }) async {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) {
@@ -95,9 +103,17 @@ class OrderService {
             'latitude': latitude,
             'longitude': longitude,
             'is_default': isDefault,
+            if (ownerName != null && ownerName.isNotEmpty) 'owner_name': ownerName,
+            if (phone != null && phone.isNotEmpty) 'phone': phone,
+            if (altPhone != null && altPhone.isNotEmpty) 'alt_phone': altPhone,
+            if (landmark != null && landmark.isNotEmpty) 'landmark': landmark,
+            if (governorate != null && governorate.isNotEmpty) 'governorate': governorate,
+            if (city != null && city.isNotEmpty) 'city': city,
+            if (district != null && district.isNotEmpty) 'district': district,
           })
           .select()
           .single();
+
 
       _logSuccess('saveClientAddress');
       return ClientAddress.fromJson(insertedRow);

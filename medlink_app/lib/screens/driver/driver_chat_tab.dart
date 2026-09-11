@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../services/chat_controller.dart';
@@ -34,7 +35,39 @@ class _DriverChatTabState extends State<DriverChatTab> {
               order.status == 'assigned' || order.status == 'in_progress',
         )
         .toList();
-    if (chat.isLoading) return const Center(child: CircularProgressIndicator());
+
+    // Error state — show Arabic error with retry button instead of spinner
+    if (chat.error != null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.error_outline_rounded, size: 48, color: AppColors.error),
+              const SizedBox(height: 16),
+              Text(
+                chat.error!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: AppColors.onSurfaceVariant, fontSize: 15),
+              ),
+              const SizedBox(height: 20),
+              FilledButton.icon(
+                onPressed: () => context.read<ChatController>().loadDriverRooms(),
+                icon: const Icon(Icons.refresh_rounded),
+                label: const Text('إعادة المحاولة'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Loading state — only show spinner during initial load
+    if (chat.isLoading && chat.rooms.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     if (orders.isEmpty) return Center(child: Text(l10n.chatNoConversations));
     return ListView.separated(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -54,11 +87,13 @@ class _DriverChatTabState extends State<DriverChatTab> {
             trailing: const Icon(Icons.chevron_left_rounded),
             onTap: () async {
               try {
+                final myId = Supabase.instance.client.auth.currentUser?.id;
+                if (myId == null) return;
                 final created =
                     room ??
                     await context.read<ChatController>().getOrCreateRoom(
                       orderId: order.id,
-                      driverId: order.assignedDriverId!,
+                      driverId: myId,
                       branchId: order.branchId!,
                     );
                 if (context.mounted) {
@@ -71,7 +106,13 @@ class _DriverChatTabState extends State<DriverChatTab> {
                     },
                   );
                 }
-              } catch (_) {}
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('تعذر فتح المحادثة: $e'), backgroundColor: AppColors.error),
+                  );
+                }
+              }
             },
           ),
         );

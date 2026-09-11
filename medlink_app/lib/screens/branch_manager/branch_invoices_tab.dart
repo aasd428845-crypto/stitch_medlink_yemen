@@ -49,7 +49,7 @@ class _BranchInvoicesTabState extends State<BranchInvoicesTab> {
             onRefresh: branch.loadInvoices,
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 120),
+              padding: const EdgeInsets.fromLTRB(16, 68, 16, 120),
               children: [
                 const BranchManagerHero(
                   title: 'الفواتير',

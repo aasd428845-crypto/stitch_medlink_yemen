@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +8,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/client_address.dart';
 import '../../services/order_controller.dart';
 import '../../utils/theme.dart';
+import '../branch_manager/branch_manager_design.dart';
 
 class AddressesScreen extends StatefulWidget {
   const AddressesScreen({super.key});
@@ -27,91 +30,450 @@ class _AddressesScreenState extends State<AddressesScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final controller = context.watch<OrderController>();
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.deliveryAddress)),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _addAddress(context),
-        icon: const Icon(Icons.add_location_alt_outlined),
-        label: Text(l10n.addNewAddress),
+    return Theme(
+      data: AppTheme.branchManagerLight,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          foregroundColor: BranchColors.onSurface,
+          title: Text(l10n.deliveryAddress),
+        ),
+        body: BranchGlassBackground(
+          child: controller.addresses.isEmpty
+              ? Center(
+                  child: SoftCard(
+                    padding: const EdgeInsets.all(32),
+                    borderRadius: 28,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        PastelIconBadge(
+                          icon: Icons.location_off_outlined,
+                          color: BranchColors.onSurfaceVariant,
+                          size: 56,
+                          iconSize: 28,
+                          shape: BoxShape.circle,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'لا توجد عناوين محفوظة',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'أضف عنواناً لتسريع عملية التوصيل',
+                          style: Theme.of(context).textTheme.bodySmall,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+                  itemCount: controller.addresses.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 10),
+                  itemBuilder: (_, i) =>
+                      _AddressTile(address: controller.addresses[i]),
+                ),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => _addAddress(context),
+          backgroundColor: BranchColors.primaryContainer,
+          foregroundColor: BranchColors.onPrimary,
+          icon: const Icon(Icons.add_location_alt_outlined),
+          label: Text(l10n.addNewAddress),
+        ),
       ),
-      body: controller.addresses.isEmpty
-          ? const Center(child: Text('لا توجد عناوين محفوظة'))
-          : ListView.separated(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              itemCount: controller.addresses.length,
-              separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.xs),
-              itemBuilder: (_, i) => _AddressTile(address: controller.addresses[i]),
-            ),
     );
   }
 
   Future<void> _addAddress(BuildContext context) async {
-    final label = TextEditingController();
-    final details = TextEditingController();
-    LatLng? point;
-    final result = await showDialog<bool>(
+    final result = await showModalBottomSheet<bool>(
       context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.addNewAddress),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: label,
-                  decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)!.addressLabel,
-                  ),
-                ),
-                TextField(
-                  controller: details,
-                  maxLines: 2,
-                  decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)!.addressText,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                OutlinedButton.icon(
-                  onPressed: () async {
-                    final selected = await Navigator.of(context).push<LatLng>(
-                      MaterialPageRoute(builder: (_) => const _MapPicker()),
-                    );
-                    if (selected != null) setState(() => point = selected);
-                  },
-                  icon: const Icon(Icons.map_outlined),
-                  label: Text(point == null
-                      ? 'اختيار الموقع من الخريطة'
-                      : 'تم تحديد الموقع ✓'),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext, false),
-              child: const Text('إلغاء'),
-            ),
-            FilledButton(
-              onPressed: () async {
-                if (label.text.trim().isEmpty || details.text.trim().isEmpty) return;
-                await context.read<OrderController>().saveAddress(
-                      label: label.text.trim(),
-                      addressText: details.text.trim(),
-                      latitude: point?.latitude,
-                      longitude: point?.longitude,
-                    );
-                if (dialogContext.mounted) Navigator.pop(dialogContext, true);
-              },
-              child: Text(AppLocalizations.of(context)!.saveAddress),
-            ),
-          ],
-        ),
-      ),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const _AddAddressSheet(),
     );
     if (result == true && mounted) setState(() {});
   }
 }
+
+// ─── Add Address Bottom Sheet ─────────────────────────────────────────────────
+
+class _AddAddressSheet extends StatefulWidget {
+  const _AddAddressSheet();
+
+  @override
+  State<_AddAddressSheet> createState() => _AddAddressSheetState();
+}
+
+class _AddAddressSheetState extends State<_AddAddressSheet> {
+  final _formKey = GlobalKey<FormState>();
+  final _labelCtrl = TextEditingController();
+  final _detailsCtrl = TextEditingController();
+  final _ownerCtrl = TextEditingController();
+  final _phoneCtrl = TextEditingController();
+  final _altPhoneCtrl = TextEditingController();
+  final _landmarkCtrl = TextEditingController();
+  final _governorateCtrl = TextEditingController();
+  final _cityCtrl = TextEditingController();
+  final _districtCtrl = TextEditingController();
+  LatLng? _point;
+  bool _saving = false;
+
+  @override
+  void dispose() {
+    _labelCtrl.dispose();
+    _detailsCtrl.dispose();
+    _ownerCtrl.dispose();
+    _phoneCtrl.dispose();
+    _altPhoneCtrl.dispose();
+    _landmarkCtrl.dispose();
+    _governorateCtrl.dispose();
+    _cityCtrl.dispose();
+    _districtCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _saving = true);
+    try {
+      await context.read<OrderController>().saveAddress(
+            label: _labelCtrl.text.trim(),
+            addressText: _detailsCtrl.text.trim(),
+            latitude: _point?.latitude,
+            longitude: _point?.longitude,
+            ownerName: _ownerCtrl.text.trim(),
+            phone: _phoneCtrl.text.trim(),
+            altPhone: _altPhoneCtrl.text.trim(),
+            landmark: _landmarkCtrl.text.trim(),
+            governorate: _governorateCtrl.text.trim(),
+            city: _cityCtrl.text.trim(),
+            district: _districtCtrl.text.trim(),
+          );
+      if (mounted) Navigator.of(context).pop(true);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('فشل حفظ العنوان: $e'),
+            backgroundColor: BranchColors.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bottom = MediaQuery.viewInsetsOf(context).bottom;
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + bottom),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: .92),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: .6),
+              width: 1.2,
+            ),
+          ),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Handle
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: BranchColors.outlineVariant,
+                        borderRadius: BorderRadius.circular(99),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Title
+                  Row(
+                    children: [
+                      Container(
+                        width: 5,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: BranchColors.glassHeroGradient,
+                          ),
+                          borderRadius: BorderRadius.circular(99),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        'إضافة عنوان جديد',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.w900),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // ── Section: معلومات العنوان ──────────────────────────
+                  _SectionLabel(
+                    icon: Icons.location_on_outlined,
+                    label: 'معلومات العنوان',
+                    gradient: BranchColors.pastelBluGradient,
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _labelCtrl,
+                    decoration: const InputDecoration(
+                      labelText: 'اسم العنوان (مثال: الصيدلية)',
+                      prefixIcon: Icon(Icons.label_outline),
+                    ),
+                    validator: (v) =>
+                        (v == null || v.trim().isEmpty) ? 'مطلوب' : null,
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _detailsCtrl,
+                    maxLines: 2,
+                    decoration: const InputDecoration(
+                      labelText: 'العنوان بالتفصيل',
+                      prefixIcon: Icon(Icons.edit_location_alt_outlined),
+                    ),
+                    validator: (v) =>
+                        (v == null || v.trim().isEmpty) ? 'مطلوب' : null,
+                  ),
+                  const SizedBox(height: 12),
+
+                  // ── Section: الموقع الجغرافي ──────────────────────────
+                  _SectionLabel(
+                    icon: Icons.map_outlined,
+                    label: 'الموقع الجغرافي',
+                    gradient: BranchColors.pastelGreenGradient,
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _governorateCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'المحافظة',
+                            prefixIcon: Icon(Icons.account_balance_outlined),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _cityCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'المدينة / المديرية',
+                            prefixIcon: Icon(Icons.location_city_outlined),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _districtCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'الحي / المنطقة',
+                            prefixIcon: Icon(Icons.holiday_village_outlined),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _landmarkCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'أقرب معلم',
+                            prefixIcon: Icon(Icons.place_outlined),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  // خريطة
+                  StatefulBuilder(
+                    builder: (ctx, setInner) => OutlinedButton.icon(
+                      onPressed: () async {
+                        final selected = await Navigator.of(context)
+                            .push<LatLng>(
+                          MaterialPageRoute(
+                              builder: (_) => const _MapPicker()),
+                        );
+                        if (selected != null) {
+                          setState(() => _point = selected);
+                          setInner(() {});
+                        }
+                      },
+                      icon: const Icon(Icons.map_outlined),
+                      label: Text(
+                        _point == null
+                            ? 'اختيار الموقع من الخريطة'
+                            : 'تم تحديد الموقع ✓',
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: _point != null
+                            ? BranchColors.success
+                            : BranchColors.primary,
+                        side: BorderSide(
+                          color: _point != null
+                              ? BranchColors.success
+                              : BranchColors.outlineVariant,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // ── Section: معلومات صاحب المنشأة ─────────────────────
+                  _SectionLabel(
+                    icon: Icons.business_outlined,
+                    label: 'معلومات صاحب المنشأة',
+                    gradient: BranchColors.pastelVioletGradient,
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _ownerCtrl,
+                    decoration: const InputDecoration(
+                      labelText: 'اسم صاحب المنشأة',
+                      prefixIcon: Icon(Icons.person_outline),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _phoneCtrl,
+                          keyboardType: TextInputType.phone,
+                          decoration: const InputDecoration(
+                            labelText: 'رقم الهاتف',
+                            prefixIcon: Icon(Icons.phone_outlined),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _altPhoneCtrl,
+                          keyboardType: TextInputType.phone,
+                          decoration: const InputDecoration(
+                            labelText: 'رقم هاتف آخر',
+                            prefixIcon: Icon(Icons.phone_callback_outlined),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  // ── Action buttons ────────────────────────────────────
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: const Text('إلغاء'),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: FilledButton.icon(
+                          onPressed: _saving ? null : _save,
+                          icon: _saving
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: BranchColors.onPrimary,
+                                  ),
+                                )
+                              : const Icon(Icons.save_outlined),
+                          label: const Text('حفظ العنوان'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Section Label ────────────────────────────────────────────────────────────
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel({
+    required this.icon,
+    required this.label,
+    required this.gradient,
+  });
+  final IconData icon;
+  final String label;
+  final List<Color> gradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: gradient,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: Colors.white, size: 16),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: BranchColors.onSurface,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+// ─── Address Tile ─────────────────────────────────────────────────────────────
 
 class _AddressTile extends StatelessWidget {
   const _AddressTile({required this.address});
@@ -119,22 +481,76 @@ class _AddressTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: Icon(
-          address.isDefault ? Icons.home_rounded : Icons.location_on_outlined,
-          color: AppColors.primary,
-        ),
-        title: Text(address.label),
-        subtitle: Text(address.addressText),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete_outline, color: AppColors.error),
-          onPressed: () => context.read<OrderController>().deleteAddress(address.id),
-        ),
+    return SoftCard(
+      padding: const EdgeInsets.all(14),
+      borderRadius: 22,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PastelIconBadge(
+            icon: address.isDefault
+                ? Icons.home_rounded
+                : Icons.location_on_outlined,
+            color: BranchColors.primary,
+            size: 44,
+            iconSize: 20,
+            borderRadius: 14,
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(address.label,
+                    style: Theme.of(context).textTheme.titleSmall),
+                const SizedBox(height: 2),
+                Text(address.addressText,
+                    style: Theme.of(context).textTheme.bodySmall),
+                if (address.governorate != null || address.city != null) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    [
+                      if (address.governorate?.isNotEmpty == true)
+                        address.governorate!,
+                      if (address.city?.isNotEmpty == true) address.city!,
+                      if (address.district?.isNotEmpty == true) address.district!,
+                    ].join(' - '),
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: BranchColors.onSurfaceVariant,
+                        ),
+                  ),
+                ],
+                if (address.phone?.isNotEmpty == true) ...[
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      const Icon(Icons.phone_outlined,
+                          size: 12, color: BranchColors.success),
+                      const SizedBox(width: 4),
+                      Text(address.phone!,
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: BranchColors.success,
+                                    fontWeight: FontWeight.w700,
+                                  )),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline, color: BranchColors.error),
+            onPressed: () =>
+                context.read<OrderController>().deleteAddress(address.id),
+          ),
+        ],
       ),
     );
   }
 }
+
+// ─── Map Picker ───────────────────────────────────────────────────────────────
 
 class _MapPicker extends StatefulWidget {
   const _MapPicker();
@@ -144,7 +560,7 @@ class _MapPicker extends StatefulWidget {
 }
 
 class _MapPickerState extends State<_MapPicker> {
-  static const _default = LatLng(15.3694, 44.1910); // Sana'a map centre only.
+  static const _default = LatLng(15.3694, 44.1910);
   LatLng _selected = _default;
 
   @override
@@ -159,12 +575,13 @@ class _MapPickerState extends State<_MapPicker> {
           ],
         ),
         body: GoogleMap(
-          initialCameraPosition: const CameraPosition(target: _default, zoom: 13),
+          initialCameraPosition:
+              const CameraPosition(target: _default, zoom: 13),
           markers: {
             Marker(
               markerId: const MarkerId('selected-address'),
               position: _selected,
-            ),
+            )
           },
           onTap: (point) => setState(() => _selected = point),
           myLocationButtonEnabled: true,

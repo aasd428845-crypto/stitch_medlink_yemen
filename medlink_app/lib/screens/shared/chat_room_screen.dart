@@ -37,13 +37,13 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _initialize());
   }
 
+  String? _error;
+
   Future<void> _initialize() async {
     final service = context.read<ChatService>();
     try {
       final messages = await service.fetchMessages(widget.roomId);
-      if (!mounted) {
-        return;
-      }
+      if (!mounted) return;
       setState(() {
         _messages.addAll(messages);
         _loading = false;
@@ -57,8 +57,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         _scrollToEnd();
       });
       _scrollToEnd();
-    } catch (_) {
-      if (mounted) setState(() => _loading = false);
+    } catch (e) {
+      if (mounted) setState(() { _loading = false; _error = e.toString(); });
     }
   }
 
@@ -125,6 +125,28 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           Expanded(
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
+                : _error != null
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.error_outline_rounded, size: 40, color: AppColors.error),
+                          const SizedBox(height: AppSpacing.sm),
+                          Text('تعذر تحميل المحادثة', style: Theme.of(context).textTheme.titleSmall),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(_error!, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.onSurfaceVariant), textAlign: TextAlign.center),
+                          const SizedBox(height: AppSpacing.md),
+                          FilledButton.icon(
+                            onPressed: () { setState(() { _loading = true; _error = null; }); _initialize(); },
+                            icon: const Icon(Icons.refresh_rounded),
+                            label: const Text('إعادة المحاولة'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
                 : _messages.isEmpty
                 ? Center(child: Text(l10n.chatEmptyRoom))
                 : ListView.builder(

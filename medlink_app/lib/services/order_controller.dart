@@ -65,6 +65,14 @@ class OrderController extends ChangeNotifier {
     double? latitude,
     double? longitude,
     bool isDefault = false,
+    // Extended fields
+    String? ownerName,
+    String? phone,
+    String? altPhone,
+    String? landmark,
+    String? governorate,
+    String? city,
+    String? district,
   }) async {
     _setLoading(true);
     try {
@@ -74,6 +82,13 @@ class OrderController extends ChangeNotifier {
         latitude: latitude,
         longitude: longitude,
         isDefault: isDefault,
+        ownerName: ownerName,
+        phone: phone,
+        altPhone: altPhone,
+        landmark: landmark,
+        governorate: governorate,
+        city: city,
+        district: district,
       );
       await loadAddresses();
       _selectedAddress = newAddr;

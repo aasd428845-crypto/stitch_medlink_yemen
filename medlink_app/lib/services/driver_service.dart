@@ -22,18 +22,46 @@ class DriverService {
     debugPrint('[${AppConstants.supabaseDebugTag}] DriverService.$fn OK');
   }
 
-  /// Invokes the edge function and throws a human-readable message on error.
+  /// Invokes the edge function and throws a human-readable Arabic message on error.
   Future<void> _invoke(Map<String, dynamic> body) async {
     final response = await _client.functions.invoke(
       'manage-driver-account',
       body: body,
     );
     if (response.status != 200) {
-      final msg = (response.data as Map<String, dynamic>?)?['error']
-          as String? ??
-          'حدث خطأ غير متوقع (${response.status})';
-      throw Exception(msg);
+      final rawMsg = (response.data as Map<String, dynamic>?)?['error']
+              as String? ??
+          '';
+      final details = (response.data as Map<String, dynamic>?)?['details']
+              as String? ??
+          '';
+      throw Exception(_translateError(rawMsg.isNotEmpty ? rawMsg : details,
+          response.status ?? 0));
     }
+  }
+
+  /// Maps common English backend errors to clear Arabic messages.
+  String _translateError(String raw, int status) {
+    final lower = raw.toLowerCase();
+    if (lower.contains('already been registered') ||
+        lower.contains('already registered') ||
+        lower.contains('already exists')) {
+      return 'البريد الإلكتروني مسجّل مسبقاً. استخدم بريداً آخر أو راجع قائمة السائقين.';
+    }
+    if (lower.contains('invalid email') || lower.contains('email')) {
+      return 'البريد الإلكتروني غير صالح. تحقق من الصيغة وأعد المحاولة.';
+    }
+    if (lower.contains('password') && lower.contains('short')) {
+      return 'كلمة المرور قصيرة جداً. يجب أن تكون 6 أحرف على الأقل.';
+    }
+    if (lower.contains('unauthorized') || status == 401) {
+      return 'غير مصرّح. تأكد من تسجيل الدخول بصلاحية مدير الفرع.';
+    }
+    if (lower.contains('not found') || status == 404) {
+      return 'السائق غير موجود في قاعدة البيانات.';
+    }
+    if (raw.isNotEmpty) return raw;
+    return 'حدث خطأ غير متوقع (رمز: $status). حاول مجدداً.';
   }
 
   /// Creates a new driver account under the calling manager's branch.

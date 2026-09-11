@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:csv/csv.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
@@ -51,6 +55,104 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
         _ => true,
       };
     }).toList();
+  }
+
+  Future<void> _bulkImport(BuildContext context) async {
+    final controller = context.read<BranchController>();
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['csv'],
+      withData: true,
+    );
+    if (result == null ||
+        result.files.single.path == null && result.files.single.bytes == null) {
+      return;
+    }
+
+    try {
+      final file = result.files.single;
+      final bytes = file.bytes ?? await File(file.path!).readAsBytes();
+      final rows = const CsvToListConverter().convert(utf8.decode(bytes));
+      if (rows.length < 2) {
+        throw const FormatException('الملف فارغ أو بلا بيانات.');
+      }
+
+      final headers = rows.first
+          .map((value) => value.toString().trim().toLowerCase())
+          .toList();
+      int column(String name) => headers.indexOf(name);
+
+      final productIdColumn = column('product_id');
+      final productNameColumn = column('product_name');
+      final quantityColumn = column('quantity');
+      final expiryColumn = column('expiry_date');
+      if (quantityColumn < 0 ||
+          productIdColumn < 0 && productNameColumn < 0) {
+        throw const FormatException(
+          'يجب أن يحتوي الملف على product_id أو product_name و quantity.',
+        );
+      }
+
+      var imported = 0;
+      final errors = <String>[];
+      for (var index = 1; index < rows.length; index++) {
+        final row = rows[index];
+        String valueAt(int columnIndex) =>
+            columnIndex >= 0 && columnIndex < row.length
+                ? row[columnIndex].toString().trim()
+                : '';
+
+        final productId = valueAt(productIdColumn);
+        final productName = valueAt(productNameColumn);
+        CatalogRow? product;
+        for (final item in controller.catalog) {
+          if (item.productId == productId || item.name == productName) {
+            product = item;
+            break;
+          }
+        }
+        final quantity = int.tryParse(valueAt(quantityColumn));
+        final expiryText = valueAt(expiryColumn);
+        final expiry = expiryText.isEmpty ? null : DateTime.tryParse(expiryText);
+
+        if (product == null ||
+            quantity == null ||
+            quantity <= 0 ||
+            expiryText.isNotEmpty && expiry == null) {
+          errors.add('السطر ${index + 1}');
+          continue;
+        }
+
+        await controller.addStockBatch(
+          productId: product.productId,
+          quantity: quantity,
+          expiryDate: expiry,
+        );
+        imported++;
+      }
+
+      if (!context.mounted) return;
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('اكتمل الاستيراد'),
+          content: Text(
+            'تم استيراد $imported دفعة${errors.isEmpty ? '' : '\nتعذر استيراد ${errors.length} سطر.'}',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('حسناً'),
+            ),
+          ],
+        ),
+      );
+    } catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('تعذر استيراد الملف: $error')),
+      );
+    }
   }
 
   Future<void> _editQuantity(CatalogRow row) async {
@@ -256,7 +358,45 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
                   subtitle:
                       'راقب مستويات المخزون وأضف دفعات جديدة بسهولة.',
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
+
+                // Bulk import button
+                GestureDetector(
+                  onTap: () => _bulkImport(context),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: BranchColors.pastelVioletGradient,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: BranchColors.pastelVioletGradient.first.withValues(alpha: .25),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(LucideIcons.upload, color: Colors.white, size: 18),
+                        const SizedBox(width: 10),
+                        Text(
+                          '📤 استيراد بالجملة (CSV)',
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
 
                 // Search field
                 _GlassTextField(

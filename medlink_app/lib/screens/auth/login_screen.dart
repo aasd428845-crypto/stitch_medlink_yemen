@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -8,10 +10,8 @@ import '../../services/auth_service.dart';
 import '../../utils/error_mapper.dart';
 import '../../utils/theme.dart';
 import '../../widgets/app_logo.dart';
-import '../../widgets/app_primary_button.dart';
-import '../../widgets/app_text_field.dart';
 import '../../widgets/error_banner.dart';
-import '../../widgets/medlink_design.dart';
+import '../branch_manager/branch_manager_design.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -80,138 +80,155 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: MedLinkBackground(
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg,
-                vertical: AppSpacing.xl,
-              ),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: GlassPanel(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Center(child: AppLogo()),
-                        const SizedBox(height: AppSpacing.md),
-                        Text(
-                          l10n.appName,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(color: AppColors.primary),
-                        ),
-                        const SizedBox(height: AppSpacing.xl),
-                        Text(
-                          l10n.loginTitle,
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
-                          l10n.loginSubtitle,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(color: AppColors.onSurfaceVariant),
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        if (_errorMessage != null)
-                          ErrorBanner(message: _errorMessage!),
-                        AppTextField(
-                          label: l10n.emailLabel,
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          prefixIcon: Icons.mail_outline,
-                          textInputAction: TextInputAction.next,
-                          autofillHints: const [AutofillHints.email],
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return l10n.validationRequired;
-                            }
-                            if (!RegExp(
-                              r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
-                            ).hasMatch(value.trim())) {
-                              return l10n.validationEmailInvalid;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        AppTextField(
-                          label: l10n.passwordLabel,
-                          controller: _passwordController,
-                          obscureText: true,
-                          prefixIcon: Icons.lock_outline,
-                          textInputAction: TextInputAction.done,
-                          autofillHints: const [AutofillHints.password],
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return l10n.validationRequired;
-                            }
-                            return null;
-                          },
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: TextButton(
-                            onPressed: () {},
-                            child: Text(l10n.forgotPassword),
+    return Theme(
+      data: AppTheme.branchManagerLight,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: BranchGlassBackground(
+          child: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 32,
+                ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 420),
+                  child: GlassCard(
+                    padding: const EdgeInsets.all(28),
+                    borderRadius: 32,
+                    tint: 0.78,
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const Center(child: AppLogo()),
+                          const SizedBox(height: 16),
+                          Text(
+                            l10n.appName,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              color: BranchColors.primary,
+                              fontWeight: FontWeight.w900,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        AppPrimaryButton(
-                          label: l10n.loginButton,
-                          isLoading: _isSubmitting,
-                          onPressed: _submit,
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        Row(
-                          children: [
-                            const Expanded(child: Divider()),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.sm,
+                          const SizedBox(height: 32),
+                          Text(
+                            l10n.loginTitle,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            l10n.loginSubtitle,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: BranchColors.onSurfaceVariant,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          if (_errorMessage != null) ...[
+                            ErrorBanner(message: _errorMessage!),
+                            const SizedBox(height: 12),
+                          ],
+                          TextField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            autofillHints: const [AutofillHints.email],
+                            decoration: InputDecoration(
+                              labelText: l10n.emailLabel,
+                              prefixIcon: const Icon(Icons.mail_outline),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            textInputAction: TextInputAction.done,
+                            autofillHints: const [AutofillHints.password],
+                            decoration: InputDecoration(
+                              labelText: l10n.passwordLabel,
+                              prefixIcon: const Icon(Icons.lock_outline),
+                            ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional.centerEnd,
+                            child: TextButton(
+                              onPressed: () {},
+                              child: Text(l10n.forgotPassword),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          FilledButton(
+                            onPressed: _isSubmitting ? null : _submit,
+                            style: FilledButton.styleFrom(
+                              minimumSize: const Size.fromHeight(52),
+                              backgroundColor: BranchColors.primaryContainer,
+                              foregroundColor: BranchColors.onPrimary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
                               ),
-                              child: Text(
-                                l10n.orDivider,
-                                style: const TextStyle(
-                                  color: AppColors.onSurfaceVariant,
+                            ),
+                            child: _isSubmitting
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: BranchColors.onPrimary,
+                                    ),
+                                  )
+                                : Text(
+                                    l10n.loginButton,
+                                    style: const TextStyle(fontWeight: FontWeight.w700),
+                                  ),
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            children: [
+                              const Expanded(child: Divider()),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  l10n.orDivider,
+                                  style: const TextStyle(color: BranchColors.onSurfaceVariant),
                                 ),
                               ),
+                              const Expanded(child: Divider()),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          OutlinedButton.icon(
+                            onPressed: _isGoogleSubmitting ? null : _submitGoogle,
+                            icon: _isGoogleSubmitting
+                                ? const SizedBox(
+                                    height: 18,
+                                    width: 18,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  )
+                                : const Icon(Icons.g_mobiledata, size: 26),
+                            label: Text(l10n.continueWithGoogle),
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size.fromHeight(52),
+                              side: const BorderSide(color: BranchColors.outlineVariant),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
                             ),
-                            const Expanded(child: Divider()),
-                          ],
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        OutlinedButton.icon(
-                          onPressed: _isGoogleSubmitting ? null : _submitGoogle,
-                          icon: _isGoogleSubmitting
-                              ? const SizedBox(
-                                  height: 18,
-                                  width: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : const Icon(Icons.g_mobiledata, size: 26),
-                          label: Text(l10n.continueWithGoogle),
-                        ),
-                        const SizedBox(height: AppSpacing.xl),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(l10n.noAccountYet),
-                            TextButton(
-                              onPressed: () => context.go('/register'),
-                              child: Text(l10n.createAccountLink),
-                            ),
-                          ],
-                        ),
-                      ],
+                          ),
+                          const SizedBox(height: 32),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(l10n.noAccountYet),
+                              TextButton(
+                                onPressed: () => context.go('/register'),
+                                child: Text(l10n.createAccountLink),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -223,3 +240,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+

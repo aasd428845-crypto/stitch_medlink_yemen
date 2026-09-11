@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +8,7 @@ import '../../l10n/app_localizations.dart';
 import '../../services/cart_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/cart_item_tile.dart';
-import 'client_design.dart';
+import '../branch_manager/branch_manager_design.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -16,48 +18,96 @@ class CartScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final cart = context.watch<CartController>();
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.cartTitle), actions: [
-        if (!cart.isEmpty) IconButton(icon: const Icon(Icons.delete_outline_rounded), tooltip: l10n.clearCart, onPressed: cart.clearCart),
-      ]),
-      body: cart.isEmpty
-          ? Center(child: ClientDesignSurface(child: Column(mainAxisSize: MainAxisSize.min, children: [
-              const Icon(Icons.shopping_cart_outlined, size: 58, color: AppColors.primary),
-              const SizedBox(height: AppSpacing.md),
-              Text(l10n.emptyCart, style: const TextStyle(color: AppColors.onSurface, fontSize: 18, fontWeight: FontWeight.w800)),
-            ])))
-          : Column(children: [
-              Expanded(child: ListView.separated(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
-                itemCount: cart.items.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 10),
-                itemBuilder: (context, i) {
-                  final item = cart.items[i];
-                  return ClientDesignSurface(padding: const EdgeInsets.all(8), child: CartItemTile(
-                    item: item,
-                    onQuantityChanged: (qty) => cart.updateQuantity(item.product.id, qty),
-                    onRemove: () => cart.removeItem(item.product.id),
-                  ));
-                },
-              )),
-              ClientDesignSurface(
-                margin: const EdgeInsets.fromLTRB(12, 4, 12, 12),
-                child: SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    Text(l10n.subtotal, style: const TextStyle(color: AppColors.onSurfaceVariant)),
-                    Text('${cart.subtotalAmount.toStringAsFixed(0)} ﷼', style: const TextStyle(color: AppColors.onSurface, fontWeight: FontWeight.w900, fontSize: 18)),
-                  ]),
-                  const SizedBox(height: 10),
-                  Row(children: [
-                    const Icon(Icons.local_shipping_outlined, size: 18, color: AppColors.success),
-                    const SizedBox(width: 7),
-                    Text(l10n.freeDelivery, style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.w700)),
-                  ]),
-                  const SizedBox(height: 14),
-                  SizedBox(width: double.infinity, child: FilledButton.icon(icon: const Icon(Icons.arrow_back_rounded), label: Text(l10n.proceedToCheckout), onPressed: () => context.push('/client/checkout'))),
-                ])),
-              ),
-            ]),
+    return Theme(
+      data: AppTheme.branchManagerLight,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          foregroundColor: BranchColors.onSurface,
+          title: Text(l10n.cartTitle),
+          actions: [
+            if (!cart.isEmpty)
+              IconButton(icon: const Icon(Icons.delete_outline_rounded), tooltip: l10n.clearCart, onPressed: cart.clearCart),
+          ],
+        ),
+        body: BranchGlassBackground(
+          child: cart.isEmpty
+              ? Center(
+                  child: SoftCard(
+                    padding: const EdgeInsets.all(32),
+                    borderRadius: 28,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        PastelIconBadge(icon: Icons.shopping_cart_outlined, color: BranchColors.primary, size: 56, iconSize: 28, shape: BoxShape.circle),
+                        const SizedBox(height: 16),
+                        Text(l10n.emptyCart, style: Theme.of(context).textTheme.titleSmall),
+                      ],
+                    ),
+                  ),
+                )
+              : Column(
+                  children: [
+                    Expanded(
+                      child: ListView.separated(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
+                        itemCount: cart.items.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 10),
+                        itemBuilder: (context, i) {
+                          final item = cart.items[i];
+                          return SoftCard(
+                            padding: const EdgeInsets.all(8),
+                            borderRadius: 22,
+                            child: CartItemTile(
+                              item: item,
+                              onQuantityChanged: (qty) => cart.updateQuantity(item.product.id, qty),
+                              onRemove: () => cart.removeItem(item.product.id),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    GlassCard(
+                      margin: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+                      borderRadius: 24,
+                      tint: 0.82,
+                      child: SafeArea(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(l10n.subtotal, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: BranchColors.onSurfaceVariant)),
+                                Text('${cart.subtotalAmount.toStringAsFixed(0)} ﷼', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900)),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                const Icon(Icons.local_shipping_outlined, size: 18, color: BranchColors.success),
+                                const SizedBox(width: 7),
+                                Text(l10n.freeDelivery, style: const TextStyle(color: BranchColors.success, fontWeight: FontWeight.w700)),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            SizedBox(
+                              width: double.infinity,
+                              child: FilledButton.icon(
+                                icon: const Icon(Icons.arrow_back_rounded),
+                                label: Text(l10n.proceedToCheckout),
+                                onPressed: () => context.push('/client/checkout'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ),
     );
   }
 }

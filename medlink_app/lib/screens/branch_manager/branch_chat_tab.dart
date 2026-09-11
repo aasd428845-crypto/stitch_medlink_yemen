@@ -40,6 +40,40 @@ class _BranchChatTabState extends State<BranchChatTab> {
       );
     }
 
+    // Error state — show Arabic error with retry
+    if (chat.error != null) {
+      return Center(
+        child: SoftCard(
+          padding: const EdgeInsets.all(32),
+          borderRadius: 28,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PastelIconBadge(
+                icon: Icons.error_outline_rounded,
+                color: BranchColors.error,
+                size: 56,
+                iconSize: 28,
+                shape: BoxShape.circle,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                chat.error!,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 20),
+              FilledButton.icon(
+                onPressed: () => context.read<ChatController>().loadBranchRooms(branchId),
+                icon: const Icon(Icons.refresh_rounded),
+                label: const Text('إعادة المحاولة'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     // Loading only when truly waiting for first data
     if (chat.isLoading && chat.rooms.isEmpty) {
       return const Center(child: CircularProgressIndicator());
@@ -47,7 +81,7 @@ class _BranchChatTabState extends State<BranchChatTab> {
 
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+      padding: const EdgeInsets.fromLTRB(16, 68, 16, 120),
       children: [
         // ── Hero header ──────────────────────────────────────────────────
         const BranchManagerHero(
@@ -103,7 +137,7 @@ class _ChatRoomCard extends StatefulWidget {
   const _ChatRoomCard({required this.room, required this.l10n});
 
   final dynamic room;
-  final dynamic l10n;
+  final AppLocalizations l10n;
 
   @override
   State<_ChatRoomCard> createState() => _ChatRoomCardState();
@@ -117,7 +151,7 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
     final room = widget.room;
     final orderId = '#${(room.orderId as String).substring(0, 8).toUpperCase()}';
     final driverName =
-        (room.driverName as String?) ?? widget.l10n.chatWithDriver as String;
+        (room.driverName as String?) ?? widget.l10n.chatWithDriver;
 
     return GestureDetector(
       onTapDown: (_) => setState(() => _pressed = true),

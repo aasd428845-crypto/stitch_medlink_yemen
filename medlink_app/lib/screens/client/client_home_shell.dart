@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../services/cart_controller.dart';
-import '../../widgets/medlink_design.dart';
-import '../shared/coming_soon_scaffold.dart';
+import '../../utils/theme.dart';
+import '../branch_manager/branch_floating_bottom_bar.dart';
+import '../branch_manager/branch_manager_design.dart';
 import 'account_tab.dart';
 import 'catalog_tab.dart';
 import 'home_tab.dart';
 import 'orders_tab.dart';
 
-/// Bottom-nav shell for the `client` role.
-/// Tab 0 → HomeTab (offers + categories + products)
-/// Tab 1 → CatalogTab (full catalog + search + filter)
-/// Tab 2 → OrdersTab (active & previous orders)
-/// Tab 3 → Account hub
 class ClientHomeShell extends StatefulWidget {
   const ClientHomeShell({super.key});
 
@@ -34,49 +31,54 @@ class _ClientHomeShellState extends State<ClientHomeShell> {
     final cart = context.watch<CartController>();
 
     final tabDefs = [
-      (l10n.clientHomeLabel, Icons.home_outlined, Icons.home_rounded),
-      (
-        l10n.clientCatalogLabel,
-        Icons.grid_view_outlined,
-        Icons.grid_view_rounded,
-      ),
-      (
-        l10n.clientOrdersLabel,
-        Icons.receipt_long_outlined,
-        Icons.receipt_long_rounded,
-      ),
-      (l10n.clientProfileLabel, Icons.person_outline, Icons.person_rounded),
+      (l10n.clientHomeLabel, LucideIcons.home),
+      (l10n.clientCatalogLabel, LucideIcons.grid3x3),
+      (l10n.clientOrdersLabel, LucideIcons.clipboardList),
+      (l10n.clientProfileLabel, LucideIcons.user),
     ];
 
-    final body = _tabs[_index];
-
-    return MedLinkScaffold(
-      appBar: MedLinkTopBar(
-        title: tabDefs[_index].$1,
-        actions: [
-          IconButton(
-            icon: Badge(
-              isLabelVisible: cart.totalItemCount > 0,
-              label: Text('${cart.totalItemCount}'),
-              child: const Icon(Icons.shopping_cart_outlined),
-            ),
-            onPressed: () => context.push('/client/cart'),
+    return Theme(
+      data: AppTheme.branchManagerLight,
+      child: BranchGlassBackground(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          extendBody: true,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            foregroundColor: BranchColors.onSurface,
+            scrolledUnderElevation: 0,
+            title: Text(tabDefs[_index].$1),
+            actions: [
+              IconButton(
+                icon: Badge(
+                  isLabelVisible: cart.totalItemCount > 0,
+                  backgroundColor: BranchColors.danger,
+                  label: Text(
+                    '${cart.totalItemCount}',
+                    style: const TextStyle(color: BranchColors.onPrimary),
+                  ),
+                  child: const Icon(LucideIcons.shoppingCart),
+                ),
+                onPressed: () => context.push('/client/cart'),
+              ),
+            ],
           ),
-          const RoleAppBarActions(),
-        ],
-      ),
-      body: body,
-      bottomNavigationBar: MedLinkBottomNav(
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
-        destinations: [
-          for (final tab in tabDefs)
-            NavigationDestination(
-              icon: Icon(tab.$2),
-              selectedIcon: Icon(tab.$3),
-              label: tab.$1,
-            ),
-        ],
+          body: IndexedStack(
+            index: _index,
+            children: _tabs,
+          ),
+          bottomNavigationBar: BranchFloatingBottomBar(
+            items: [
+              for (final tab in tabDefs)
+                BranchBottomBarItem(icon: tab.$2, label: tab.$1),
+            ],
+            selectedIndex: _index,
+            onSelect: (i) => setState(() => _index = i),
+            // FAB يفتح سلة التسوق
+            fabIcon: LucideIcons.shoppingCart,
+            onFabPressed: () => context.push('/client/cart'),
+          ),
+        ),
       ),
     );
   }

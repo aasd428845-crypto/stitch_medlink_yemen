@@ -35,7 +35,17 @@ class ChatController extends ChangeNotifier {
     try {
       rooms = await loader();
     } catch (e) {
-      error = e.toString();
+      // Show a user-friendly Arabic message instead of raw technical errors.
+      final raw = e.toString().toLowerCase();
+      if (raw.contains('relation') && raw.contains('does not exist')) {
+        error = 'جداول الدردشة غير مفعّلة بعد في قاعدة البيانات. تواصل مع الدعم الفني.';
+      } else if (raw.contains('permission denied') || raw.contains('rls')) {
+        error = 'ليس لديك صلاحية الوصول للمحادثات. تحقق من إعدادات حسابك.';
+      } else if (raw.contains('socket') || raw.contains('network') || raw.contains('timeout') || raw.contains('connection')) {
+        error = 'تعذّر الاتصال بالخادم. تحقق من اتصال الإنترنت وأعد المحاولة.';
+      } else {
+        error = 'تعذّر تحميل المحادثات. تحقق من الاتصال وأعد المحاولة.';
+      }
     } finally {
       isLoading = false;
       notifyListeners();

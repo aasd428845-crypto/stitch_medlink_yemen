@@ -56,7 +56,13 @@ class _CreateDriverSheetState extends State<CreateDriverSheet> {
         password: _passwordCtrl.text.trim(),
       );
     } catch (e) {
-      setState(() => _error = e.toString().replaceAll('Exception: ', ''));
+      // Clean raw exception wrapper text
+      final msg = e
+          .toString()
+          .replaceAll('Exception: ', '')
+          .replaceAll('FunctionException(', '')
+          .replaceAll(')', '');
+      setState(() => _error = msg);
     } finally {
       if (mounted) setState(() => _loading = false);
     }

@@ -33,6 +33,15 @@ mixin _$ClientAddress {
   bool get isDefault => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   String? get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'owner_name')
+  String? get ownerName => throw _privateConstructorUsedError;
+  String? get phone => throw _privateConstructorUsedError;
+  @JsonKey(name: 'alt_phone')
+  String? get altPhone => throw _privateConstructorUsedError;
+  String? get landmark => throw _privateConstructorUsedError;
+  String? get governorate => throw _privateConstructorUsedError;
+  String? get city => throw _privateConstructorUsedError;
+  String? get district => throw _privateConstructorUsedError;
 
   /// Serializes this ClientAddress to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -60,6 +69,13 @@ abstract class $ClientAddressCopyWith<$Res> {
     double? longitude,
     @JsonKey(name: 'is_default') bool isDefault,
     @JsonKey(name: 'created_at') String? createdAt,
+    @JsonKey(name: 'owner_name') String? ownerName,
+    String? phone,
+    @JsonKey(name: 'alt_phone') String? altPhone,
+    String? landmark,
+    String? governorate,
+    String? city,
+    String? district,
   });
 }
 
@@ -86,6 +102,13 @@ class _$ClientAddressCopyWithImpl<$Res, $Val extends ClientAddress>
     Object? longitude = freezed,
     Object? isDefault = null,
     Object? createdAt = freezed,
+    Object? ownerName = freezed,
+    Object? phone = freezed,
+    Object? altPhone = freezed,
+    Object? landmark = freezed,
+    Object? governorate = freezed,
+    Object? city = freezed,
+    Object? district = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -121,6 +144,34 @@ class _$ClientAddressCopyWithImpl<$Res, $Val extends ClientAddress>
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
                       as String?,
+            ownerName: freezed == ownerName
+                ? _value.ownerName
+                : ownerName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            phone: freezed == phone
+                ? _value.phone
+                : phone // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            altPhone: freezed == altPhone
+                ? _value.altPhone
+                : altPhone // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            landmark: freezed == landmark
+                ? _value.landmark
+                : landmark // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            governorate: freezed == governorate
+                ? _value.governorate
+                : governorate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            city: freezed == city
+                ? _value.city
+                : city // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            district: freezed == district
+                ? _value.district
+                : district // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -145,6 +196,13 @@ abstract class _$$ClientAddressImplCopyWith<$Res>
     double? longitude,
     @JsonKey(name: 'is_default') bool isDefault,
     @JsonKey(name: 'created_at') String? createdAt,
+    @JsonKey(name: 'owner_name') String? ownerName,
+    String? phone,
+    @JsonKey(name: 'alt_phone') String? altPhone,
+    String? landmark,
+    String? governorate,
+    String? city,
+    String? district,
   });
 }
 
@@ -170,6 +228,13 @@ class __$$ClientAddressImplCopyWithImpl<$Res>
     Object? longitude = freezed,
     Object? isDefault = null,
     Object? createdAt = freezed,
+    Object? ownerName = freezed,
+    Object? phone = freezed,
+    Object? altPhone = freezed,
+    Object? landmark = freezed,
+    Object? governorate = freezed,
+    Object? city = freezed,
+    Object? district = freezed,
   }) {
     return _then(
       _$ClientAddressImpl(
@@ -205,6 +270,34 @@ class __$$ClientAddressImplCopyWithImpl<$Res>
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
                   as String?,
+        ownerName: freezed == ownerName
+            ? _value.ownerName
+            : ownerName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        phone: freezed == phone
+            ? _value.phone
+            : phone // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        altPhone: freezed == altPhone
+            ? _value.altPhone
+            : altPhone // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        landmark: freezed == landmark
+            ? _value.landmark
+            : landmark // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        governorate: freezed == governorate
+            ? _value.governorate
+            : governorate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        city: freezed == city
+            ? _value.city
+            : city // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        district: freezed == district
+            ? _value.district
+            : district // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -222,6 +315,13 @@ class _$ClientAddressImpl extends _ClientAddress {
     this.longitude,
     @JsonKey(name: 'is_default') this.isDefault = false,
     @JsonKey(name: 'created_at') this.createdAt,
+    @JsonKey(name: 'owner_name') this.ownerName,
+    this.phone,
+    @JsonKey(name: 'alt_phone') this.altPhone,
+    this.landmark,
+    this.governorate,
+    this.city,
+    this.district,
   }) : super._();
 
   factory _$ClientAddressImpl.fromJson(Map<String, dynamic> json) =>
@@ -247,10 +347,26 @@ class _$ClientAddressImpl extends _ClientAddress {
   @override
   @JsonKey(name: 'created_at')
   final String? createdAt;
+  @override
+  @JsonKey(name: 'owner_name')
+  final String? ownerName;
+  @override
+  final String? phone;
+  @override
+  @JsonKey(name: 'alt_phone')
+  final String? altPhone;
+  @override
+  final String? landmark;
+  @override
+  final String? governorate;
+  @override
+  final String? city;
+  @override
+  final String? district;
 
   @override
   String toString() {
-    return 'ClientAddress(id: $id, clientId: $clientId, label: $label, addressText: $addressText, latitude: $latitude, longitude: $longitude, isDefault: $isDefault, createdAt: $createdAt)';
+    return 'ClientAddress(id: $id, clientId: $clientId, label: $label, addressText: $addressText, latitude: $latitude, longitude: $longitude, isDefault: $isDefault, createdAt: $createdAt, ownerName: $ownerName, phone: $phone, altPhone: $altPhone, landmark: $landmark, governorate: $governorate, city: $city, district: $district)';
   }
 
   @override
@@ -271,7 +387,19 @@ class _$ClientAddressImpl extends _ClientAddress {
             (identical(other.isDefault, isDefault) ||
                 other.isDefault == isDefault) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.ownerName, ownerName) ||
+                other.ownerName == ownerName) &&
+            (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.altPhone, altPhone) ||
+                other.altPhone == altPhone) &&
+            (identical(other.landmark, landmark) ||
+                other.landmark == landmark) &&
+            (identical(other.governorate, governorate) ||
+                other.governorate == governorate) &&
+            (identical(other.city, city) || other.city == city) &&
+            (identical(other.district, district) ||
+                other.district == district));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -286,6 +414,13 @@ class _$ClientAddressImpl extends _ClientAddress {
     longitude,
     isDefault,
     createdAt,
+    ownerName,
+    phone,
+    altPhone,
+    landmark,
+    governorate,
+    city,
+    district,
   );
 
   /// Create a copy of ClientAddress
@@ -312,6 +447,13 @@ abstract class _ClientAddress extends ClientAddress {
     final double? longitude,
     @JsonKey(name: 'is_default') final bool isDefault,
     @JsonKey(name: 'created_at') final String? createdAt,
+    @JsonKey(name: 'owner_name') final String? ownerName,
+    final String? phone,
+    @JsonKey(name: 'alt_phone') final String? altPhone,
+    final String? landmark,
+    final String? governorate,
+    final String? city,
+    final String? district,
   }) = _$ClientAddressImpl;
   const _ClientAddress._() : super._();
 
@@ -338,6 +480,22 @@ abstract class _ClientAddress extends ClientAddress {
   @override
   @JsonKey(name: 'created_at')
   String? get createdAt;
+  @override
+  @JsonKey(name: 'owner_name')
+  String? get ownerName;
+  @override
+  String? get phone;
+  @override
+  @JsonKey(name: 'alt_phone')
+  String? get altPhone;
+  @override
+  String? get landmark;
+  @override
+  String? get governorate;
+  @override
+  String? get city;
+  @override
+  String? get district;
 
   /// Create a copy of ClientAddress
   /// with the given fields replaced by the non-null parameter values.

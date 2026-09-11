@@ -15,6 +15,14 @@ class ClientAddress with _$ClientAddress {
     double? longitude,
     @JsonKey(name: 'is_default') @Default(false) bool isDefault,
     @JsonKey(name: 'created_at') String? createdAt,
+    // ── New extended fields ────────────────────────────────────────────────
+    @JsonKey(name: 'owner_name') String? ownerName,
+    String? phone,
+    @JsonKey(name: 'alt_phone') String? altPhone,
+    String? landmark,
+    String? governorate,
+    String? city,
+    String? district,
   }) = _ClientAddress;
 
   const ClientAddress._();
