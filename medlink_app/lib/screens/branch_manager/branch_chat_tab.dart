@@ -18,13 +18,26 @@ class BranchChatTab extends StatefulWidget {
 }
 
 class _BranchChatTabState extends State<BranchChatTab> {
+  String? _loadedBranchId;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final branchId = context.read<AuthController>().profile?.branchId;
-    if (branchId != null) {
-      context.read<ChatController>().loadBranchRooms(branchId);
+    if (branchId == null || branchId == _loadedBranchId) {
+      return;
     }
+
+    // `ChatController` notifies its listeners when the request starts and
+    // finishes. Since this widget also depends on that provider, doing the
+    // request unconditionally here creates a reload loop and leaves the tab
+    // showing its spinner forever.
+    _loadedBranchId = branchId;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<ChatController>().loadBranchRooms(branchId);
+      }
+    });
   }
 
   @override
@@ -35,9 +48,7 @@ class _BranchChatTabState extends State<BranchChatTab> {
 
     // No branch ID — show message instead of infinite spinner
     if (branchId == null) {
-      return const Center(
-        child: Text('لم يتم تعيين فرع لهذا الحساب.'),
-      );
+      return const Center(child: Text('لم يتم تعيين فرع لهذا الحساب.'));
     }
 
     // Error state — show Arabic error with retry
@@ -64,7 +75,8 @@ class _BranchChatTabState extends State<BranchChatTab> {
               ),
               const SizedBox(height: 20),
               FilledButton.icon(
-                onPressed: () => context.read<ChatController>().loadBranchRooms(branchId),
+                onPressed: () =>
+                    context.read<ChatController>().loadBranchRooms(branchId),
                 icon: const Icon(Icons.refresh_rounded),
                 label: const Text('إعادة المحاولة'),
               ),
@@ -97,29 +109,31 @@ class _BranchChatTabState extends State<BranchChatTab> {
           // Count badge
           Container(
             margin: const EdgeInsets.only(bottom: 14),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                  colors: BranchColors.metricBlueGradient,
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight),
+                colors: BranchColors.metricBlueGradient,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               borderRadius: BorderRadius.circular(99),
               boxShadow: [
                 BoxShadow(
-                  color: BranchColors.metricBlueGradient.first
-                      .withValues(alpha: .28),
+                  color: BranchColors.metricBlueGradient.first.withValues(
+                    alpha: .28,
+                  ),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
-                )
+                ),
               ],
             ),
             child: Text(
               '${chat.rooms.length} محادثة',
               style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 12),
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 12,
+              ),
             ),
           ),
 
@@ -149,7 +163,8 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
   @override
   Widget build(BuildContext context) {
     final room = widget.room;
-    final orderId = '#${(room.orderId as String).substring(0, 8).toUpperCase()}';
+    final orderId =
+        '#${(room.orderId as String).substring(0, 8).toUpperCase()}';
     final driverName =
         (room.driverName as String?) ?? widget.l10n.chatWithDriver;
 
@@ -159,10 +174,7 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
         setState(() => _pressed = false);
         context.push(
           '/chat/${room.id}',
-          extra: {
-            'orderNumber': orderId,
-            'otherPartyName': driverName,
-          },
+          extra: {'orderNumber': orderId, 'otherPartyName': driverName},
         );
       },
       onTapCancel: () => setState(() => _pressed = false),
@@ -176,8 +188,9 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: BranchColors.metricBlueGradient.first
-                    .withValues(alpha: .08),
+                color: BranchColors.metricBlueGradient.first.withValues(
+                  alpha: .08,
+                ),
                 blurRadius: 18,
                 offset: const Offset(0, 6),
               ),
@@ -187,8 +200,7 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
                 offset: const Offset(0, 2),
               ),
             ],
-            border: Border.all(
-                color: Colors.grey.shade100, width: 1),
+            border: Border.all(color: Colors.grey.shade100, width: 1),
           ),
           child: Padding(
             padding: const EdgeInsets.all(14),
@@ -207,15 +219,19 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: BranchColors.metricBlueGradient.first
-                            .withValues(alpha: .30),
+                        color: BranchColors.metricBlueGradient.first.withValues(
+                          alpha: .30,
+                        ),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
-                      )
+                      ),
                     ],
                   ),
-                  child: const Icon(LucideIcons.truck,
-                      color: Colors.white, size: 22),
+                  child: const Icon(
+                    LucideIcons.truck,
+                    color: Colors.white,
+                    size: 22,
+                  ),
                 ),
                 const SizedBox(width: 14),
 
@@ -226,20 +242,19 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
                     children: [
                       Text(
                         driverName,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall
-                            ?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: BranchColors.onSurface,
-                            ),
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: BranchColors.onSurface,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Row(
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 3),
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
                             decoration: BoxDecoration(
                               color: BranchColors.glassHeroGradient.first
                                   .withValues(alpha: .10),
@@ -248,8 +263,7 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
                             child: Text(
                               orderId,
                               style: TextStyle(
-                                color:
-                                    BranchColors.glassHeroGradient.first,
+                                color: BranchColors.glassHeroGradient.first,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 11,
                               ),
@@ -270,9 +284,11 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.grey.shade200),
                   ),
-                  child: const Icon(LucideIcons.chevronLeft,
-                      size: 16,
-                      color: BranchColors.onSurfaceVariant),
+                  child: const Icon(
+                    LucideIcons.chevronLeft,
+                    size: 16,
+                    color: BranchColors.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
@@ -297,13 +313,14 @@ class _ChatEmptyState extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
-          padding:
-              const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: .78),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-                color: Colors.white.withValues(alpha: .55), width: 1.2),
+              color: Colors.white.withValues(alpha: .55),
+              width: 1.2,
+            ),
           ),
           child: Column(
             children: [
@@ -319,23 +336,27 @@ class _ChatEmptyState extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: BranchColors.metricBlueGradient.first
-                          .withValues(alpha: .30),
+                      color: BranchColors.metricBlueGradient.first.withValues(
+                        alpha: .30,
+                      ),
                       blurRadius: 18,
                       offset: const Offset(0, 6),
-                    )
+                    ),
                   ],
                 ),
-                child: const Icon(LucideIcons.messageCircle,
-                    color: Colors.white, size: 30),
+                child: const Icon(
+                  LucideIcons.messageCircle,
+                  color: Colors.white,
+                  size: 30,
+                ),
               ),
               const SizedBox(height: 18),
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 8),
               Text(

@@ -83,14 +83,14 @@ class _BranchSettingsSheetState extends State<BranchSettingsSheet> {
     });
     try {
       await context.read<BranchController>().saveBranchInfo(
-            name: _nameCtrl.text.trim(),
-            governorate: _governorateCtrl.text.trim(),
-            addressText: _addressCtrl.text.trim(),
-          );
+        name: _nameCtrl.text.trim(),
+        governorate: _governorateCtrl.text.trim(),
+        addressText: _addressCtrl.text.trim(),
+      );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تم حفظ بيانات الفرع')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('تم حفظ بيانات الفرع')));
       }
     } catch (e) {
       setState(() => _error = e.toString().replaceAll('Exception: ', ''));
@@ -104,9 +104,9 @@ class _BranchSettingsSheetState extends State<BranchSettingsSheet> {
     if (profile == null) return;
     setState(() => _savingPrefs = true);
     try {
-      await context
-          .read<BranchController>()
-          .saveNotificationPreferences(profile.id);
+      await context.read<BranchController>().saveNotificationPreferences(
+        profile.id,
+      );
     } catch (e) {
       setState(() => _error = e.toString().replaceAll('Exception: ', ''));
     } finally {
@@ -122,10 +122,10 @@ class _BranchSettingsSheetState extends State<BranchSettingsSheet> {
     });
     try {
       await context.read<BranchController>().addBankAccount(
-            bankName: _bankNameCtrl.text.trim(),
-            accountName: _accountNameCtrl.text.trim(),
-            accountNumber: _accountNumberCtrl.text.trim(),
-          );
+        bankName: _bankNameCtrl.text.trim(),
+        accountName: _accountNameCtrl.text.trim(),
+        accountNumber: _accountNumberCtrl.text.trim(),
+      );
       if (mounted) {
         _bankNameCtrl.clear();
         _accountNameCtrl.clear();
@@ -175,8 +175,7 @@ class _BranchSettingsSheetState extends State<BranchSettingsSheet> {
         child: Container(
           decoration: BoxDecoration(
             color: BranchColors.glassBackgroundStart.withValues(alpha: .97),
-            borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(32)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
           ),
           padding: EdgeInsets.only(
             left: AppSpacing.lg,
@@ -217,17 +216,18 @@ class _BranchSettingsSheetState extends State<BranchSettingsSheet> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('الإعدادات',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
-                                ?.copyWith(fontWeight: FontWeight.w900)),
+                        Text(
+                          'الإعدادات',
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w900),
+                        ),
                         if (profile?.branchName != null)
                           Text(
                             profile!.branchName!,
                             style: const TextStyle(
-                                color: BranchColors.onSurfaceVariant,
-                                fontSize: 12),
+                              color: BranchColors.onSurfaceVariant,
+                              fontSize: 12,
+                            ),
                           ),
                       ],
                     ),
@@ -251,9 +251,10 @@ class _BranchSettingsSheetState extends State<BranchSettingsSheet> {
                   children: [
                     // ── Branch Info Section ─────────────────────────────
                     _SectionHeader(
-                        icon: LucideIcons.store,
-                        title: 'بيانات الفرع',
-                        gradient: BranchColors.metricBlueGradient),
+                      icon: LucideIcons.store,
+                      title: 'بيانات الفرع',
+                      gradient: BranchColors.metricBlueGradient,
+                    ),
                     const SizedBox(height: AppSpacing.sm),
                     Form(
                       key: _formKey,
@@ -282,7 +283,9 @@ class _BranchSettingsSheetState extends State<BranchSettingsSheet> {
                           ),
                           const SizedBox(height: AppSpacing.md),
                           _GradientButton(
-                            label: _savingInfo ? 'جاري الحفظ…' : 'حفظ بيانات الفرع',
+                            label: _savingInfo
+                                ? 'جاري الحفظ…'
+                                : 'حفظ بيانات الفرع',
                             gradient: BranchColors.metricBlueGradient,
                             onPressed: _savingInfo ? null : _saveInfo,
                           ),
@@ -293,26 +296,26 @@ class _BranchSettingsSheetState extends State<BranchSettingsSheet> {
 
                     // ── Payment Accounts ────────────────────────────────
                     _SectionHeader(
-                        icon: LucideIcons.wallet,
-                        title: 'حسابات الدفع',
-                        gradient: BranchColors.metricGreenGradient),
+                      icon: LucideIcons.wallet,
+                      title: 'حسابات الدفع',
+                      gradient: BranchColors.metricGreenGradient,
+                    ),
                     const SizedBox(height: AppSpacing.sm),
                     if (accounts.isEmpty)
                       _EmptyHint(
-                          text:
-                              'لا توجد حسابات مسجلة بعد. أضف حساباً لإظهاره للعملاء.')
+                        text:
+                            'لا توجد حسابات مسجلة بعد. أضف حساباً لإظهاره للعملاء.',
+                      )
                     else
                       for (final account in accounts)
                         _BankAccountCard(
                           account: account,
                           onSetDefault: () => context
                               .read<BranchController>()
-                              .setDefaultBankAccount(
-                                  account['id'] as String),
+                              .setDefaultBankAccount(account['id'] as String),
                           onDelete: () => context
                               .read<BranchController>()
-                              .deleteBankAccount(
-                                  account['id'] as String),
+                              .deleteBankAccount(account['id'] as String),
                         ),
                     const SizedBox(height: AppSpacing.sm),
                     Form(
@@ -349,7 +352,9 @@ class _BranchSettingsSheetState extends State<BranchSettingsSheet> {
                           ),
                           const SizedBox(height: AppSpacing.md),
                           _GradientButton(
-                            label: _savingAccount ? 'جاري الإضافة…' : 'إضافة حساب',
+                            label: _savingAccount
+                                ? 'جاري الإضافة…'
+                                : 'إضافة حساب',
                             gradient: BranchColors.metricGreenGradient,
                             onPressed: _savingAccount ? null : _addAccount,
                           ),
@@ -360,9 +365,10 @@ class _BranchSettingsSheetState extends State<BranchSettingsSheet> {
 
                     // ── Notifications ───────────────────────────────────
                     _SectionHeader(
-                        icon: LucideIcons.bell,
-                        title: 'الإشعارات',
-                        gradient: BranchColors.metricPurpleGradient),
+                      icon: LucideIcons.bell,
+                      title: 'الإشعارات',
+                      gradient: BranchColors.metricPurpleGradient,
+                    ),
                     const SizedBox(height: AppSpacing.xs),
                     _PremiumSwitch(
                       value: branch.prefsNewOrders,
@@ -403,16 +409,23 @@ class _BranchSettingsSheetState extends State<BranchSettingsSheet> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                            color: BranchColors.error.withValues(alpha: .3)),
+                          color: BranchColors.error.withValues(alpha: .3),
+                        ),
                         color: BranchColors.error.withValues(alpha: .04),
                       ),
                       child: TextButton.icon(
-                        icon: const Icon(LucideIcons.logOut,
-                            color: BranchColors.error, size: 18),
-                        label: const Text('تسجيل الخروج',
-                            style: TextStyle(
-                                color: BranchColors.error,
-                                fontWeight: FontWeight.w700)),
+                        icon: const Icon(
+                          LucideIcons.logOut,
+                          color: BranchColors.error,
+                          size: 18,
+                        ),
+                        label: const Text(
+                          'تسجيل الخروج',
+                          style: TextStyle(
+                            color: BranchColors.error,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                         style: TextButton.styleFrom(
                           minimumSize: const Size.fromHeight(48),
                           shape: RoundedRectangleBorder(
@@ -456,26 +469,29 @@ class _SectionHeader extends StatelessWidget {
           height: 32,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-                colors: gradient,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight),
+              colors: gradient,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
                 color: gradient.first.withValues(alpha: .25),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
-              )
+              ),
             ],
           ),
           child: Icon(icon, size: 16, color: Colors.white),
         ),
         const SizedBox(width: 10),
-        Text(title,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: BranchColors.onSurface,
-                  fontWeight: FontWeight.w900,
-                )),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: BranchColors.onSurface,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
       ],
     );
   }
@@ -505,16 +521,22 @@ class _SettingsTextField extends StatelessWidget {
       keyboardType: keyboardType,
       validator: validator,
       style: const TextStyle(
-          color: BranchColors.onSurface, fontWeight: FontWeight.w600),
+        color: BranchColors.onSurface,
+        fontWeight: FontWeight.w600,
+      ),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(
-            color: BranchColors.onSurfaceVariant, fontSize: 13),
+          color: BranchColors.onSurfaceVariant,
+          fontSize: 13,
+        ),
         prefixIcon: Icon(icon, size: 18, color: BranchColors.onSurfaceVariant),
         filled: true,
         fillColor: Colors.grey.shade100,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
@@ -526,7 +548,9 @@ class _SettingsTextField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
-              color: BranchColors.glassHeroGradient.first, width: 1.5),
+            color: BranchColors.glassHeroGradient.first,
+            width: 1.5,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -575,7 +599,7 @@ class _GradientButton extends StatelessWidget {
                     color: gradient.first.withValues(alpha: .32),
                     blurRadius: 14,
                     offset: const Offset(0, 5),
-                  )
+                  ),
                 ],
         ),
         child: Text(
@@ -628,23 +652,29 @@ class _PremiumSwitch extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: BranchColors.onSurface,
-                        fontSize: 13)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: BranchColors.onSurface,
+                    fontSize: 13,
+                  ),
+                ),
                 const SizedBox(height: 2),
-                Text(subtitle,
-                    style: const TextStyle(
-                        fontSize: 11,
-                        color: BranchColors.onSurfaceVariant)),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: BranchColors.onSurfaceVariant,
+                  ),
+                ),
               ],
             ),
           ),
           Switch(
             value: value,
             onChanged: onChanged,
-            activeThumbColor: Colors.white,
+            thumbColor: WidgetStatePropertyAll(Colors.white),
             activeTrackColor: BranchColors.glassHeroGradient.first,
             inactiveThumbColor: Colors.grey.shade400,
             inactiveTrackColor: Colors.grey.shade200,
@@ -674,8 +704,10 @@ class _EmptyHint extends StatelessWidget {
       ),
       child: Text(
         text,
-        style:
-            const TextStyle(color: BranchColors.onSurfaceVariant, fontSize: 12),
+        style: const TextStyle(
+          color: BranchColors.onSurfaceVariant,
+          fontSize: 12,
+        ),
       ),
     );
   }
@@ -713,7 +745,7 @@ class _BankAccountCard extends StatelessWidget {
             color: Colors.black.withValues(alpha: .04),
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Padding(
@@ -734,17 +766,21 @@ class _BankAccountCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: (isDefault
-                            ? BranchColors.primary
-                            : BranchColors.success)
-                        .withValues(alpha: .25),
+                    color:
+                        (isDefault
+                                ? BranchColors.primary
+                                : BranchColors.success)
+                            .withValues(alpha: .25),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
-                  )
+                  ),
                 ],
               ),
-              child: const Icon(LucideIcons.landmark,
-                  size: 18, color: Colors.white),
+              child: const Icon(
+                LucideIcons.landmark,
+                size: 18,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -754,9 +790,10 @@ class _BankAccountCard extends StatelessWidget {
                   Text(
                     '${account['bank_name'] ?? ''} — ${account['account_name'] ?? ''}',
                     style: const TextStyle(
-                        color: BranchColors.onSurface,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13),
+                      color: BranchColors.onSurface,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -764,31 +801,35 @@ class _BankAccountCard extends StatelessWidget {
                   Text(
                     account['account_number'] ?? '',
                     style: const TextStyle(
-                        color: BranchColors.onSurfaceVariant, fontSize: 12),
+                      color: BranchColors.onSurfaceVariant,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
             ),
             if (isDefault)
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                      colors: BranchColors.metricOrangeGradient),
+                    colors: BranchColors.metricOrangeGradient,
+                  ),
                   borderRadius: BorderRadius.circular(99),
                 ),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(LucideIcons.star,
-                        size: 11, color: Colors.white),
+                    Icon(LucideIcons.star, size: 11, color: Colors.white),
                     SizedBox(width: 4),
-                    Text('افتراضي',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w800)),
+                    Text(
+                      'افتراضي',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                   ],
                 ),
               )
