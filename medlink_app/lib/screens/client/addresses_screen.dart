@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/client_address.dart';
@@ -162,6 +163,18 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
         district: _districtCtrl.text.trim(),
       );
       if (mounted) Navigator.of(context).pop(true);
+    } on PostgrestException catch (e) {
+      if (mounted) {
+        final message = e.code == '42703'
+            ? 'قاعدة البيانات تحتاج تحديثاً لتخزين تفاصيل العنوان. طبّق آخر Migration ثم أعد المحاولة.'
+            : 'فشل حفظ العنوان: ${e.message}';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: BranchColors.error,
+          ),
+        );
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

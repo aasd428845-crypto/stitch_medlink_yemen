@@ -97,7 +97,7 @@ Drivers created by a branch manager have `requires_password_change = true` in `p
 
 ```
 supabase/                                 ← Supabase project root (repo root)
-├── migrations/                           ← SQL schema migrations (0001–0005)
+├── migrations/                           ← SQL schema migrations (0001–0014)
 └── functions/
     └── manage-driver-account/            ← Phase 5 Edge Function (index.ts)
 
