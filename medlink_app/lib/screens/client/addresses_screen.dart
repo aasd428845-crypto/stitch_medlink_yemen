@@ -95,7 +95,8 @@ class _AddressesScreenState extends State<AddressesScreen> {
     final result = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      useSafeArea: true,
+      useSafeArea: false,
+      enableDrag: false,
       constraints: BoxConstraints.tightFor(
         height: MediaQuery.sizeOf(context).height,
       ),
@@ -178,26 +179,20 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
   @override
   Widget build(BuildContext context) {
     final bottom = MediaQuery.viewInsetsOf(context).bottom;
-    return SafeArea(
-      top: true,
-      bottom: false,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-          child: Container(
-            height: double.infinity,
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + bottom),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: .94),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(32),
-              ),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: .72),
-                width: 1.2,
-              ),
+    final topInset = MediaQuery.paddingOf(context).top;
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+        child: Container(
+          height: double.infinity,
+          padding: EdgeInsets.fromLTRB(20, topInset + 12, 20, 20 + bottom),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: .94),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: .72),
+              width: 1.2,
             ),
+          ),
             child: Form(
               key: _formKey,
               child: SingleChildScrollView(
@@ -436,7 +431,6 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                 ),
               ),
             ),
-          ),
         ),
       ),
     );

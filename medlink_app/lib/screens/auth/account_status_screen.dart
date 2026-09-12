@@ -5,7 +5,7 @@ import '../../l10n/app_localizations.dart';
 import '../../services/auth_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/app_logo.dart';
-import '../../widgets/medlink_design.dart';
+import '../branch_manager/branch_manager_design.dart';
 
 /// Shared full-screen state for rejected / suspended / director-blocked
 /// outcomes — each just supplies its own icon, title and message.
@@ -30,18 +30,20 @@ class AccountStatusScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: MedLinkBackground(
-        child: SafeArea(
+    return Theme(
+      data: AppTheme.branchManagerLight,
+      child: BranchGlassBackground(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SafeArea(
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 380),
-                child: GlassPanel(
+                child: GlassCard(
                   padding: const EdgeInsets.all(AppSpacing.xl),
-                  radius: 30,
+                  borderRadius: 30,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -66,7 +68,7 @@ class AccountStatusScreen extends StatelessWidget {
                         message,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.onSurfaceVariant,
+                          color: BranchColors.onSurfaceVariant,
                         ),
                       ),
                       if (showSignOut) ...[
@@ -82,6 +84,7 @@ class AccountStatusScreen extends StatelessWidget {
                 ),
               ),
             ),
+          ),
           ),
         ),
       ),

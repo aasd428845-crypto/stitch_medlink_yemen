@@ -9,7 +9,7 @@ import '../../utils/theme.dart';
 import '../../widgets/app_primary_button.dart';
 import '../../widgets/app_text_field.dart';
 import '../../widgets/error_banner.dart';
-import '../../widgets/medlink_design.dart';
+import '../branch_manager/branch_manager_design.dart';
 
 /// Forced password-change screen for drivers whose account has
 /// [requiresPasswordChange] = true (first login after manager creation or
@@ -61,18 +61,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: MedLinkBackground(
-        child: SafeArea(
+    return Theme(
+      data: AppTheme.branchManagerLight,
+      child: BranchGlassBackground(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 440),
-                child: GlassPanel(
+                child: GlassCard(
                   padding: const EdgeInsets.all(AppSpacing.xl),
-                  radius: 30,
+                  borderRadius: 30,
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -95,7 +97,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         Text(
                           l10n.changePasswordSubtitle,
                           style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(color: AppColors.onSurfaceVariant),
+                               ?.copyWith(color: BranchColors.onSurfaceVariant),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: AppSpacing.xl),
@@ -150,6 +152,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
               ),
             ),
+          ),
           ),
         ),
       ),

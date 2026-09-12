@@ -142,9 +142,14 @@ class _HomeTabState extends State<HomeTab> {
             )
           else
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+               padding: const EdgeInsets.fromLTRB(16, 0, 16, 148),
               sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, childAspectRatio: 0.72),
+                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                   crossAxisCount: 2,
+                   crossAxisSpacing: 12,
+                   mainAxisSpacing: 12,
+                   childAspectRatio: 0.66,
+                 ),
                 delegate: SliverChildBuilderDelegate((context, i) {
                   final product = catalog.products[i];
                   return ProductCard(

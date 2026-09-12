@@ -8,6 +8,7 @@ import '../../models/order.dart';
 import '../../services/driver_orders_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/error_banner.dart';
+import '../branch_manager/branch_manager_design.dart';
 import 'driver_design.dart';
 
 class DriverOrdersTab extends StatefulWidget {

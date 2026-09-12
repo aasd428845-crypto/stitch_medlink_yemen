@@ -63,10 +63,13 @@ class _ClientHomeShellState extends State<ClientHomeShell> {
               ),
             ],
           ),
-          body: IndexedStack(
-            index: _index,
-            children: _tabs,
-          ),
+           body: Padding(
+             padding: const EdgeInsets.only(bottom: 96),
+             child: IndexedStack(
+               index: _index,
+               children: _tabs,
+             ),
+           ),
           bottomNavigationBar: BranchFloatingBottomBar(
             items: [
               for (final tab in tabDefs)

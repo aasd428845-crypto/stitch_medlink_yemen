@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/product.dart';
 import '../../utils/theme.dart';
-import 'medlink_design.dart';
+import '../screens/branch_manager/branch_manager_design.dart';
 
 /// Reusable product card used in CatalogTab and HomeTab.
 /// Tapping navigates to ProductDetailScreen; [onAdd] triggers cart addition.
@@ -22,7 +22,8 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return GlassPanel(
+    return SoftCard(
+      margin: EdgeInsets.zero,
       padding: EdgeInsets.zero,
       child: InkWell(
         onTap: onTap,
@@ -34,7 +35,7 @@ class ProductCard extends StatelessWidget {
             children: [
               // Product image
               AspectRatio(
-                aspectRatio: 16 / 9,
+                aspectRatio: 1.18,
                 child: product.imageUrl != null
                     ? Image.network(
                         product.imageUrl!,
@@ -47,9 +48,9 @@ class ProductCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(
                   AppSpacing.sm,
+                  12,
                   AppSpacing.sm,
-                  AppSpacing.sm,
-                  0,
+                  4,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,13 +62,14 @@ class ProductCard extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.secondaryContainer,
+                        color: BranchColors.secondaryContainer.withValues(alpha: .7),
                         borderRadius: BorderRadius.circular(AppRadius.full),
                       ),
                       child: Text(
                         product.category,
                         style: theme.textTheme.labelMedium?.copyWith(
-                          color: AppColors.onSecondaryContainer,
+                          color: BranchColors.onSecondaryContainer,
+                          fontWeight: FontWeight.w700,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -79,8 +81,9 @@ class ProductCard extends StatelessWidget {
                     // Product name
                     Text(
                       product.name,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: BranchColors.onSurface,
+                        fontWeight: FontWeight.w800,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -90,7 +93,9 @@ class ProductCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         product.manufacturer!,
-                        style: theme.textTheme.bodySmall,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: BranchColors.onSurfaceVariant,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -101,15 +106,20 @@ class ProductCard extends StatelessWidget {
 
               // Price row + Add button
               Padding(
-                padding: const EdgeInsets.all(AppSpacing.sm),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.sm,
+                  4,
+                  AppSpacing.sm,
+                  AppSpacing.sm,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${product.unitPrice.toStringAsFixed(0)} ﷼',
+                      '${product.unitPrice.toStringAsFixed(0)} ر.ي',
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: AppColors.primary,
+                        color: BranchColors.primary,
                       ),
                     ),
                     SizedBox(
@@ -138,12 +148,29 @@ class ProductCard extends StatelessWidget {
 
   Widget _imagePlaceholder() {
     return Container(
-      color: AppColors.surfaceContainerLow,
-      child: const Center(
-        child: Icon(
-          Icons.medication_outlined,
-          size: 40,
-          color: AppColors.outlineVariant,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            BranchColors.secondaryContainer,
+            BranchColors.glassBackgroundEnd,
+          ],
+        ),
+      ),
+      child: Center(
+        child: Container(
+          width: 54,
+          height: 54,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: .65),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(
+            Icons.medication_liquid_rounded,
+            size: 30,
+            color: BranchColors.primary,
+          ),
         ),
       ),
     );

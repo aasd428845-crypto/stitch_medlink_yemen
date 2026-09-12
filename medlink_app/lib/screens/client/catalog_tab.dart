@@ -116,7 +116,7 @@ class _CatalogTabState extends State<CatalogTab> {
             ),
           ),
         const SizedBox(height: 10),
-        Expanded(child: _buildGrid(context, l10n, catalog)),
+         Expanded(child: _buildGrid(context, l10n, catalog)),
       ],
     );
   }
@@ -155,8 +155,13 @@ class _CatalogTabState extends State<CatalogTab> {
     return RefreshIndicator(
       onRefresh: catalog.loadProducts,
       child: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, childAspectRatio: 0.72),
+         padding: const EdgeInsets.fromLTRB(16, 8, 16, 148),
+         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+           crossAxisCount: 2,
+           crossAxisSpacing: 12,
+           mainAxisSpacing: 12,
+           childAspectRatio: 0.66,
+         ),
         itemCount: catalog.products.length,
         itemBuilder: (context, i) {
           final product = catalog.products[i];
