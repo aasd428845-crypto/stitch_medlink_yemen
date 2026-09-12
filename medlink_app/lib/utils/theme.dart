@@ -33,6 +33,7 @@ class AppColors {
   static const onErrorContainer = Color(0xFFFFD9DC);
 
   static const background = midnightNavy;
+  static const backgroundEnd = Color(0xFF06101F);
   static const onBackground = Color(0xFFF1F7FF);
   static const surface = deepNavy;
   static const onSurface = Color(0xFFF1F7FF);
@@ -132,14 +133,18 @@ class BranchColors {
     Color(0xFF2563EB),
     Color(0xFF3B82F6),
   ];
-  static const tabActiveGradient = <Color>[Color(0xFF2563EB), Color(0xFF1E40AF)];
+  static const tabActiveGradient = <Color>[
+    Color(0xFF2563EB),
+    Color(0xFF1E40AF),
+  ];
 
   // ---- Modern Glassmorphism tokens (soft pastel, branch manager) ----
   static const glassBackgroundStart = Color(0xFFF2F4FF);
-  static const glassBackgroundEnd   = Color(0xFFE8EEFF);
-  static const glassSurface         = Color(0xFFFFFFFF);
-  static const glassSurfaceOpacity  = 0.75;
-  static const glassBorder          = Color(0x33FFFFFF);
+  static const glassBackgroundMiddle = Color(0xFFEFF0FF);
+  static const glassBackgroundEnd = Color(0xFFE8EEFF);
+  static const glassSurface = Color(0xFFFFFFFF);
+  static const glassSurfaceOpacity = 0.75;
+  static const glassBorder = Color(0x33FFFFFF);
 
   // Hero header: violet → pink → sky
   static const glassHeroGradient = <Color>[
@@ -156,10 +161,22 @@ class BranchColors {
   ];
 
   // Accent gradients for Quick Action cards
-  static const pastelBluGradient    = <Color>[Color(0xFF4361EE), Color(0xFF60A5FA)];
-  static const pastelGreenGradient  = <Color>[Color(0xFF10B981), Color(0xFF6EE7B7)];
-  static const pastelAmberGradient  = <Color>[Color(0xFFF59E0B), Color(0xFFFCD34D)];
-  static const pastelVioletGradient = <Color>[Color(0xFF8B5CF6), Color(0xFFC4B5FD)];
+  static const pastelBluGradient = <Color>[
+    Color(0xFF4361EE),
+    Color(0xFF60A5FA),
+  ];
+  static const pastelGreenGradient = <Color>[
+    Color(0xFF10B981),
+    Color(0xFF6EE7B7),
+  ];
+  static const pastelAmberGradient = <Color>[
+    Color(0xFFF59E0B),
+    Color(0xFFFCD34D),
+  ];
+  static const pastelVioletGradient = <Color>[
+    Color(0xFF8B5CF6),
+    Color(0xFFC4B5FD),
+  ];
 
   // Primary blue gradient (charts / progress)
   static const glassPrimaryGradient = <Color>[
@@ -168,17 +185,29 @@ class BranchColors {
   ];
 
   // Metric tile accent gradients
-  static const metricOrangeGradient = <Color>[Color(0xFFF59E0B), Color(0xFFFB923C)];
-  static const metricBlueGradient   = <Color>[Color(0xFF4361EE), Color(0xFF818CF8)];
-  static const metricGreenGradient  = <Color>[Color(0xFF10B981), Color(0xFF34D399)];
-  static const metricPurpleGradient = <Color>[Color(0xFF8B5CF6), Color(0xFFA78BFA)];
+  static const metricOrangeGradient = <Color>[
+    Color(0xFFF59E0B),
+    Color(0xFFFB923C),
+  ];
+  static const metricBlueGradient = <Color>[
+    Color(0xFF4361EE),
+    Color(0xFF818CF8),
+  ];
+  static const metricGreenGradient = <Color>[
+    Color(0xFF10B981),
+    Color(0xFF34D399),
+  ];
+  static const metricPurpleGradient = <Color>[
+    Color(0xFF8B5CF6),
+    Color(0xFFA78BFA),
+  ];
 
   // Decorative background orbs
-  static const orbMint   = Color(0xFFBFF2E6);
-  static const orbSky    = Color(0xFFB9D8FF);
+  static const orbMint = Color(0xFFBFF2E6);
+  static const orbSky = Color(0xFFB9D8FF);
   static const orbViolet = Color(0xFFE0D4FF);
-  static const orbPink   = Color(0xFFFFD9E8);
-  static const orbPeach  = Color(0xFFFFE3C7);
+  static const orbPink = Color(0xFFFFD9E8);
+  static const orbPeach = Color(0xFFFFE3C7);
 }
 
 class AppRadius {
@@ -394,6 +423,19 @@ class AppTheme {
           borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
       ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: AppColors.surfaceContainerLow.withValues(alpha: .94),
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28),
+          side: const BorderSide(color: AppColors.outlineVariant),
+        ),
+      ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+      ),
     );
   }
 
@@ -604,6 +646,21 @@ class AppTheme {
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
+        modalBarrierColor: Color(0x66000000),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        ),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: BranchColors.glassSurface.withValues(alpha: .94),
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28),
+          side: BorderSide(
+            color: BranchColors.outlineVariant.withValues(alpha: .72),
+          ),
+        ),
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: BranchColors.slate800,

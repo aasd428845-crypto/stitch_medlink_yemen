@@ -21,7 +21,7 @@ class MedLinkBackground extends StatelessWidget {
           colors: [
             AppColors.deepNavy,
             AppColors.midnightNavy,
-            Color(0xFF06101F),
+            AppColors.backgroundEnd,
           ],
         ),
       ),
@@ -88,16 +88,36 @@ class GlassPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: margin,
-      padding: padding,
       decoration: BoxDecoration(
-        color: color ?? AppColors.surfaceContainerLow.withValues(alpha: 0.82),
         borderRadius: BorderRadius.circular(radius),
-        border: Border.all(
-          color:
-              borderColor ?? AppColors.outlineVariant.withValues(alpha: 0.92),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .16),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(radius),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+          child: Container(
+            padding: padding,
+            decoration: BoxDecoration(
+              color:
+                  color ??
+                  AppColors.surfaceContainerLow.withValues(alpha: 0.74),
+              borderRadius: BorderRadius.circular(radius),
+              border: Border.all(
+                color:
+                    borderColor ?? AppColors.onSurface.withValues(alpha: 0.10),
+              ),
+            ),
+            child: child,
+          ),
         ),
       ),
-      child: child,
     );
   }
 }

@@ -17,7 +17,12 @@ class DigitalCardScreen extends StatelessWidget {
     if (profile == null) {
       return Theme(
         data: AppTheme.branchManagerLight,
-        child: Scaffold(backgroundColor: Colors.transparent, body: BranchGlassBackground(child: const Center(child: CircularProgressIndicator()))),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: BranchGlassBackground(
+            child: const Center(child: CircularProgressIndicator()),
+          ),
+        ),
       );
     }
     final payload = 'medlink-client:${profile.id}';
@@ -51,29 +56,49 @@ class DigitalCardScreen extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: BranchColors.glassHeroGradient.first.withValues(alpha: .35),
+                            color: BranchColors.glassHeroGradient.first
+                                .withValues(alpha: .35),
                             blurRadius: 16,
                             offset: const Offset(0, 6),
                           ),
                         ],
                       ),
-                      child: const Icon(Icons.medical_services_rounded, color: Colors.white, size: 28),
+                      child: const Icon(
+                        Icons.medical_services_rounded,
+                        color: Colors.white,
+                        size: 28,
+                      ),
                     ),
                     const SizedBox(height: 16),
-                    Text(profile.name ?? 'عميل MedLink', style: Theme.of(context).textTheme.headlineSmall),
+                    Text(
+                      profile.name ?? 'عميل MedLink',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
                     const SizedBox(height: 4),
-                    Text(profile.phone ?? profile.email ?? '', style: Theme.of(context).textTheme.bodySmall),
+                    Text(
+                      profile.phone ?? profile.email,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                     const SizedBox(height: 24),
                     QrImageView(
                       data: payload,
                       version: QrVersions.auto,
                       size: 220,
-                      eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.square, color: BranchColors.onSurface),
-                      dataModuleStyle: const QrDataModuleStyle(dataModuleShape: QrDataModuleShape.square, color: BranchColors.onSurface),
+                      eyeStyle: const QrEyeStyle(
+                        eyeShape: QrEyeShape.square,
+                        color: BranchColors.onSurface,
+                      ),
+                      dataModuleStyle: const QrDataModuleStyle(
+                        dataModuleShape: QrDataModuleShape.square,
+                        color: BranchColors.onSurface,
+                      ),
                       backgroundColor: Colors.white,
                     ),
                     const SizedBox(height: 16),
-                    Text('اعرض هذا الرمز للتحقق من بطاقتك الرقمية', style: Theme.of(context).textTheme.bodySmall),
+                    Text(
+                      'اعرض هذا الرمز للتحقق من بطاقتك الرقمية',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ],
                 ),
               ),

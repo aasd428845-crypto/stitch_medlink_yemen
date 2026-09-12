@@ -11,4 +11,7 @@ description: intl version pinning by flutter_localizations, freezed @JsonKey ana
 - Flutter 3.32's `Switch` no longer accepts `activeThumbColor`; use `thumbColor: WidgetStatePropertyAll(...)` for the active thumb.
   **Why:** the removed parameter blocks the entire Flutter web build, even when the affected settings screen is not open.
   **How to apply:** update legacy `Switch` calls before using a build as validation for unrelated UI fixes.
+- If the pub cache is empty and `flutter pub get` fails while formatting generated localizations, seed the missing lint packages (`flutter_lints` and its `lints` dependency) before rerunning `pub get`.
+  **Why:** Flutter's localization generation can read the resolved lockfile paths before all cached analysis-option packages have been restored.
+  **How to apply:** repair the cache or add the exact locked package versions, then run `flutter clean`, `flutter pub get`, and the normal build checks.
 </content>

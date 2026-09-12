@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-
 import '../../utils/theme.dart';
 
 /// Shared Modern Glassmorphism design widgets for every branch-manager screen.
@@ -29,7 +28,7 @@ class BranchGlassBackground extends StatelessWidget {
           stops: [0.0, 0.5, 1.0],
           colors: [
             BranchColors.glassBackgroundStart,
-            Color(0xFFEFF0FF),
+            BranchColors.glassBackgroundMiddle,
             BranchColors.glassBackgroundEnd,
           ],
         ),
@@ -96,6 +95,52 @@ class _Orb extends StatelessWidget {
   }
 }
 
+/// Calm, branded loading state used instead of a bare spinner on glass pages.
+class GlassLoadingState extends StatelessWidget {
+  const GlassLoadingState({super.key, this.message = 'جارٍ التحميل'});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SoftCard(
+        padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 22),
+        borderRadius: 26,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const PastelIconBadge(
+              icon: Icons.auto_awesome_rounded,
+              color: BranchColors.primary,
+              size: 56,
+              iconSize: 25,
+              shape: BoxShape.circle,
+            ),
+            const SizedBox(height: 14),
+            const SizedBox(
+              width: 26,
+              height: 26,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                color: BranchColors.primary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              message,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: BranchColors.onSurfaceVariant,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 // ─── Glass Cards ──────────────────────────────────────────────────────────────
 
 /// True frosted-glass card — BackdropFilter blur + translucent white fill +
@@ -145,8 +190,9 @@ class GlassCard extends StatelessWidget {
               color: Colors.white.withValues(alpha: tint),
               borderRadius: BorderRadius.circular(borderRadius),
               border: Border.all(
-                  color: Colors.white.withValues(alpha: borderOpacity),
-                  width: 1.2),
+                color: Colors.white.withValues(alpha: borderOpacity),
+                width: 1.2,
+              ),
             ),
             child: child,
           ),
@@ -199,7 +245,9 @@ class SoftCard extends StatelessWidget {
               color: Colors.white.withValues(alpha: tint),
               borderRadius: BorderRadius.circular(borderRadius),
               border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.4), width: 1.2),
+                color: Colors.white.withValues(alpha: 0.4),
+                width: 1.2,
+              ),
             ),
             child: child,
           ),
@@ -276,20 +324,24 @@ class PastelIconBadge extends StatelessWidget {
             ? (backgroundColor ?? color.withValues(alpha: .14))
             : null,
         shape: shape,
-        borderRadius:
-            shape == BoxShape.circle ? null : BorderRadius.circular(borderRadius),
+        borderRadius: shape == BoxShape.circle
+            ? null
+            : BorderRadius.circular(borderRadius),
         boxShadow: gradient != null
             ? [
                 BoxShadow(
                   color: gradient!.first.withValues(alpha: .35),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
-                )
+                ),
               ]
             : null,
       ),
-      child: Icon(icon,
-          color: gradient != null ? Colors.white : color, size: iconSize),
+      child: Icon(
+        icon,
+        color: gradient != null ? Colors.white : color,
+        size: iconSize,
+      ),
     );
   }
 }
@@ -381,19 +433,19 @@ class BranchManagerHero extends StatelessWidget {
               Text(
                 _greeting,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: .85),
-                      fontWeight: FontWeight.w600,
-                    ),
+                  color: Colors.white.withValues(alpha: .85),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(height: 6),
               // Main title
               Text(
                 title,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: -0.5,
-                    ),
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  letterSpacing: -0.5,
+                ),
               ),
               const SizedBox(height: 8),
               // Subtitle
@@ -402,9 +454,9 @@ class BranchManagerHero extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withValues(alpha: .80),
-                      height: 1.6,
-                    ),
+                  color: Colors.white.withValues(alpha: .80),
+                  height: 1.6,
+                ),
               ),
             ],
           ),
@@ -431,9 +483,10 @@ class _AnimatedStatusBadgeState extends State<_AnimatedStatusBadge>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     )..repeat(reverse: true);
-    _scale = Tween<double>(begin: 0.8, end: 1.4).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
-    );
+    _scale = Tween<double>(
+      begin: 0.8,
+      end: 1.4,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
   }
 
   @override
@@ -449,8 +502,10 @@ class _AnimatedStatusBadgeState extends State<_AnimatedStatusBadge>
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: .20),
         borderRadius: BorderRadius.circular(99),
-        border:
-            Border.all(color: Colors.white.withValues(alpha: .30), width: 1),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: .30),
+          width: 1,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -467,7 +522,7 @@ class _AnimatedStatusBadgeState extends State<_AnimatedStatusBadge>
                   BoxShadow(
                     color: const Color(0xFF6EE7B7).withValues(alpha: .6),
                     blurRadius: 6,
-                  )
+                  ),
                 ],
               ),
             ),
@@ -535,15 +590,19 @@ class BranchMetricTile extends StatelessWidget {
               color: Colors.white.withValues(alpha: .75),
               borderRadius: BorderRadius.circular(28),
               border: Border.all(
-                  color: Colors.white.withValues(alpha: .5), width: 1.2),
+                color: Colors.white.withValues(alpha: .5),
+                width: 1.2,
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Accent top strip with icon
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 14,
+                  ),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: _gradient,
@@ -572,8 +631,10 @@ class BranchMetricTile extends StatelessWidget {
                 // Value + label
                 Expanded(
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -583,9 +644,7 @@ class BranchMetricTile extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: Text(
                             value,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium
+                            style: Theme.of(context).textTheme.headlineMedium
                                 ?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: BranchColors.onSurface,
@@ -596,11 +655,11 @@ class BranchMetricTile extends StatelessWidget {
                         Text(
                           label,
                           maxLines: 2,
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: BranchColors.onSurfaceVariant,
-                                    height: 1.4,
-                                  ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                color: BranchColors.onSurfaceVariant,
+                                height: 1.4,
+                              ),
                         ),
                       ],
                     ),
@@ -680,13 +739,14 @@ class _BranchQuickActionState extends State<BranchQuickAction>
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: .78),
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                    color: Colors.white.withValues(alpha: .5), width: 1.2),
+                  color: Colors.white.withValues(alpha: .5),
+                  width: 1.2,
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: (grad?.first ?? widget.color).withValues(alpha: .12),
@@ -711,15 +771,16 @@ class _BranchQuickActionState extends State<BranchQuickAction>
                               end: Alignment.bottomRight,
                             )
                           : null,
-                      color:
-                          grad == null ? widget.color.withValues(alpha: .14) : null,
+                      color: grad == null
+                          ? widget.color.withValues(alpha: .14)
+                          : null,
                       boxShadow: grad != null
                           ? [
                               BoxShadow(
                                 color: grad.first.withValues(alpha: .38),
                                 blurRadius: 12,
                                 offset: const Offset(0, 4),
-                              )
+                              ),
                             ]
                           : null,
                     ),
@@ -736,9 +797,9 @@ class _BranchQuickActionState extends State<BranchQuickAction>
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: BranchColors.onSurface,
-                          fontWeight: FontWeight.w800,
-                        ),
+                      color: BranchColors.onSurface,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ],
               ),
@@ -787,16 +848,20 @@ class BranchSectionTitle extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         if (icon != null) ...[
-          Icon(icon, color: iconColor ?? BranchColors.onSurfaceVariant, size: 18),
+          Icon(
+            icon,
+            color: iconColor ?? BranchColors.onSurfaceVariant,
+            size: 18,
+          ),
           const SizedBox(width: 6),
         ],
         Expanded(
           child: Text(
             title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: BranchColors.onSurface,
-                  fontWeight: FontWeight.w900,
-                ),
+              color: BranchColors.onSurface,
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ),
         if (action != null)
@@ -804,9 +869,9 @@ class BranchSectionTitle extends StatelessWidget {
             onPressed: onAction,
             style: TextButton.styleFrom(
               foregroundColor: BranchColors.glassHeroGradient.first,
-              textStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              textStyle: Theme.of(
+                context,
+              ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             child: Text(action!),
           ),
