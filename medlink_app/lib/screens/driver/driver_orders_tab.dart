@@ -8,6 +8,7 @@ import '../../models/order.dart';
 import '../../services/driver_orders_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/error_banner.dart';
+import 'driver_design.dart';
 
 class DriverOrdersTab extends StatefulWidget {
   const DriverOrdersTab({super.key});
@@ -40,8 +41,9 @@ class _DriverOrdersTabState extends State<DriverOrdersTab> {
     return Column(
       children: [
         // ── Two delivery stages from the real orders.status values ────────
-        Material(
-          color: AppColors.surfaceContainerLowest,
+        DriverSurface(
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          padding: EdgeInsets.zero,
           child: Row(
             children: [
               _SegmentButton(
@@ -70,14 +72,15 @@ class _DriverOrdersTabState extends State<DriverOrdersTab> {
                   const SizedBox(height: AppSpacing.md),
                 ],
                 if (ctrl.isLoadingOrders && ctrl.orders.isEmpty)
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: GlassLoadingState(message: l10n.driverOrdersLabel),
                   )
                 else if (filtered.isEmpty)
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.xl,
+                    ),
                     child: Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -85,15 +88,15 @@ class _DriverOrdersTabState extends State<DriverOrdersTab> {
                           const Icon(
                             Icons.local_shipping_outlined,
                             size: 48,
-                            color: AppColors.outline,
+                            color: BranchColors.outline,
                           ),
                           const SizedBox(height: AppSpacing.md),
                           Text(
                             l10n.driverNoOrders,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(color: AppColors.onSurfaceVariant),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: BranchColors.onSurfaceVariant,
+                                ),
                           ),
                         ],
                       ),
@@ -120,7 +123,10 @@ class _DriverOrdersTabState extends State<DriverOrdersTab> {
 
   Future<void> _advanceOrder(BuildContext context, OrderModel order) async {
     final next = order.status == 'assigned' ? 'in_progress' : 'delivered';
-    await context.read<DriverOrdersController>().advanceOrderStatus(order.id, next);
+    await context.read<DriverOrdersController>().advanceOrderStatus(
+      order.id,
+      next,
+    );
   }
 
   Future<void> _callClient(OrderModel order) async {
@@ -136,12 +142,17 @@ class _DriverOrdersTabState extends State<DriverOrdersTab> {
     final uri = Uri.parse(
       'https://www.google.com/maps/search/?api=1&query=${address!.latitude},${address.longitude}',
     );
-    if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (await canLaunchUrl(uri))
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 }
 
 class _SegmentButton extends StatelessWidget {
-  const _SegmentButton({required this.label, required this.selected, required this.onTap});
+  const _SegmentButton({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
   final String label;
   final bool selected;
   final VoidCallback onTap;
@@ -152,13 +163,23 @@ class _SegmentButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
         decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: selected ? AppColors.primary : Colors.transparent, width: 3)),
+          border: Border(
+            bottom: BorderSide(
+              color: selected ? BranchColors.primary : Colors.transparent,
+              width: 3,
+            ),
+          ),
         ),
         alignment: Alignment.center,
-        child: Text(label, style: Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: selected ? AppColors.primary : AppColors.onSurfaceVariant,
-          fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-        )),
+        child: Text(
+          label,
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            color: selected
+                ? BranchColors.primary
+                : BranchColors.onSurfaceVariant,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
       ),
     ),
   );
@@ -167,7 +188,13 @@ class _SegmentButton extends StatelessWidget {
 // ── Order card ─────────────────────────────────────────────────────────────────
 
 class _DriverOrderCard extends StatelessWidget {
-  const _DriverOrderCard({required this.order, required this.onTap, required this.onAdvance, required this.onCall, required this.onMap});
+  const _DriverOrderCard({
+    required this.order,
+    required this.onTap,
+    required this.onAdvance,
+    required this.onCall,
+    required this.onMap,
+  });
 
   final OrderModel order;
   final VoidCallback onTap;
@@ -185,8 +212,8 @@ class _DriverOrderCard extends StatelessWidget {
     final address = order.deliveryAddress?.addressText ?? '—';
     final itemCount = order.items?.length ?? 0;
 
-    return Card(
-      margin: EdgeInsets.zero,
+    return DriverSurface(
+      padding: EdgeInsets.zero,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -213,13 +240,13 @@ class _DriverOrderCard extends StatelessWidget {
               // Row 2: client name
               Row(
                 children: [
-                  const Icon(Icons.person_outline,
-                      size: 16, color: AppColors.onSurfaceVariant),
-                  const SizedBox(width: AppSpacing.xs),
-                  Text(
-                    clientName,
-                    style: theme.textTheme.bodyMedium,
+                  const Icon(
+                    Icons.person_outline,
+                    size: 16,
+                    color: BranchColors.onSurfaceVariant,
                   ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(clientName, style: theme.textTheme.bodyMedium),
                 ],
               ),
               const SizedBox(height: AppSpacing.xs),
@@ -227,14 +254,17 @@ class _DriverOrderCard extends StatelessWidget {
               // Row 3: delivery address
               Row(
                 children: [
-                  const Icon(Icons.location_on_outlined,
-                      size: 16, color: AppColors.onSurfaceVariant),
+                  const Icon(
+                    Icons.location_on_outlined,
+                    size: 16,
+                    color: BranchColors.onSurfaceVariant,
+                  ),
                   const SizedBox(width: AppSpacing.xs),
                   Expanded(
                     child: Text(
                       address,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: AppColors.onSurfaceVariant,
+                        color: BranchColors.onSurfaceVariant,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -247,15 +277,18 @@ class _DriverOrderCard extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xs),
                 Row(
                   children: [
-                    const Icon(Icons.schedule_outlined,
-                        size: 16, color: AppColors.onSurfaceVariant),
+                    const Icon(
+                      Icons.schedule_outlined,
+                      size: 16,
+                      color: BranchColors.onSurfaceVariant,
+                    ),
                     const SizedBox(width: AppSpacing.xs),
                     Text(
                       order.scheduledDeliveryAt!
                           .replaceFirst('T', ' ')
                           .substring(0, 16),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: AppColors.onSurfaceVariant,
+                        color: BranchColors.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -265,36 +298,52 @@ class _DriverOrderCard extends StatelessWidget {
               const Divider(height: 1),
               const SizedBox(height: AppSpacing.sm),
 
-               // Actions are available directly on the card.
-               Row(
-                 children: [
-                   Expanded(
-                     child: FilledButton.icon(
-                       onPressed: onAdvance,
-                       icon: Icon(order.status == 'assigned' ? Icons.local_shipping_rounded : Icons.check_circle_rounded),
-                       label: Text(order.status == 'assigned' ? l10n.driverStartDelivery : l10n.driverConfirmDelivery),
-                     ),
-                   ),
-                   const SizedBox(width: AppSpacing.sm),
-                   IconButton.filledTonal(onPressed: onCall, icon: const Icon(Icons.call_outlined), tooltip: l10n.driverClientPhone),
-                   IconButton.filledTonal(onPressed: onMap, icon: const Icon(Icons.directions_outlined), tooltip: l10n.driverDeliveryAddress),
-                 ],
-               ),
-               const SizedBox(height: AppSpacing.sm),
-               // Row 4: item count + total
+              // Actions are available directly on the card.
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: onAdvance,
+                      icon: Icon(
+                        order.status == 'assigned'
+                            ? Icons.local_shipping_rounded
+                            : Icons.check_circle_rounded,
+                      ),
+                      label: Text(
+                        order.status == 'assigned'
+                            ? l10n.driverStartDelivery
+                            : l10n.driverConfirmDelivery,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  IconButton.filledTonal(
+                    onPressed: onCall,
+                    icon: const Icon(Icons.call_outlined),
+                    tooltip: l10n.driverClientPhone,
+                  ),
+                  IconButton.filledTonal(
+                    onPressed: onMap,
+                    icon: const Icon(Icons.directions_outlined),
+                    tooltip: l10n.driverDeliveryAddress,
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              // Row 4: item count + total
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     '$itemCount ${l10n.driverOrderItems}',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: BranchColors.onSurfaceVariant,
                     ),
                   ),
                   Text(
                     '${order.totalAmount.toStringAsFixed(0)} ر.ي',
                     style: theme.textTheme.titleSmall?.copyWith(
-                      color: AppColors.primary,
+                      color: BranchColors.primary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -321,21 +370,21 @@ class _StatusChip extends StatelessWidget {
 
     final (label, color, background) = switch (status) {
       'assigned' => (
-          l10n.driverFilterAssigned,
-          AppColors.primary,
-          AppColors.secondaryContainer,
-        ),
+        l10n.driverFilterAssigned,
+        BranchColors.primary,
+        BranchColors.secondaryContainer,
+      ),
       'in_progress' => (
-          l10n.driverFilterInProgress,
-          AppColors.warning,
-          AppColors.warningContainer,
-        ),
+        l10n.driverFilterInProgress,
+        BranchColors.warning,
+        BranchColors.warningContainer,
+      ),
       'delivered' => (
-          l10n.driverFilterDelivered,
-          AppColors.success,
-          AppColors.successContainer,
-        ),
-      _ => (status, AppColors.outline, AppColors.surfaceVariant),
+        l10n.driverFilterDelivered,
+        BranchColors.success,
+        BranchColors.successContainer,
+      ),
+      _ => (status, BranchColors.outline, BranchColors.surfaceVariant),
     };
 
     return Container(
@@ -350,9 +399,9 @@ class _StatusChip extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
-            ),
+          color: color,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

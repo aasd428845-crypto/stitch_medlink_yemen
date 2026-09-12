@@ -6,6 +6,8 @@ import '../../models/driver_commission.dart';
 import '../../services/driver_orders_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/error_banner.dart';
+import '../branch_manager/branch_manager_design.dart';
+import 'driver_design.dart';
 
 class DriverEarningsTab extends StatefulWidget {
   const DriverEarningsTab({super.key});
@@ -41,121 +43,137 @@ class _DriverEarningsTabState extends State<DriverEarningsTab> {
     final isThisMonth =
         ctrl.selectedMonth == thisMonth && ctrl.selectedYear == thisYear;
 
-    return RefreshIndicator(
-      onRefresh: ctrl.loadEarnings,
-      child: ListView(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        children: [
-          // ── Period selector ──────────────────────────────────────────────
-          Row(
-            children: [
-              Expanded(
-                child: _PeriodChip(
-                  label: l10n.driverThisMonth,
-                  selected: isThisMonth,
-                  onTap: () => ctrl.setEarningsPeriod(thisMonth, thisYear),
-                ),
+    return Column(
+      children: [
+        DriverHero(
+          title: l10n.driverEarningsLabel,
+          subtitle: l10n.driverHeroSubtitle,
+        ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: ctrl.loadEarnings,
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                0,
+                AppSpacing.md,
+                AppSpacing.xl,
               ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: _PeriodChip(
-                  label: l10n.driverLastMonth,
-                  selected: !isThisMonth,
-                  onTap: () =>
-                      ctrl.setEarningsPeriod(lastMonth, lastMonthYear),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          // ── Rating summary card ──────────────────────────────────────────
-          if (!ctrl.isLoadingRating) ...[
-            _RatingSummaryCard(
-              average: ctrl.ratingAverage,
-              count: ctrl.ratingCount,
-              l10n: l10n,
-            ),
-            const SizedBox(height: AppSpacing.md),
-          ],
-
-          // ── Error ────────────────────────────────────────────────────────
-          if (ctrl.earningsError != null) ...[
-            ErrorBanner(message: ctrl.earningsError!),
-            const SizedBox(height: AppSpacing.md),
-          ],
-
-          // ── Loading ──────────────────────────────────────────────────────
-          if (ctrl.isLoadingEarnings) ...[
-            const Center(child: CircularProgressIndicator()),
-            const SizedBox(height: AppSpacing.md),
-          ] else ...[
-            // ── Summary cards ────────────────────────────────────────────
-            Row(
               children: [
-                Expanded(
-                  child: _SummaryCard(
-                    icon: Icons.payments_rounded,
-                    label: l10n.driverTotalEarningsLabel,
-                    value: '${ctrl.totalEarnings.toStringAsFixed(0)} ر.ي',
-                    color: AppColors.primary,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: _SummaryCard(
-                    icon: Icons.local_shipping_rounded,
-                    label: l10n.driverTotalDeliveries,
-                    value: '${ctrl.deliveredCount}',
-                    color: AppColors.success,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-
-            // ── Empty state ───────────────────────────────────────────────
-            if (ctrl.earnings.isEmpty)
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: AppSpacing.xl),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.account_balance_wallet_outlined,
-                        size: 48,
-                        color: AppColors.outline,
+                // ── Period selector ──────────────────────────────────────────────
+                Row(
+                  children: [
+                    Expanded(
+                      child: _PeriodChip(
+                        label: l10n.driverThisMonth,
+                        selected: isThisMonth,
+                        onTap: () =>
+                            ctrl.setEarningsPeriod(thisMonth, thisYear),
                       ),
-                      const SizedBox(height: AppSpacing.md),
-                      Text(
-                        l10n.driverNoEarnings,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: _PeriodChip(
+                        label: l10n.driverLastMonth,
+                        selected: !isThisMonth,
+                        onTap: () =>
+                            ctrl.setEarningsPeriod(lastMonth, lastMonthYear),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+
+                // ── Rating summary card ──────────────────────────────────────────
+                if (!ctrl.isLoadingRating) ...[
+                  _RatingSummaryCard(
+                    average: ctrl.ratingAverage,
+                    count: ctrl.ratingCount,
+                    l10n: l10n,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+
+                // ── Error ────────────────────────────────────────────────────────
+                if (ctrl.earningsError != null) ...[
+                  ErrorBanner(message: ctrl.earningsError!),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+
+                // ── Loading ──────────────────────────────────────────────────────
+                if (ctrl.isLoadingEarnings) ...[
+                  GlassLoadingState(message: l10n.driverEarningsLabel),
+                  const SizedBox(height: AppSpacing.md),
+                ] else ...[
+                  // ── Summary cards ────────────────────────────────────────────
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _SummaryCard(
+                          icon: Icons.payments_rounded,
+                          label: l10n.driverTotalEarningsLabel,
+                          value: '${ctrl.totalEarnings.toStringAsFixed(0)} ر.ي',
+                          color: BranchColors.primary,
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: _SummaryCard(
+                          icon: Icons.local_shipping_rounded,
+                          label: l10n.driverTotalDeliveries,
+                          value: '${ctrl.deliveredCount}',
+                          color: BranchColors.success,
+                        ),
                       ),
                     ],
                   ),
-                ),
-              )
-            else ...[
-              // ── Commission list ───────────────────────────────────────
-              Text(
-                l10n.driverOrderEarning,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                  const SizedBox(height: AppSpacing.md),
+
+                  // ── Empty state ───────────────────────────────────────────────
+                  if (ctrl.earnings.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.xl,
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.account_balance_wallet_outlined,
+                              size: 48,
+                              color: BranchColors.outline,
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            Text(
+                              l10n.driverNoEarnings,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(color: BranchColors.onSurfaceVariant),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  else ...[
+                    // ── Commission list ───────────────────────────────────────
+                    Text(
+                      l10n.driverOrderEarning,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: BranchColors.onSurfaceVariant,
+                      ),
                     ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              for (final commission in ctrl.earnings) ...[
-                _CommissionCard(commission: commission),
-                const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.sm),
+                    for (final commission in ctrl.earnings) ...[
+                      _CommissionCard(commission: commission),
+                      const SizedBox(height: AppSpacing.sm),
+                    ],
+                  ],
+                ],
               ],
-            ],
-          ],
-        ],
-      ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -176,13 +194,13 @@ class _RatingSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-      margin: EdgeInsets.zero,
+    return DriverSurface(
+      padding: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Row(
           children: [
-            const Icon(Icons.star_rounded, color: AppColors.warning, size: 28),
+            const Icon(Icons.star_rounded, color: BranchColors.warning, size: 28),
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Column(
@@ -253,23 +271,17 @@ class _PeriodChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
         decoration: BoxDecoration(
-          color: selected
-              ? AppColors.primary
-              : AppColors.surfaceContainerLow,
+          color: selected ? AppColors.primary : AppColors.surfaceContainerLow,
           borderRadius: BorderRadius.circular(AppRadius.lg),
-          border: selected
-              ? null
-              : Border.all(color: AppColors.outlineVariant),
+          border: selected ? null : Border.all(color: AppColors.outlineVariant),
         ),
         alignment: Alignment.center,
         child: Text(
           label,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: selected
-                    ? AppColors.onPrimary
-                    : AppColors.onSurfaceVariant,
-                fontWeight: FontWeight.w600,
-              ),
+            color: selected ? AppColors.onPrimary : AppColors.onSurfaceVariant,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
@@ -293,8 +305,8 @@ class _SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
+    return DriverSurface(
+      padding: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
@@ -305,16 +317,16 @@ class _SummaryCard extends StatelessWidget {
             Text(
               value,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.w700,
-                  ),
+                color: color,
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
+                color: AppColors.onSurfaceVariant,
+              ),
             ),
           ],
         ),
@@ -339,8 +351,8 @@ class _CommissionCard extends StatelessWidget {
 
     final isPaid = commission.status == 'paid';
 
-    return Card(
-      margin: EdgeInsets.zero,
+    return DriverSurface(
+      padding: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Row(
@@ -363,14 +375,14 @@ class _CommissionCard extends StatelessWidget {
                   Text(
                     shortId,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   Text(
                     dateStr,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
+                      color: AppColors.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -381,15 +393,15 @@ class _CommissionCard extends StatelessWidget {
                 Text(
                   '${commission.amount.toStringAsFixed(0)} ر.ي',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 Text(
                   'من ${commission.orderTotalAmount.toStringAsFixed(0)} ر.ي',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
+                    color: AppColors.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),

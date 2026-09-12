@@ -8,6 +8,8 @@ import '../../models/order.dart';
 import '../../services/driver_orders_controller.dart';
 import '../../services/chat_service.dart';
 import '../../utils/theme.dart';
+import '../branch_manager/branch_manager_design.dart';
+import 'driver_design.dart';
 
 class DriverOrderDetailScreen extends StatefulWidget {
   const DriverOrderDetailScreen({super.key, required this.orderId});
@@ -103,196 +105,212 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
     if (order == null) {
       // Edge case: arrived here before orders loaded
-      return Scaffold(
-        appBar: AppBar(title: Text(l10n.driverOrderDetailTitle)),
-        body: const Center(child: CircularProgressIndicator()),
+      return Theme(
+        data: AppTheme.branchManagerLight,
+        child: BranchGlassBackground(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(title: Text(l10n.driverOrderDetailTitle)),
+            body: const GlassLoadingState(message: 'جارٍ تحميل الطلب'),
+          ),
+        ),
       );
     }
 
     final shortId = '#${order.id.substring(0, 8).toUpperCase()}';
 
-    return Scaffold(
-      appBar: AppBar(title: Text(shortId)),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // ── Client info ─────────────────────────────────────────────────
-            _SectionCard(
-              icon: Icons.person_rounded,
-              title: order.client?.name ?? '—',
+    return Theme(
+      data: AppTheme.branchManagerLight,
+      child: BranchGlassBackground(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(title: Text(shortId)),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (order.client?.phone != null)
-                  _InfoRow(
-                    icon: Icons.phone_outlined,
-                    label: l10n.driverClientPhone,
-                    value: order.client!.phone!,
-                    trailing: IconButton(
-                      icon: const Icon(
-                        Icons.call_outlined,
-                        color: AppColors.primary,
+                // ── Client info ─────────────────────────────────────────────────
+                _SectionCard(
+                  icon: Icons.person_rounded,
+                  title: order.client?.name ?? '—',
+                  children: [
+                    if (order.client?.phone != null)
+                      _InfoRow(
+                        icon: Icons.phone_outlined,
+                        label: l10n.driverClientPhone,
+                        value: order.client!.phone!,
+                        trailing: IconButton(
+                          icon: const Icon(
+                            Icons.call_outlined,
+                            color: AppColors.primary,
+                          ),
+                          onPressed: () async {
+                            final uri = Uri(
+                              scheme: 'tel',
+                              path: order.client!.phone,
+                            );
+                            if (await canLaunchUrl(uri)) launchUrl(uri);
+                          },
+                        ),
                       ),
-                      onPressed: () async {
-                        final uri = Uri(
-                          scheme: 'tel',
-                          path: order.client!.phone,
-                        );
-                        if (await canLaunchUrl(uri)) launchUrl(uri);
-                      },
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-
-            // ── Delivery address ─────────────────────────────────────────────
-            _SectionCard(
-              icon: Icons.location_on_rounded,
-              title: l10n.driverDeliveryAddress,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  child: Text(
-                    order.deliveryAddress?.addressText ?? '—',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  ],
                 ),
-                if (order.scheduledDeliveryAt != null &&
-                    order.scheduledDeliveryAt!.isNotEmpty)
-                  _InfoRow(
-                    icon: Icons.schedule_outlined,
-                    label: l10n.driverScheduledDelivery,
-                    value: order.scheduledDeliveryAt!
-                        .replaceFirst('T', ' ')
-                        .substring(0, 16),
-                  ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.md),
 
-            // ── Items list ───────────────────────────────────────────────────
-            _SectionCard(
-              icon: Icons.inventory_2_outlined,
-              title: l10n.driverOrderItems,
-              children: [
-                if (order.items == null || order.items!.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Text(
-                      '—',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  )
-                else
-                  for (final item in order.items!) ...[
+                // ── Delivery address ─────────────────────────────────────────────
+                _SectionCard(
+                  icon: Icons.location_on_rounded,
+                  title: l10n.driverDeliveryAddress,
+                  children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.md,
                         vertical: AppSpacing.sm,
                       ),
-                      child: Row(
-                        children: [
-                          if (item.isBonus)
-                            Container(
-                              margin: const EdgeInsets.only(
-                                left: AppSpacing.xs,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.xs,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.successContainer,
-                                borderRadius: BorderRadius.circular(
-                                  AppRadius.sm,
+                      child: Text(
+                        order.deliveryAddress?.addressText ?? '—',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                    if (order.scheduledDeliveryAt != null &&
+                        order.scheduledDeliveryAt!.isNotEmpty)
+                      _InfoRow(
+                        icon: Icons.schedule_outlined,
+                        label: l10n.driverScheduledDelivery,
+                        value: order.scheduledDeliveryAt!
+                            .replaceFirst('T', ' ')
+                            .substring(0, 16),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+
+                // ── Items list ───────────────────────────────────────────────────
+                _SectionCard(
+                  icon: Icons.inventory_2_outlined,
+                  title: l10n.driverOrderItems,
+                  children: [
+                    if (order.items == null || order.items!.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(AppSpacing.md),
+                        child: Text(
+                          '—',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      )
+                    else
+                      for (final item in order.items!) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md,
+                            vertical: AppSpacing.sm,
+                          ),
+                          child: Row(
+                            children: [
+                              if (item.isBonus)
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                    left: AppSpacing.xs,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.xs,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.successContainer,
+                                    borderRadius: BorderRadius.circular(
+                                      AppRadius.sm,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'هدية',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(color: AppColors.success),
+                                  ),
+                                ),
+                              Expanded(
+                                child: Text(
+                                  item.product?.name ?? item.productId,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ),
-                              child: Text(
-                                'هدية',
-                                style: Theme.of(context).textTheme.labelSmall
-                                    ?.copyWith(color: AppColors.success),
+                              Text(
+                                '× ${item.quantity}',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: AppColors.onSurfaceVariant,
+                                    ),
                               ),
-                            ),
-                          Expanded(
-                            child: Text(
-                              item.product?.name ?? item.productId,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
+                              const SizedBox(width: AppSpacing.sm),
+                              Text(
+                                item.isBonus
+                                    ? '0 ر.ي'
+                                    : '${(item.quantity * item.unitPrice).toStringAsFixed(0)} ر.ي',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Divider(height: 1, indent: AppSpacing.md),
+                      ],
+                    // Total row
+                    Padding(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            l10n.total,
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(fontWeight: FontWeight.w700),
                           ),
                           Text(
-                            '× ${item.quantity}',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: AppColors.onSurfaceVariant),
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Text(
-                            item.isBonus
-                                ? '0 ر.ي'
-                                : '${(item.quantity * item.unitPrice).toStringAsFixed(0)} ر.ي',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(fontWeight: FontWeight.w600),
+                            '${order.totalAmount.toStringAsFixed(0)} ر.ي',
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w700,
+                                ),
                           ),
                         ],
                       ),
                     ),
-                    const Divider(height: 1, indent: AppSpacing.md),
                   ],
-                // Total row
-                Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+
+                // ── Notes ────────────────────────────────────────────────────────
+                if (order.notes != null && order.notes!.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  _SectionCard(
+                    icon: Icons.notes_rounded,
+                    title: l10n.orderNotes,
                     children: [
-                      Text(
-                        l10n.total,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.md,
+                          vertical: AppSpacing.sm,
                         ),
-                      ),
-                      Text(
-                        '${order.totalAmount.toStringAsFixed(0)} ر.ي',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w700,
+                        child: Text(
+                          order.notes!,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
                     ],
                   ),
-                ),
+                ],
+
+                const SizedBox(height: AppSpacing.xl),
               ],
             ),
-
-            // ── Notes ────────────────────────────────────────────────────────
-            if (order.notes != null && order.notes!.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.md),
-              _SectionCard(
-                icon: Icons.notes_rounded,
-                title: l10n.orderNotes,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.md,
-                      vertical: AppSpacing.sm,
-                    ),
-                    child: Text(
-                      order.notes!,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-
-            const SizedBox(height: AppSpacing.xl),
-          ],
+          ),
+          // ── Action button ──────────────────────────────────────────────────────
+          bottomNavigationBar: _buildActionBar(context, order, l10n),
         ),
       ),
-      // ── Action button ──────────────────────────────────────────────────────
-      bottomNavigationBar: _buildActionBar(context, order, l10n),
     );
   }
 
@@ -312,12 +330,18 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         : (l10n.driverConfirmDelivery, Icons.check_circle_rounded, 'delivered');
 
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.md,
+      child: DriverSurface(
+        margin: const EdgeInsets.fromLTRB(
           AppSpacing.sm,
-          AppSpacing.md,
-          AppSpacing.md,
+          AppSpacing.xs,
+          AppSpacing.sm,
+          AppSpacing.sm,
+        ),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.sm,
+          AppSpacing.xs,
+          AppSpacing.sm,
+          AppSpacing.sm,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -382,8 +406,8 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
+    return DriverSurface(
+      padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
