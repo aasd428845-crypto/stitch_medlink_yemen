@@ -686,6 +686,24 @@ abstract class AppLocalizations {
   /// **'التصفح حسب الفئة'**
   String get categoriesSection;
 
+  /// No description provided for @newProductsSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصل حديثاً'**
+  String get newProductsSection;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض الكل'**
+  String get viewAll;
+
+  /// No description provided for @noUpdates.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد مستجدات حالياً'**
+  String get noUpdates;
+
   /// No description provided for @quickReorder.
   ///
   /// In ar, this message translates to:

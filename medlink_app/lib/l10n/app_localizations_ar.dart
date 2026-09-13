@@ -313,6 +313,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get categoriesSection => 'التصفح حسب الفئة';
 
   @override
+  String get newProductsSection => 'وصل حديثاً';
+
+  @override
+  String get viewAll => 'عرض الكل';
+
+  @override
+  String get noUpdates => 'لا توجد مستجدات حالياً';
+
+  @override
   String get quickReorder => 'قد تحتاج إعادة طلبها قريباً';
 
   @override

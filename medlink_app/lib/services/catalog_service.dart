@@ -49,11 +49,26 @@ class CatalogService {
 
       final rows = await query.order('name');
       _logSuccess('fetchProducts');
-      return (rows as List)
-          .map((r) => Product.fromJson(r))
-          .toList();
+      return (rows as List).map((r) => Product.fromJson(r)).toList();
     } catch (e, st) {
       _logError('fetchProducts', e, st);
+      rethrow;
+    }
+  }
+
+  /// Fetches the most recently added active products for the client home.
+  Future<List<Product>> fetchLatestProducts({int limit = 6}) async {
+    try {
+      final rows = await _client
+          .from('products')
+          .select()
+          .eq('is_active', true)
+          .order('created_at', ascending: false)
+          .limit(limit);
+      _logSuccess('fetchLatestProducts');
+      return (rows as List).map((r) => Product.fromJson(r)).toList();
+    } catch (e, st) {
+      _logError('fetchLatestProducts', e, st);
       rethrow;
     }
   }
@@ -179,9 +194,7 @@ class CatalogService {
           .eq('branch_id', branchId)
           .order('updated_at', ascending: false);
       _logSuccess('fetchInventoryForBranch');
-      return (rows as List)
-          .map((r) => InventoryItem.fromJson(r))
-          .toList();
+      return (rows as List).map((r) => InventoryItem.fromJson(r)).toList();
     } catch (e, st) {
       _logError('fetchInventoryForBranch', e, st);
       rethrow;

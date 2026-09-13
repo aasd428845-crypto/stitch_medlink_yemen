@@ -115,6 +115,9 @@
   "noOffersFound": "No offers available at the moment",
   "viewOffer": "View Details",
   "categoriesSection": "Browse by Category",
+  "newProductsSection": "New Products",
+  "viewAll": "View all",
+  "noUpdates": "No updates at the moment",
   "quickReorder": "You may need to reorder soon",
 
   "catalogTitle": "Catalog",

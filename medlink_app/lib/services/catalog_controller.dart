@@ -27,6 +27,9 @@ class CatalogController extends ChangeNotifier {
   List<Product> _products = [];
   List<Product> get products => _products;
 
+  List<Product> _newProducts = [];
+  List<Product> get newProducts => _newProducts;
+
   List<PromotionalOffer> _offers = [];
   List<PromotionalOffer> get offers => _offers;
 
@@ -57,7 +60,7 @@ class CatalogController extends ChangeNotifier {
   Future<void> initialize() async {
     if (_initialized) return;
     await loadProducts();
-    await Future.wait([loadOffers(), loadCategories()]);
+    await Future.wait([loadOffers(), loadCategories(), loadNewProducts()]);
     await loadReorderRecommendations();
     _initialized = true;
   }
@@ -86,6 +89,15 @@ class CatalogController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> loadNewProducts() async {
+    try {
+      _newProducts = await _service.fetchLatestProducts();
+    } catch (_) {
+      _newProducts = [];
+    }
+    notifyListeners();
+  }
+
   /// Calculates a recommendation from the client's real delivered orders.
   /// A product is shown only after two or more purchase dates establish a
   /// cycle, and only once the current interval is close to that cycle.
@@ -106,8 +118,8 @@ class CatalogController extends ChangeNotifier {
         }
         if (intervals.isEmpty) continue;
 
-        final average =
-            (intervals.reduce((a, b) => a + b) / intervals.length).round();
+        final average = (intervals.reduce((a, b) => a + b) / intervals.length)
+            .round();
         final elapsed = now.difference(dates.last).inDays;
         if (average > 0 && elapsed >= (average * 0.8).round()) {
           recommendations.add(

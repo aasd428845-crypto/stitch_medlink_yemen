@@ -315,6 +315,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoriesSection => 'Browse by Category';
 
   @override
+  String get newProductsSection => 'New Products';
+
+  @override
+  String get viewAll => 'View all';
+
+  @override
+  String get noUpdates => 'No updates at the moment';
+
+  @override
   String get quickReorder => 'You may need to reorder soon';
 
   @override

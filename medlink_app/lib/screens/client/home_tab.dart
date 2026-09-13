@@ -1,14 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../models/product.dart';
 import '../../models/promotional_offer.dart';
 import '../../services/auth_controller.dart';
 import '../../services/cart_controller.dart';
 import '../../services/catalog_controller.dart';
 import '../../utils/theme.dart';
-import '../../widgets/offer_banner_card.dart';
 import '../../widgets/product_card.dart';
 import '../branch_manager/branch_manager_design.dart';
 import 'client_design.dart';
@@ -48,7 +50,11 @@ class _HomeTabState extends State<HomeTab> {
     return RefreshIndicator(
       onRefresh: () async {
         await catalog.loadProducts();
-        await Future.wait([catalog.loadOffers(), catalog.loadCategories()]);
+        await Future.wait([
+          catalog.loadOffers(),
+          catalog.loadCategories(),
+          catalog.loadNewProducts(),
+        ]);
         await catalog.loadReorderRecommendations();
       },
       child: CustomScrollView(
@@ -68,69 +74,89 @@ class _HomeTabState extends State<HomeTab> {
               onChanged: catalog.updateSearch,
             ),
           ),
-          if (catalog.offers.isNotEmpty) ...[
-            SliverToBoxAdapter(
-              child: _LatestUpdatesTicker(offers: catalog.offers),
+          SliverToBoxAdapter(
+            child: BranchSectionTitle(
+              title: l10n.offersSection,
+              icon: Icons.local_offer_outlined,
+              iconColor: ClientColors.primary,
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 6)),
-          ],
-          if (catalog.offers.isNotEmpty || catalog.isLoading) ...[
-            SliverToBoxAdapter(
-              child: BranchSectionTitle(title: l10n.offersSection),
+          ),
+          SliverToBoxAdapter(
+            child: _OfferCarousel(
+              offers: catalog.offers,
+              isLoading: catalog.isLoading,
             ),
+          ),
+          SliverToBoxAdapter(
+            child: _LatestUpdatesTicker(
+              offers: catalog.offers,
+              newProducts: catalog.newProducts,
+              reorderRecommendations: catalog.reorderRecommendations,
+            ),
+          ),
+          if (catalog.categories.isNotEmpty) ...[
             SliverToBoxAdapter(
-              child: SizedBox(
-                height: 180,
-                child: catalog.isLoading && catalog.offers.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
-                    : ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: catalog.offers.length,
-                        separatorBuilder: (_, __) =>
-                            const SizedBox(width: 10),
-                        itemBuilder: (context, i) {
-                          final offer = catalog.offers[i];
-                          return GestureDetector(
-                            onTap: () => context.push(
-                              '/client/offer/${offer.id}',
-                              extra: offer,
-                            ),
-                            child: OfferBannerCard(offer: offer),
-                          );
-                        },
-                      ),
+              child: BranchSectionTitle(
+                title: l10n.categoriesSection,
+                icon: Icons.category_outlined,
+                iconColor: ClientColors.primary,
+                action: l10n.viewAll,
+                onAction: () => _openCatalog(context),
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 16)),
-          ],
-          if (catalog.categories.isNotEmpty) ...[
-            SliverToBoxAdapter(child: BranchSectionTitle(title: l10n.exploreCategories)),
             SliverToBoxAdapter(
               child: SizedBox(
-                height: 48,
+                height: 92,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: catalog.categories.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 4),
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
                   itemBuilder: (context, i) {
-                    final cat = catalog.categories[i];
-                    final selected = catalog.selectedCategory == cat;
-                    return FilterChip(
-                      label: Text(cat),
+                    final category = catalog.categories[i];
+                    final selected = catalog.selectedCategory == category;
+                    return _CategoryCard(
+                      label: category,
+                      icon: _categoryIcons[i % _categoryIcons.length],
                       selected: selected,
-                      onSelected: (_) => catalog.selectCategory(selected ? null : cat),
-                      showCheckmark: false,
-                      backgroundColor: BranchColors.surfaceContainerLow,
-                      selectedColor: BranchColors.primary.withValues(alpha: .15),
-                      side: BorderSide(
-                        color: selected ? BranchColors.primary : BranchColors.outlineVariant,
-                      ),
-                      labelStyle: TextStyle(
-                        color: selected ? BranchColors.primary : BranchColors.onSurfaceVariant,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
+                      onTap: () {
+                        catalog.selectCategory(selected ? null : category);
+                        _openCatalog(context, clearFilters: false);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 16)),
+          ],
+          if (catalog.newProducts.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: BranchSectionTitle(
+                title: l10n.newProductsSection,
+                icon: Icons.new_releases_outlined,
+                iconColor: ClientColors.primary,
+                action: l10n.viewAll,
+                onAction: () => _openCatalog(context),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 302,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: catalog.newProducts.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 12),
+                  itemBuilder: (context, i) {
+                    final product = catalog.newProducts[i];
+                    return SizedBox(
+                      width: 190,
+                      child: ProductCard(
+                        product: product,
+                        onTap: () =>
+                            context.push('/client/product/${product.id}'),
+                        onAdd: () => _addToCart(context, product),
                       ),
                     );
                   },
@@ -140,20 +166,43 @@ class _HomeTabState extends State<HomeTab> {
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
           ],
           SliverToBoxAdapter(
-            child: BranchSectionTitle(title: l10n.featuredProducts),
+            child: BranchSectionTitle(
+              title: l10n.featuredProducts,
+              icon: Icons.medication_outlined,
+              iconColor: ClientColors.primary,
+              action: l10n.viewAll,
+              onAction: () => _openCatalog(context),
+            ),
           ),
           if (catalog.isLoading && catalog.products.isEmpty)
-            const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
+            const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator()),
+            )
           else if (catalog.error != null && catalog.products.isEmpty)
             SliverFillRemaining(
               child: Center(
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  const Icon(Icons.error_outline_rounded, size: 48, color: BranchColors.error),
-                  const SizedBox(height: 10),
-                  Text(catalog.error!, style: Theme.of(context).textTheme.bodyMedium),
-                  const SizedBox(height: 16),
-                  FilledButton.icon(onPressed: catalog.loadProducts, icon: const Icon(Icons.refresh_rounded), label: Text(l10n.retry)),
-                ]),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error_outline_rounded,
+                      size: 48,
+                      color: ClientColors.danger,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      catalog.error!,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    FilledButton.icon(
+                      onPressed: catalog.loadProducts,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: Text(l10n.retry),
+                    ),
+                  ],
+                ),
               ),
             )
           else if (catalog.products.isEmpty)
@@ -162,20 +211,23 @@ class _HomeTabState extends State<HomeTab> {
                 margin: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                 borderRadius: 24,
                 child: Center(
-                  child: Text(l10n.noProductsFound, style: Theme.of(context).textTheme.bodyMedium),
+                  child: Text(
+                    l10n.noProductsFound,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
               ),
             )
           else
             SliverPadding(
-               padding: const EdgeInsets.fromLTRB(16, 0, 16, 148),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 148),
               sliver: SliverGrid(
-                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                   crossAxisCount: 2,
-                   crossAxisSpacing: 12,
-                   mainAxisSpacing: 12,
-                   childAspectRatio: 0.66,
-                 ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.60,
+                ),
                 delegate: SliverChildBuilderDelegate(
                   (context, i) {
                     final product = catalog.products[i];
@@ -183,40 +235,42 @@ class _HomeTabState extends State<HomeTab> {
                       product: product,
                       onTap: () =>
                           context.push('/client/product/${product.id}'),
-                      onAdd: () {
-                        context.read<CartController>().addItem(product);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(l10n.addedToCart),
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
-                      },
+                      onAdd: () => _addToCart(context, product),
                     );
                   },
-                  childCount:
-                      catalog.products.length > 4 ? 4 : catalog.products.length,
+                  childCount: catalog.products.length > 4
+                      ? 4
+                      : catalog.products.length,
                 ),
               ),
             ),
           if (catalog.reorderRecommendations.isNotEmpty) ...[
-            SliverToBoxAdapter(child: BranchSectionTitle(title: l10n.reorderSuggestions)),
+            SliverToBoxAdapter(
+              child: BranchSectionTitle(
+                title: l10n.reorderSuggestions,
+                icon: Icons.repeat_rounded,
+                iconColor: ClientColors.primary,
+              ),
+            ),
             SliverToBoxAdapter(
               child: SizedBox(
-                height: 265,
+                height: 302,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: catalog.reorderRecommendations.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 10),
+                  separatorBuilder: (_, __) => const SizedBox(width: 12),
                   itemBuilder: (context, i) {
                     final recommendation = catalog.reorderRecommendations[i];
                     return SizedBox(
                       width: 190,
                       child: ProductCard(
                         product: recommendation.product,
-                        onTap: () => context.push('/client/product/${recommendation.product.id}'),
-                        onAdd: () => context.read<CartController>().addItem(recommendation.product),
+                        onTap: () => context.push(
+                          '/client/product/${recommendation.product.id}',
+                        ),
+                        onAdd: () =>
+                            _addToCart(context, recommendation.product),
                       ),
                     );
                   },
@@ -229,34 +283,427 @@ class _HomeTabState extends State<HomeTab> {
       ),
     );
   }
+
+  void _openCatalog(BuildContext context, {bool clearFilters = true}) {
+    if (clearFilters) {
+      context.read<CatalogController>().clearFilters();
+    }
+    context.go('/client?tab=1');
+  }
+
+  void _addToCart(BuildContext context, Product product) {
+    final l10n = AppLocalizations.of(context)!;
+    context.read<CartController>().addItem(product);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n.addedToCart),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
 }
 
-class _LatestUpdatesTicker extends StatelessWidget {
-  const _LatestUpdatesTicker({required this.offers});
+const _categoryIcons = [
+  Icons.medication_outlined,
+  Icons.vaccines_outlined,
+  Icons.healing_outlined,
+  Icons.child_care_outlined,
+  Icons.sanitizer_outlined,
+];
+
+class _CategoryCard extends StatelessWidget {
+  const _CategoryCard({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: selected ? ClientColors.primary : ClientColors.surface,
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        child: Container(
+          width: 92,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: selected ? ClientColors.primary : ClientColors.outline,
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 24,
+                color: selected ? Colors.white : ClientColors.primary,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: selected ? Colors.white : ClientColors.text,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OfferCarousel extends StatefulWidget {
+  const _OfferCarousel({required this.offers, required this.isLoading});
 
   final List<PromotionalOffer> offers;
+  final bool isLoading;
+
+  @override
+  State<_OfferCarousel> createState() => _OfferCarouselState();
+}
+
+class _OfferCarouselState extends State<_OfferCarousel> {
+  late final PageController _pageController;
+  Timer? _timer;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+    _configureTimer();
+  }
+
+  @override
+  void didUpdateWidget(covariant _OfferCarousel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.offers.length != widget.offers.length) {
+      _configureTimer();
+      if (_currentPage >= widget.offers.length && widget.offers.isNotEmpty) {
+        _currentPage = 0;
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _pageController.jumpToPage(0),
+        );
+      }
+    }
+  }
+
+  void _configureTimer() {
+    _timer?.cancel();
+    if (widget.offers.length < 2) return;
+    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (!mounted || !_pageController.hasClients) return;
+      final next = (_currentPage + 1) % widget.offers.length;
+      _pageController.animateToPage(
+        next,
+        duration: const Duration(milliseconds: 550),
+        curve: Curves.easeOutCubic,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final updateText = offers
+    if (widget.isLoading && widget.offers.isEmpty) {
+      return const SizedBox(
+        height: 218,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (widget.offers.isEmpty) {
+      return Container(
+        height: 112,
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: ClientColors.surfaceMuted,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: ClientColors.outline),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.local_offer_outlined, color: ClientColors.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                l10n.noOffersFound,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: ClientColors.textMuted,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        SizedBox(
+          height: 218,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: widget.offers.length,
+            onPageChanged: (index) => setState(() => _currentPage = index),
+            itemBuilder: (context, index) {
+              final offer = widget.offers[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: _OfferSlide(
+                  offer: offer,
+                  onTap: () =>
+                      context.push('/client/offer/${offer.id}', extra: offer),
+                ),
+              );
+            },
+          ),
+        ),
+        if (widget.offers.length > 1)
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (var i = 0; i < widget.offers.length; i++)
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 220),
+                    width: i == _currentPage ? 22 : 7,
+                    height: 7,
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                    decoration: BoxDecoration(
+                      color: i == _currentPage
+                          ? ClientColors.primary
+                          : ClientColors.outline,
+                      borderRadius: BorderRadius.circular(99),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _OfferSlide extends StatelessWidget {
+  const _OfferSlide({required this.offer, required this.onTap});
+
+  final PromotionalOffer offer;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: ClientColors.navy,
+      borderRadius: BorderRadius.circular(24),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            if (offer.imageUrl != null)
+              Image.network(
+                offer.imageUrl!,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+              ),
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, Color(0xCC102A43)],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (offer.discountText?.trim().isNotEmpty == true)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: ClientColors.primary,
+                        borderRadius: BorderRadius.circular(99),
+                      ),
+                      child: Text(
+                        offer.discountText!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 8),
+                  Text(
+                    offer.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  if (offer.description?.trim().isNotEmpty == true) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      offer.description!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.viewOffer,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      const Icon(
+                        Icons.arrow_forward_rounded,
+                        color: Colors.white,
+                        size: 17,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LatestUpdatesTicker extends StatefulWidget {
+  const _LatestUpdatesTicker({
+    required this.offers,
+    required this.newProducts,
+    required this.reorderRecommendations,
+  });
+
+  final List<PromotionalOffer> offers;
+  final List<Product> newProducts;
+  final List<ReorderRecommendation> reorderRecommendations;
+
+  @override
+  State<_LatestUpdatesTicker> createState() => _LatestUpdatesTickerState();
+}
+
+class _LatestUpdatesTickerState extends State<_LatestUpdatesTicker> {
+  final _scrollController = ScrollController();
+  Timer? _timer;
+
+  List<String> _contentFor(_LatestUpdatesTicker value) => [
+    ...value.offers
         .take(3)
         .map(
           (offer) => [
             offer.title,
-            if (offer.discountText != null) offer.discountText!,
+            if (offer.discountText?.trim().isNotEmpty == true)
+              offer.discountText!,
           ].join(' — '),
-        )
-        .join('   •   ');
+        ),
+    ...value.newProducts.take(3).map((product) => product.name),
+    ...value.reorderRecommendations
+        .take(2)
+        .map((recommendation) => recommendation.product.name),
+  ];
 
+  List<String> get _content => _contentFor(widget);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _startScrolling());
+  }
+
+  @override
+  void didUpdateWidget(covariant _LatestUpdatesTicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_contentFor(oldWidget).join('|') != _content.join('|')) {
+      _timer?.cancel();
+      WidgetsBinding.instance.addPostFrameCallback((_) => _startScrolling());
+    }
+  }
+
+  void _startScrolling() {
+    if (!mounted || !_scrollController.hasClients) return;
+    if (_scrollController.position.maxScrollExtent <= 0) return;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 4), (_) async {
+      if (!mounted || !_scrollController.hasClients) return;
+      final max = _scrollController.position.maxScrollExtent;
+      final target = _scrollController.offset >= max - 2 ? 0.0 : max;
+      await _scrollController.animateTo(
+        target,
+        duration: const Duration(seconds: 3),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final text = _content.isEmpty ? l10n.noUpdates : _content.join('   •   ');
     return Container(
       height: 42,
-      margin: const EdgeInsets.fromLTRB(16, 2, 16, 10),
+      margin: const EdgeInsets.fromLTRB(16, 2, 16, 16),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .82),
+        color: ClientColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: BranchColors.outlineVariant),
+        border: Border.all(color: ClientColors.outline),
       ),
       child: Row(
         children: [
@@ -264,28 +711,28 @@ class _LatestUpdatesTicker extends StatelessWidget {
             height: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 12),
             alignment: Alignment.center,
-            color: BranchColors.primary.withValues(alpha: .10),
+            color: ClientColors.primarySoft,
             child: Text(
               l10n.latestUpdates,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: BranchColors.primary,
-                    fontWeight: FontWeight.w800,
-                  ),
+                color: ClientColors.primaryDark,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               scrollDirection: Axis.horizontal,
-              reverse: true,
+              reverse: Directionality.of(context) == TextDirection.rtl,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Text(
-                updateText,
+                text,
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: BranchColors.onSurfaceVariant,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  color: ClientColors.textMuted,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -294,4 +741,3 @@ class _LatestUpdatesTicker extends StatelessWidget {
     );
   }
 }
-

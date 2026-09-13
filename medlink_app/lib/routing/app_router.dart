@@ -99,7 +99,10 @@ GoRouter buildRouter(AuthController authController) {
       // ── Client ───────────────────────────────────────────────────────────
       GoRoute(
         path: '/client',
-        builder: (context, state) => const ClientHomeShell(),
+        builder: (context, state) => ClientHomeShell(
+          initialIndex:
+              int.tryParse(state.uri.queryParameters['tab'] ?? '') ?? 0,
+        ),
         routes: [
           GoRoute(
             path: 'product/:id',

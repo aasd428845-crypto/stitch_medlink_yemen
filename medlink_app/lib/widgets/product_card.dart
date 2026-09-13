@@ -62,13 +62,13 @@ class ProductCard extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: BranchColors.secondaryContainer.withValues(alpha: .7),
+                        color: ClientColors.primarySoft,
                         borderRadius: BorderRadius.circular(AppRadius.full),
                       ),
                       child: Text(
                         product.category,
                         style: theme.textTheme.labelMedium?.copyWith(
-                          color: BranchColors.onSecondaryContainer,
+                          color: ClientColors.primaryDark,
                           fontWeight: FontWeight.w700,
                         ),
                         maxLines: 1,
@@ -100,6 +100,30 @@ class ProductCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
+                    if (product.nameEn?.trim().isNotEmpty == true) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        product.nameEn!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: ClientColors.textMuted,
+                          fontSize: 11,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                    if (product.dosageForm?.trim().isNotEmpty == true) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        '${product.dosageForm} · ${product.unit}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: ClientColors.textMuted,
+                          fontSize: 11,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -119,7 +143,7 @@ class ProductCard extends StatelessWidget {
                       '${product.unitPrice.toStringAsFixed(0)} ر.ي',
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: BranchColors.primary,
+                        color: ClientColors.primary,
                       ),
                     ),
                     SizedBox(
@@ -152,10 +176,7 @@ class ProductCard extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            BranchColors.secondaryContainer,
-            BranchColors.glassBackgroundEnd,
-          ],
+          colors: [ClientColors.primarySoft, ClientColors.surfaceMuted],
         ),
       ),
       child: Center(
@@ -169,7 +190,7 @@ class ProductCard extends StatelessWidget {
           child: const Icon(
             Icons.medication_liquid_rounded,
             size: 30,
-            color: BranchColors.primary,
+            color: ClientColors.primary,
           ),
         ),
       ),

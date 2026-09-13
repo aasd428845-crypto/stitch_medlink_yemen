@@ -1,0 +1,148 @@
+============
+2. INTERACTIVE OFFER CAROUSEL
+==================================================
+
+At the top of Home, implement an interactive promotional banner/carousel.
+
+Important:
+
+The banner MUST use REAL promotional offers loaded from the existing system.
+
+Do NOT hardcode offers.
+
+Use the existing:
+- promotional_offers
+- offer service
+- product relationship
+- target governorate
+- start/end dates
+- active status
+
+where applicable.
+
+Each slide can show:
+- offer image when available
+- offer title
+- discount percentage OR special price
+- related product information when available
+- short description
+- CTA to open the related product/offer
+
+The carousel should:
+- automatically rotate
+- support swipe
+- show pagination indicators
+- allow tapping a slide
+- stop behaving like a static image
+- handle 1 offer correctly
+- handle multiple offers correctly
+- handle no offers with a clean empty state
+
+DO NOT create fake offers.
+
+==================================================
+3. MOVING INFORMATION TICKER
+==================================================
+
+Immediately below the offer carousel create a small horizontal moving ticker.
+
+Purpose:
+
+Show useful commercial information such as:
+- new products
+- products with increasing customer interest
+- products with active offers
+- important promotional messages
+
+IMPORTANT:
+
+Do not invent an AI demand system that does not exist yet.
+
+Use only information that can actually be derived from existing data.
+
+If customer purchase history/reorder data already exists, use it where appropriate.
+
+The architecture should allow future demand-intelligence data to be plugged into this ticker without redesigning the Home screen.
+
+The ticker must:
+- be compact
+- be readable
+- support RTL
+- animate smoothly
+- not interfere with scrolling
+- have a fallback when there is no ticker content
+
+==================================================
+4. CATEGORIES
+==================================================
+
+Redesign the category section.
+
+Use REAL categories from the existing catalog service/database.
+
+Do not hardcode category names if the existing system already loads them dynamically.
+
+Requirements:
+- modern compact category cards
+- clear icon/visual
+- Arabic RTL
+- horizontal scrolling where appropriate
+- "View all" action
+- selecting a category opens the existing Products screen with that category filter
+
+Do not break existing category filtering.
+
+==================================================
+5. NEW PRODUCTS
+==================================================
+
+Create a modern "New Products" section.
+
+Products must come from the existing products service/database.
+
+Use the actual fields available in the existing product model/database.
+
+Known existing product fields include, where available:
+- name
+- name_en
+- description
+- category
+- manufacturer
+- dosage_form
+- unit
+- unit_price
+- image_url
+- is_active
+
+IMPORTANT:
+Only display a field if it actually exists and is available for the product.
+
+Do NOT invent:
+- scientific name
+- strength
+- active ingredient
+- barcode
+- expiry
+- batch number
+etc.
+unless those fields are actually present in the current database/model.
+
+Product card should be significantly more modern than the old design.
+
+It should clearly show:
+- product image
+- product name
+- English name if available
+- category
+- manufacturer if available
+- dosage form
+- unit
+- price
+- stock availability if available to the client
+- active offer indicator when applicable
+- product details action
+- add-to-cart action
+
+Images must use the actual image_url from the database.
+
+Handle missing images gracefully with a professional medical placeholder.
