@@ -416,6 +416,12 @@ abstract class AppLocalizations {
   /// **'حسابي'**
   String get clientProfileLabel;
 
+  /// No description provided for @clientAccountContext.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب العميل'**
+  String get clientAccountContext;
+
   /// No description provided for @branchDashboardLabel.
   ///
   /// In ar, this message translates to:

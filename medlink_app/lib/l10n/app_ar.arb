@@ -63,6 +63,7 @@
   "clientCatalogLabel": "الكتالوج",
   "clientOrdersLabel": "طلباتي",
   "clientProfileLabel": "حسابي",
+  "clientAccountContext": "حساب العميل",
 
   "branchDashboardLabel": "لوحة التحكم",
   "branchOrdersLabel": "الطلبات",

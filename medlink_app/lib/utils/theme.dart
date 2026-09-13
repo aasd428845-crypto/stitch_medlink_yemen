@@ -210,6 +210,28 @@ class BranchColors {
   static const orbPeach = Color(0xFFFFE3C7);
 }
 
+/// Light clinical tokens for the client-facing experience.
+///
+/// Keep client screens separate from the branch manager palette so a future
+/// white-label deployment can replace the client brand without changing
+/// operational screens.
+class ClientColors {
+  ClientColors._();
+
+  static const background = Color(0xFFF5F8F8);
+  static const surface = Color(0xFFFFFFFF);
+  static const surfaceMuted = Color(0xFFEFF4F4);
+  static const primary = Color(0xFF0F766E);
+  static const primaryDark = Color(0xFF0B4F4A);
+  static const primarySoft = Color(0xFFDDF3F0);
+  static const navy = Color(0xFF102A43);
+  static const text = Color(0xFF183B56);
+  static const textMuted = Color(0xFF66788A);
+  static const outline = Color(0xFFD7E2E2);
+  static const success = Color(0xFF16805C);
+  static const danger = Color(0xFFC53030);
+}
+
 class AppRadius {
   AppRadius._();
   static const sm = 4.0;
@@ -442,6 +464,41 @@ class AppTheme {
   /// Kept as an alias so older screens that still reference `light` can be
   /// migrated incrementally without creating a second visual language.
   static ThemeData get light => dark;
+
+  /// Light clinical theme for the client-facing experience.
+  static ThemeData get clientLight {
+    final base = branchManagerLight;
+    final scheme = base.colorScheme.copyWith(
+      primary: ClientColors.primary,
+      onPrimary: Colors.white,
+      primaryContainer: ClientColors.primarySoft,
+      onPrimaryContainer: ClientColors.primaryDark,
+      secondary: ClientColors.navy,
+      onSecondary: Colors.white,
+      surface: ClientColors.surface,
+      onSurface: ClientColors.text,
+      surfaceContainerLowest: ClientColors.surface,
+      surfaceContainerLow: ClientColors.surfaceMuted,
+      surfaceContainer: ClientColors.surfaceMuted,
+      outline: ClientColors.outline,
+      outlineVariant: ClientColors.outline,
+    );
+
+    return base.copyWith(
+      colorScheme: scheme,
+      scaffoldBackgroundColor: ClientColors.background,
+      appBarTheme: base.appBarTheme.copyWith(
+        backgroundColor: ClientColors.surface,
+        foregroundColor: ClientColors.text,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+      ),
+      textTheme: base.textTheme.apply(
+        bodyColor: ClientColors.text,
+        displayColor: ClientColors.text,
+      ),
+    );
+  }
 
   /// Light theme for the branch-manager area, matching the approved design.
   /// Applied by wrapping the branch shell body in `Theme(data: …)`; every

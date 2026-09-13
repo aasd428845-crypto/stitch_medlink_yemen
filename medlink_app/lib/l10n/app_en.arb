@@ -63,6 +63,7 @@
   "clientCatalogLabel": "Catalog",
   "clientOrdersLabel": "My Orders",
   "clientProfileLabel": "Account",
+  "clientAccountContext": "Client account",
 
   "branchDashboardLabel": "Dashboard",
   "branchOrdersLabel": "Orders",

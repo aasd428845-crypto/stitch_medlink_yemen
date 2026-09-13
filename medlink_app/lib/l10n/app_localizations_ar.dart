@@ -178,6 +178,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get clientProfileLabel => 'حسابي';
 
   @override
+  String get clientAccountContext => 'حساب العميل';
+
+  @override
   String get branchDashboardLabel => 'لوحة التحكم';
 
   @override

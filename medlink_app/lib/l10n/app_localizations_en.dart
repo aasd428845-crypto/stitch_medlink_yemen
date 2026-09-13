@@ -180,6 +180,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clientProfileLabel => 'Account';
 
   @override
+  String get clientAccountContext => 'Client account';
+
+  @override
   String get branchDashboardLabel => 'Dashboard';
 
   @override

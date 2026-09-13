@@ -1,12 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../../utils/theme.dart';
 import '../branch_manager/branch_manager_design.dart';
 
-/// Glass surface card for client screens — uses BranchColors tokens only.
-/// Rule: NO raw Color() here; all tokens come from BranchColors / AppColors.
+/// Surface card for client screens — uses the clinical client tokens.
 class ClientDesignSurface extends StatelessWidget {
   const ClientDesignSurface({
     super.key,
@@ -30,8 +27,7 @@ class ClientDesignSurface extends StatelessWidget {
   }
 }
 
-/// Gradient hero banner for the client role.
-/// Uses the same glassHeroGradient (violet→pink→sky) as branch manager.
+/// Trustworthy hero banner for the client role.
 class ClientHero extends StatelessWidget {
   const ClientHero({
     super.key,
@@ -55,46 +51,23 @@ class ClientHero extends StatelessWidget {
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
           stops: [0.0, 0.5, 1.0],
-          colors: BranchColors.glassHeroGradient,
+          colors: [
+            ClientColors.primaryDark,
+            ClientColors.primary,
+            ClientColors.navy,
+          ],
         ),
         boxShadow: [
           BoxShadow(
-            color: BranchColors.glassHeroGradient.first.withValues(alpha: .35),
-            blurRadius: 36,
-            offset: const Offset(0, 14),
+            color: ClientColors.navy.withValues(alpha: .14),
+            blurRadius: 22,
+            offset: Offset(0, 10),
           ),
         ],
       ),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Decorative overlay circles
-          Positioned(
-            top: -40,
-            left: -20,
-            child: Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: .09),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -30,
-            right: -30,
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: .07),
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
               // Badge
               Container(
                 padding:
@@ -151,8 +124,6 @@ class ClientHero extends StatelessWidget {
                       height: 1.5,
                     ),
               ),
-            ],
-          ),
         ],
       ),
     );
@@ -178,25 +149,21 @@ class ClientSearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: TextField(
+      child: TextField(
             controller: controller,
             onSubmitted: onSubmitted,
             onChanged: onChanged,
             textInputAction: TextInputAction.search,
             style: TextStyle(
-              color: BranchColors.onSurface,
+              color: ClientColors.text,
               fontWeight: FontWeight.w600,
             ),
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle:
-                  TextStyle(color: BranchColors.onSurfaceVariant),
+                  TextStyle(color: ClientColors.textMuted),
               prefixIcon:
-                  Icon(Icons.search_rounded, color: BranchColors.primary),
+                  Icon(Icons.search_rounded, color: ClientColors.primary),
               suffixIcon: controller.text.isEmpty
                   ? null
                   : IconButton(
@@ -207,23 +174,20 @@ class ClientSearchField extends StatelessWidget {
                       },
                     ),
               filled: true,
-              fillColor: Colors.white.withValues(alpha: .75),
+              fillColor: ClientColors.surface,
               contentPadding: const EdgeInsets.symmetric(
                   vertical: 15, horizontal: 16),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: BorderSide(
-                    color: BranchColors.outlineVariant
-                        .withValues(alpha: .5)),
+                    color: ClientColors.outline),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide:
-                    BorderSide(color: BranchColors.primary, width: 1.4),
+                    BorderSide(color: ClientColors.primary, width: 1.4),
               ),
             ),
-          ),
-        ),
       ),
     );
   }
