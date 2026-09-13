@@ -1,0 +1,72 @@
+You are now implementing the new MedLink Yemen Client UI design.
+
+IMPORTANT PROJECT RULES — MUST FOLLOW:
+
+1. DO NOT rebuild the project from scratch.
+2. DO NOT create a new Flutter project.
+3. DO NOT replace the existing architecture.
+4. DO NOT delete existing business logic.
+5. DO NOT remove existing features just because the UI is being redesigned.
+6. The HTML prototype is a VISUAL DESIGN REFERENCE ONLY. It is NOT the source of truth for database fields or business logic.
+7. Before changing code, inspect the ACTUAL existing code and database structure.
+8. You MUST review BOTH repositories before implementation:
+   - Flutter/mobile:
+     aasd428845-crypto/stitch_medlink_yemen
+   - Web/PWA/Admin:
+     aasd428845-crypto/Medlik-Waap
+9. Check the existing Supabase/PostgreSQL schema, migrations, models, services, RLS policies and existing queries.
+10. Existing features must continue using real Supabase data. DO NOT replace them with mock/static data.
+11. Do not invent database fields that do not exist.
+12. Do not change database schema in this phase unless absolutely required and explicitly justified.
+13. Keep the architecture ready for future Windows Desktop and white-label pharmaceutical-company branding.
+14. Do not hardcode the MedLink colors throughout individual widgets. Use the existing/shared theme/design-token architecture or improve it so branding can later be changed per organization.
+15. After implementation, review the Flutter repository AGAIN and verify that nothing was broken.
+16. Also review the Web repository and database compatibility after the Flutter changes.
+
+==================================================
+PHASE 1 — CLIENT HOME SCREEN
+==================================================
+
+Implement ONLY the new visual/UX design for the CLIENT HOME interface first.
+
+Before editing:
+
+A. Inspect the existing Flutter Home screen and identify:
+- current widgets
+- providers/state management
+- services
+- Supabase queries
+- models
+- navigation
+- loading states
+- empty states
+- error states
+- offer loading
+- category loading
+- product loading
+- reorder/recommendation logic
+- notification count
+- cart behavior
+- authentication/client context
+
+B. Inspect:
+- catalog_service.dart
+- product models
+- promotional offer models
+- order/purchase-history logic
+- notification logic
+- existing theme/design components
+- any shared client UI components
+
+C. Inspect the Web/Admin repository to verify how administrators currently create/manage:
+- products
+- product images
+- categories
+- promotional offers
+- discount percentage
+- special price
+- offer dates
+- target governorate
+- product activation
+
+The client UI must reflect the REAL fields and behavior already supported by the system.

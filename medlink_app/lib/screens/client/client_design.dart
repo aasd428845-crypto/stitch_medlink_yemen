@@ -33,17 +33,16 @@ class ClientDesignSurface extends StatelessWidget {
 /// Gradient hero banner for the client role.
 /// Uses the same glassHeroGradient (violet→pink→sky) as branch manager.
 class ClientHero extends StatelessWidget {
-  const ClientHero({super.key, required this.name, required this.subtitle});
+  const ClientHero({
+    super.key,
+    required this.name,
+    required this.subtitle,
+    required this.greeting,
+  });
 
   final String name;
   final String subtitle;
-
-  String get _greeting {
-    final h = DateTime.now().hour;
-    if (h < 12) return 'صباح الخير ☀️';
-    if (h < 17) return 'مساء النشاط 💊';
-    return 'مساء الخير 🌙';
-  }
+  final String greeting;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +126,7 @@ class ClientHero extends StatelessWidget {
               ),
               const SizedBox(height: 14),
               Text(
-                _greeting,
+                greeting,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.white.withValues(alpha: .85),
                       fontWeight: FontWeight.w500,
@@ -166,10 +165,14 @@ class ClientSearchField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.onSubmitted,
+    this.onChanged,
+    this.hintText,
   });
 
   final TextEditingController controller;
   final ValueChanged<String> onSubmitted;
+  final ValueChanged<String>? onChanged;
+  final String? hintText;
 
   @override
   Widget build(BuildContext context) {
@@ -182,17 +185,18 @@ class ClientSearchField extends StatelessWidget {
           child: TextField(
             controller: controller,
             onSubmitted: onSubmitted,
+            onChanged: onChanged,
             textInputAction: TextInputAction.search,
             style: TextStyle(
               color: BranchColors.onSurface,
               fontWeight: FontWeight.w600,
             ),
             decoration: InputDecoration(
-              hintText: 'البحث في الأدوية والمنتجات',
+              hintText: hintText,
               hintStyle:
                   TextStyle(color: BranchColors.onSurfaceVariant),
-              prefixIcon: Icon(Icons.search_rounded,
-                  color: BranchColors.primary),
+              prefixIcon:
+                  Icon(Icons.search_rounded, color: BranchColors.primary),
               suffixIcon: controller.text.isEmpty
                   ? null
                   : IconButton(

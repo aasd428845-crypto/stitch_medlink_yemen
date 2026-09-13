@@ -1,10 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../models/promotional_offer.dart';
 import '../../services/auth_controller.dart';
 import '../../services/cart_controller.dart';
 import '../../services/catalog_controller.dart';
@@ -54,10 +53,31 @@ class _HomeTabState extends State<HomeTab> {
       },
       child: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: ClientHero(name: userName, subtitle: l10n.homeSubtitle)),
-          SliverToBoxAdapter(child: ClientSearchField(controller: _searchController, onSubmitted: catalog.updateSearch)),
+          SliverToBoxAdapter(
+            child: ClientHero(
+              name: userName,
+              subtitle: l10n.homeSubtitle,
+              greeting: l10n.homeGreeting,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: ClientSearchField(
+              controller: _searchController,
+              hintText: l10n.searchHint,
+              onSubmitted: catalog.updateSearch,
+              onChanged: catalog.updateSearch,
+            ),
+          ),
+          if (catalog.offers.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: _LatestUpdatesTicker(offers: catalog.offers),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 6)),
+          ],
           if (catalog.offers.isNotEmpty || catalog.isLoading) ...[
-            SliverToBoxAdapter(child: BranchSectionTitle(title: l10n.offersSection)),
+            SliverToBoxAdapter(
+              child: BranchSectionTitle(title: l10n.offersSection),
+            ),
             SliverToBoxAdapter(
               child: SizedBox(
                 height: 180,
@@ -67,11 +87,15 @@ class _HomeTabState extends State<HomeTab> {
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: catalog.offers.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 10),
+                        separatorBuilder: (_, __) =>
+                            const SizedBox(width: 10),
                         itemBuilder: (context, i) {
                           final offer = catalog.offers[i];
                           return GestureDetector(
-                            onTap: () => context.push('/client/offer/${offer.id}', extra: offer),
+                            onTap: () => context.push(
+                              '/client/offer/${offer.id}',
+                              extra: offer,
+                            ),
                             child: OfferBannerCard(offer: offer),
                           );
                         },
@@ -115,7 +139,9 @@ class _HomeTabState extends State<HomeTab> {
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
           ],
-          SliverToBoxAdapter(child: BranchSectionTitle(title: l10n.catalogTitle)),
+          SliverToBoxAdapter(
+            child: BranchSectionTitle(title: l10n.featuredProducts),
+          ),
           if (catalog.isLoading && catalog.products.isEmpty)
             const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
           else if (catalog.error != null && catalog.products.isEmpty)
@@ -150,17 +176,27 @@ class _HomeTabState extends State<HomeTab> {
                    mainAxisSpacing: 12,
                    childAspectRatio: 0.66,
                  ),
-                delegate: SliverChildBuilderDelegate((context, i) {
-                  final product = catalog.products[i];
-                  return ProductCard(
-                    product: product,
-                    onTap: () => context.push('/client/product/${product.id}'),
-                    onAdd: () {
-                      context.read<CartController>().addItem(product);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.addedToCart), duration: const Duration(seconds: 1)));
-                    },
-                  );
-                }, childCount: catalog.products.length),
+                delegate: SliverChildBuilderDelegate(
+                  (context, i) {
+                    final product = catalog.products[i];
+                    return ProductCard(
+                      product: product,
+                      onTap: () =>
+                          context.push('/client/product/${product.id}'),
+                      onAdd: () {
+                        context.read<CartController>().addItem(product);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(l10n.addedToCart),
+                            duration: const Duration(seconds: 1),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  childCount:
+                      catalog.products.length > 4 ? 4 : catalog.products.length,
+                ),
               ),
             ),
           if (catalog.reorderRecommendations.isNotEmpty) ...[
@@ -189,6 +225,70 @@ class _HomeTabState extends State<HomeTab> {
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class _LatestUpdatesTicker extends StatelessWidget {
+  const _LatestUpdatesTicker({required this.offers});
+
+  final List<PromotionalOffer> offers;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final updateText = offers
+        .take(3)
+        .map(
+          (offer) => [
+            offer.title,
+            if (offer.discountText != null) offer.discountText!,
+          ].join(' — '),
+        )
+        .join('   •   ');
+
+    return Container(
+      height: 42,
+      margin: const EdgeInsets.fromLTRB(16, 2, 16, 10),
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: .82),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: BranchColors.outlineVariant),
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            alignment: Alignment.center,
+            color: BranchColors.primary.withValues(alpha: .10),
+            child: Text(
+              l10n.latestUpdates,
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: BranchColors.primary,
+                    fontWeight: FontWeight.w800,
+                  ),
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              reverse: true,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                updateText,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: BranchColors.onSurfaceVariant,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+          ),
         ],
       ),
     );

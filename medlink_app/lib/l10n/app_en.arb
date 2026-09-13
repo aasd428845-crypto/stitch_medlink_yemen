@@ -108,11 +108,12 @@
 
   "homeGreeting": "Hello",
   "homeSubtitle": "What do you need today?",
+  "latestUpdates": "Latest updates",
+  "featuredProducts": "Featured products",
   "offersSection": "Promotional Offers",
   "noOffersFound": "No offers available at the moment",
   "viewOffer": "View Details",
   "categoriesSection": "Browse by Category",
-  "featuredProducts": "Featured Products",
   "quickReorder": "You may need to reorder soon",
 
   "catalogTitle": "Catalog",

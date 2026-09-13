@@ -108,11 +108,12 @@
 
   "homeGreeting": "مرحباً",
   "homeSubtitle": "ما الذي تحتاجه اليوم؟",
+  "latestUpdates": "آخر المستجدات",
+  "featuredProducts": "منتجات مميزة",
   "offersSection": "العروض الترويجية",
   "noOffersFound": "لا توجد عروض متاحة حالياً",
   "viewOffer": "عرض التفاصيل",
   "categoriesSection": "التصفح حسب الفئة",
-  "featuredProducts": "منتجات مميزة",
   "quickReorder": "قد تحتاج إعادة طلبها قريباً",
 
   "catalogTitle": "الكتالوج",

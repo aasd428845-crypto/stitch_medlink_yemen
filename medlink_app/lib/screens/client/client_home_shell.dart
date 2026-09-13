@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../services/cart_controller.dart';
+import '../../services/notification_controller.dart';
 import '../../utils/theme.dart';
 import '../branch_manager/branch_floating_bottom_bar.dart';
 import '../branch_manager/branch_manager_design.dart';
@@ -49,6 +50,25 @@ class _ClientHomeShellState extends State<ClientHomeShell> {
             scrolledUnderElevation: 0,
             title: Text(tabDefs[_index].$1),
             actions: [
+              Builder(
+                builder: (context) {
+                  final unread =
+                      context.watch<NotificationController>().unreadCount;
+                  return IconButton(
+                    tooltip: l10n.notificationsTitle,
+                    icon: Badge(
+                      isLabelVisible: unread > 0,
+                      backgroundColor: BranchColors.danger,
+                      label: Text(
+                        unread > 9 ? '9+' : '$unread',
+                        style: const TextStyle(color: BranchColors.onPrimary),
+                      ),
+                      child: const Icon(LucideIcons.bell),
+                    ),
+                    onPressed: () => context.push('/notifications'),
+                  );
+                },
+              ),
               IconButton(
                 icon: Badge(
                   isLabelVisible: cart.totalItemCount > 0,

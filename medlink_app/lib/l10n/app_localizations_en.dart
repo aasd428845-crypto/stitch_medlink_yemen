@@ -294,6 +294,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeSubtitle => 'What do you need today?';
 
   @override
+  String get latestUpdates => 'Latest updates';
+
+  @override
+  String get featuredProducts => 'Featured products';
+
+  @override
   String get offersSection => 'Promotional Offers';
 
   @override
@@ -304,9 +310,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get categoriesSection => 'Browse by Category';
-
-  @override
-  String get featuredProducts => 'Featured Products';
 
   @override
   String get quickReorder => 'You may need to reorder soon';

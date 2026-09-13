@@ -644,6 +644,18 @@ abstract class AppLocalizations {
   /// **'ما الذي تحتاجه اليوم؟'**
   String get homeSubtitle;
 
+  /// No description provided for @latestUpdates.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر المستجدات'**
+  String get latestUpdates;
+
+  /// No description provided for @featuredProducts.
+  ///
+  /// In ar, this message translates to:
+  /// **'منتجات مميزة'**
+  String get featuredProducts;
+
   /// No description provided for @offersSection.
   ///
   /// In ar, this message translates to:
@@ -667,12 +679,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'التصفح حسب الفئة'**
   String get categoriesSection;
-
-  /// No description provided for @featuredProducts.
-  ///
-  /// In ar, this message translates to:
-  /// **'منتجات مميزة'**
-  String get featuredProducts;
 
   /// No description provided for @quickReorder.
   ///

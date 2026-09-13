@@ -292,6 +292,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeSubtitle => 'ما الذي تحتاجه اليوم؟';
 
   @override
+  String get latestUpdates => 'آخر المستجدات';
+
+  @override
+  String get featuredProducts => 'منتجات مميزة';
+
+  @override
   String get offersSection => 'العروض الترويجية';
 
   @override
@@ -302,9 +308,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get categoriesSection => 'التصفح حسب الفئة';
-
-  @override
-  String get featuredProducts => 'منتجات مميزة';
 
   @override
   String get quickReorder => 'قد تحتاج إعادة طلبها قريباً';
