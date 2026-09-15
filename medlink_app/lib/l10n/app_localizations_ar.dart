@@ -322,6 +322,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noUpdates => 'لا توجد مستجدات حالياً';
 
   @override
+  String get noCategoriesFound => 'لا توجد فئات متاحة حالياً';
+
+  @override
+  String get noNewProducts => 'لا توجد منتجات جديدة حالياً';
+
+  @override
+  String get noReorderRecommendations =>
+      'ستظهر اقتراحات إعادة الطلب بعد توفر سجل شراء كافٍ';
+
+  @override
+  String get currentOffersSection => 'العروض الحالية';
+
+  @override
   String get quickReorder => 'قد تحتاج إعادة طلبها قريباً';
 
   @override

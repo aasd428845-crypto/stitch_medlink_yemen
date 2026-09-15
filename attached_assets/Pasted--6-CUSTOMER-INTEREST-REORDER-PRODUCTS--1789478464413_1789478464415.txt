@@ -1,0 +1,110 @@
+==================================================
+6. CUSTOMER INTEREST / REORDER PRODUCTS
+==================================================
+
+The existing Flutter project has purchase-history/reorder logic.
+
+Inspect it carefully.
+
+If existing purchase-history data can support a "Recommended for you" or "Frequently ordered" section, integrate it into the new Home design.
+
+Do NOT create fake recommendation algorithms.
+
+Use the existing logic first.
+
+Architect the UI so that future demand intelligence can replace/extend the recommendation source without redesigning the component.
+
+==================================================
+7. CURRENT OFFERS SECTION
+==================================================
+
+Create a polished current-offers section below products/recommendations.
+
+Use real active offers.
+
+Respect:
+- start_date
+- end_date
+- is_active
+- target_governorate
+- discount_percent
+- special_price
+- product relationship
+
+Do not display expired offers.
+
+Offer cards should link to the actual related product/offer detail flow.
+
+==================================================
+8. LOADING / EMPTY / ERROR STATES
+==================================================
+
+Every dynamic Home section must have proper states.
+
+Implement/retain:
+- skeleton/loading state
+- empty state
+- error state
+- retry action where appropriate
+
+Do NOT leave blank areas while data is loading.
+
+Do NOT show fake numbers or fake content as a substitute for failed database loading.
+
+==================================================
+9. PERFORMANCE
+==================================================
+
+The current project has had complaints about slow navigation.
+
+Therefore:
+
+- Avoid unnecessary database requests.
+- Do not repeatedly fetch the same data when it can be reused.
+- Preserve existing caching/state mechanisms if present.
+- Avoid rebuilding the entire Home unnecessarily.
+- Optimize product images.
+- Avoid expensive animations.
+- Keep carousel and ticker animations lightweight.
+- Do not block the UI while loading.
+
+==================================================
+10. DESIGN SYSTEM
+==================================================
+
+Before styling many widgets, identify the existing design system.
+
+If the current design system is inconsistent, consolidate the CLIENT HOME styling into reusable tokens/components.
+
+Prefer reusable concepts such as:
+
+AppColors
+AppTypography
+AppSpacing
+AppRadius
+AppShadows
+
+and reusable components such as:
+
+- ClientHeader
+- OfferCarousel
+- NewsTicker
+- CategoryCard
+- ProductCard
+- OfferCard
+- SectionHeader
+- LoadingSkeleton
+- EmptyState
+- ErrorState
+
+Do not create unnecessary duplicate components if equivalent reusable components already exist.
+
+The design must be future-ready for white-label deployment.
+
+A pharmaceutical company may later require:
+- different logo
+- different colors
+- different company name
+- different splash branding
+
+Therefore avoid hardcoding MedLink branding into every component

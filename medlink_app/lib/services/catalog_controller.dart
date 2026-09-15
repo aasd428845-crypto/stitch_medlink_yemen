@@ -29,12 +29,24 @@ class CatalogController extends ChangeNotifier {
 
   List<Product> _newProducts = [];
   List<Product> get newProducts => _newProducts;
+  bool _newProductsLoading = false;
+  bool get newProductsLoading => _newProductsLoading;
+  String? _newProductsError;
+  String? get newProductsError => _newProductsError;
 
   List<PromotionalOffer> _offers = [];
   List<PromotionalOffer> get offers => _offers;
+  bool _offersLoading = false;
+  bool get offersLoading => _offersLoading;
+  String? _offersError;
+  String? get offersError => _offersError;
 
   List<String> _categories = [];
   List<String> get categories => _categories;
+  bool _categoriesLoading = false;
+  bool get categoriesLoading => _categoriesLoading;
+  String? _categoriesError;
+  String? get categoriesError => _categoriesError;
 
   String? _selectedCategory;
   String? get selectedCategory => _selectedCategory;
@@ -51,18 +63,28 @@ class CatalogController extends ChangeNotifier {
   List<ReorderRecommendation> _reorderRecommendations = [];
   List<ReorderRecommendation> get reorderRecommendations =>
       _reorderRecommendations;
+  bool _reorderLoading = false;
+  bool get reorderLoading => _reorderLoading;
+  String? _reorderError;
+  String? get reorderError => _reorderError;
 
   bool _initialized = false;
+  bool get isInitialized => _initialized;
 
   // ── Actions ───────────────────────────────────────────────────────────────
 
   /// Call once on first entering the client home area.
   Future<void> initialize() async {
     if (_initialized) return;
-    await loadProducts();
-    await Future.wait([loadOffers(), loadCategories(), loadNewProducts()]);
+    await Future.wait([
+      loadProducts(),
+      loadOffers(),
+      loadCategories(),
+      loadNewProducts(),
+    ]);
     await loadReorderRecommendations();
     _initialized = true;
+    notifyListeners();
   }
 
   Future<void> loadProducts() async {
@@ -81,19 +103,31 @@ class CatalogController extends ChangeNotifier {
   }
 
   Future<void> loadOffers() async {
+    _offersLoading = true;
+    _offersError = null;
+    notifyListeners();
     try {
       _offers = await _service.fetchActiveOffers();
-    } catch (_) {
-      // Offers failure is non-critical — silently ignore, keep list empty.
+    } catch (e) {
+      _offers = [];
+      _offersError = e.toString();
+    } finally {
+      _offersLoading = false;
     }
     notifyListeners();
   }
 
   Future<void> loadNewProducts() async {
+    _newProductsLoading = true;
+    _newProductsError = null;
+    notifyListeners();
     try {
       _newProducts = await _service.fetchLatestProducts();
-    } catch (_) {
+    } catch (e) {
       _newProducts = [];
+      _newProductsError = e.toString();
+    } finally {
+      _newProductsLoading = false;
     }
     notifyListeners();
   }
@@ -102,6 +136,9 @@ class CatalogController extends ChangeNotifier {
   /// A product is shown only after two or more purchase dates establish a
   /// cycle, and only once the current interval is close to that cycle.
   Future<void> loadReorderRecommendations() async {
+    _reorderLoading = true;
+    _reorderError = null;
+    notifyListeners();
     try {
       final history = await _service.fetchPurchaseHistory();
       final now = DateTime.now();
@@ -133,17 +170,26 @@ class CatalogController extends ChangeNotifier {
       }
 
       _reorderRecommendations = recommendations;
-    } catch (_) {
+    } catch (e) {
       _reorderRecommendations = [];
+      _reorderError = e.toString();
+    } finally {
+      _reorderLoading = false;
     }
     notifyListeners();
   }
 
   Future<void> loadCategories() async {
+    _categoriesLoading = true;
+    _categoriesError = null;
+    notifyListeners();
     try {
       _categories = await _service.fetchCategories();
-    } catch (_) {
+    } catch (e) {
       _categories = [];
+      _categoriesError = e.toString();
+    } finally {
+      _categoriesLoading = false;
     }
     notifyListeners();
   }

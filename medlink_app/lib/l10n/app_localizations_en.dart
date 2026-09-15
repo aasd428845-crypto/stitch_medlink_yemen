@@ -324,6 +324,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noUpdates => 'No updates at the moment';
 
   @override
+  String get noCategoriesFound => 'No categories are available at the moment';
+
+  @override
+  String get noNewProducts => 'No new products are available at the moment';
+
+  @override
+  String get noReorderRecommendations =>
+      'Reorder suggestions will appear after enough purchase history is available';
+
+  @override
+  String get currentOffersSection => 'Current Offers';
+
+  @override
   String get quickReorder => 'You may need to reorder soon';
 
   @override

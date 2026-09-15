@@ -118,6 +118,10 @@
   "newProductsSection": "وصل حديثاً",
   "viewAll": "عرض الكل",
   "noUpdates": "لا توجد مستجدات حالياً",
+  "noCategoriesFound": "لا توجد فئات متاحة حالياً",
+  "noNewProducts": "لا توجد منتجات جديدة حالياً",
+  "noReorderRecommendations": "ستظهر اقتراحات إعادة الطلب بعد توفر سجل شراء كافٍ",
+  "currentOffersSection": "العروض الحالية",
   "quickReorder": "قد تحتاج إعادة طلبها قريباً",
 
   "catalogTitle": "الكتالوج",

@@ -49,8 +49,8 @@ class _HomeTabState extends State<HomeTab> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        await catalog.loadProducts();
         await Future.wait([
+          catalog.loadProducts(),
           catalog.loadOffers(),
           catalog.loadCategories(),
           catalog.loadNewProducts(),
@@ -84,7 +84,9 @@ class _HomeTabState extends State<HomeTab> {
           SliverToBoxAdapter(
             child: _OfferCarousel(
               offers: catalog.offers,
-              isLoading: catalog.isLoading,
+              isLoading: catalog.offersLoading,
+              error: catalog.offersError,
+              onRetry: catalog.loadOffers,
             ),
           ),
           SliverToBoxAdapter(
@@ -94,7 +96,9 @@ class _HomeTabState extends State<HomeTab> {
               reorderRecommendations: catalog.reorderRecommendations,
             ),
           ),
-          if (catalog.categories.isNotEmpty) ...[
+          if (catalog.categoriesLoading ||
+              catalog.categoriesError != null ||
+              catalog.categories.isNotEmpty) ...[
             SliverToBoxAdapter(
               child: BranchSectionTitle(
                 title: l10n.categoriesSection,
@@ -105,32 +109,24 @@ class _HomeTabState extends State<HomeTab> {
               ),
             ),
             SliverToBoxAdapter(
-              child: SizedBox(
-                height: 92,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: catalog.categories.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
-                  itemBuilder: (context, i) {
-                    final category = catalog.categories[i];
-                    final selected = catalog.selectedCategory == category;
-                    return _CategoryCard(
-                      label: category,
-                      icon: _categoryIcons[i % _categoryIcons.length],
-                      selected: selected,
-                      onTap: () {
-                        catalog.selectCategory(selected ? null : category);
-                        _openCatalog(context, clearFilters: false);
-                      },
-                    );
-                  },
-                ),
+              child: _CategoriesSection(
+                categories: catalog.categories,
+                isLoading: catalog.categoriesLoading,
+                error: catalog.categoriesError,
+                selectedCategory: catalog.selectedCategory,
+                onRetry: catalog.loadCategories,
+                onSelect: (category) {
+                  final selected = catalog.selectedCategory == category;
+                  catalog.selectCategory(selected ? null : category);
+                  _openCatalog(context, clearFilters: false);
+                },
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
           ],
-          if (catalog.newProducts.isNotEmpty) ...[
+          if (catalog.newProductsLoading ||
+              catalog.newProductsError != null ||
+              catalog.newProducts.isNotEmpty) ...[
             SliverToBoxAdapter(
               child: BranchSectionTitle(
                 title: l10n.newProductsSection,
@@ -141,26 +137,12 @@ class _HomeTabState extends State<HomeTab> {
               ),
             ),
             SliverToBoxAdapter(
-              child: SizedBox(
-                height: 302,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: catalog.newProducts.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
-                  itemBuilder: (context, i) {
-                    final product = catalog.newProducts[i];
-                    return SizedBox(
-                      width: 190,
-                      child: ProductCard(
-                        product: product,
-                        onTap: () =>
-                            context.push('/client/product/${product.id}'),
-                        onAdd: () => _addToCart(context, product),
-                      ),
-                    );
-                  },
-                ),
+              child: _NewProductsSection(
+                products: catalog.newProducts,
+                isLoading: catalog.newProductsLoading,
+                error: catalog.newProductsError,
+                onRetry: catalog.loadNewProducts,
+                onAdd: (product) => _addToCart(context, product),
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
@@ -244,7 +226,9 @@ class _HomeTabState extends State<HomeTab> {
                 ),
               ),
             ),
-          if (catalog.reorderRecommendations.isNotEmpty) ...[
+          if (catalog.reorderLoading ||
+              catalog.reorderError != null ||
+              catalog.reorderRecommendations.isNotEmpty) ...[
             SliverToBoxAdapter(
               child: BranchSectionTitle(
                 title: l10n.reorderSuggestions,
@@ -253,28 +237,32 @@ class _HomeTabState extends State<HomeTab> {
               ),
             ),
             SliverToBoxAdapter(
-              child: SizedBox(
-                height: 302,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: catalog.reorderRecommendations.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
-                  itemBuilder: (context, i) {
-                    final recommendation = catalog.reorderRecommendations[i];
-                    return SizedBox(
-                      width: 190,
-                      child: ProductCard(
-                        product: recommendation.product,
-                        onTap: () => context.push(
-                          '/client/product/${recommendation.product.id}',
-                        ),
-                        onAdd: () =>
-                            _addToCart(context, recommendation.product),
-                      ),
-                    );
-                  },
-                ),
+              child: _ReorderSection(
+                recommendations: catalog.reorderRecommendations,
+                isLoading: catalog.reorderLoading,
+                error: catalog.reorderError,
+                onRetry: catalog.loadReorderRecommendations,
+                onAdd: (product) => _addToCart(context, product),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 16)),
+          ],
+          if (catalog.isInitialized ||
+              catalog.offersLoading ||
+              catalog.offersError != null) ...[
+            SliverToBoxAdapter(
+              child: BranchSectionTitle(
+                title: l10n.currentOffersSection,
+                icon: Icons.local_offer_rounded,
+                iconColor: ClientColors.primary,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: _CurrentOffersSection(
+                offers: catalog.offers,
+                isLoading: catalog.offersLoading,
+                error: catalog.offersError,
+                onRetry: catalog.loadOffers,
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
@@ -368,11 +356,451 @@ class _CategoryCard extends StatelessWidget {
   }
 }
 
-class _OfferCarousel extends StatefulWidget {
-  const _OfferCarousel({required this.offers, required this.isLoading});
+class _CategoriesSection extends StatelessWidget {
+  const _CategoriesSection({
+    required this.categories,
+    required this.isLoading,
+    required this.error,
+    required this.selectedCategory,
+    required this.onRetry,
+    required this.onSelect,
+  });
+
+  final List<String> categories;
+  final bool isLoading;
+  final String? error;
+  final String? selectedCategory;
+  final Future<void> Function() onRetry;
+  final ValueChanged<String> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    if (isLoading && categories.isEmpty) {
+      return SizedBox(
+        height: 92,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: 4,
+          separatorBuilder: (_, __) => const SizedBox(width: 8),
+          itemBuilder: (_, __) => const _CategorySkeleton(),
+        ),
+      );
+    }
+    if (error != null && categories.isEmpty) {
+      return _HomeErrorState(message: error!, onRetry: onRetry);
+    }
+    if (categories.isEmpty) {
+      return _HomeEmptyState(
+        icon: Icons.category_outlined,
+        message: l10n.noCategoriesFound,
+      );
+    }
+
+    return SizedBox(
+      height: 92,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: categories.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (context, i) {
+          final category = categories[i];
+          return _CategoryCard(
+            label: category,
+            icon: _categoryIcons[i % _categoryIcons.length],
+            selected: selectedCategory == category,
+            onTap: () => onSelect(category),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _CategorySkeleton extends StatelessWidget {
+  const _CategorySkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 92,
+      height: 92,
+      decoration: BoxDecoration(
+        color: ClientColors.surfaceMuted,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: ClientColors.outline),
+      ),
+      child: const Center(
+        child: SizedBox(
+          width: 22,
+          height: 22,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: ClientColors.primary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NewProductsSection extends StatelessWidget {
+  const _NewProductsSection({
+    required this.products,
+    required this.isLoading,
+    required this.error,
+    required this.onRetry,
+    required this.onAdd,
+  });
+
+  final List<Product> products;
+  final bool isLoading;
+  final String? error;
+  final Future<void> Function() onRetry;
+  final ValueChanged<Product> onAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    if (isLoading && products.isEmpty) {
+      return const SizedBox(
+        height: 302,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (error != null && products.isEmpty) {
+      return _HomeErrorState(message: error!, onRetry: onRetry);
+    }
+    if (products.isEmpty) {
+      return _HomeEmptyState(
+        icon: Icons.new_releases_outlined,
+        message: l10n.noNewProducts,
+      );
+    }
+
+    return SizedBox(
+      height: 302,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: products.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, i) {
+          final product = products[i];
+          return SizedBox(
+            width: 190,
+            child: ProductCard(
+              product: product,
+              onTap: () => context.push('/client/product/${product.id}'),
+              onAdd: () => onAdd(product),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _HomeEmptyState extends StatelessWidget {
+  const _HomeEmptyState({required this.icon, required this.message});
+
+  final IconData icon;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      decoration: BoxDecoration(
+        color: ClientColors.surfaceMuted,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: ClientColors.outline),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: ClientColors.textMuted),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: ClientColors.textMuted,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HomeErrorState extends StatelessWidget {
+  const _HomeErrorState({required this.message, required this.onRetry});
+
+  final String message;
+  final Future<void> Function() onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: ClientColors.surface,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: ClientColors.outline),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline_rounded, color: ClientColors.danger),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: ClientColors.textMuted),
+            ),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            tooltip: l10n.retry,
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh_rounded),
+            color: ClientColors.primary,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReorderSection extends StatelessWidget {
+  const _ReorderSection({
+    required this.recommendations,
+    required this.isLoading,
+    required this.error,
+    required this.onRetry,
+    required this.onAdd,
+  });
+
+  final List<ReorderRecommendation> recommendations;
+  final bool isLoading;
+  final String? error;
+  final Future<void> Function() onRetry;
+  final ValueChanged<Product> onAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    if (isLoading && recommendations.isEmpty) {
+      return const SizedBox(
+        height: 302,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (error != null && recommendations.isEmpty) {
+      return _HomeErrorState(message: error!, onRetry: onRetry);
+    }
+    if (recommendations.isEmpty) {
+      return _HomeEmptyState(
+        icon: Icons.repeat_rounded,
+        message: l10n.noReorderRecommendations,
+      );
+    }
+
+    return SizedBox(
+      height: 302,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: recommendations.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, i) {
+          final recommendation = recommendations[i];
+          return SizedBox(
+            width: 190,
+            child: ProductCard(
+              product: recommendation.product,
+              onTap: () =>
+                  context.push('/client/product/${recommendation.product.id}'),
+              onAdd: () => onAdd(recommendation.product),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _CurrentOffersSection extends StatelessWidget {
+  const _CurrentOffersSection({
+    required this.offers,
+    required this.isLoading,
+    required this.error,
+    required this.onRetry,
+  });
 
   final List<PromotionalOffer> offers;
   final bool isLoading;
+  final String? error;
+  final Future<void> Function() onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    if (isLoading && offers.isEmpty) {
+      return const SizedBox(
+        height: 184,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (error != null && offers.isEmpty) {
+      return _HomeErrorState(message: error!, onRetry: onRetry);
+    }
+    if (offers.isEmpty) {
+      return _HomeEmptyState(
+        icon: Icons.local_offer_outlined,
+        message: l10n.noOffersFound,
+      );
+    }
+
+    return SizedBox(
+      height: 184,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: offers.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, i) {
+          final offer = offers[i];
+          return _CompactOfferCard(
+            offer: offer,
+            onTap: () =>
+                context.push('/client/offer/${offer.id}', extra: offer),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _CompactOfferCard extends StatelessWidget {
+  const _CompactOfferCard({required this.offer, required this.onTap});
+
+  final PromotionalOffer offer;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 260,
+      child: Material(
+        color: ClientColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: ClientColors.outline),
+            ),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 92,
+                  height: double.infinity,
+                  child: offer.imageUrl == null
+                      ? const ColoredBox(
+                          color: ClientColors.primarySoft,
+                          child: Icon(
+                            Icons.local_offer_outlined,
+                            color: ClientColors.primary,
+                            size: 28,
+                          ),
+                        )
+                      : Image.network(
+                          offer.imageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => const ColoredBox(
+                            color: ClientColors.primarySoft,
+                            child: Icon(
+                              Icons.local_offer_outlined,
+                              color: ClientColors.primary,
+                            ),
+                          ),
+                        ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (offer.discountText?.trim().isNotEmpty == true)
+                          Text(
+                            offer.discountText!,
+                            style: const TextStyle(
+                              color: ClientColors.primary,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 12,
+                            ),
+                          ),
+                        const SizedBox(height: 5),
+                        Text(
+                          offer.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(
+                                color: ClientColors.text,
+                                fontWeight: FontWeight.w800,
+                              ),
+                        ),
+                        if (offer.description?.trim().isNotEmpty == true) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            offer.description!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: ClientColors.textMuted),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OfferCarousel extends StatefulWidget {
+  const _OfferCarousel({
+    required this.offers,
+    required this.isLoading,
+    required this.error,
+    required this.onRetry,
+  });
+
+  final List<PromotionalOffer> offers;
+  final bool isLoading;
+  final String? error;
+  final Future<void> Function() onRetry;
 
   @override
   State<_OfferCarousel> createState() => _OfferCarouselState();
@@ -433,6 +861,9 @@ class _OfferCarouselState extends State<_OfferCarousel> {
         height: 218,
         child: Center(child: CircularProgressIndicator()),
       );
+    }
+    if (widget.error != null && widget.offers.isEmpty) {
+      return _HomeErrorState(message: widget.error!, onRetry: widget.onRetry);
     }
     if (widget.offers.isEmpty) {
       return Container(

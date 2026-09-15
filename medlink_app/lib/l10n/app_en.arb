@@ -118,6 +118,10 @@
   "newProductsSection": "New Products",
   "viewAll": "View all",
   "noUpdates": "No updates at the moment",
+  "noCategoriesFound": "No categories are available at the moment",
+  "noNewProducts": "No new products are available at the moment",
+  "noReorderRecommendations": "Reorder suggestions will appear after enough purchase history is available",
+  "currentOffersSection": "Current Offers",
   "quickReorder": "You may need to reorder soon",
 
   "catalogTitle": "Catalog",

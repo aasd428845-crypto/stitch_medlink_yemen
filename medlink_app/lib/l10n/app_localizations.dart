@@ -704,6 +704,30 @@ abstract class AppLocalizations {
   /// **'لا توجد مستجدات حالياً'**
   String get noUpdates;
 
+  /// No description provided for @noCategoriesFound.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد فئات متاحة حالياً'**
+  String get noCategoriesFound;
+
+  /// No description provided for @noNewProducts.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد منتجات جديدة حالياً'**
+  String get noNewProducts;
+
+  /// No description provided for @noReorderRecommendations.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستظهر اقتراحات إعادة الطلب بعد توفر سجل شراء كافٍ'**
+  String get noReorderRecommendations;
+
+  /// No description provided for @currentOffersSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'العروض الحالية'**
+  String get currentOffersSection;
+
   /// No description provided for @quickReorder.
   ///
   /// In ar, this message translates to:
