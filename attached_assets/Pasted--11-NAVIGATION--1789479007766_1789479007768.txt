@@ -1,0 +1,92 @@
+==================================================
+11. NAVIGATION
+==================================================
+
+Preserve the existing navigation architecture.
+
+Home must continue opening:
+- Products
+- Product Details
+- Offers
+- Orders
+- Notifications
+- Account
+- Cart
+- Categories
+
+Do not break authentication or role-based navigation.
+
+==================================================
+12. IMPORTANT DATABASE RULE
+==================================================
+
+DO NOT modify existing Supabase tables simply to make the UI easier.
+
+First determine what already exists.
+
+If something is missing:
+- report it
+- explain why it is required
+- do not casually create a duplicate table/field.
+
+Existing Supabase/PostgreSQL remains the central source of truth.
+
+==================================================
+13. AFTER IMPLEMENTATION
+==================================================
+
+When implementation is complete:
+
+1. Run Flutter analysis.
+2. Fix compilation errors.
+3. Fix analyzer errors caused by your changes.
+4. Verify Home navigation.
+5. Verify products load from Supabase.
+6. Verify categories load from Supabase.
+7. Verify offers load from Supabase.
+8. Verify product images.
+9. Verify product details navigation.
+10. Verify add-to-cart still works.
+11. Verify notifications still work.
+12. Verify purchase/reorder functionality was not broken.
+13. Verify Arabic RTL.
+14. Verify small-screen layout.
+15. Verify loading/empty/error states.
+
+Then review BOTH repositories again.
+
+Specifically report:
+
+FLUTTER:
+- files changed
+- components created
+- components modified
+- services modified
+- models modified
+- navigation changes
+- tests/checks performed
+
+WEB:
+- files inspected
+- any compatibility concerns
+- whether Admin product/offer functionality remains compatible
+
+DATABASE:
+- tables inspected
+- migrations inspected
+- RLS inspected
+- whether schema was changed
+- if changed, explain exactly why
+
+FUNCTIONAL STATUS:
+- Working
+- Working but needs device testing
+- Partially implemented
+- Blocked
+
+IMPORTANT:
+Do NOT continue automatically to redesign Products, Product Details, Account, Orders, or other screens in this phase.
+
+Finish Phase 1 and report the result first.
+
+The next phase will be handled separately after review.
