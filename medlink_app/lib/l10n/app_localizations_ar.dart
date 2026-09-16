@@ -187,6 +187,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get digitalCardSubtitle => 'بيانات العميل ورمز QR';
 
   @override
+  String get digitalCardInstruction =>
+      'اعرض هذا الرمز للتحقق من بطاقتك الرقمية';
+
+  @override
   String get manageDeliveryAddresses => 'إدارة عناوين التوصيل';
 
   @override
@@ -196,10 +200,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get businessProfileSubtitle => 'البيانات المسجلة في الحساب';
 
   @override
+  String get linkedBranchLabel => 'الفرع المرتبط';
+
+  @override
+  String get notAvailableLabel => 'غير محدد';
+
+  @override
+  String get businessProfileNote =>
+      'تُدار بيانات الحساب الأساسية من خلال الملف المسجل في النظام.';
+
+  @override
   String get termsPrivacyTitle => 'الشروط وسياسة الخصوصية';
 
   @override
   String get termsPrivacySubtitle => 'راجع أحكام استخدام MedLink';
+
+  @override
+  String get termsSectionTitle => 'الشروط والأحكام';
+
+  @override
+  String get termsSectionBody =>
+      'باستخدام MedLink، تؤكد صحة بياناتك وتتعهد باستخدام التطبيق لطلب الأدوية والمنتجات الطبية بطريقة نظامية. تخضع الطلبات للتوفر والمراجعة والتوصيل حسب الفرع.';
+
+  @override
+  String get privacySectionTitle => 'الخصوصية';
+
+  @override
+  String get privacySectionBody =>
+      'نستخدم بيانات الحساب والعناوين والطلبات لتشغيل الخدمة وتوصيل الطلبات وتحسين الدعم. لا يعرض التطبيق بياناتك لعملاء آخرين، وتخضع البيانات لسياسات قاعدة البيانات وصلاحيات الحساب.';
 
   @override
   String get branchDashboardLabel => 'لوحة التحكم';
@@ -452,6 +480,57 @@ class AppLocalizationsAr extends AppLocalizations {
   String get saveAddress => 'حفظ العنوان';
 
   @override
+  String get addressInformation => 'معلومات العنوان';
+
+  @override
+  String get locationInformation => 'الموقع الجغرافي';
+
+  @override
+  String get ownerInformation => 'معلومات صاحب المنشأة';
+
+  @override
+  String get governorateLabel => 'المحافظة';
+
+  @override
+  String get cityDistrictLabel => 'المدينة / المديرية';
+
+  @override
+  String get districtLabel => 'الحي / المنطقة';
+
+  @override
+  String get landmarkLabel => 'أقرب معلم';
+
+  @override
+  String get ownerNameLabel => 'اسم صاحب المنشأة';
+
+  @override
+  String get alternatePhoneLabel => 'رقم هاتف آخر';
+
+  @override
+  String get chooseLocationOnMap => 'اختيار الموقع من الخريطة';
+
+  @override
+  String get locationSelected => 'تم تحديد الموقع ✓';
+
+  @override
+  String get cancelButton => 'إلغاء';
+
+  @override
+  String get saveAddressButton => 'حفظ العنوان';
+
+  @override
+  String get defaultAddressLabel => 'استخدام هذا العنوان كعنوان افتراضي';
+
+  @override
+  String get defaultAddressHint => 'سيتم اختياره تلقائياً عند إنشاء طلب جديد.';
+
+  @override
+  String get defaultAddressBadge => 'العنوان الافتراضي';
+
+  @override
+  String get requiredField => 'مطلوب';
+
+  @override
   String get orderNotes => 'ملاحظات الطلب (اختياري)';
 
   @override
@@ -637,6 +716,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notificationsEmpty => 'لا توجد تنبيهات حتى الآن';
+
+  @override
+  String get notificationsEmptyHint => 'ستظهر تنبيهاتك هنا فور وصولها.';
 
   @override
   String get offerDetailTitle => 'تفاصيل العرض';

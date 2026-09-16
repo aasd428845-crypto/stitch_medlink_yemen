@@ -189,6 +189,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get digitalCardSubtitle => 'Client details and QR code';
 
   @override
+  String get digitalCardInstruction =>
+      'Show this code to verify your digital card';
+
+  @override
   String get manageDeliveryAddresses => 'Manage delivery addresses';
 
   @override
@@ -198,10 +202,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get businessProfileSubtitle => 'Details registered on the account';
 
   @override
+  String get linkedBranchLabel => 'Linked branch';
+
+  @override
+  String get notAvailableLabel => 'Not specified';
+
+  @override
+  String get businessProfileNote =>
+      'Core account details are managed through the profile registered in the system.';
+
+  @override
   String get termsPrivacyTitle => 'Terms & Privacy Policy';
 
   @override
   String get termsPrivacySubtitle => 'Review MedLink usage terms';
+
+  @override
+  String get termsSectionTitle => 'Terms and Conditions';
+
+  @override
+  String get termsSectionBody =>
+      'By using MedLink, you confirm that your details are accurate and agree to use the app lawfully to request medicines and medical products. Orders remain subject to availability, review, and branch delivery.';
+
+  @override
+  String get privacySectionTitle => 'Privacy';
+
+  @override
+  String get privacySectionBody =>
+      'We use account, address, and order data to operate the service, deliver orders, and improve support. The app does not expose your data to other customers, and access is governed by database policies and account permissions.';
 
   @override
   String get branchDashboardLabel => 'Dashboard';
@@ -454,6 +482,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveAddress => 'Save Address';
 
   @override
+  String get addressInformation => 'Address information';
+
+  @override
+  String get locationInformation => 'Location details';
+
+  @override
+  String get ownerInformation => 'Business contact';
+
+  @override
+  String get governorateLabel => 'Governorate';
+
+  @override
+  String get cityDistrictLabel => 'City / District';
+
+  @override
+  String get districtLabel => 'Area / Neighborhood';
+
+  @override
+  String get landmarkLabel => 'Nearby landmark';
+
+  @override
+  String get ownerNameLabel => 'Business owner name';
+
+  @override
+  String get alternatePhoneLabel => 'Alternate phone';
+
+  @override
+  String get chooseLocationOnMap => 'Choose location on map';
+
+  @override
+  String get locationSelected => 'Location selected ✓';
+
+  @override
+  String get cancelButton => 'Cancel';
+
+  @override
+  String get saveAddressButton => 'Save address';
+
+  @override
+  String get defaultAddressLabel => 'Use this as the default address';
+
+  @override
+  String get defaultAddressHint =>
+      'It will be selected automatically for new orders.';
+
+  @override
+  String get defaultAddressBadge => 'Default address';
+
+  @override
+  String get requiredField => 'Required';
+
+  @override
   String get orderNotes => 'Order Notes (optional)';
 
   @override
@@ -642,6 +722,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationsEmpty => 'No notifications yet';
+
+  @override
+  String get notificationsEmptyHint =>
+      'Your notifications will appear here when they arrive.';
 
   @override
   String get offerDetailTitle => 'Offer Details';

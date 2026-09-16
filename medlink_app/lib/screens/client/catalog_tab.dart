@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +8,7 @@ import '../../services/cart_controller.dart';
 import '../../services/catalog_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/product_card.dart';
-import '../branch_manager/branch_manager_design.dart';
+import 'client_design.dart';
 
 class CatalogTab extends StatefulWidget {
   const CatalogTab({super.key});
@@ -91,7 +89,7 @@ class _CatalogTabState extends State<CatalogTab> {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: const BorderSide(
-                  color: BranchColors.primary,
+                  color: ClientColors.primary,
                   width: 1.2,
                 ),
               ),
@@ -179,7 +177,7 @@ class _CatalogTabState extends State<CatalogTab> {
             const Icon(
               Icons.error_outline_rounded,
               size: 48,
-              color: BranchColors.error,
+              color: ClientColors.danger,
             ),
             const SizedBox(height: 10),
             Text(
@@ -200,15 +198,15 @@ class _CatalogTabState extends State<CatalogTab> {
 
     if (catalog.products.isEmpty) {
       return Center(
-        child: SoftCard(
+        child: ClientCard(
           padding: const EdgeInsets.all(32),
           borderRadius: 28,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              PastelIconBadge(
+              ClientIconBadge(
                 icon: Icons.search_off_rounded,
-                color: BranchColors.onSurfaceVariant,
+                color: ClientColors.textMuted,
                 size: 56,
                 iconSize: 28,
                 shape: BoxShape.circle,

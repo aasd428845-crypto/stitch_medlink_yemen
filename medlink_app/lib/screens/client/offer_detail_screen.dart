@@ -30,7 +30,11 @@ class OfferDetailScreen extends StatelessWidget {
                 foregroundColor: ClientColors.text,
                 flexibleSpace: FlexibleSpaceBar(
                   background: offer.imageUrl != null
-                      ? Image.network(offer.imageUrl!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => _gradientHero())
+                      ? Image.network(
+                          offer.imageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => _gradientHero(),
+                        )
                       : _gradientHero(),
                 ),
               ),
@@ -42,27 +46,87 @@ class OfferDetailScreen extends StatelessWidget {
                     children: [
                       if (offer.discountText != null) ...[
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(colors: [ClientColors.primary, ClientColors.primaryDark], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                            borderRadius: BorderRadius.circular(99),
-                            boxShadow: [BoxShadow(color: ClientColors.primary.withValues(alpha: .35), blurRadius: 12, offset: const Offset(0, 4))],
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 6,
                           ),
-                          child: Text(offer.discountText!, style: theme.textTheme.labelLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                ClientColors.primary,
+                                ClientColors.primaryDark,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(99),
+                            boxShadow: [
+                              BoxShadow(
+                                color: ClientColors.primary.withValues(
+                                  alpha: .35,
+                                ),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            offer.discountText!,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 16),
                       ],
-                      Text(offer.title, style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
-                      if (offer.description != null) ...[const SizedBox(height: 16), Text(offer.description!, style: theme.textTheme.bodyLarge?.copyWith(color: ClientColors.textMuted, height: 1.6))],
+                      Text(
+                        offer.title,
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      if (offer.description != null) ...[
+                        const SizedBox(height: 16),
+                        Text(
+                          offer.description!,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: ClientColors.textMuted,
+                            height: 1.6,
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 24),
-                      Divider(color: ClientColors.outline.withValues(alpha: .5)),
+                      Divider(
+                        color: ClientColors.outline.withValues(alpha: .5),
+                      ),
                       const SizedBox(height: 16),
                       if (offer.startDate != null || offer.endDate != null) ...[
-                        _InfoRow(icon: Icons.calendar_today_outlined, label: l10n.offerValidFrom, value: _formatDate(offer.startDate), color: ClientColors.primary),
-                        if (offer.endDate != null) ...[const SizedBox(height: 10), _InfoRow(icon: Icons.event_outlined, label: l10n.offerValidUntil, value: _formatDate(offer.endDate), color: ClientColors.primaryDark)],
+                        _InfoRow(
+                          icon: Icons.calendar_today_outlined,
+                          label: l10n.offerValidFrom,
+                          value: _formatDate(offer.startDate),
+                          color: ClientColors.primary,
+                        ),
+                        if (offer.endDate != null) ...[
+                          const SizedBox(height: 10),
+                          _InfoRow(
+                            icon: Icons.event_outlined,
+                            label: l10n.offerValidUntil,
+                            value: _formatDate(offer.endDate),
+                            color: ClientColors.primaryDark,
+                          ),
+                        ],
                         const SizedBox(height: 16),
                       ],
-                      if (offer.targetGovernorate != null) ...[_InfoRow(icon: Icons.location_on_outlined, label: l10n.offerGovernorate, value: offer.targetGovernorate!, color: ClientColors.success)],
+                      if (offer.targetGovernorate != null) ...[
+                        _InfoRow(
+                          icon: Icons.location_on_outlined,
+                          label: l10n.offerGovernorate,
+                          value: offer.targetGovernorate!,
+                          color: ClientColors.success,
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -75,7 +139,15 @@ class OfferDetailScreen extends StatelessWidget {
   }
 
   Widget _gradientHero() {
-    return const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors: [ClientColors.primaryDark, ClientColors.navy])));
+    return const DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [ClientColors.primaryDark, ClientColors.navy],
+        ),
+      ),
+    );
   }
 
   String _formatDate(String? dateStr) {
@@ -87,7 +159,12 @@ class OfferDetailScreen extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.icon, required this.label, required this.value, required this.color});
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+  });
   final IconData icon;
   final String label;
   final String value;
@@ -95,6 +172,31 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClientCard(borderRadius: 20, padding: const EdgeInsets.all(14), child: Row(children: [ClientIconBadge(icon: icon, color: color, size: 40, iconSize: 18, borderRadius: 12), const SizedBox(width: 12), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(label, style: Theme.of(context).textTheme.labelSmall), const SizedBox(height: 2), Text(value, style: Theme.of(context).textTheme.titleSmall)]))]));
+    return ClientCard(
+      borderRadius: 20,
+      padding: const EdgeInsets.all(14),
+      child: Row(
+        children: [
+          ClientIconBadge(
+            icon: icon,
+            color: color,
+            size: 40,
+            iconSize: 18,
+            borderRadius: 12,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: Theme.of(context).textTheme.labelSmall),
+                const SizedBox(height: 2),
+                Text(value, style: Theme.of(context).textTheme.titleSmall),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

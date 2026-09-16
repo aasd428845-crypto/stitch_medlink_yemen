@@ -11,7 +11,6 @@ import '../../services/notification_controller.dart';
 import '../../utils/constants.dart';
 import '../../utils/theme.dart';
 import '../../widgets/error_banner.dart';
-import '../client/client_design.dart';
 
 /// Notification centre — shared across all roles.
 /// Accessible via the bell icon in the AppBar from any home shell.
@@ -51,114 +50,121 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
         ),
         child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
           backgroundColor: Colors.transparent,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          title: Row(
-            children: [
-              Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            title: Row(
+              children: [
+                Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
                       colors: palette.heroGradient,
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: palette.accent.withValues(alpha: .28),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    )
-                  ],
-                ),
-                child:
-                    const Icon(LucideIcons.bell, color: Colors.white, size: 16),
-              ),
-              const SizedBox(width: 10),
-              Text(
-                l10n.notificationsTitle,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                       color: palette.text,
-                      fontWeight: FontWeight.w900,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-              ),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: palette.accent.withValues(alpha: .28),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    LucideIcons.bell,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  l10n.notificationsTitle,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: palette.text,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              if (ctrl.unreadCount > 0)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: TextButton.icon(
+                    onPressed: ctrl.markAllAsRead,
+                    icon: Icon(
+                      LucideIcons.checkCheck,
+                      size: 16,
+                      color: palette.accent,
+                    ),
+                    label: Text(
+                      l10n.notificationsMarkAllRead,
+                      style: TextStyle(
+                        color: palette.accent,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
-          actions: [
-            if (ctrl.unreadCount > 0)
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: TextButton.icon(
-                  onPressed: ctrl.markAllAsRead,
-                   icon: Icon(LucideIcons.checkCheck,
-                       size: 16, color: palette.accent),
-                  label: Text(
-                    l10n.notificationsMarkAllRead,
-                     style: TextStyle(
-                         color: palette.accent,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12),
+          body: Builder(
+            builder: (context) {
+              if (ctrl.isLoading && ctrl.notifications.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (ctrl.error != null && ctrl.notifications.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ErrorBanner(message: ctrl.error!),
+                      const SizedBox(height: 16),
+                      _GradientButton(
+                        label: l10n.retry,
+                        onPressed: ctrl.loadNotifications,
+                        isClient: isClient,
+                      ),
+                    ],
                   ),
-                ),
-              ),
-          ],
-        ),
-        body: Builder(
-          builder: (context) {
-            if (ctrl.isLoading && ctrl.notifications.isEmpty) {
-              return const Center(child: CircularProgressIndicator());
-            }
+                );
+              }
 
-            if (ctrl.error != null && ctrl.notifications.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ErrorBanner(message: ctrl.error!),
-                    const SizedBox(height: 16),
-                    _GradientButton(
-                      label: l10n.retry,
-                       onPressed: ctrl.loadNotifications,
-                       isClient: isClient,
-                    ),
-                  ],
+              if (ctrl.notifications.isEmpty) {
+                return _EmptyNotifications(
+                  message: l10n.notificationsEmpty,
+                  isClient: isClient,
+                  secondaryMessage: l10n.notificationsEmptyHint,
+                );
+              }
+
+              return RefreshIndicator(
+                color: palette.accent,
+                backgroundColor: Colors.white,
+                onRefresh: ctrl.loadNotifications,
+                child: ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                  itemCount: ctrl.notifications.length,
+                  itemBuilder: (context, i) {
+                    final notif = ctrl.notifications[i];
+                    return _NotifCard(
+                      notification: notif,
+                      onTap: () => ctrl.markAsRead(notif.id),
+                      isClient: isClient,
+                    );
+                  },
                 ),
               );
-            }
-
-            if (ctrl.notifications.isEmpty) {
-              return _EmptyNotifications(
-                message: l10n.notificationsEmpty,
-                isClient: isClient,
-                secondaryMessage: l10n.notificationsEmptyHint,
-              );
-            }
-
-            return RefreshIndicator(
-               color: palette.accent,
-              backgroundColor: Colors.white,
-              onRefresh: ctrl.loadNotifications,
-              child: ListView.builder(
-                padding:
-                    const EdgeInsets.fromLTRB(16, 12, 16, 24),
-                itemCount: ctrl.notifications.length,
-                itemBuilder: (context, i) {
-                  final notif = ctrl.notifications[i];
-                  return _NotifCard(
-                    notification: notif,
-                    onTap: () => ctrl.markAsRead(notif.id),
-                    isClient: isClient,
-                  );
-                },
-              ),
-            );
-          },
+            },
+          ),
         ),
       ),
     );
@@ -222,14 +228,18 @@ class _NotifCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           color: isUnread
-              ? (isClient ? ClientColors.primary : BranchColors.glassHeroGradient.first)
-                  .withValues(alpha: .04)
+              ? (isClient
+                        ? ClientColors.primary
+                        : BranchColors.glassHeroGradient.first)
+                    .withValues(alpha: .04)
               : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isUnread
-                 ? (isClient ? ClientColors.primary : BranchColors.glassHeroGradient.first)
-                     .withValues(alpha: .20)
+                ? (isClient
+                          ? ClientColors.primary
+                          : BranchColors.glassHeroGradient.first)
+                      .withValues(alpha: .20)
                 : Colors.grey.shade100,
             width: isUnread ? 1.5 : 1,
           ),
@@ -262,7 +272,7 @@ class _NotifCard extends StatelessWidget {
                       color: _gradient.first.withValues(alpha: .28),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
-                    )
+                    ),
                   ],
                 ),
                 child: Icon(_icon, color: Colors.white, size: 20),
@@ -279,13 +289,11 @@ class _NotifCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             notification.title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall
+                            style: Theme.of(context).textTheme.titleSmall
                                 ?.copyWith(
-                                   color: isClient
-                                       ? ClientColors.text
-                                       : BranchColors.onSurface,
+                                  color: isClient
+                                      ? ClientColors.text
+                                      : BranchColors.onSurface,
                                   fontWeight: isUnread
                                       ? FontWeight.w800
                                       : FontWeight.w600,
@@ -301,9 +309,9 @@ class _NotifCard extends StatelessWidget {
                             margin: const EdgeInsets.only(right: 4),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                               color: isClient
-                                   ? ClientColors.primary
-                                   : BranchColors.glassWarmGradient.first,
+                              color: isClient
+                                  ? ClientColors.primary
+                                  : BranchColors.glassWarmGradient.first,
                             ),
                           ),
                       ],
@@ -312,30 +320,32 @@ class _NotifCard extends StatelessWidget {
                     Text(
                       notification.body,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                             color: isClient
-                                 ? ClientColors.textMuted
-                                 : BranchColors.onSurfaceVariant,
-                          ),
+                        color: isClient
+                            ? ClientColors.textMuted
+                            : BranchColors.onSurfaceVariant,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Icon(LucideIcons.clock,
-                            size: 11,
-                             color: isClient
-                                 ? ClientColors.textMuted
-                                 : BranchColors.onSurfaceVariant),
+                        Icon(
+                          LucideIcons.clock,
+                          size: 11,
+                          color: isClient
+                              ? ClientColors.textMuted
+                              : BranchColors.onSurfaceVariant,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           _formatDate(notification.createdAt),
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                     color: isClient
-                                         ? ClientColors.textMuted
-                                         : BranchColors.onSurfaceVariant,
-                                  ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                color: isClient
+                                    ? ClientColors.textMuted
+                                    : BranchColors.onSurfaceVariant,
+                              ),
                         ),
                       ],
                     ),
@@ -353,9 +363,15 @@ class _NotifCard extends StatelessWidget {
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
 class _EmptyNotifications extends StatelessWidget {
-  const _EmptyNotifications({required this.message});
+  const _EmptyNotifications({
+    required this.message,
+    required this.isClient,
+    required this.secondaryMessage,
+  });
 
   final String message;
+  final bool isClient;
+  final String secondaryMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -367,13 +383,14 @@ class _EmptyNotifications extends StatelessWidget {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 48, horizontal: 28),
+              padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 28),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: .80),
                 borderRadius: BorderRadius.circular(28),
                 border: Border.all(
-                    color: Colors.white.withValues(alpha: .55), width: 1.2),
+                  color: Colors.white.withValues(alpha: .55),
+                  width: 1.2,
+                ),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -383,40 +400,54 @@ class _EmptyNotifications extends StatelessWidget {
                     height: 72,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: const LinearGradient(
-                        colors: BranchColors.glassHeroGradient,
+                      gradient: LinearGradient(
+                        colors: isClient
+                            ? const [
+                                ClientColors.primary,
+                                ClientColors.primaryDark,
+                              ]
+                            : BranchColors.glassHeroGradient,
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: BranchColors.glassHeroGradient.first
-                              .withValues(alpha: .30),
+                          color:
+                              (isClient
+                                      ? ClientColors.primary
+                                      : BranchColors.glassHeroGradient.first)
+                                  .withValues(alpha: .30),
                           blurRadius: 20,
                           offset: const Offset(0, 6),
-                        )
+                        ),
                       ],
                     ),
-                    child: const Icon(LucideIcons.bellOff,
-                        color: Colors.white, size: 30),
+                    child: const Icon(
+                      LucideIcons.bellOff,
+                      color: Colors.white,
+                      size: 30,
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Text(
                     message,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: BranchColors.onSurface,
-                        ),
+                      fontWeight: FontWeight.w800,
+                      color: isClient
+                          ? ClientColors.text
+                          : BranchColors.onSurface,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'ستظهر تنبيهاتك هنا فور وصولها.',
+                    secondaryMessage,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(color: BranchColors.onSurfaceVariant),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: isClient
+                          ? ClientColors.textMuted
+                          : BranchColors.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -431,10 +462,15 @@ class _EmptyNotifications extends StatelessWidget {
 // ─── Gradient Button ──────────────────────────────────────────────────────────
 
 class _GradientButton extends StatelessWidget {
-  const _GradientButton({required this.label, required this.onPressed});
+  const _GradientButton({
+    required this.label,
+    required this.onPressed,
+    required this.isClient,
+  });
 
   final String label;
   final VoidCallback onPressed;
+  final bool isClient;
 
   @override
   Widget build(BuildContext context) {
@@ -444,19 +480,24 @@ class _GradientButton extends StatelessWidget {
         height: 48,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: BranchColors.glassHeroGradient,
+          gradient: LinearGradient(
+            colors: isClient
+                ? const [ClientColors.primary, ClientColors.primaryDark]
+                : BranchColors.glassHeroGradient,
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(99),
           boxShadow: [
             BoxShadow(
-              color: BranchColors.glassHeroGradient.first
-                  .withValues(alpha: .30),
+              color:
+                  (isClient
+                          ? ClientColors.primary
+                          : BranchColors.glassHeroGradient.first)
+                      .withValues(alpha: .30),
               blurRadius: 14,
               offset: const Offset(0, 5),
-            )
+            ),
           ],
         ),
         child: Text(
@@ -470,4 +511,24 @@ class _GradientButton extends StatelessWidget {
       ),
     );
   }
+}
+
+class _NotificationPalette {
+  _NotificationPalette(this.isClient)
+    : backgroundGradient = isClient
+          ? const [ClientColors.surface, ClientColors.background]
+          : const [BranchColors.background, Color(0xFFF1EEFF)],
+      heroGradient = isClient
+          ? const [ClientColors.primary, ClientColors.primaryDark]
+          : BranchColors.glassHeroGradient,
+      accent = isClient
+          ? ClientColors.primary
+          : BranchColors.glassHeroGradient.first,
+      text = isClient ? ClientColors.text : BranchColors.onSurface;
+
+  final bool isClient;
+  final List<Color> backgroundGradient;
+  final List<Color> heroGradient;
+  final Color accent;
+  final Color text;
 }

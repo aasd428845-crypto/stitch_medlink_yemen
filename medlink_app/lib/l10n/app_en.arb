@@ -185,6 +185,9 @@
   "locationSelected": "Location selected ✓",
   "cancelButton": "Cancel",
   "saveAddressButton": "Save address",
+  "defaultAddressLabel": "Use this as the default address",
+  "defaultAddressHint": "It will be selected automatically for new orders.",
+  "defaultAddressBadge": "Default address",
   "requiredField": "Required",
   "orderNotes": "Order Notes (optional)",
   "noSavedAddress": "No saved address yet",
@@ -250,6 +253,7 @@
   "notificationsTitle": "Notifications",
   "notificationsMarkAllRead": "Mark all as read",
   "notificationsEmpty": "No notifications yet",
+  "notificationsEmptyHint": "Your notifications will appear here when they arrive.",
 
   "offerDetailTitle": "Offer Details",
   "offerValidFrom": "Valid from",

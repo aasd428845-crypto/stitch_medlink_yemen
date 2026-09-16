@@ -185,6 +185,9 @@
   "locationSelected": "تم تحديد الموقع ✓",
   "cancelButton": "إلغاء",
   "saveAddressButton": "حفظ العنوان",
+  "defaultAddressLabel": "استخدام هذا العنوان كعنوان افتراضي",
+  "defaultAddressHint": "سيتم اختياره تلقائياً عند إنشاء طلب جديد.",
+  "defaultAddressBadge": "العنوان الافتراضي",
   "requiredField": "مطلوب",
   "orderNotes": "ملاحظات الطلب (اختياري)",
   "noSavedAddress": "لا يوجد عنوان محفوظ بعد",
@@ -250,6 +253,7 @@
   "notificationsTitle": "التنبيهات",
   "notificationsMarkAllRead": "تعليم الكل مقروءاً",
   "notificationsEmpty": "لا توجد تنبيهات حتى الآن",
+  "notificationsEmptyHint": "ستظهر تنبيهاتك هنا فور وصولها.",
 
   "offerDetailTitle": "تفاصيل العرض",
   "offerValidFrom": "يبدأ من",

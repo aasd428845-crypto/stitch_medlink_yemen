@@ -12,12 +12,14 @@ class ClientCard extends StatelessWidget {
     this.padding = const EdgeInsets.all(16),
     this.margin,
     this.borderRadius = 24,
+    this.tint = .92,
   });
 
   final Widget child;
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry? margin;
   final double borderRadius;
+  final double tint;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class ClientCard extends StatelessWidget {
       margin: margin,
       padding: padding,
       decoration: BoxDecoration(
-        color: ClientColors.surface.withValues(alpha: .92),
+        color: ClientColors.surface.withValues(alpha: tint.clamp(0, 1)),
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(color: ClientColors.outline),
         boxShadow: [
@@ -49,6 +51,7 @@ class ClientIconBadge extends StatelessWidget {
     this.size = 44,
     this.iconSize = 20,
     this.borderRadius = 14,
+    this.shape = BoxShape.rectangle,
   });
 
   final IconData icon;
@@ -56,6 +59,7 @@ class ClientIconBadge extends StatelessWidget {
   final double size;
   final double iconSize;
   final double borderRadius;
+  final BoxShape shape;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +68,10 @@ class ClientIconBadge extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         color: color.withValues(alpha: .12),
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: shape == BoxShape.circle
+            ? null
+            : BorderRadius.circular(borderRadius),
+        shape: shape,
       ),
       child: Icon(icon, color: color, size: iconSize),
     );
@@ -77,11 +84,15 @@ class ClientSectionTitle extends StatelessWidget {
     required this.title,
     required this.icon,
     this.iconColor = ClientColors.primary,
+    this.action,
+    this.onAction,
   });
 
   final String title;
   final IconData icon;
   final Color iconColor;
+  final String? action;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +109,17 @@ class ClientSectionTitle extends StatelessWidget {
             ),
           ),
         ),
+        if (action != null && onAction != null)
+          TextButton(
+            onPressed: onAction,
+            child: Text(
+              action!,
+              style: const TextStyle(
+                color: ClientColors.primary,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -278,7 +300,9 @@ class _ClientBarItem extends StatelessWidget {
               Text(
                 item.label,
                 style: TextStyle(
-                  color: selected ? ClientColors.primary : ClientColors.textMuted,
+                  color: selected
+                      ? ClientColors.primary
+                      : ClientColors.textMuted,
                   fontSize: 10,
                   fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
                 ),

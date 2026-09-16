@@ -7,6 +7,7 @@ import '../../l10n/app_localizations.dart';
 import '../../utils/constants.dart';
 import '../../utils/theme.dart';
 import '../branch_manager/branch_manager_design.dart';
+import '../client/client_design.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key, required this.role});
@@ -104,97 +105,221 @@ class HelpSupportScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final faqs = _getFaqs(l10n, role);
+    final isClient = role == UserRole.client;
 
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: isClient ? AppTheme.clientLight : AppTheme.branchManagerLight,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: isClient
+            ? ClientColors.background
+            : BranchColors.background,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          foregroundColor: BranchColors.onSurface,
+          backgroundColor: isClient
+              ? ClientColors.surface
+              : BranchColors.background,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          foregroundColor: isClient
+              ? ClientColors.text
+              : BranchColors.onSurface,
           title: Text(l10n.helpSupportTitle),
         ),
-        body: BranchGlassBackground(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-            children: [
-              BranchSectionTitle(
-                title: l10n.helpFaqSection,
-                icon: Icons.quiz_outlined,
-                iconColor: BranchColors.primary,
-              ),
-              const SizedBox(height: 12),
-              for (final entry in faqs)
-                SoftCard(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  borderRadius: 20,
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          PastelIconBadge(
-                            icon: Icons.question_mark_rounded,
-                            color: BranchColors.primary,
-                            size: 32,
-                            iconSize: 16,
-                            borderRadius: 10,
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              entry.q,
-                              style: Theme.of(context).textTheme.titleSmall,
+        body: isClient
+            ? ClientGlassBackground(
+                child: _HelpContent(
+                  faqs: faqs,
+                  l10n: l10n,
+                  isClient: isClient,
+                  onLaunch: _launch,
+                ),
+              )
+            : BranchGlassBackground(
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                  children: [
+                    BranchSectionTitle(
+                      title: l10n.helpFaqSection,
+                      icon: Icons.quiz_outlined,
+                      iconColor: BranchColors.primary,
+                    ),
+                    const SizedBox(height: 12),
+                    for (final entry in faqs)
+                      SoftCard(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        borderRadius: 20,
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                PastelIconBadge(
+                                  icon: Icons.question_mark_rounded,
+                                  color: BranchColors.primary,
+                                  size: 32,
+                                  iconSize: 16,
+                                  borderRadius: 10,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    entry.q,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleSmall,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 42),
-                        child: Text(
-                          entry.a,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodyMedium?.copyWith(height: 1.6),
+                            const SizedBox(height: 10),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 42),
+                              child: Text(
+                                entry.a,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.copyWith(height: 1.6),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    const SizedBox(height: 20),
+                    BranchSectionTitle(
+                      title: l10n.helpContactSection,
+                      icon: Icons.headset_mic_rounded,
+                      iconColor: BranchColors.success,
+                    ),
+                    const SizedBox(height: 12),
+                    _ContactTile(
+                      icon: Icons.phone_rounded,
+                      label: l10n.helpCallUs,
+                      subtitle: _phoneNumber,
+                      color: BranchColors.primary,
+                      onTap: () => _launch('tel:$_phoneNumber'),
+                    ),
+                    _ContactTile(
+                      icon: Icons.chat_rounded,
+                      label: l10n.helpWhatsapp,
+                      subtitle: '+$_whatsappNumber',
+                      color: BranchColors.success,
+                      onTap: () => _launch('https://wa.me/$_whatsappNumber'),
+                    ),
+                    _ContactTile(
+                      icon: Icons.email_rounded,
+                      label: l10n.helpEmailUs,
+                      subtitle: _email,
+                      color: BranchColors.primaryContainer,
+                      onTap: () =>
+                          _launch('mailto:$_email?subject=MedLink Support'),
+                    ),
+                  ],
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+class _HelpContent extends StatelessWidget {
+  const _HelpContent({
+    required this.faqs,
+    required this.l10n,
+    required this.isClient,
+    required this.onLaunch,
+  });
+
+  final List<_FaqEntry> faqs;
+  final AppLocalizations l10n;
+  final bool isClient;
+  final Future<void> Function(String url) onLaunch;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+      children: [
+        ClientSectionTitle(
+          title: l10n.helpFaqSection,
+          icon: Icons.quiz_outlined,
+          iconColor: ClientColors.primary,
+        ),
+        const SizedBox(height: 12),
+        for (final entry in faqs) ...[
+          ClientCard(
+            margin: const EdgeInsets.only(bottom: 10),
+            borderRadius: 20,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    ClientIconBadge(
+                      icon: Icons.question_mark_rounded,
+                      color: ClientColors.primary,
+                      size: 32,
+                      iconSize: 16,
+                      borderRadius: 10,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        entry.q,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 42),
+                  child: Text(
+                    entry.a,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(height: 1.6),
                   ),
                 ),
-              const SizedBox(height: 20),
-              BranchSectionTitle(
-                title: l10n.helpContactSection,
-                icon: Icons.headset_mic_rounded,
-                iconColor: BranchColors.success,
-              ),
-              const SizedBox(height: 12),
-              _ContactTile(
-                icon: Icons.phone_rounded,
-                label: l10n.helpCallUs,
-                subtitle: _phoneNumber,
-                color: BranchColors.primary,
-                onTap: () => _launch('tel:$_phoneNumber'),
-              ),
-              _ContactTile(
-                icon: Icons.chat_rounded,
-                label: l10n.helpWhatsapp,
-                subtitle: '+$_whatsappNumber',
-                color: BranchColors.success,
-                onTap: () => _launch('https://wa.me/$_whatsappNumber'),
-              ),
-              _ContactTile(
-                icon: Icons.email_rounded,
-                label: l10n.helpEmailUs,
-                subtitle: _email,
-                color: BranchColors.primaryContainer,
-                onTap: () => _launch('mailto:$_email?subject=MedLink Support'),
-              ),
-            ],
+              ],
+            ),
+          ),
+        ],
+        const SizedBox(height: 12),
+        ClientSectionTitle(
+          title: l10n.helpContactSection,
+          icon: Icons.headset_mic_rounded,
+          iconColor: ClientColors.success,
+        ),
+        const SizedBox(height: 12),
+        _ContactTile(
+          isClient: true,
+          icon: Icons.phone_rounded,
+          label: l10n.helpCallUs,
+          subtitle: HelpSupportScreen._phoneNumber,
+          color: ClientColors.primary,
+          onTap: () => onLaunch('tel:${HelpSupportScreen._phoneNumber}'),
+        ),
+        _ContactTile(
+          isClient: true,
+          icon: Icons.chat_rounded,
+          label: l10n.helpWhatsapp,
+          subtitle: '+${HelpSupportScreen._whatsappNumber}',
+          color: ClientColors.success,
+          onTap: () =>
+              onLaunch('https://wa.me/${HelpSupportScreen._whatsappNumber}'),
+        ),
+        _ContactTile(
+          isClient: true,
+          icon: Icons.email_rounded,
+          label: l10n.helpEmailUs,
+          subtitle: HelpSupportScreen._email,
+          color: ClientColors.primaryDark,
+          onTap: () => onLaunch(
+            'mailto:${HelpSupportScreen._email}?subject=MedLink Support',
           ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -212,49 +337,73 @@ class _ContactTile extends StatelessWidget {
     required this.subtitle,
     required this.color,
     required this.onTap,
+    this.isClient = false,
   });
   final IconData icon;
   final String label;
   final String subtitle;
   final Color color;
   final VoidCallback onTap;
+  final bool isClient;
 
   @override
   Widget build(BuildContext context) {
-    return SoftCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      borderRadius: 22,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(22),
-        onTap: onTap,
-        child: Row(
-          children: [
-            PastelIconBadge(
-              icon: icon,
-              color: color,
-              size: 44,
-              iconSize: 20,
-              borderRadius: 14,
+    final card = isClient
+        ? ClientCard(
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(14),
+            borderRadius: 22,
+            child: _content(context),
+          )
+        : SoftCard(
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(14),
+            borderRadius: 22,
+            child: _content(context),
+          );
+    return card;
+  }
+
+  Widget _content(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(22),
+      onTap: onTap,
+      child: Row(
+        children: [
+          isClient
+              ? ClientIconBadge(
+                  icon: icon,
+                  color: color,
+                  size: 44,
+                  iconSize: 20,
+                  borderRadius: 14,
+                )
+              : PastelIconBadge(
+                  icon: icon,
+                  color: color,
+                  size: 44,
+                  iconSize: 20,
+                  borderRadius: 14,
+                ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: Theme.of(context).textTheme.titleSmall),
+                const SizedBox(height: 2),
+                Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+              ],
             ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(label, style: Theme.of(context).textTheme.titleSmall),
-                  const SizedBox(height: 2),
-                  Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-            ),
-            const Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 14,
-              color: BranchColors.onSurfaceVariant,
-            ),
-          ],
-        ),
+          ),
+          Icon(
+            Icons.arrow_forward_ios_rounded,
+            size: 14,
+            color: isClient
+                ? ClientColors.textMuted
+                : BranchColors.onSurfaceVariant,
+          ),
+        ],
       ),
     );
   }

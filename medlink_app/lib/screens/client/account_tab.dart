@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../services/auth_controller.dart';
 import '../../services/auth_service.dart';
 import '../../utils/theme.dart';
-import '../branch_manager/branch_manager_design.dart';
+import 'client_design.dart';
 
 class AccountTab extends StatelessWidget {
   const AccountTab({super.key});
@@ -21,9 +19,8 @@ class AccountTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
       children: [
-        GlassCard(
+        ClientCard(
           borderRadius: 28,
-          tint: 0.78,
           child: Row(
             children: [
               Container(
@@ -32,15 +29,13 @@ class AccountTab extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: const LinearGradient(
-                    colors: BranchColors.glassHeroGradient,
+                    colors: [ClientColors.primary, ClientColors.primaryDark],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: BranchColors.glassHeroGradient.first.withValues(
-                        alpha: .35,
-                      ),
+                      color: ClientColors.primary.withValues(alpha: .35),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -163,7 +158,7 @@ class _AccountTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SoftCard(
+    return ClientCard(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       borderRadius: 22,
@@ -172,7 +167,7 @@ class _AccountTile extends StatelessWidget {
         onTap: onTap,
         child: Row(
           children: [
-            PastelIconBadge(
+            ClientIconBadge(
               icon: icon,
               color: color,
               size: 44,

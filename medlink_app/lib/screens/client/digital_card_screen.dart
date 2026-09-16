@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -19,7 +17,7 @@ class DigitalCardScreen extends StatelessWidget {
       return Theme(
         data: AppTheme.clientLight,
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: ClientColors.surface,
           body: ClientGlassBackground(
             child: const Center(child: CircularProgressIndicator()),
           ),
@@ -30,7 +28,7 @@ class DigitalCardScreen extends StatelessWidget {
     return Theme(
       data: AppTheme.clientLight,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: ClientColors.surface,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           foregroundColor: ClientColors.text,

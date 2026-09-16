@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +10,6 @@ import '../../utils/theme.dart';
 import '../../widgets/order_status_chip.dart';
 import '../../widgets/rate_driver_sheet.dart';
 import '../../widgets/driver_location_map.dart';
-import '../branch_manager/branch_manager_design.dart';
 import 'client_design.dart';
 
 class OrderDetailScreen extends StatefulWidget {
@@ -122,9 +119,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Theme(
       data: AppTheme.clientLight,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: ClientColors.background,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: ClientColors.surface,
+          elevation: 0,
+          scrolledUnderElevation: 0,
           foregroundColor: ClientColors.text,
           title: Text(
             _order != null
@@ -202,7 +201,7 @@ class _OrderContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GlassCard(
+          ClientCard(
             borderRadius: 24,
             tint: 0.82,
             child: Row(
@@ -248,17 +247,17 @@ class _OrderContent extends StatelessWidget {
             const SizedBox(height: 16),
           ],
           if (order.deliveryAddress != null) ...[
-            BranchSectionTitle(
+            ClientSectionTitle(
               title: l10n.deliveryAddress,
               icon: Icons.location_on_outlined,
               iconColor: ClientColors.primary,
             ),
             const SizedBox(height: 10),
-            SoftCard(
+            ClientCard(
               borderRadius: 22,
               child: Row(
                 children: [
-                  PastelIconBadge(
+                  ClientIconBadge(
                     icon: Icons.location_on_outlined,
                     color: ClientColors.primary,
                     size: 44,
@@ -288,12 +287,12 @@ class _OrderContent extends StatelessWidget {
             const SizedBox(height: 16),
           ],
           if (order.scheduledDeliveryAt != null) ...[
-            SoftCard(
+            ClientCard(
               borderRadius: 22,
               margin: const EdgeInsets.only(bottom: 16),
               child: Row(
                 children: [
-                  PastelIconBadge(
+                  ClientIconBadge(
                     icon: Icons.schedule_rounded,
                     color: ClientColors.primary,
                     size: 44,
@@ -327,13 +326,13 @@ class _OrderContent extends StatelessWidget {
             const SizedBox(height: 16),
           ],
           if (order.items != null && order.items!.isNotEmpty) ...[
-            BranchSectionTitle(
+            ClientSectionTitle(
               title: l10n.orderItemsSection,
               icon: Icons.inventory_2_outlined,
               iconColor: ClientColors.primarySoft,
             ),
             const SizedBox(height: 10),
-            GlassCard(
+            ClientCard(
               borderRadius: 24,
               tint: 0.78,
               child: ListView.separated(
@@ -395,19 +394,19 @@ class _OrderContent extends StatelessWidget {
             const SizedBox(height: 16),
           ],
           if (order.notes != null && order.notes!.isNotEmpty) ...[
-            BranchSectionTitle(
+            ClientSectionTitle(
               title: l10n.orderNotes,
               icon: Icons.notes_rounded,
               iconColor: ClientColors.primary,
             ),
             const SizedBox(height: 10),
-            SoftCard(
+            ClientCard(
               borderRadius: 22,
               child: Text(order.notes!, style: theme.textTheme.bodyMedium),
             ),
             const SizedBox(height: 16),
           ],
-          GlassCard(
+          ClientCard(
             borderRadius: 24,
             tint: 0.82,
             child: Column(
@@ -502,7 +501,7 @@ class _RatingDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return SoftCard(
+    return ClientCard(
       borderRadius: 22,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +8,6 @@ import '../../services/order_controller.dart';
 import '../../utils/theme.dart';
 import '../../utils/error_mapper.dart';
 import '../../widgets/error_banner.dart';
-import '../branch_manager/branch_manager_design.dart';
 import 'addresses_screen.dart';
 import 'client_design.dart';
 
@@ -85,9 +82,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Theme(
       data: AppTheme.clientLight,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: ClientColors.background,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: ClientColors.surface,
+          elevation: 0,
+          scrolledUnderElevation: 0,
           foregroundColor: ClientColors.text,
           title: Text(l10n.checkoutTitle),
         ),
@@ -103,7 +102,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ),
                   const SizedBox(height: 16),
                 ],
-                BranchSectionTitle(
+                ClientSectionTitle(
                   title: l10n.deliveryAddress,
                   icon: Icons.location_on_outlined,
                   iconColor: ClientColors.primary,
@@ -112,11 +111,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 if (orderCtrl.isLoading && orderCtrl.addresses.isEmpty)
                   const Center(child: CircularProgressIndicator())
                 else if (orderCtrl.addresses.isEmpty)
-                  SoftCard(
+                  ClientCard(
                     borderRadius: 22,
                     child: Row(
                       children: [
-                        PastelIconBadge(
+                        ClientIconBadge(
                           icon: Icons.location_off_outlined,
                           color: ClientColors.textMuted,
                           size: 44,
@@ -140,7 +139,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   )
                 else ...[
                   for (final addr in orderCtrl.addresses)
-                    SoftCard(
+                    ClientCard(
                       margin: const EdgeInsets.only(bottom: 10),
                       borderRadius: 22,
                       padding: const EdgeInsets.all(14),
@@ -192,7 +191,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ),
                 ],
                 const SizedBox(height: 20),
-                BranchSectionTitle(
+                ClientSectionTitle(
                   title: l10n.orderNotes,
                   icon: Icons.notes_rounded,
                   iconColor: ClientColors.primary,
@@ -204,13 +203,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   decoration: InputDecoration(hintText: l10n.deliveryNotesHint),
                 ),
                 const SizedBox(height: 20),
-                BranchSectionTitle(
+                ClientSectionTitle(
                   title: l10n.orderSummary,
                   icon: Icons.receipt_long_outlined,
                   iconColor: ClientColors.primarySoft,
                 ),
                 const SizedBox(height: 12),
-                GlassCard(
+                ClientCard(
                   borderRadius: 24,
                   tint: 0.82,
                   child: Column(

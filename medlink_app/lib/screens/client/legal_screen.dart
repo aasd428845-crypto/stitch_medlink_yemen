@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -15,9 +13,11 @@ class LegalScreen extends StatelessWidget {
     return Theme(
       data: AppTheme.clientLight,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: ClientColors.background,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: ClientColors.surface,
+          elevation: 0,
+          scrolledUnderElevation: 0,
           foregroundColor: ClientColors.text,
           title: Text(l10n.termsPrivacyTitle),
         ),
@@ -47,7 +47,12 @@ class LegalScreen extends StatelessWidget {
 }
 
 class _LegalSection extends StatelessWidget {
-  const _LegalSection({required this.icon, required this.color, required this.title, required this.text});
+  const _LegalSection({
+    required this.icon,
+    required this.color,
+    required this.title,
+    required this.text,
+  });
   final IconData icon;
   final Color color;
   final String title;
@@ -63,13 +68,29 @@ class _LegalSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              ClientIconBadge(icon: icon, color: color, size: 40, iconSize: 20, borderRadius: 12),
+              ClientIconBadge(
+                icon: icon,
+                color: color,
+                size: 40,
+                iconSize: 20,
+                borderRadius: 12,
+              ),
               const SizedBox(width: 12),
-              Expanded(child: Text(title, style: Theme.of(context).textTheme.titleSmall)),
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 14),
-          Text(text, style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.7)),
+          Text(
+            text,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(height: 1.7),
+          ),
         ],
       ),
     );

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +41,16 @@ class _AddressesScreenState extends State<AddressesScreen> {
         ),
         body: ClientGlassBackground(
           child: controller.isLoading && controller.addresses.isEmpty
-              ? GlassLoadingState(message: l10n.addressesLoading)
+              ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 12),
+                      Text(l10n.addressesLoading),
+                    ],
+                  ),
+                )
               : controller.addresses.isEmpty
               ? Center(
                   child: ClientCard(
@@ -131,6 +138,7 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
   final _districtCtrl = TextEditingController();
   LatLng? _point;
   bool _saving = false;
+  bool _isDefault = false;
 
   @override
   void dispose() {
@@ -156,6 +164,7 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
         addressText: _detailsCtrl.text.trim(),
         latitude: _point?.latitude,
         longitude: _point?.longitude,
+        isDefault: _isDefault,
         ownerName: _ownerCtrl.text.trim(),
         phone: _phoneCtrl.text.trim(),
         altPhone: _altPhoneCtrl.text.trim(),
@@ -197,270 +206,278 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
     final bottom = MediaQuery.viewInsetsOf(context).bottom;
     final topInset = MediaQuery.paddingOf(context).top;
     return ClipRRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-        child: Container(
-          height: double.infinity,
-          padding: EdgeInsets.fromLTRB(20, topInset + 12, 20, 20 + bottom),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: .94),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: .72),
-              width: 1.2,
-            ),
-          ),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Handle
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
+      child: Container(
+        height: double.infinity,
+        padding: EdgeInsets.fromLTRB(20, topInset + 12, 20, 20 + bottom),
+        decoration: const BoxDecoration(color: ClientColors.background),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: ClientColors.outline,
+                      borderRadius: BorderRadius.circular(99),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Title
+                Row(
+                  children: [
+                    Container(
+                      width: 5,
+                      height: 24,
                       decoration: BoxDecoration(
-                        color: ClientColors.outline,
+                        gradient: const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            ClientColors.primary,
+                            ClientColors.primaryDark,
+                          ],
+                        ),
                         borderRadius: BorderRadius.circular(99),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Title
-                  Row(
-                    children: [
-                      Container(
-                        width: 5,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              ClientColors.primary,
-                              ClientColors.primaryDark,
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(99),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        l10n.addNewAddress,
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  // ── Section: معلومات العنوان ──────────────────────────
-                  _SectionLabel(
-                    icon: Icons.location_on_outlined,
-                    label: l10n.addressInformation,
-                    gradient: const [
-                      ClientColors.primary,
-                      ClientColors.primaryDark,
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: _labelCtrl,
-                    decoration: InputDecoration(
-                      labelText: l10n.addressLabel,
-                      prefixIcon: Icon(Icons.label_outline),
+                    const SizedBox(width: 10),
+                    Text(
+                      l10n.addNewAddress,
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.w900),
                     ),
-                    validator: (v) =>
-                        (v == null || v.trim().isEmpty)
-                            ? l10n.requiredField
-                            : null,
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: _detailsCtrl,
-                    maxLines: 2,
-                    decoration: InputDecoration(
-                      labelText: l10n.addressText,
-                      prefixIcon: Icon(Icons.edit_location_alt_outlined),
-                    ),
-                    validator: (v) =>
-                        (v == null || v.trim().isEmpty)
-                            ? l10n.requiredField
-                            : null,
-                  ),
-                  const SizedBox(height: 12),
+                  ],
+                ),
+                const SizedBox(height: 20),
 
-                  // ── Section: الموقع الجغرافي ──────────────────────────
-                  _SectionLabel(
-                    icon: Icons.map_outlined,
-                    label: l10n.locationInformation,
-                    gradient: const [
-                      ClientColors.success,
-                      ClientColors.primary,
-                    ],
+                // ── Section: معلومات العنوان ──────────────────────────
+                _SectionLabel(
+                  icon: Icons.location_on_outlined,
+                  label: l10n.addressInformation,
+                  gradient: const [
+                    ClientColors.primary,
+                    ClientColors.primaryDark,
+                  ],
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _labelCtrl,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    labelText: l10n.addressLabel,
+                    prefixIcon: Icon(Icons.label_outline),
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _governorateCtrl,
-                            decoration: InputDecoration(
-                              labelText: l10n.governorateLabel,
-                            prefixIcon: Icon(Icons.account_balance_outlined),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _cityCtrl,
-                            decoration: InputDecoration(
-                              labelText: l10n.cityDistrictLabel,
-                            prefixIcon: Icon(Icons.location_city_outlined),
-                          ),
-                        ),
-                      ),
-                    ],
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? l10n.requiredField
+                      : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _detailsCtrl,
+                  maxLines: 2,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    labelText: l10n.addressText,
+                    prefixIcon: Icon(Icons.edit_location_alt_outlined),
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _districtCtrl,
-                            decoration: InputDecoration(
-                              labelText: l10n.districtLabel,
-                            prefixIcon: Icon(Icons.holiday_village_outlined),
-                          ),
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? l10n.requiredField
+                      : null,
+                ),
+                const SizedBox(height: 12),
+
+                // ── Section: الموقع الجغرافي ──────────────────────────
+                _SectionLabel(
+                  icon: Icons.map_outlined,
+                  label: l10n.locationInformation,
+                  gradient: const [ClientColors.success, ClientColors.primary],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _governorateCtrl,
+                        decoration: InputDecoration(
+                          labelText: l10n.governorateLabel,
+                          prefixIcon: Icon(Icons.account_balance_outlined),
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _landmarkCtrl,
-                            decoration: InputDecoration(
-                              labelText: l10n.landmarkLabel,
-                            prefixIcon: Icon(Icons.place_outlined),
-                          ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _cityCtrl,
+                        decoration: InputDecoration(
+                          labelText: l10n.cityDistrictLabel,
+                          prefixIcon: Icon(Icons.location_city_outlined),
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  // خريطة
-                  StatefulBuilder(
-                    builder: (ctx, setInner) => OutlinedButton.icon(
-                      onPressed: () async {
-                        final selected = await Navigator.of(context)
-                            .push<LatLng>(
-                              MaterialPageRoute(
-                                builder: (_) => const _MapPicker(),
-                              ),
-                            );
-                        if (selected != null) {
-                          setState(() => _point = selected);
-                          setInner(() {});
-                        }
-                      },
-                      icon: const Icon(Icons.map_outlined),
-                      label: Text(
-                        _point == null
-                            ? l10n.chooseLocationOnMap
-                            : l10n.locationSelected,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _districtCtrl,
+                        decoration: InputDecoration(
+                          labelText: l10n.districtLabel,
+                          prefixIcon: Icon(Icons.holiday_village_outlined),
+                        ),
                       ),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: _point != null
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _landmarkCtrl,
+                        decoration: InputDecoration(
+                          labelText: l10n.landmarkLabel,
+                          prefixIcon: Icon(Icons.place_outlined),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                // خريطة
+                StatefulBuilder(
+                  builder: (ctx, setInner) => OutlinedButton.icon(
+                    onPressed: () async {
+                      final selected = await Navigator.of(context).push<LatLng>(
+                        MaterialPageRoute(builder: (_) => const _MapPicker()),
+                      );
+                      if (selected != null) {
+                        setState(() => _point = selected);
+                        setInner(() {});
+                      }
+                    },
+                    icon: const Icon(Icons.map_outlined),
+                    label: Text(
+                      _point == null
+                          ? l10n.chooseLocationOnMap
+                          : l10n.locationSelected,
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: _point != null
+                          ? ClientColors.success
+                          : ClientColors.primary,
+                      side: BorderSide(
+                        color: _point != null
                             ? ClientColors.success
-                            : ClientColors.primary,
-                        side: BorderSide(
-                          color: _point != null
-                              ? ClientColors.success
-                              : ClientColors.outline,
-                        ),
+                            : ClientColors.outline,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                ),
+                const SizedBox(height: 20),
 
-                  // ── Section: معلومات صاحب المنشأة ─────────────────────
-                  _SectionLabel(
-                    icon: Icons.business_outlined,
-                    label: l10n.ownerInformation,
-                    gradient: const [
-                      ClientColors.primaryDark,
-                      ClientColors.navy,
-                    ],
+                // ── Section: معلومات صاحب المنشأة ─────────────────────
+                _SectionLabel(
+                  icon: Icons.business_outlined,
+                  label: l10n.ownerInformation,
+                  gradient: const [ClientColors.primaryDark, ClientColors.navy],
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _ownerCtrl,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    labelText: l10n.ownerNameLabel,
+                    prefixIcon: Icon(Icons.person_outline),
                   ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: _ownerCtrl,
-                    decoration: InputDecoration(
-                      labelText: l10n.ownerNameLabel,
-                      prefixIcon: Icon(Icons.person_outline),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _phoneCtrl,
+                        keyboardType: TextInputType.phone,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          labelText: l10n.phoneLabel,
+                          prefixIcon: Icon(Icons.phone_outlined),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _altPhoneCtrl,
+                        keyboardType: TextInputType.phone,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          labelText: l10n.alternatePhoneLabel,
+                          prefixIcon: Icon(Icons.phone_callback_outlined),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                ClientCard(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
+                  borderRadius: 16,
+                  child: SwitchListTile.adaptive(
+                    contentPadding: EdgeInsets.zero,
+                    value: _isDefault,
+                    onChanged: (value) => setState(() => _isDefault = value),
+                    activeColor: ClientColors.primary,
+                    title: Text(
+                      l10n.defaultAddressLabel,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    subtitle: Text(
+                      l10n.defaultAddressHint,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _phoneCtrl,
-                          keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(
-                              labelText: l10n.phoneLabel,
-                            prefixIcon: Icon(Icons.phone_outlined),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _altPhoneCtrl,
-                          keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(
-                              labelText: l10n.alternatePhoneLabel,
-                            prefixIcon: Icon(Icons.phone_callback_outlined),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
+                ),
+                const SizedBox(height: 24),
 
-                  // ── Action buttons ────────────────────────────────────
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          child: Text(l10n.cancelButton),
-                        ),
+                // ── Action buttons ────────────────────────────────────
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: Text(l10n.cancelButton),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        flex: 2,
-                        child: FilledButton.icon(
-                          onPressed: _saving ? null : _save,
-                          icon: _saving
-                              ? const SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Icon(Icons.save_outlined),
-                          label: Text(l10n.saveAddressButton),
-                        ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 2,
+                      child: FilledButton.icon(
+                        onPressed: _saving ? null : _save,
+                        icon: _saving
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Icon(Icons.save_outlined),
+                        label: Text(l10n.saveAddressButton),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -519,6 +536,7 @@ class _AddressTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ClientCard(
       padding: const EdgeInsets.all(14),
       borderRadius: 22,
@@ -570,17 +588,38 @@ class _AddressTile extends StatelessWidget {
                       const Icon(
                         Icons.phone_outlined,
                         size: 12,
-                      color: ClientColors.success,
+                        color: ClientColors.success,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         address.phone!,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: ClientColors.success,
+                          color: ClientColors.success,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                     ],
+                  ),
+                ],
+                if (address.isDefault) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: ClientColors.primarySoft,
+                      borderRadius: BorderRadius.circular(99),
+                    ),
+                    child: Text(
+                      l10n.defaultAddressBadge,
+                      style: const TextStyle(
+                        color: ClientColors.primaryDark,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                   ),
                 ],
               ],

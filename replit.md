@@ -82,6 +82,34 @@ Drivers created by a branch manager have `requires_password_change = true` in `p
 
 ---
 
+## Customer UI migration — remaining screens
+
+The customer-facing screens now use the same light clinical design system as the
+redesigned customer account and home navigation:
+
+- Digital card and QR presentation
+- Notifications, including client-specific empty, error, unread, and mark-all-read states
+- Business profile / organization details
+- Help and support, with client styling kept separate from branch-manager and driver styling
+- Legal and privacy sections
+- Delivery addresses, including organized address/contact/location fields, map selection,
+  keyboard-safe scrolling, validation feedback, default-address selection, and save states
+- Offer details, including the existing offer image, discount text, description, validity,
+  and governorate data
+- Customer home, catalog, orders, cart, checkout, special request, and order detail flows
+- Shared customer card, icon badge, section title, and bottom navigation styling
+
+### Scope boundaries
+
+- Existing Supabase queries, controllers, routes, models, and real data flows were kept.
+- No shared Web repository or Supabase schema changes were required. The existing
+  `client_addresses` extended fields from migration `0014_client_address_extended_fields.sql`
+  are used as-is.
+- No remaining customer screen was identified that still requires the old branch-manager visual
+  system. Branch-manager and driver interfaces remain on their existing design systems.
+
+---
+
 ## Architecture Rules (from CLAUDE.md)
 
 - Every Supabase call must log through the `SUPABASE_DEBUG` tag (see `AppConstants.supabaseDebugTag`).

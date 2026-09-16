@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../services/order_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/order_status_chip.dart';
-import '../branch_manager/branch_manager_design.dart';
+import 'client_design.dart';
 
 class OrdersTab extends StatefulWidget {
   const OrdersTab({super.key});
@@ -62,13 +60,13 @@ class _OrdersTabState extends State<OrdersTab> {
 
     if (orderCtrl.orders.isEmpty) {
       return Center(
-        child: SoftCard(
+        child: ClientCard(
           padding: const EdgeInsets.all(32),
           borderRadius: 28,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              PastelIconBadge(
+              ClientIconBadge(
                 icon: Icons.receipt_long_outlined,
                 color: ClientColors.primary,
                 size: 56,
@@ -97,7 +95,7 @@ class _OrdersTabState extends State<OrdersTab> {
           final dateStr = order.createdAt != null
               ? order.createdAt!.substring(0, 10)
               : '';
-          return SoftCard(
+          return ClientCard(
             padding: EdgeInsets.zero,
             borderRadius: 24,
             child: InkWell(
@@ -110,9 +108,9 @@ class _OrdersTabState extends State<OrdersTab> {
                   children: [
                     Row(
                       children: [
-                        PastelIconBadge(
+                        ClientIconBadge(
                           icon: Icons.receipt_long_rounded,
-                          color: BranchColors.primary,
+                          color: ClientColors.primary,
                           size: 44,
                           iconSize: 20,
                           borderRadius: 14,

@@ -12,7 +12,6 @@ import '../../services/cart_controller.dart';
 import '../../services/catalog_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/product_card.dart';
-import '../branch_manager/branch_manager_design.dart';
 import 'client_design.dart';
 
 class HomeTab extends StatefulWidget {
@@ -75,7 +74,7 @@ class _HomeTabState extends State<HomeTab> {
             ),
           ),
           SliverToBoxAdapter(
-            child: BranchSectionTitle(
+            child: ClientSectionTitle(
               title: l10n.offersSection,
               icon: Icons.local_offer_outlined,
               iconColor: ClientColors.primary,
@@ -100,7 +99,7 @@ class _HomeTabState extends State<HomeTab> {
               catalog.categoriesError != null ||
               catalog.categories.isNotEmpty) ...[
             SliverToBoxAdapter(
-              child: BranchSectionTitle(
+              child: ClientSectionTitle(
                 title: l10n.categoriesSection,
                 icon: Icons.category_outlined,
                 iconColor: ClientColors.primary,
@@ -128,7 +127,7 @@ class _HomeTabState extends State<HomeTab> {
               catalog.newProductsError != null ||
               catalog.newProducts.isNotEmpty) ...[
             SliverToBoxAdapter(
-              child: BranchSectionTitle(
+              child: ClientSectionTitle(
                 title: l10n.newProductsSection,
                 icon: Icons.new_releases_outlined,
                 iconColor: ClientColors.primary,
@@ -148,7 +147,7 @@ class _HomeTabState extends State<HomeTab> {
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
           ],
           SliverToBoxAdapter(
-            child: BranchSectionTitle(
+            child: ClientSectionTitle(
               title: l10n.featuredProducts,
               icon: Icons.medication_outlined,
               iconColor: ClientColors.primary,
@@ -189,7 +188,7 @@ class _HomeTabState extends State<HomeTab> {
             )
           else if (catalog.products.isEmpty)
             SliverToBoxAdapter(
-              child: SoftCard(
+              child: ClientCard(
                 margin: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                 borderRadius: 24,
                 child: Center(
@@ -230,7 +229,7 @@ class _HomeTabState extends State<HomeTab> {
               catalog.reorderError != null ||
               catalog.reorderRecommendations.isNotEmpty) ...[
             SliverToBoxAdapter(
-              child: BranchSectionTitle(
+              child: ClientSectionTitle(
                 title: l10n.reorderSuggestions,
                 icon: Icons.repeat_rounded,
                 iconColor: ClientColors.primary,
@@ -251,7 +250,7 @@ class _HomeTabState extends State<HomeTab> {
               catalog.offersLoading ||
               catalog.offersError != null) ...[
             SliverToBoxAdapter(
-              child: BranchSectionTitle(
+              child: ClientSectionTitle(
                 title: l10n.currentOffersSection,
                 icon: Icons.local_offer_rounded,
                 iconColor: ClientColors.primary,

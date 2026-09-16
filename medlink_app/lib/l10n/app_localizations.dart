@@ -434,6 +434,12 @@ abstract class AppLocalizations {
   /// **'بيانات العميل ورمز QR'**
   String get digitalCardSubtitle;
 
+  /// No description provided for @digitalCardInstruction.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعرض هذا الرمز للتحقق من بطاقتك الرقمية'**
+  String get digitalCardInstruction;
+
   /// No description provided for @manageDeliveryAddresses.
   ///
   /// In ar, this message translates to:
@@ -452,6 +458,24 @@ abstract class AppLocalizations {
   /// **'البيانات المسجلة في الحساب'**
   String get businessProfileSubtitle;
 
+  /// No description provided for @linkedBranchLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفرع المرتبط'**
+  String get linkedBranchLabel;
+
+  /// No description provided for @notAvailableLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير محدد'**
+  String get notAvailableLabel;
+
+  /// No description provided for @businessProfileNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تُدار بيانات الحساب الأساسية من خلال الملف المسجل في النظام.'**
+  String get businessProfileNote;
+
   /// No description provided for @termsPrivacyTitle.
   ///
   /// In ar, this message translates to:
@@ -463,6 +487,30 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'راجع أحكام استخدام MedLink'**
   String get termsPrivacySubtitle;
+
+  /// No description provided for @termsSectionTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشروط والأحكام'**
+  String get termsSectionTitle;
+
+  /// No description provided for @termsSectionBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'باستخدام MedLink، تؤكد صحة بياناتك وتتعهد باستخدام التطبيق لطلب الأدوية والمنتجات الطبية بطريقة نظامية. تخضع الطلبات للتوفر والمراجعة والتوصيل حسب الفرع.'**
+  String get termsSectionBody;
+
+  /// No description provided for @privacySectionTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخصوصية'**
+  String get privacySectionTitle;
+
+  /// No description provided for @privacySectionBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'نستخدم بيانات الحساب والعناوين والطلبات لتشغيل الخدمة وتوصيل الطلبات وتحسين الدعم. لا يعرض التطبيق بياناتك لعملاء آخرين، وتخضع البيانات لسياسات قاعدة البيانات وصلاحيات الحساب.'**
+  String get privacySectionBody;
 
   /// No description provided for @branchDashboardLabel.
   ///
@@ -962,6 +1010,108 @@ abstract class AppLocalizations {
   /// **'حفظ العنوان'**
   String get saveAddress;
 
+  /// No description provided for @addressInformation.
+  ///
+  /// In ar, this message translates to:
+  /// **'معلومات العنوان'**
+  String get addressInformation;
+
+  /// No description provided for @locationInformation.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموقع الجغرافي'**
+  String get locationInformation;
+
+  /// No description provided for @ownerInformation.
+  ///
+  /// In ar, this message translates to:
+  /// **'معلومات صاحب المنشأة'**
+  String get ownerInformation;
+
+  /// No description provided for @governorateLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحافظة'**
+  String get governorateLabel;
+
+  /// No description provided for @cityDistrictLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المدينة / المديرية'**
+  String get cityDistrictLabel;
+
+  /// No description provided for @districtLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحي / المنطقة'**
+  String get districtLabel;
+
+  /// No description provided for @landmarkLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'أقرب معلم'**
+  String get landmarkLabel;
+
+  /// No description provided for @ownerNameLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم صاحب المنشأة'**
+  String get ownerNameLabel;
+
+  /// No description provided for @alternatePhoneLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم هاتف آخر'**
+  String get alternatePhoneLabel;
+
+  /// No description provided for @chooseLocationOnMap.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختيار الموقع من الخريطة'**
+  String get chooseLocationOnMap;
+
+  /// No description provided for @locationSelected.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديد الموقع ✓'**
+  String get locationSelected;
+
+  /// No description provided for @cancelButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get cancelButton;
+
+  /// No description provided for @saveAddressButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ العنوان'**
+  String get saveAddressButton;
+
+  /// No description provided for @defaultAddressLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'استخدام هذا العنوان كعنوان افتراضي'**
+  String get defaultAddressLabel;
+
+  /// No description provided for @defaultAddressHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم اختياره تلقائياً عند إنشاء طلب جديد.'**
+  String get defaultAddressHint;
+
+  /// No description provided for @defaultAddressBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'العنوان الافتراضي'**
+  String get defaultAddressBadge;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطلوب'**
+  String get requiredField;
+
   /// No description provided for @orderNotes.
   ///
   /// In ar, this message translates to:
@@ -1327,6 +1477,12 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'لا توجد تنبيهات حتى الآن'**
   String get notificationsEmpty;
+
+  /// No description provided for @notificationsEmptyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستظهر تنبيهاتك هنا فور وصولها.'**
+  String get notificationsEmptyHint;
 
   /// No description provided for @offerDetailTitle.
   ///

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +6,6 @@ import '../../l10n/app_localizations.dart';
 import '../../services/cart_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/cart_item_tile.dart';
-import '../branch_manager/branch_manager_design.dart';
 import 'client_design.dart';
 
 class CartScreen extends StatelessWidget {
@@ -22,9 +19,11 @@ class CartScreen extends StatelessWidget {
     return Theme(
       data: AppTheme.clientLight,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: ClientColors.background,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: ClientColors.surface,
+          elevation: 0,
+          scrolledUnderElevation: 0,
           foregroundColor: ClientColors.text,
           title: Text(l10n.cartTitle),
           actions: [
@@ -39,13 +38,13 @@ class CartScreen extends StatelessWidget {
         body: ClientGlassBackground(
           child: cart.isEmpty
               ? Center(
-                  child: SoftCard(
+                  child: ClientCard(
                     padding: const EdgeInsets.all(32),
                     borderRadius: 28,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        PastelIconBadge(
+                        ClientIconBadge(
                           icon: Icons.shopping_cart_outlined,
                           color: ClientColors.primary,
                           size: 56,
@@ -70,7 +69,7 @@ class CartScreen extends StatelessWidget {
                         separatorBuilder: (_, __) => const SizedBox(height: 10),
                         itemBuilder: (context, i) {
                           final item = cart.items[i];
-                          return SoftCard(
+                          return ClientCard(
                             padding: const EdgeInsets.all(8),
                             borderRadius: 22,
                             child: CartItemTile(
@@ -83,7 +82,7 @@ class CartScreen extends StatelessWidget {
                         },
                       ),
                     ),
-                    GlassCard(
+                    ClientCard(
                       margin: const EdgeInsets.fromLTRB(12, 4, 12, 12),
                       borderRadius: 24,
                       tint: 0.82,
