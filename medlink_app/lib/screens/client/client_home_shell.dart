@@ -9,9 +9,9 @@ import '../../services/cart_controller.dart';
 import '../../services/notification_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/app_logo.dart';
-import '../branch_manager/branch_floating_bottom_bar.dart';
 import 'account_tab.dart';
 import 'catalog_tab.dart';
+import 'client_design.dart';
 import 'home_tab.dart';
 import 'orders_tab.dart';
 
@@ -110,10 +110,10 @@ class _ClientHomeShellState extends State<ClientHomeShell> {
           padding: const EdgeInsets.only(bottom: 96),
           child: IndexedStack(index: _index, children: _tabs),
         ),
-        bottomNavigationBar: BranchFloatingBottomBar(
+        bottomNavigationBar: ClientFloatingBottomBar(
           items: [
             for (final tab in tabDefs)
-              BranchBottomBarItem(icon: tab.$2, label: tab.$1),
+              ClientBottomBarItem(icon: tab.$2, label: tab.$1),
           ],
           selectedIndex: _index,
           onSelect: (i) => setState(() => _index = i),

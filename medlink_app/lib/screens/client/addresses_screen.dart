@@ -10,7 +10,6 @@ import '../../models/client_address.dart';
 import '../../services/order_controller.dart';
 import '../../utils/error_mapper.dart';
 import '../../utils/theme.dart';
-import '../branch_manager/branch_manager_design.dart';
 import 'client_design.dart';
 
 class AddressesScreen extends StatefulWidget {
@@ -47,13 +46,13 @@ class _AddressesScreenState extends State<AddressesScreen> {
               ? GlassLoadingState(message: l10n.addressesLoading)
               : controller.addresses.isEmpty
               ? Center(
-                  child: SoftCard(
+                  child: ClientCard(
                     padding: const EdgeInsets.all(32),
                     borderRadius: 28,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        PastelIconBadge(
+                        ClientIconBadge(
                           icon: Icons.location_off_outlined,
                           color: ClientColors.textMuted,
                           size: 56,
@@ -194,6 +193,7 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final bottom = MediaQuery.viewInsetsOf(context).bottom;
     final topInset = MediaQuery.paddingOf(context).top;
     return ClipRRect(
@@ -222,7 +222,7 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: BranchColors.outlineVariant,
+                        color: ClientColors.outline,
                         borderRadius: BorderRadius.circular(99),
                       ),
                     ),
@@ -238,14 +238,17 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                           gradient: const LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
-                            colors: BranchColors.glassHeroGradient,
+                            colors: [
+                              ClientColors.primary,
+                              ClientColors.primaryDark,
+                            ],
                           ),
                           borderRadius: BorderRadius.circular(99),
                         ),
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        'إضافة عنوان جديد',
+                        l10n.addNewAddress,
                         style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.w900),
                       ),
@@ -256,37 +259,47 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                   // ── Section: معلومات العنوان ──────────────────────────
                   _SectionLabel(
                     icon: Icons.location_on_outlined,
-                    label: 'معلومات العنوان',
-                    gradient: BranchColors.pastelBluGradient,
+                    label: l10n.addressInformation,
+                    gradient: const [
+                      ClientColors.primary,
+                      ClientColors.primaryDark,
+                    ],
                   ),
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: _labelCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'اسم العنوان (مثال: الصيدلية)',
+                    decoration: InputDecoration(
+                      labelText: l10n.addressLabel,
                       prefixIcon: Icon(Icons.label_outline),
                     ),
                     validator: (v) =>
-                        (v == null || v.trim().isEmpty) ? 'مطلوب' : null,
+                        (v == null || v.trim().isEmpty)
+                            ? l10n.requiredField
+                            : null,
                   ),
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: _detailsCtrl,
                     maxLines: 2,
-                    decoration: const InputDecoration(
-                      labelText: 'العنوان بالتفصيل',
+                    decoration: InputDecoration(
+                      labelText: l10n.addressText,
                       prefixIcon: Icon(Icons.edit_location_alt_outlined),
                     ),
                     validator: (v) =>
-                        (v == null || v.trim().isEmpty) ? 'مطلوب' : null,
+                        (v == null || v.trim().isEmpty)
+                            ? l10n.requiredField
+                            : null,
                   ),
                   const SizedBox(height: 12),
 
                   // ── Section: الموقع الجغرافي ──────────────────────────
                   _SectionLabel(
                     icon: Icons.map_outlined,
-                    label: 'الموقع الجغرافي',
-                    gradient: BranchColors.pastelGreenGradient,
+                    label: l10n.locationInformation,
+                    gradient: const [
+                      ClientColors.success,
+                      ClientColors.primary,
+                    ],
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -294,8 +307,8 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                       Expanded(
                         child: TextFormField(
                           controller: _governorateCtrl,
-                          decoration: const InputDecoration(
-                            labelText: 'المحافظة',
+                            decoration: InputDecoration(
+                              labelText: l10n.governorateLabel,
                             prefixIcon: Icon(Icons.account_balance_outlined),
                           ),
                         ),
@@ -304,8 +317,8 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                       Expanded(
                         child: TextFormField(
                           controller: _cityCtrl,
-                          decoration: const InputDecoration(
-                            labelText: 'المدينة / المديرية',
+                            decoration: InputDecoration(
+                              labelText: l10n.cityDistrictLabel,
                             prefixIcon: Icon(Icons.location_city_outlined),
                           ),
                         ),
@@ -318,8 +331,8 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                       Expanded(
                         child: TextFormField(
                           controller: _districtCtrl,
-                          decoration: const InputDecoration(
-                            labelText: 'الحي / المنطقة',
+                            decoration: InputDecoration(
+                              labelText: l10n.districtLabel,
                             prefixIcon: Icon(Icons.holiday_village_outlined),
                           ),
                         ),
@@ -328,8 +341,8 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                       Expanded(
                         child: TextFormField(
                           controller: _landmarkCtrl,
-                          decoration: const InputDecoration(
-                            labelText: 'أقرب معلم',
+                            decoration: InputDecoration(
+                              labelText: l10n.landmarkLabel,
                             prefixIcon: Icon(Icons.place_outlined),
                           ),
                         ),
@@ -355,17 +368,17 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                       icon: const Icon(Icons.map_outlined),
                       label: Text(
                         _point == null
-                            ? 'اختيار الموقع من الخريطة'
-                            : 'تم تحديد الموقع ✓',
+                            ? l10n.chooseLocationOnMap
+                            : l10n.locationSelected,
                       ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: _point != null
-                            ? BranchColors.success
-                            : BranchColors.primary,
+                            ? ClientColors.success
+                            : ClientColors.primary,
                         side: BorderSide(
                           color: _point != null
-                              ? BranchColors.success
-                              : BranchColors.outlineVariant,
+                              ? ClientColors.success
+                              : ClientColors.outline,
                         ),
                       ),
                     ),
@@ -375,14 +388,17 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                   // ── Section: معلومات صاحب المنشأة ─────────────────────
                   _SectionLabel(
                     icon: Icons.business_outlined,
-                    label: 'معلومات صاحب المنشأة',
-                    gradient: BranchColors.pastelVioletGradient,
+                    label: l10n.ownerInformation,
+                    gradient: const [
+                      ClientColors.primaryDark,
+                      ClientColors.navy,
+                    ],
                   ),
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: _ownerCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'اسم صاحب المنشأة',
+                    decoration: InputDecoration(
+                      labelText: l10n.ownerNameLabel,
                       prefixIcon: Icon(Icons.person_outline),
                     ),
                   ),
@@ -393,8 +409,8 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                         child: TextFormField(
                           controller: _phoneCtrl,
                           keyboardType: TextInputType.phone,
-                          decoration: const InputDecoration(
-                            labelText: 'رقم الهاتف',
+                            decoration: InputDecoration(
+                              labelText: l10n.phoneLabel,
                             prefixIcon: Icon(Icons.phone_outlined),
                           ),
                         ),
@@ -404,8 +420,8 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                         child: TextFormField(
                           controller: _altPhoneCtrl,
                           keyboardType: TextInputType.phone,
-                          decoration: const InputDecoration(
-                            labelText: 'رقم هاتف آخر',
+                            decoration: InputDecoration(
+                              labelText: l10n.alternatePhoneLabel,
                             prefixIcon: Icon(Icons.phone_callback_outlined),
                           ),
                         ),
@@ -420,7 +436,7 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () => Navigator.of(context).pop(false),
-                          child: const Text('إلغاء'),
+                          child: Text(l10n.cancelButton),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -434,11 +450,11 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                                   height: 18,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: BranchColors.onPrimary,
+                                    color: Colors.white,
                                   ),
                                 )
                               : const Icon(Icons.save_outlined),
-                          label: const Text('حفظ العنوان'),
+                          label: Text(l10n.saveAddressButton),
                         ),
                       ),
                     ],
@@ -487,7 +503,7 @@ class _SectionLabel extends StatelessWidget {
           label,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w800,
-            color: BranchColors.onSurface,
+            color: ClientColors.text,
           ),
         ),
       ],
@@ -503,17 +519,17 @@ class _AddressTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SoftCard(
+    return ClientCard(
       padding: const EdgeInsets.all(14),
       borderRadius: 22,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PastelIconBadge(
+          ClientIconBadge(
             icon: address.isDefault
                 ? Icons.home_rounded
                 : Icons.location_on_outlined,
-            color: BranchColors.primary,
+            color: ClientColors.primary,
             size: 44,
             iconSize: 20,
             borderRadius: 14,
@@ -543,7 +559,7 @@ class _AddressTile extends StatelessWidget {
                         address.district!,
                     ].join(' - '),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: BranchColors.onSurfaceVariant,
+                      color: ClientColors.textMuted,
                     ),
                   ),
                 ],
@@ -554,13 +570,13 @@ class _AddressTile extends StatelessWidget {
                       const Icon(
                         Icons.phone_outlined,
                         size: 12,
-                        color: BranchColors.success,
+                      color: ClientColors.success,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         address.phone!,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: BranchColors.success,
+                        color: ClientColors.success,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -571,7 +587,7 @@ class _AddressTile extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.delete_outline, color: BranchColors.error),
+            icon: const Icon(Icons.delete_outline, color: ClientColors.danger),
             onPressed: () =>
                 context.read<OrderController>().deleteAddress(address.id),
           ),
@@ -597,7 +613,7 @@ class _MapPickerState extends State<_MapPicker> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text('حدد موقع العنوان'),
+      title: Text(AppLocalizations.of(context)!.chooseLocationOnMap),
       actions: [
         IconButton(
           icon: const Icon(Icons.check_rounded),

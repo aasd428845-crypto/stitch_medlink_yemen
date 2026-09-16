@@ -1,0 +1,57 @@
+MedLink Yemen — Complete the Remaining Customer UI Migration
+
+Continue from your current implementation. The new Customer design is already implemented across most of the main screens. DO NOT rebuild or undo the work you already completed.
+
+The remaining problem is that several Customer sub-screens still use the old design after the user opens them from the redesigned Account/Customer navigation.
+
+Complete the migration for ALL remaining Customer screens, especially:
+
+1. Digital Card
+2. Notifications
+3. Business Profile / My Organization
+4. Help & Support
+5. Legal / related Customer sub-pages
+6. Delivery Address screen
+7. Offer Details screen
+8. Bottom navigation / Customer navigation consistency
+
+Important:
+- The redesigned parent screen is already correct; now make the screens opened from it use the SAME new Customer Design System.
+- Remove remaining old Glass/Branch Manager visual components from Customer screens where appropriate.
+- Keep the existing business logic, routes, Supabase queries, controllers, and data structures.
+- Do not replace real data with mock data.
+- Do not modify Branch Manager or Driver interfaces unnecessarily.
+
+DELIVERY ADDRESS — special attention:
+Redesign and reorganize the entire form carefully.
+Review the existing fields and database model first, then arrange the fields in the most logical order for a real customer.
+Make labels, inputs, validation, location fields, phone/contact information, default address option, save action, spacing, keyboard behavior, and error states consistent and easy to use.
+Do not remove any required existing field. Do not invent database fields.
+
+BOTTOM NAVIGATION:
+Review the complete Customer bottom navigation and make its appearance, spacing, active/inactive states, icons, labels, and behavior consistent across all Customer screens.
+It must remain stable and usable when navigating between screens.
+
+OFFER DETAILS:
+Redesign the offer details page using the new Customer design.
+Use the existing promotional offer and product data from Supabase.
+Clearly present the offer, product image, product information, offer/discount or special price, validity, and relevant action(s) based on the existing business logic.
+Do not invent fields that do not exist.
+
+ARCHITECTURE RULE:
+Before changing anything that may affect shared functionality:
+- Review BOTH Flutter and Web repositories.
+- Review the existing Supabase/PostgreSQL schema and migration history.
+- If a shared/backend/database change is actually required, implement it consistently in the affected projects and document it using the correct migration order.
+- If no shared/backend change is required, do not make unnecessary database changes.
+
+FINAL REVIEW:
+After implementation, review the Customer routes and verify that every Customer screen reachable from the current UI uses the new Customer design system, not the old visual system.
+
+Document:
+- Customer screens completed
+- Files changed
+- Any shared Web/database changes made
+- Any remaining Customer screens that still require work
+
+Do not stop after changing only the parent navigation screen. The goal is to complete the actual destination screens as well.

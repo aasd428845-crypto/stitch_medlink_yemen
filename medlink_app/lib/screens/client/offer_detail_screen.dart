@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/promotional_offer.dart';
 import '../../utils/theme.dart';
-import '../branch_manager/branch_manager_design.dart';
+import 'client_design.dart';
 
 class OfferDetailScreen extends StatelessWidget {
   const OfferDetailScreen({super.key, required this.offer});
@@ -17,17 +17,17 @@ class OfferDetailScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: BranchGlassBackground(
+        body: ClientGlassBackground(
           child: CustomScrollView(
             slivers: [
               SliverAppBar(
                 expandedHeight: 260,
                 pinned: true,
                 backgroundColor: Colors.transparent,
-                foregroundColor: BranchColors.onSurface,
+                foregroundColor: ClientColors.text,
                 flexibleSpace: FlexibleSpaceBar(
                   background: offer.imageUrl != null
                       ? Image.network(offer.imageUrl!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => _gradientHero())
@@ -44,25 +44,25 @@ class OfferDetailScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(colors: BranchColors.glassWarmGradient, begin: Alignment.topLeft, end: Alignment.bottomRight),
+                            gradient: const LinearGradient(colors: [ClientColors.primary, ClientColors.primaryDark], begin: Alignment.topLeft, end: Alignment.bottomRight),
                             borderRadius: BorderRadius.circular(99),
-                            boxShadow: [BoxShadow(color: BranchColors.glassWarmGradient.first.withValues(alpha: .35), blurRadius: 12, offset: const Offset(0, 4))],
+                            boxShadow: [BoxShadow(color: ClientColors.primary.withValues(alpha: .35), blurRadius: 12, offset: const Offset(0, 4))],
                           ),
                           child: Text(offer.discountText!, style: theme.textTheme.labelLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
                         ),
                         const SizedBox(height: 16),
                       ],
                       Text(offer.title, style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
-                      if (offer.description != null) ...[const SizedBox(height: 16), Text(offer.description!, style: theme.textTheme.bodyLarge?.copyWith(color: BranchColors.onSurfaceVariant, height: 1.6))],
+                      if (offer.description != null) ...[const SizedBox(height: 16), Text(offer.description!, style: theme.textTheme.bodyLarge?.copyWith(color: ClientColors.textMuted, height: 1.6))],
                       const SizedBox(height: 24),
-                      Divider(color: BranchColors.outlineVariant.withValues(alpha: .5)),
+                      Divider(color: ClientColors.outline.withValues(alpha: .5)),
                       const SizedBox(height: 16),
                       if (offer.startDate != null || offer.endDate != null) ...[
-                        _InfoRow(icon: Icons.calendar_today_outlined, label: l10n.offerValidFrom, value: _formatDate(offer.startDate), color: BranchColors.primary),
-                        if (offer.endDate != null) ...[const SizedBox(height: 10), _InfoRow(icon: Icons.event_outlined, label: l10n.offerValidUntil, value: _formatDate(offer.endDate), color: BranchColors.warning)],
+                        _InfoRow(icon: Icons.calendar_today_outlined, label: l10n.offerValidFrom, value: _formatDate(offer.startDate), color: ClientColors.primary),
+                        if (offer.endDate != null) ...[const SizedBox(height: 10), _InfoRow(icon: Icons.event_outlined, label: l10n.offerValidUntil, value: _formatDate(offer.endDate), color: ClientColors.primaryDark)],
                         const SizedBox(height: 16),
                       ],
-                      if (offer.targetGovernorate != null) ...[_InfoRow(icon: Icons.location_on_outlined, label: l10n.offerGovernorate, value: offer.targetGovernorate!, color: BranchColors.success)],
+                      if (offer.targetGovernorate != null) ...[_InfoRow(icon: Icons.location_on_outlined, label: l10n.offerGovernorate, value: offer.targetGovernorate!, color: ClientColors.success)],
                     ],
                   ),
                 ),
@@ -75,7 +75,7 @@ class OfferDetailScreen extends StatelessWidget {
   }
 
   Widget _gradientHero() {
-    return DecoratedBox(decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors: BranchColors.glassHeroGradient)));
+    return const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors: [ClientColors.primaryDark, ClientColors.navy])));
   }
 
   String _formatDate(String? dateStr) {
@@ -95,6 +95,6 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SoftCard(borderRadius: 20, padding: const EdgeInsets.all(14), child: Row(children: [PastelIconBadge(icon: icon, color: color, size: 40, iconSize: 18, borderRadius: 12), const SizedBox(width: 12), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(label, style: Theme.of(context).textTheme.labelSmall), const SizedBox(height: 2), Text(value, style: Theme.of(context).textTheme.titleSmall)]))]));
+    return ClientCard(borderRadius: 20, padding: const EdgeInsets.all(14), child: Row(children: [ClientIconBadge(icon: icon, color: color, size: 40, iconSize: 18, borderRadius: 12), const SizedBox(width: 12), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(label, style: Theme.of(context).textTheme.labelSmall), const SizedBox(height: 2), Text(value, style: Theme.of(context).textTheme.titleSmall)]))]));
   }
 }

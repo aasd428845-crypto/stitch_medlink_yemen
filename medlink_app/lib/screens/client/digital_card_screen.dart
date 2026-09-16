@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../services/auth_controller.dart';
 import '../../utils/theme.dart';
-import '../branch_manager/branch_manager_design.dart';
+import 'client_design.dart';
 
 class DigitalCardScreen extends StatelessWidget {
   const DigitalCardScreen({super.key});
@@ -16,10 +17,10 @@ class DigitalCardScreen extends StatelessWidget {
     final profile = context.watch<AuthController>().profile;
     if (profile == null) {
       return Theme(
-        data: AppTheme.branchManagerLight,
+        data: AppTheme.clientLight,
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: BranchGlassBackground(
+          body: ClientGlassBackground(
             child: const Center(child: CircularProgressIndicator()),
           ),
         ),
@@ -27,19 +28,19 @@ class DigitalCardScreen extends StatelessWidget {
     }
     final payload = 'medlink-client:${profile.id}';
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          foregroundColor: BranchColors.onSurface,
-          title: const Text('بطاقتي الرقمية'),
+          foregroundColor: ClientColors.text,
+          title: Text(AppLocalizations.of(context)!.digitalCardTitle),
         ),
-        body: BranchGlassBackground(
+        body: ClientGlassBackground(
           child: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
-              child: GlassCard(
+              child: ClientCard(
                 borderRadius: 32,
                 tint: 0.82,
                 child: Column(
@@ -50,14 +51,16 @@ class DigitalCardScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: const LinearGradient(
-                          colors: BranchColors.glassHeroGradient,
+                          colors: [
+                            ClientColors.primary,
+                            ClientColors.primaryDark,
+                          ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: BranchColors.glassHeroGradient.first
-                                .withValues(alpha: .35),
+                            color: ClientColors.primary.withValues(alpha: .35),
                             blurRadius: 16,
                             offset: const Offset(0, 6),
                           ),
@@ -71,7 +74,8 @@ class DigitalCardScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      profile.name ?? 'عميل MedLink',
+                      profile.name ??
+                          AppLocalizations.of(context)!.clientAccountContext,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 4),
@@ -86,17 +90,17 @@ class DigitalCardScreen extends StatelessWidget {
                       size: 220,
                       eyeStyle: const QrEyeStyle(
                         eyeShape: QrEyeShape.square,
-                        color: BranchColors.onSurface,
+                        color: ClientColors.text,
                       ),
                       dataModuleStyle: const QrDataModuleStyle(
                         dataModuleShape: QrDataModuleShape.square,
-                        color: BranchColors.onSurface,
+                        color: ClientColors.text,
                       ),
                       backgroundColor: Colors.white,
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'اعرض هذا الرمز للتحقق من بطاقتك الرقمية',
+                      AppLocalizations.of(context)!.digitalCardInstruction,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],

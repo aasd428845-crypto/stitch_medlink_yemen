@@ -2,39 +2,41 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../utils/theme.dart';
-import '../branch_manager/branch_manager_design.dart';
+import 'client_design.dart';
 
 class LegalScreen extends StatelessWidget {
   const LegalScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          foregroundColor: BranchColors.onSurface,
-          title: const Text('الشروط وسياسة الخصوصية'),
+          foregroundColor: ClientColors.text,
+          title: Text(l10n.termsPrivacyTitle),
         ),
-        body: BranchGlassBackground(
+        body: ClientGlassBackground(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
             children: [
               _LegalSection(
                 icon: Icons.gavel_rounded,
-                color: BranchColors.primary,
-                title: 'الشروط والأحكام',
-                text: 'باستخدام MedLink، تؤكد صحة بياناتك وتتعهد باستخدام التطبيق لطلب الأدوية والمنتجات الطبية بطريقة نظامية. تخضع الطلبات للتوفر والمراجعة والتوصيل حسب الفرع.',
+                color: ClientColors.primary,
+                title: l10n.termsSectionTitle,
+                text: l10n.termsSectionBody,
               ),
               const SizedBox(height: 12),
               _LegalSection(
                 icon: Icons.shield_outlined,
-                color: BranchColors.success,
-                title: 'الخصوصية',
-                text: 'نستخدم بيانات الحساب والعناوين والطلبات لتشغيل الخدمة وتوصيل الطلبات وتحسين الدعم. لا يعرض التطبيق بياناتك لعملاء آخرين، وتخضع البيانات لسياسات قاعدة البيانات وصلاحيات الحساب.',
+                color: ClientColors.success,
+                title: l10n.privacySectionTitle,
+                text: l10n.privacySectionBody,
               ),
             ],
           ),
@@ -53,7 +55,7 @@ class _LegalSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SoftCard(
+    return ClientCard(
       borderRadius: 24,
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -61,7 +63,7 @@ class _LegalSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              PastelIconBadge(icon: icon, color: color, size: 40, iconSize: 20, borderRadius: 12),
+              ClientIconBadge(icon: icon, color: color, size: 40, iconSize: 20, borderRadius: 12),
               const SizedBox(width: 12),
               Expanded(child: Text(title, style: Theme.of(context).textTheme.titleSmall)),
             ],

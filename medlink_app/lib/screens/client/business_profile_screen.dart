@@ -3,9 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../services/auth_controller.dart';
 import '../../utils/theme.dart';
-import '../branch_manager/branch_manager_design.dart';
+import 'client_design.dart';
 
 class BusinessProfileScreen extends StatelessWidget {
   const BusinessProfileScreen({super.key});
@@ -13,20 +14,21 @@ class BusinessProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profile = context.watch<AuthController>().profile;
+    final l10n = AppLocalizations.of(context)!;
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          foregroundColor: BranchColors.onSurface,
-          title: const Text('بيانات منشأتي'),
+          foregroundColor: ClientColors.text,
+          title: Text(l10n.businessProfileTitle),
         ),
-        body: BranchGlassBackground(
+        body: ClientGlassBackground(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
             children: [
-              GlassCard(
+              ClientCard(
                 borderRadius: 28,
                 tint: 0.78,
                 child: Column(
@@ -37,13 +39,16 @@ class BusinessProfileScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: const LinearGradient(
-                          colors: BranchColors.glassHeroGradient,
+                          colors: [
+                            ClientColors.primary,
+                            ClientColors.navy,
+                          ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: BranchColors.glassHeroGradient.first.withValues(alpha: .35),
+                            color: ClientColors.primary.withValues(alpha: .35),
                             blurRadius: 16,
                             offset: const Offset(0, 6),
                           ),
@@ -59,15 +64,15 @@ class BusinessProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              _InfoRow(icon: Icons.person_outline, label: 'الاسم', value: profile?.name ?? '—', color: BranchColors.primary),
-              _InfoRow(icon: Icons.email_outlined, label: 'البريد الإلكتروني', value: profile?.email ?? '—', color: BranchColors.primaryContainer),
-              _InfoRow(icon: Icons.phone_outlined, label: 'رقم الهاتف', value: profile?.phone ?? '—', color: BranchColors.success),
-              _InfoRow(icon: Icons.store_outlined, label: 'الفرع المرتبط', value: profile?.branchName ?? 'غير محدد', color: BranchColors.warning),
+              _InfoRow(icon: Icons.person_outline, label: l10n.nameLabel, value: profile?.name ?? '—', color: ClientColors.primary),
+              _InfoRow(icon: Icons.email_outlined, label: l10n.emailLabel, value: profile?.email ?? '—', color: ClientColors.primaryDark),
+              _InfoRow(icon: Icons.phone_outlined, label: l10n.phoneLabel, value: profile?.phone ?? '—', color: ClientColors.success),
+              _InfoRow(icon: Icons.store_outlined, label: l10n.linkedBranchLabel, value: profile?.branchName ?? l10n.notAvailableLabel, color: ClientColors.navy),
               const SizedBox(height: 16),
-              SoftCard(
+              ClientCard(
                 borderRadius: 20,
                 child: Text(
-                  'تُدار بيانات الحساب الأساسية من خلال الملف المسجل في النظام.',
+                  l10n.businessProfileNote,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -88,13 +93,13 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SoftCard(
+    return ClientCard(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       borderRadius: 22,
       child: Row(
         children: [
-          PastelIconBadge(icon: icon, color: color, size: 44, iconSize: 20, borderRadius: 14),
+          ClientIconBadge(icon: icon, color: color, size: 44, iconSize: 20, borderRadius: 14),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
