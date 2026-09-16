@@ -58,22 +58,42 @@ class _CatalogTabState extends State<CatalogTab> {
             controller: _searchController,
             onChanged: (v) => _onSearchChanged(v, catalog),
             textInputAction: TextInputAction.search,
-            style: const TextStyle(color: BranchColors.onSurface, fontWeight: FontWeight.w600),
+            style: const TextStyle(
+              color: ClientColors.text,
+              fontWeight: FontWeight.w600,
+            ),
             decoration: InputDecoration(
               hintText: l10n.searchHint,
-              hintStyle: const TextStyle(color: BranchColors.onSurfaceVariant),
-              prefixIcon: const Icon(Icons.search_rounded, color: BranchColors.primary),
-              suffixIcon: _searchController.text.isEmpty ? null : IconButton(icon: const Icon(Icons.close_rounded), onPressed: () { _searchController.clear(); _onSearchChanged('', catalog); }),
+              hintStyle: const TextStyle(color: ClientColors.textMuted),
+              prefixIcon: const Icon(
+                Icons.search_rounded,
+                color: ClientColors.primary,
+              ),
+              suffixIcon: _searchController.text.isEmpty
+                  ? null
+                  : IconButton(
+                      icon: const Icon(Icons.close_rounded),
+                      onPressed: () {
+                        _searchController.clear();
+                        _onSearchChanged('', catalog);
+                      },
+                    ),
               filled: true,
-              fillColor: BranchColors.glassSurface.withValues(alpha: .7),
-              contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+              fillColor: ClientColors.surface,
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 15,
+                horizontal: 16,
+              ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
-                borderSide: const BorderSide(color: BranchColors.outlineVariant),
+                borderSide: const BorderSide(color: ClientColors.outline),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
-                borderSide: const BorderSide(color: BranchColors.primary, width: 1.2),
+                borderSide: const BorderSide(
+                  color: BranchColors.primary,
+                  width: 1.2,
+                ),
               ),
             ),
           ),
@@ -94,10 +114,20 @@ class _CatalogTabState extends State<CatalogTab> {
                     selected: selected,
                     onSelected: (_) => catalog.selectCategory(null),
                     showCheckmark: false,
-                    backgroundColor: BranchColors.surfaceContainerLow,
-                    selectedColor: BranchColors.primary.withValues(alpha: .15),
-                    side: BorderSide(color: selected ? BranchColors.primary : BranchColors.outlineVariant),
-                    labelStyle: TextStyle(color: selected ? BranchColors.primary : BranchColors.onSurfaceVariant, fontWeight: FontWeight.w700, fontSize: 12),
+                    backgroundColor: ClientColors.surfaceMuted,
+                    selectedColor: ClientColors.primarySoft,
+                    side: BorderSide(
+                      color: selected
+                          ? ClientColors.primary
+                          : ClientColors.outline,
+                    ),
+                    labelStyle: TextStyle(
+                      color: selected
+                          ? ClientColors.primary
+                          : ClientColors.textMuted,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                    ),
                   );
                 }
                 final cat = catalog.categories[i - 1];
@@ -105,36 +135,66 @@ class _CatalogTabState extends State<CatalogTab> {
                 return FilterChip(
                   label: Text(cat),
                   selected: selected,
-                  onSelected: (_) => catalog.selectCategory(selected ? null : cat),
+                  onSelected: (_) =>
+                      catalog.selectCategory(selected ? null : cat),
                   showCheckmark: false,
-                  backgroundColor: BranchColors.surfaceContainerLow,
-                  selectedColor: BranchColors.primary.withValues(alpha: .15),
-                  side: BorderSide(color: selected ? BranchColors.primary : BranchColors.outlineVariant),
-                  labelStyle: TextStyle(color: selected ? BranchColors.primary : BranchColors.onSurfaceVariant, fontWeight: FontWeight.w700, fontSize: 12),
+                  backgroundColor: ClientColors.surfaceMuted,
+                  selectedColor: ClientColors.primarySoft,
+                  side: BorderSide(
+                    color: selected
+                        ? ClientColors.primary
+                        : ClientColors.outline,
+                  ),
+                  labelStyle: TextStyle(
+                    color: selected
+                        ? ClientColors.primary
+                        : ClientColors.textMuted,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                  ),
                 );
               },
             ),
           ),
         const SizedBox(height: 10),
-         Expanded(child: _buildGrid(context, l10n, catalog)),
+        Expanded(child: _buildGrid(context, l10n, catalog)),
       ],
     );
   }
 
-  Widget _buildGrid(BuildContext context, AppLocalizations l10n, CatalogController catalog) {
+  Widget _buildGrid(
+    BuildContext context,
+    AppLocalizations l10n,
+    CatalogController catalog,
+  ) {
     if (catalog.isLoading && catalog.products.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
 
     if (catalog.error != null && catalog.products.isEmpty) {
       return Center(
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Icon(Icons.error_outline_rounded, size: 48, color: BranchColors.error),
-          const SizedBox(height: 10),
-          Text(catalog.error!, style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
-          const SizedBox(height: 16),
-          FilledButton.icon(onPressed: catalog.loadProducts, icon: const Icon(Icons.refresh_rounded), label: Text(l10n.retry)),
-        ]),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.error_outline_rounded,
+              size: 48,
+              color: BranchColors.error,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              catalog.error!,
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              onPressed: catalog.loadProducts,
+              icon: const Icon(Icons.refresh_rounded),
+              label: Text(l10n.retry),
+            ),
+          ],
+        ),
       );
     }
 
@@ -143,11 +203,23 @@ class _CatalogTabState extends State<CatalogTab> {
         child: SoftCard(
           padding: const EdgeInsets.all(32),
           borderRadius: 28,
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            PastelIconBadge(icon: Icons.search_off_rounded, color: BranchColors.onSurfaceVariant, size: 56, iconSize: 28, shape: BoxShape.circle),
-            const SizedBox(height: 16),
-            Text(l10n.noProductsFound, style: Theme.of(context).textTheme.titleSmall),
-          ]),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PastelIconBadge(
+                icon: Icons.search_off_rounded,
+                color: BranchColors.onSurfaceVariant,
+                size: 56,
+                iconSize: 28,
+                shape: BoxShape.circle,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                l10n.noProductsFound,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -155,13 +227,13 @@ class _CatalogTabState extends State<CatalogTab> {
     return RefreshIndicator(
       onRefresh: catalog.loadProducts,
       child: GridView.builder(
-         padding: const EdgeInsets.fromLTRB(16, 8, 16, 148),
-         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-           crossAxisCount: 2,
-           crossAxisSpacing: 12,
-           mainAxisSpacing: 12,
-           childAspectRatio: 0.66,
-         ),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 148),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 0.66,
+        ),
         itemCount: catalog.products.length,
         itemBuilder: (context, i) {
           final product = catalog.products[i];
@@ -170,7 +242,12 @@ class _CatalogTabState extends State<CatalogTab> {
             onTap: () => context.push('/client/product/${product.id}'),
             onAdd: () {
               context.read<CartController>().addItem(product);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.addedToCart), duration: const Duration(seconds: 1)));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(l10n.addedToCart),
+                  duration: const Duration(seconds: 1),
+                ),
+              );
             },
           );
         },
@@ -178,4 +255,3 @@ class _CatalogTabState extends State<CatalogTab> {
     );
   }
 }
-

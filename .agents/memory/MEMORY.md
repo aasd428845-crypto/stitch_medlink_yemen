@@ -1,3 +1,4 @@
 - [Flutter has no artifact type](flutter-non-artifact-workflow.md) — Flutter apps must run as a plain (non-artifact) workflow; they never appear in the artifact Preview dropdown.
 - [Flutter/Dart pubspec gotchas](flutter-pubspec-gotchas.md) — intl/freezed version quirks; also covers a stale-build-cache compile failure (`Matrix4 isn't a type` etc.) fixed by `flutter clean`.
 - [Supabase Edge Function errors](supabase-edge-function-errors.md) — non-2xx calls throw before response handling; translate `FunctionException.details` for user-safe messages.
+- [Shared migration numbering](shared-migration-numbering.md) — root Supabase migrations and app-local migrations diverge; never apply the app-local duplicate number blindly.

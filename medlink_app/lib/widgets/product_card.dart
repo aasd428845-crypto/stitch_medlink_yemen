@@ -82,7 +82,7 @@ class ProductCard extends StatelessWidget {
                     Text(
                       product.name,
                       style: theme.textTheme.titleSmall?.copyWith(
-                        color: BranchColors.onSurface,
+                        color: ClientColors.text,
                         fontWeight: FontWeight.w800,
                       ),
                       maxLines: 2,
@@ -94,7 +94,7 @@ class ProductCard extends StatelessWidget {
                       Text(
                         product.manufacturer!,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: BranchColors.onSurfaceVariant,
+                          color: ClientColors.textMuted,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

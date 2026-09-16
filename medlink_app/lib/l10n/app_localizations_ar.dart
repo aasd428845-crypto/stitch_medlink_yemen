@@ -181,6 +181,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get clientAccountContext => 'حساب العميل';
 
   @override
+  String get digitalCardTitle => 'بطاقتي الرقمية';
+
+  @override
+  String get digitalCardSubtitle => 'بيانات العميل ورمز QR';
+
+  @override
+  String get manageDeliveryAddresses => 'إدارة عناوين التوصيل';
+
+  @override
+  String get businessProfileTitle => 'بيانات منشأتي';
+
+  @override
+  String get businessProfileSubtitle => 'البيانات المسجلة في الحساب';
+
+  @override
+  String get termsPrivacyTitle => 'الشروط وسياسة الخصوصية';
+
+  @override
+  String get termsPrivacySubtitle => 'راجع أحكام استخدام MedLink';
+
+  @override
   String get branchDashboardLabel => 'لوحة التحكم';
 
   @override
@@ -413,6 +434,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deliveryAddress => 'عنوان التسليم';
 
   @override
+  String get addressesLoading => 'جارٍ تحميل العناوين';
+
+  @override
+  String get noAddressesSaved => 'لا توجد عناوين محفوظة';
+
+  @override
   String get addNewAddress => 'إضافة عنوان جديد';
 
   @override
@@ -426,6 +453,33 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get orderNotes => 'ملاحظات الطلب (اختياري)';
+
+  @override
+  String get noSavedAddress => 'لا يوجد عنوان محفوظ بعد';
+
+  @override
+  String get addAddressForDelivery => 'أضف عنواناً للمتابعة في عملية التوصيل';
+
+  @override
+  String get selectDeliveryAddress => 'يرجى اختيار عنوان التسليم أولاً';
+
+  @override
+  String get orderSummary => 'ملخص الطلب';
+
+  @override
+  String get orderItemsSection => 'بنود الطلب';
+
+  @override
+  String get productFallback => 'منتج';
+
+  @override
+  String get quantityLabel => 'الكمية';
+
+  @override
+  String get orderItemsCountLabel => 'عدد البنود:';
+
+  @override
+  String get deliveryNotesHint => 'أدخل أي تعليمات خاصة بالتسليم...';
 
   @override
   String get confirmOrder => 'تأكيد وإرسال الطلب';

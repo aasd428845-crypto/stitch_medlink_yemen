@@ -9,6 +9,7 @@ import '../../services/cart_controller.dart';
 import '../../utils/theme.dart';
 import '../../widgets/cart_item_tile.dart';
 import '../branch_manager/branch_manager_design.dart';
+import 'client_design.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -19,19 +20,23 @@ class CartScreen extends StatelessWidget {
     final cart = context.watch<CartController>();
 
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          foregroundColor: BranchColors.onSurface,
+          foregroundColor: ClientColors.text,
           title: Text(l10n.cartTitle),
           actions: [
             if (!cart.isEmpty)
-              IconButton(icon: const Icon(Icons.delete_outline_rounded), tooltip: l10n.clearCart, onPressed: cart.clearCart),
+              IconButton(
+                icon: const Icon(Icons.delete_outline_rounded),
+                tooltip: l10n.clearCart,
+                onPressed: cart.clearCart,
+              ),
           ],
         ),
-        body: BranchGlassBackground(
+        body: ClientGlassBackground(
           child: cart.isEmpty
               ? Center(
                   child: SoftCard(
@@ -40,9 +45,18 @@ class CartScreen extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        PastelIconBadge(icon: Icons.shopping_cart_outlined, color: BranchColors.primary, size: 56, iconSize: 28, shape: BoxShape.circle),
+                        PastelIconBadge(
+                          icon: Icons.shopping_cart_outlined,
+                          color: ClientColors.primary,
+                          size: 56,
+                          iconSize: 28,
+                          shape: BoxShape.circle,
+                        ),
                         const SizedBox(height: 16),
-                        Text(l10n.emptyCart, style: Theme.of(context).textTheme.titleSmall),
+                        Text(
+                          l10n.emptyCart,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
                       ],
                     ),
                   ),
@@ -61,7 +75,8 @@ class CartScreen extends StatelessWidget {
                             borderRadius: 22,
                             child: CartItemTile(
                               item: item,
-                              onQuantityChanged: (qty) => cart.updateQuantity(item.product.id, qty),
+                              onQuantityChanged: (qty) =>
+                                  cart.updateQuantity(item.product.id, qty),
                               onRemove: () => cart.removeItem(item.product.id),
                             ),
                           );
@@ -79,16 +94,34 @@ class CartScreen extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(l10n.subtotal, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: BranchColors.onSurfaceVariant)),
-                                Text('${cart.subtotalAmount.toStringAsFixed(0)} ﷼', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900)),
+                                Text(
+                                  l10n.subtotal,
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(color: ClientColors.textMuted),
+                                ),
+                                Text(
+                                  '${cart.subtotalAmount.toStringAsFixed(0)} ﷼',
+                                  style: Theme.of(context).textTheme.titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.w900),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 10),
                             Row(
                               children: [
-                                const Icon(Icons.local_shipping_outlined, size: 18, color: BranchColors.success),
+                                const Icon(
+                                  Icons.local_shipping_outlined,
+                                  size: 18,
+                                  color: ClientColors.success,
+                                ),
                                 const SizedBox(width: 7),
-                                Text(l10n.freeDelivery, style: const TextStyle(color: BranchColors.success, fontWeight: FontWeight.w700)),
+                                Text(
+                                  l10n.freeDelivery,
+                                  style: const TextStyle(
+                                    color: ClientColors.success,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 14),
@@ -97,7 +130,8 @@ class CartScreen extends StatelessWidget {
                               child: FilledButton.icon(
                                 icon: const Icon(Icons.arrow_back_rounded),
                                 label: Text(l10n.proceedToCheckout),
-                                onPressed: () => context.push('/client/checkout'),
+                                onPressed: () =>
+                                    context.push('/client/checkout'),
                               ),
                             ),
                           ],

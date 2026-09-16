@@ -27,6 +27,27 @@ class ClientDesignSurface extends StatelessWidget {
   }
 }
 
+/// Calm clinical background used by client detail flows outside the home shell.
+class ClientGlassBackground extends StatelessWidget {
+  const ClientGlassBackground({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [ClientColors.surface, ClientColors.background],
+        ),
+      ),
+      child: child,
+    );
+  }
+}
+
 /// Trustworthy hero banner for the client role.
 class ClientHero extends StatelessWidget {
   const ClientHero({
@@ -68,62 +89,60 @@ class ClientHero extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-              // Badge
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: .20),
-                  borderRadius: BorderRadius.circular(99),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: .30),
-                    width: 1,
+          // Badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: .20),
+              borderRadius: BorderRadius.circular(99),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: .30),
+                width: 1,
+              ),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.verified_rounded, size: 14, color: Colors.white),
+                SizedBox(width: 6),
+                Text(
+                  'MedLink',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 12,
                   ),
                 ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.verified_rounded,
-                        size: 14, color: Colors.white),
-                    SizedBox(width: 6),
-                    Text(
-                      'MedLink',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                greeting,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: .85),
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: -0.5,
-                    ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                subtitle,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withValues(alpha: .80),
-                      height: 1.5,
-                    ),
-              ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            greeting,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.white.withValues(alpha: .85),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            subtitle,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Colors.white.withValues(alpha: .80),
+              height: 1.5,
+            ),
+          ),
         ],
       ),
     );
@@ -150,44 +169,39 @@ class ClientSearchField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
       child: TextField(
-            controller: controller,
-            onSubmitted: onSubmitted,
-            onChanged: onChanged,
-            textInputAction: TextInputAction.search,
-            style: TextStyle(
-              color: ClientColors.text,
-              fontWeight: FontWeight.w600,
-            ),
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle:
-                  TextStyle(color: ClientColors.textMuted),
-              prefixIcon:
-                  Icon(Icons.search_rounded, color: ClientColors.primary),
-              suffixIcon: controller.text.isEmpty
-                  ? null
-                  : IconButton(
-                      icon: const Icon(Icons.close_rounded),
-                      onPressed: () {
-                        controller.clear();
-                        onSubmitted('');
-                      },
-                    ),
-              filled: true,
-              fillColor: ClientColors.surface,
-              contentPadding: const EdgeInsets.symmetric(
-                  vertical: 15, horizontal: 16),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide(
-                    color: ClientColors.outline),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide:
-                    BorderSide(color: ClientColors.primary, width: 1.4),
-              ),
-            ),
+        controller: controller,
+        onSubmitted: onSubmitted,
+        onChanged: onChanged,
+        textInputAction: TextInputAction.search,
+        style: TextStyle(color: ClientColors.text, fontWeight: FontWeight.w600),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: ClientColors.textMuted),
+          prefixIcon: Icon(Icons.search_rounded, color: ClientColors.primary),
+          suffixIcon: controller.text.isEmpty
+              ? null
+              : IconButton(
+                  icon: const Icon(Icons.close_rounded),
+                  onPressed: () {
+                    controller.clear();
+                    onSubmitted('');
+                  },
+                ),
+          filled: true,
+          fillColor: ClientColors.surface,
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 15,
+            horizontal: 16,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: ClientColors.outline),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: ClientColors.primary, width: 1.4),
+          ),
+        ),
       ),
     );
   }

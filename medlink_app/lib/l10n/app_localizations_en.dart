@@ -183,6 +183,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clientAccountContext => 'Client account';
 
   @override
+  String get digitalCardTitle => 'My Digital Card';
+
+  @override
+  String get digitalCardSubtitle => 'Client details and QR code';
+
+  @override
+  String get manageDeliveryAddresses => 'Manage delivery addresses';
+
+  @override
+  String get businessProfileTitle => 'Business profile';
+
+  @override
+  String get businessProfileSubtitle => 'Details registered on the account';
+
+  @override
+  String get termsPrivacyTitle => 'Terms & Privacy Policy';
+
+  @override
+  String get termsPrivacySubtitle => 'Review MedLink usage terms';
+
+  @override
   String get branchDashboardLabel => 'Dashboard';
 
   @override
@@ -415,6 +436,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deliveryAddress => 'Delivery Address';
 
   @override
+  String get addressesLoading => 'Loading addresses';
+
+  @override
+  String get noAddressesSaved => 'No saved addresses';
+
+  @override
   String get addNewAddress => 'Add New Address';
 
   @override
@@ -428,6 +455,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get orderNotes => 'Order Notes (optional)';
+
+  @override
+  String get noSavedAddress => 'No saved address yet';
+
+  @override
+  String get addAddressForDelivery =>
+      'Add an address to continue with delivery';
+
+  @override
+  String get selectDeliveryAddress => 'Select a delivery address first';
+
+  @override
+  String get orderSummary => 'Order Summary';
+
+  @override
+  String get orderItemsSection => 'Order Items';
+
+  @override
+  String get productFallback => 'Product';
+
+  @override
+  String get quantityLabel => 'Quantity';
+
+  @override
+  String get orderItemsCountLabel => 'Line items:';
+
+  @override
+  String get deliveryNotesHint => 'Add any special delivery instructions...';
 
   @override
   String get confirmOrder => 'Confirm & Send Order';

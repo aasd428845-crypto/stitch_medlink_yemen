@@ -1,0 +1,38 @@
+MedLink Yemen — Continue the Customer UI implementation
+
+Continue from the work you already completed. Do NOT rebuild or undo the current implementation.
+
+Important engineering rule:
+
+Whenever a feature or change requires work in both Flutter and Web, implement it in BOTH projects in parallel so they remain compatible.
+
+Before making any shared change:
+1. Review BOTH repositories.
+2. Review the existing Supabase/PostgreSQL schema and migration history in BOTH repositories.
+3. Treat the existing database structure and migration order as the source of truth.
+4. Do not create duplicate, conflicting, or out-of-order database migrations.
+5. If a database change is required, create the migration using the next correct migration number and keep the SQL/schema documentation synchronized in both projects where applicable.
+6. Make sure relationships, fields, RLS, roles, and permissions match between Flutter, Web, and the database.
+
+For the Customer interface:
+- Continue improving the new design across all Customer screens.
+- Keep the design consistent with the new Customer design already started.
+- Use real data and existing services/database fields.
+- Do not use mock data when real data already exists.
+- Do not remove or break existing business logic.
+- Do not modify Branch Manager or Driver UI unless the change is genuinely shared.
+- If a Customer feature depends on Web/Admin functionality, implement the required Web/Admin part as well.
+
+After implementation:
+- Review BOTH repositories again.
+- Check all affected database migrations and relationships.
+- Confirm Flutter and Web use the same field names and business logic.
+- Document exactly what was changed, including:
+  - Flutter files
+  - Web files
+  - Database migrations
+  - New/modified tables or columns
+  - RLS/policies if changed
+  - Any remaining work
+
+Continue from the current state and implement what is actually missing. Do not stop simply because the UI work is complete if a required shared/backend/database part is missing.

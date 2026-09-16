@@ -422,6 +422,48 @@ abstract class AppLocalizations {
   /// **'حساب العميل'**
   String get clientAccountContext;
 
+  /// No description provided for @digitalCardTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بطاقتي الرقمية'**
+  String get digitalCardTitle;
+
+  /// No description provided for @digitalCardSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات العميل ورمز QR'**
+  String get digitalCardSubtitle;
+
+  /// No description provided for @manageDeliveryAddresses.
+  ///
+  /// In ar, this message translates to:
+  /// **'إدارة عناوين التوصيل'**
+  String get manageDeliveryAddresses;
+
+  /// No description provided for @businessProfileTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات منشأتي'**
+  String get businessProfileTitle;
+
+  /// No description provided for @businessProfileSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'البيانات المسجلة في الحساب'**
+  String get businessProfileSubtitle;
+
+  /// No description provided for @termsPrivacyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشروط وسياسة الخصوصية'**
+  String get termsPrivacyTitle;
+
+  /// No description provided for @termsPrivacySubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع أحكام استخدام MedLink'**
+  String get termsPrivacySubtitle;
+
   /// No description provided for @branchDashboardLabel.
   ///
   /// In ar, this message translates to:
@@ -884,6 +926,18 @@ abstract class AppLocalizations {
   /// **'عنوان التسليم'**
   String get deliveryAddress;
 
+  /// No description provided for @addressesLoading.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ تحميل العناوين'**
+  String get addressesLoading;
+
+  /// No description provided for @noAddressesSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد عناوين محفوظة'**
+  String get noAddressesSaved;
+
   /// No description provided for @addNewAddress.
   ///
   /// In ar, this message translates to:
@@ -913,6 +967,60 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'ملاحظات الطلب (اختياري)'**
   String get orderNotes;
+
+  /// No description provided for @noSavedAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد عنوان محفوظ بعد'**
+  String get noSavedAddress;
+
+  /// No description provided for @addAddressForDelivery.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف عنواناً للمتابعة في عملية التوصيل'**
+  String get addAddressForDelivery;
+
+  /// No description provided for @selectDeliveryAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى اختيار عنوان التسليم أولاً'**
+  String get selectDeliveryAddress;
+
+  /// No description provided for @orderSummary.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملخص الطلب'**
+  String get orderSummary;
+
+  /// No description provided for @orderItemsSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنود الطلب'**
+  String get orderItemsSection;
+
+  /// No description provided for @productFallback.
+  ///
+  /// In ar, this message translates to:
+  /// **'منتج'**
+  String get productFallback;
+
+  /// No description provided for @quantityLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكمية'**
+  String get quantityLabel;
+
+  /// No description provided for @orderItemsCountLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد البنود:'**
+  String get orderItemsCountLabel;
+
+  /// No description provided for @deliveryNotesHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل أي تعليمات خاصة بالتسليم...'**
+  String get deliveryNotesHint;
 
   /// No description provided for @confirmOrder.
   ///

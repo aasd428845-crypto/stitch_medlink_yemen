@@ -38,7 +38,9 @@ class AccountTab extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: BranchColors.glassHeroGradient.first.withValues(alpha: .35),
+                      color: BranchColors.glassHeroGradient.first.withValues(
+                        alpha: .35,
+                      ),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -81,44 +83,44 @@ class AccountTab extends StatelessWidget {
         const SizedBox(height: 16),
         _AccountTile(
           icon: Icons.qr_code_2_rounded,
-          title: 'بطاقتي الرقمية',
-          subtitle: 'بيانات العميل ورمز QR',
-          color: BranchColors.primary,
+          title: l10n.digitalCardTitle,
+          subtitle: l10n.digitalCardSubtitle,
+          color: ClientColors.primary,
           onTap: () => context.push('/client/digital-card'),
         ),
         _AccountTile(
           icon: Icons.location_on_outlined,
           title: l10n.deliveryAddress,
-          subtitle: 'إدارة عناوين التوصيل',
-          color: BranchColors.success,
+          subtitle: l10n.manageDeliveryAddresses,
+          color: ClientColors.success,
           onTap: () => context.push('/client/addresses'),
         ),
         _AccountTile(
           icon: Icons.notifications_outlined,
           title: l10n.notificationsTitle,
           subtitle: l10n.notificationsEmpty,
-          color: BranchColors.warning,
+          color: ClientColors.primary,
           onTap: () => context.push('/notifications'),
         ),
         _AccountTile(
           icon: Icons.business_outlined,
-          title: 'بيانات منشأتي',
-          subtitle: 'البيانات المسجلة في الحساب',
-          color: BranchColors.primaryContainer,
+          title: l10n.businessProfileTitle,
+          subtitle: l10n.businessProfileSubtitle,
+          color: ClientColors.primaryDark,
           onTap: () => context.push('/client/business-profile'),
         ),
         _AccountTile(
           icon: Icons.help_outline_rounded,
           title: l10n.helpSupportTitle,
           subtitle: l10n.helpContactSection,
-          color: BranchColors.secondary,
+          color: ClientColors.navy,
           onTap: () => context.push('/help', extra: profile?.role),
         ),
         _AccountTile(
           icon: Icons.policy_outlined,
-          title: 'الشروط وسياسة الخصوصية',
-          subtitle: 'راجع أحكام استخدام MedLink',
-          color: BranchColors.outline,
+          title: l10n.termsPrivacyTitle,
+          subtitle: l10n.termsPrivacySubtitle,
+          color: ClientColors.textMuted,
           onTap: () => context.push('/client/legal'),
         ),
         const SizedBox(height: 16),
@@ -127,10 +129,12 @@ class AccountTab extends StatelessWidget {
           icon: const Icon(Icons.logout_rounded),
           label: Text(l10n.logoutButton),
           style: FilledButton.styleFrom(
-            backgroundColor: BranchColors.error,
-            foregroundColor: BranchColors.onError,
+            backgroundColor: ClientColors.danger,
+            foregroundColor: Colors.white,
             minimumSize: const Size.fromHeight(52),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
           ),
         ),
       ],
@@ -186,11 +190,13 @@ class _AccountTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_left_rounded, color: BranchColors.onSurfaceVariant),
+            const Icon(
+              Icons.chevron_left_rounded,
+              color: ClientColors.textMuted,
+            ),
           ],
         ),
       ),
     );
   }
 }
-

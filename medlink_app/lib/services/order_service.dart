@@ -103,17 +103,18 @@ class OrderService {
             'latitude': latitude,
             'longitude': longitude,
             'is_default': isDefault,
-            if (ownerName != null && ownerName.isNotEmpty) 'owner_name': ownerName,
+            if (ownerName != null && ownerName.isNotEmpty)
+              'owner_name': ownerName,
             if (phone != null && phone.isNotEmpty) 'phone': phone,
             if (altPhone != null && altPhone.isNotEmpty) 'alt_phone': altPhone,
             if (landmark != null && landmark.isNotEmpty) 'landmark': landmark,
-            if (governorate != null && governorate.isNotEmpty) 'governorate': governorate,
+            if (governorate != null && governorate.isNotEmpty)
+              'governorate': governorate,
             if (city != null && city.isNotEmpty) 'city': city,
             if (district != null && district.isNotEmpty) 'district': district,
           })
           .select()
           .single();
-
 
       _logSuccess('saveClientAddress');
       return ClientAddress.fromJson(insertedRow);
@@ -148,6 +149,9 @@ class OrderService {
     }
     if (items.isEmpty) {
       throw ArgumentError('لا يمكن إنشاء طلب بسلة فارغة');
+    }
+    if (deliveryAddressId == null || deliveryAddressId.isEmpty) {
+      throw ArgumentError('لا يمكن إنشاء طلب بدون عنوان تسليم');
     }
 
     try {
@@ -309,7 +313,8 @@ class OrderService {
   }
 
   /// Fetches single order details with joined order items & address.
-  Future<OrderModel?> fetchOrderDetails(String orderId) async {    try {
+  Future<OrderModel?> fetchOrderDetails(String orderId) async {
+    try {
       final row = await _client
           .from('orders')
           .select(

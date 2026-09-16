@@ -7,6 +7,10 @@ import '../models/product.dart';
 import '../models/special_request.dart';
 import 'order_service.dart';
 
+class MissingDeliveryAddressException implements Exception {
+  const MissingDeliveryAddressException();
+}
+
 /// State holder for addresses, order submission, and client order history.
 class OrderController extends ChangeNotifier {
   OrderController(this._service);
@@ -135,6 +139,9 @@ class OrderController extends ChangeNotifier {
     required List<CartItem> cartItems,
     String? notes,
   }) async {
+    if (_selectedAddress == null) {
+      throw const MissingDeliveryAddressException();
+    }
     _setLoading(true);
     try {
       final created = await _service.createOrder(

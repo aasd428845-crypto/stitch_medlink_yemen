@@ -21,7 +21,9 @@ class _OrdersTabState extends State<OrdersTab> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => context.read<OrderController>().loadClientOrders());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => context.read<OrderController>().loadClientOrders(),
+    );
   }
 
   @override
@@ -29,17 +31,32 @@ class _OrdersTabState extends State<OrdersTab> {
     final l10n = AppLocalizations.of(context)!;
     final orderCtrl = context.watch<OrderController>();
 
-    if (orderCtrl.isLoading && orderCtrl.orders.isEmpty) return const Center(child: CircularProgressIndicator());
+    if (orderCtrl.isLoading && orderCtrl.orders.isEmpty)
+      return const Center(child: CircularProgressIndicator());
 
     if (orderCtrl.error != null && orderCtrl.orders.isEmpty) {
       return Center(
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Icon(Icons.error_outline_rounded, size: 48, color: BranchColors.error),
-          const SizedBox(height: 10),
-          Text(orderCtrl.error!, style: Theme.of(context).textTheme.bodyMedium),
-          const SizedBox(height: 16),
-          FilledButton.icon(onPressed: orderCtrl.loadClientOrders, icon: const Icon(Icons.refresh_rounded), label: Text(l10n.retry)),
-        ]),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.error_outline_rounded,
+              size: 48,
+              color: ClientColors.danger,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              orderCtrl.error!,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              onPressed: orderCtrl.loadClientOrders,
+              icon: const Icon(Icons.refresh_rounded),
+              label: Text(l10n.retry),
+            ),
+          ],
+        ),
       );
     }
 
@@ -48,17 +65,23 @@ class _OrdersTabState extends State<OrdersTab> {
         child: SoftCard(
           padding: const EdgeInsets.all(32),
           borderRadius: 28,
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            PastelIconBadge(
-              icon: Icons.receipt_long_outlined,
-              color: BranchColors.primary,
-              size: 56,
-              iconSize: 28,
-              shape: BoxShape.circle,
-            ),
-            const SizedBox(height: 16),
-            Text(l10n.noOrdersFound, style: Theme.of(context).textTheme.titleSmall),
-          ]),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PastelIconBadge(
+                icon: Icons.receipt_long_outlined,
+                color: ClientColors.primary,
+                size: 56,
+                iconSize: 28,
+                shape: BoxShape.circle,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                l10n.noOrdersFound,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -71,7 +94,9 @@ class _OrdersTabState extends State<OrdersTab> {
         separatorBuilder: (_, __) => const SizedBox(height: 10),
         itemBuilder: (context, i) {
           final order = orderCtrl.orders[i];
-          final dateStr = order.createdAt != null ? order.createdAt!.substring(0, 10) : '';
+          final dateStr = order.createdAt != null
+              ? order.createdAt!.substring(0, 10)
+              : '';
           return SoftCard(
             padding: EdgeInsets.zero,
             borderRadius: 24,
@@ -80,31 +105,65 @@ class _OrdersTabState extends State<OrdersTab> {
               borderRadius: BorderRadius.circular(24),
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Row(children: [
-                    PastelIconBadge(
-                      icon: Icons.receipt_long_rounded,
-                      color: BranchColors.primary,
-                      size: 44,
-                      iconSize: 20,
-                      borderRadius: 14,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        PastelIconBadge(
+                          icon: Icons.receipt_long_rounded,
+                          color: BranchColors.primary,
+                          size: 44,
+                          iconSize: 20,
+                          borderRadius: 14,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${l10n.orderNumber} ${order.id.substring(0, 8)}',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              if (dateStr.isNotEmpty)
+                                Text(
+                                  dateStr,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                            ],
+                          ),
+                        ),
+                        OrderStatusChip(status: order.status),
+                      ],
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text('${l10n.orderNumber} ${order.id.substring(0, 8)}', style: Theme.of(context).textTheme.titleSmall),
-                      if (dateStr.isNotEmpty) Text(dateStr, style: Theme.of(context).textTheme.bodySmall),
-                    ])),
-                    OrderStatusChip(status: order.status),
-                  ]),
-                  const SizedBox(height: 14),
-                  Divider(color: BranchColors.outlineVariant.withValues(alpha: .5)),
-                  const SizedBox(height: 8),
-                  Row(children: [
-                    if (order.deliveryAddress != null) Expanded(child: Text('${l10n.deliveredTo}: ${order.deliveryAddress!.label}', maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall)),
-                    const SizedBox(width: 10),
-                    Text('${order.totalAmount.toStringAsFixed(0)} ﷼', style: Theme.of(context).textTheme.titleSmall?.copyWith(color: BranchColors.primary, fontWeight: FontWeight.w900)),
-                  ]),
-                ]),
+                    const SizedBox(height: 14),
+                    Divider(color: ClientColors.outline.withValues(alpha: .5)),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        if (order.deliveryAddress != null)
+                          Expanded(
+                            child: Text(
+                              '${l10n.deliveredTo}: ${order.deliveryAddress!.label}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                        const SizedBox(width: 10),
+                        Text(
+                          '${order.totalAmount.toStringAsFixed(0)} ﷼',
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(
+                                color: ClientColors.primary,
+                                fontWeight: FontWeight.w900,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -113,4 +172,3 @@ class _OrdersTabState extends State<OrdersTab> {
     );
   }
 }
-
