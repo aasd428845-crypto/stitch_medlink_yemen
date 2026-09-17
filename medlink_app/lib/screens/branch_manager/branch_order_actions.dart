@@ -20,15 +20,18 @@ void showAllocateSheet(BuildContext context, OrderModel order) {
   );
 }
 
-Future<void> showAssignDriverDialog(BuildContext context, OrderModel order) async {
+Future<void> showAssignDriverDialog(
+  BuildContext context,
+  OrderModel order,
+) async {
   final l10n = AppLocalizations.of(context)!;
   final branch = context.read<BranchController>();
   final drivers = branch.drivers;
 
   if (drivers.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.branchNoDriversAvailable)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.branchNoDriversAvailable)));
     return;
   }
 
@@ -40,7 +43,7 @@ Future<void> showAssignDriverDialog(BuildContext context, OrderModel order) asyn
       builder: (dialogCtx, setState) => AlertDialog(
         title: Text(l10n.branchAssignDriver),
         content: DropdownButtonFormField<String>(
-          value: selectedDriverId,
+          initialValue: selectedDriverId,
           decoration: InputDecoration(labelText: l10n.branchSelectDriver),
           items: [
             for (final d in drivers)
@@ -75,15 +78,18 @@ Future<void> showAssignDriverDialog(BuildContext context, OrderModel order) asyn
   );
 }
 
-Future<void> showTransferOrderDialog(BuildContext context, OrderModel order) async {
+Future<void> showTransferOrderDialog(
+  BuildContext context,
+  OrderModel order,
+) async {
   final l10n = AppLocalizations.of(context)!;
   final branch = context.read<BranchController>();
   final branches = branch.otherBranches;
 
   if (branches.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.branchNoOtherBranches)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.branchNoOtherBranches)));
     return;
   }
 
@@ -95,7 +101,7 @@ Future<void> showTransferOrderDialog(BuildContext context, OrderModel order) asy
       builder: (dialogCtx, setState) => AlertDialog(
         title: Text(l10n.branchTransferOrder),
         content: DropdownButtonFormField<String>(
-          value: selectedBranchId,
+          initialValue: selectedBranchId,
           decoration: InputDecoration(labelText: l10n.branchSelectBranch),
           items: [
             for (final b in branches)
@@ -123,7 +129,10 @@ Future<void> showTransferOrderDialog(BuildContext context, OrderModel order) asy
   );
 }
 
-Future<void> showRejectOrderConfirm(BuildContext context, OrderModel order) async {
+Future<void> showRejectOrderConfirm(
+  BuildContext context,
+  OrderModel order,
+) async {
   final l10n = AppLocalizations.of(context)!;
   final branch = context.read<BranchController>();
 

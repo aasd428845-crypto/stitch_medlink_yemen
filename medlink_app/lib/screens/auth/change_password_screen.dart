@@ -67,92 +67,97 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 440),
-                child: GlassCard(
-                  padding: const EdgeInsets.all(AppSpacing.xl),
-                  borderRadius: 30,
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(height: AppSpacing.xl),
-                        Icon(
-                          Icons.lock_reset_rounded,
-                          size: 56,
-                          color: AppColors.primary,
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        Text(
-                          l10n.changePasswordTitle,
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
-                          l10n.changePasswordSubtitle,
-                          style: Theme.of(context).textTheme.bodyMedium
-                               ?.copyWith(color: BranchColors.onSurfaceVariant),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: AppSpacing.xl),
-                        if (_error != null) ...[
-                          ErrorBanner(message: _error!),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 440),
+                  child: GlassCard(
+                    padding: const EdgeInsets.all(AppSpacing.xl),
+                    borderRadius: 30,
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: AppSpacing.xl),
+                          Icon(
+                            Icons.lock_reset_rounded,
+                            size: 56,
+                            color: AppColors.primary,
+                          ),
                           const SizedBox(height: AppSpacing.md),
+                          Text(
+                            l10n.changePasswordTitle,
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            l10n.changePasswordSubtitle,
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: BranchColors.onSurfaceVariant,
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: AppSpacing.xl),
+                          if (_error != null) ...[
+                            ErrorBanner(message: _error!),
+                            const SizedBox(height: AppSpacing.md),
+                          ],
+                          AppTextField(
+                            label: l10n.newPasswordLabel,
+                            controller: _newPasswordCtrl,
+                            obscureText: true,
+                            prefixIcon: Icons.lock_outline,
+                            validator: (v) {
+                              if (v == null || v.trim().isEmpty) {
+                                return l10n.validationRequired;
+                              }
+                              if (v.trim().length < 6) {
+                                return l10n.validationPasswordShort;
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          AppTextField(
+                            label: l10n.confirmNewPasswordLabel,
+                            controller: _confirmCtrl,
+                            obscureText: true,
+                            prefixIcon: Icons.lock_outline,
+                            validator: (v) {
+                              if (v == null || v.trim().isEmpty) {
+                                return l10n.validationRequired;
+                              }
+                              if (v.trim() != _newPasswordCtrl.text.trim()) {
+                                return l10n.validationPasswordMismatch;
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: AppSpacing.xl),
+                          AppPrimaryButton(
+                            label: l10n.changePasswordButton,
+                            onPressed: _submit,
+                            isLoading: _loading,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          TextButton.icon(
+                            icon: const Icon(Icons.logout, size: 18),
+                            label: Text(l10n.logoutButton),
+                            onPressed: () =>
+                                context.read<AuthController>().signOut(),
+                          ),
                         ],
-                        AppTextField(
-                          label: l10n.newPasswordLabel,
-                          controller: _newPasswordCtrl,
-                          obscureText: true,
-                          prefixIcon: Icons.lock_outline,
-                          validator: (v) {
-                            if (v == null || v.trim().isEmpty)
-                              return l10n.validationRequired;
-                            if (v.trim().length < 6)
-                              return l10n.validationPasswordShort;
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        AppTextField(
-                          label: l10n.confirmNewPasswordLabel,
-                          controller: _confirmCtrl,
-                          obscureText: true,
-                          prefixIcon: Icons.lock_outline,
-                          validator: (v) {
-                            if (v == null || v.trim().isEmpty)
-                              return l10n.validationRequired;
-                            if (v.trim() != _newPasswordCtrl.text.trim()) {
-                              return l10n.validationPasswordMismatch;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: AppSpacing.xl),
-                        AppPrimaryButton(
-                          label: l10n.changePasswordButton,
-                          onPressed: _submit,
-                          isLoading: _loading,
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        TextButton.icon(
-                          icon: const Icon(Icons.logout, size: 18),
-                          label: Text(l10n.logoutButton),
-                          onPressed: () =>
-                              context.read<AuthController>().signOut(),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
           ),
         ),
       ),

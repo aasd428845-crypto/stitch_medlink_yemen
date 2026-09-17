@@ -53,10 +53,10 @@ class _BranchInvoiceCreateSheetState extends State<BranchInvoiceCreateSheet> {
     });
     try {
       await context.read<BranchController>().createInvoice(
-            clientId: _clientId!,
-            amount: double.tryParse(_amountCtrl.text.trim()) ?? 0,
-            dueDate: _dueDate,
-          );
+        clientId: _clientId!,
+        amount: double.tryParse(_amountCtrl.text.trim()) ?? 0,
+        dueDate: _dueDate,
+      );
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -93,16 +93,19 @@ class _BranchInvoiceCreateSheetState extends State<BranchInvoiceCreateSheet> {
                   gradient: LinearGradient(colors: BranchColors.heroGradient),
                   borderRadius: BorderRadius.circular(13),
                 ),
-                child: const Icon(Icons.receipt_long_rounded,
-                    color: BranchColors.onPrimary),
+                child: const Icon(
+                  Icons.receipt_long_rounded,
+                  color: BranchColors.onPrimary,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Text('إنشاء فاتورة',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w800)),
+                child: Text(
+                  'إنشاء فاتورة',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.close_rounded),
@@ -121,7 +124,7 @@ class _BranchInvoiceCreateSheetState extends State<BranchInvoiceCreateSheet> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 DropdownButtonFormField<String>(
-                  value: _clientId,
+                  initialValue: _clientId,
                   decoration: const InputDecoration(
                     labelText: 'العميل',
                     prefixIcon: Icon(Icons.person_outline),
@@ -131,15 +134,12 @@ class _BranchInvoiceCreateSheetState extends State<BranchInvoiceCreateSheet> {
                       DropdownMenuItem(
                         value: c.id,
                         child: Text(
-                          c.name?.isNotEmpty == true
-                              ? c.name!
-                              : c.email,
+                          c.name?.isNotEmpty == true ? c.name! : c.email,
                         ),
                       ),
                   ],
                   onChanged: (v) => setState(() => _clientId = v),
-                  validator: (v) =>
-                      v == null ? 'اختر العميل' : null,
+                  validator: (v) => v == null ? 'اختر العميل' : null,
                 ),
                 const SizedBox(height: AppSpacing.md),
                 AppTextField(
@@ -169,8 +169,9 @@ class _BranchInvoiceCreateSheetState extends State<BranchInvoiceCreateSheet> {
                             context: context,
                             initialDate: _dueDate ?? DateTime.now(),
                             firstDate: DateTime.now(),
-                            lastDate:
-                                DateTime.now().add(const Duration(days: 365)),
+                            lastDate: DateTime.now().add(
+                              const Duration(days: 365),
+                            ),
                           );
                           if (picked != null) {
                             setState(() => _dueDate = picked);
@@ -221,9 +222,14 @@ class InvoiceStatusChip extends StatelessWidget {
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 5),
-          Text(label,
-              style: TextStyle(
-                  color: color, fontWeight: FontWeight.w800, fontSize: 11)),
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.w800,
+              fontSize: 11,
+            ),
+          ),
         ],
       ),
     );
@@ -243,11 +249,12 @@ void showInvoiceDetail(BuildContext context, Invoice invoice) {
           Row(
             children: [
               Expanded(
-                child: Text('تفاصيل الفاتورة',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w800)),
+                child: Text(
+                  'تفاصيل الفاتورة',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.close_rounded),
@@ -261,22 +268,31 @@ void showInvoiceDetail(BuildContext context, Invoice invoice) {
               children: [
                 _DetailRow(label: 'العميل', value: invoice.clientName ?? '—'),
                 _DetailRow(
-                    label: 'رقم الفاتورة',
-                    value: invoice.id.substring(0, 8).toUpperCase()),
+                  label: 'رقم الفاتورة',
+                  value: invoice.id.substring(0, 8).toUpperCase(),
+                ),
                 _DetailRow(
-                    label: 'المبلغ',
-                    value: '${invoice.amount.toStringAsFixed(0)} ﷼'),
-                _DetailRow(label: 'الحالة', value: '', chip: InvoiceStatusChip(invoice: invoice)),
+                  label: 'المبلغ',
+                  value: '${invoice.amount.toStringAsFixed(0)} ﷼',
+                ),
                 _DetailRow(
-                    label: 'تاريخ الإنشاء',
-                    value: invoice.createdAt?.substring(0, 10) ?? '—'),
+                  label: 'الحالة',
+                  value: '',
+                  chip: InvoiceStatusChip(invoice: invoice),
+                ),
                 _DetailRow(
-                    label: 'تاريخ الاستحقاق',
-                    value: invoice.dueDate?.substring(0, 10) ?? '—'),
+                  label: 'تاريخ الإنشاء',
+                  value: invoice.createdAt?.substring(0, 10) ?? '—',
+                ),
+                _DetailRow(
+                  label: 'تاريخ الاستحقاق',
+                  value: invoice.dueDate?.substring(0, 10) ?? '—',
+                ),
                 if (invoice.paidAt != null)
                   _DetailRow(
-                      label: 'تاريخ السداد',
-                      value: invoice.paidAt!.substring(0, 10)),
+                    label: 'تاريخ السداد',
+                    value: invoice.paidAt!.substring(0, 10),
+                  ),
               ],
             ),
           ),
@@ -300,12 +316,21 @@ class _DetailRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: const TextStyle(
-                  color: BranchColors.onSurfaceVariant, fontSize: 13)),
-          chip ?? Text(value,
-              style: const TextStyle(
-                  color: BranchColors.onSurface, fontWeight: FontWeight.w700)),
+          Text(
+            label,
+            style: const TextStyle(
+              color: BranchColors.onSurfaceVariant,
+              fontSize: 13,
+            ),
+          ),
+          chip ??
+              Text(
+                value,
+                style: const TextStyle(
+                  color: BranchColors.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
         ],
       ),
     );

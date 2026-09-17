@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -59,7 +57,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Theme(
       data: AppTheme.clientLight,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: ClientColors.background,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           foregroundColor: ClientColors.text,
@@ -122,91 +120,124 @@ class _ProductBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isOutOfStock = availableQuantity == 0;
+    final stockLabel = isOutOfStock
+        ? l10n.outOfStock
+        : availableQuantity == null
+        ? l10n.inStock
+        : '${l10n.availableQuantity}: $availableQuantity';
     return Column(
       children: [
         Expanded(
           child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 116),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Hero(
-                  tag: 'product_${product.id}',
-                  child: AspectRatio(
-                    aspectRatio: 4 / 3,
-                    child: product.imageUrl != null
-                        ? Image.network(
-                            product.imageUrl!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => _imagePlaceholder(),
-                          )
-                        : _imagePlaceholder(),
+                ClientCard(
+                  padding: EdgeInsets.zero,
+                  borderRadius: 28,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28),
+                    child: Hero(
+                      tag: 'product_${product.id}',
+                      child: AspectRatio(
+                        aspectRatio: 4 / 3,
+                        child: product.imageUrl != null
+                            ? Image.network(
+                                product.imageUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) =>
+                                    _imagePlaceholder(),
+                              )
+                            : _imagePlaceholder(),
+                      ),
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    _Pill(label: product.category, color: ClientColors.primary),
+                    const SizedBox(width: 8),
+                    _Pill(
+                      label: stockLabel,
+                      color: isOutOfStock
+                          ? ClientColors.danger
+                          : ClientColors.success,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  product.name,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: ClientColors.navy,
+                  ),
+                ),
+                if (product.nameEn?.trim().isNotEmpty == true) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    product.nameEn!,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: ClientColors.textMuted,
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 16),
+                ClientCard(
+                  borderRadius: 22,
+                  child: Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: ClientColors.primarySoft,
-                          borderRadius: BorderRadius.circular(99),
-                        ),
-                        child: Text(
-                          product.category,
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: ClientColors.primaryDark,
-                          ),
-                        ),
+                      const ClientIconBadge(
+                        icon: Icons.payments_outlined,
+                        color: ClientColors.primary,
                       ),
-                      const SizedBox(height: 10),
-                      Text(product.name, style: theme.textTheme.headlineMedium),
-                      if (product.nameEn != null) ...[
-                        const SizedBox(height: 2),
-                        Text(
-                          product.nameEn!,
-                          style: theme.textTheme.bodyMedium?.copyWith(
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          l10n.unitPrice,
+                          style: theme.textTheme.bodySmall?.copyWith(
                             color: ClientColors.textMuted,
                           ),
                         ),
-                      ],
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Text(
-                            l10n.unitPrice,
-                            style: theme.textTheme.bodySmall,
-                          ),
-                          const Spacer(),
-                          Text(
-                            '${product.unitPrice.toStringAsFixed(0)} ﷼',
-                            style: theme.textTheme.headlineSmall?.copyWith(
-                              color: ClientColors.primary,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
                       ),
-                      Divider(
-                        height: 32,
-                        color: ClientColors.outline.withValues(alpha: .5),
-                      ),
-                      _DetailTable(product: product, l10n: l10n),
-                      if (product.description != null &&
-                          product.description!.isNotEmpty) ...[
-                        const SizedBox(height: 16),
-                        Text(
-                          product.description!,
-                          style: theme.textTheme.bodyMedium,
+                      Text(
+                        '${product.unitPrice.toStringAsFixed(0)} ر.ي',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: ClientColors.primary,
+                          fontWeight: FontWeight.w900,
                         ),
-                      ],
+                      ),
                     ],
                   ),
                 ),
+                const SizedBox(height: 16),
+                ClientSectionTitle(
+                  title: l10n.productDetails,
+                  icon: Icons.info_outline_rounded,
+                ),
+                const SizedBox(height: 10),
+                ClientCard(
+                  borderRadius: 22,
+                  child: _DetailTable(product: product, l10n: l10n),
+                ),
+                if (product.description?.trim().isNotEmpty == true) ...[
+                  const SizedBox(height: 16),
+                  ClientSectionTitle(
+                    title: product.name,
+                    icon: Icons.description_outlined,
+                  ),
+                  const SizedBox(height: 10),
+                  ClientCard(
+                    borderRadius: 22,
+                    child: Text(
+                      product.description!,
+                      style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -215,7 +246,7 @@ class _ProductBody extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
             child: FilledButton.icon(
-              onPressed: availableQuantity == 0
+              onPressed: isOutOfStock
                   ? null
                   : () {
                       context.read<CartController>().addItem(product);
@@ -228,7 +259,7 @@ class _ProductBody extends StatelessWidget {
                     },
               icon: const Icon(Icons.add_shopping_cart_rounded),
               label: Text(
-                availableQuantity == 0
+                isOutOfStock
                     ? l10n.outOfStock
                     : availableQuantity == null
                     ? l10n.addToCart
@@ -273,35 +304,63 @@ class _DetailTable extends StatelessWidget {
       (l10n.category, product.category),
     ];
     if (rows.isEmpty) return const SizedBox.shrink();
-    return Table(
-      columnWidths: const {0: IntrinsicColumnWidth(), 1: FlexColumnWidth()},
-      children: rows
-          .map(
-            (row) => TableRow(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(
-                    row.$1,
-                    style: Theme.of(context).textTheme.bodySmall,
+    return Column(
+      children: [
+        for (var i = 0; i < rows.length; i++) ...[
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  rows[i].$1,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: ClientColors.textMuted,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 4,
-                    horizontal: 10,
-                  ),
-                  child: Text(
-                    row.$2,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+              ),
+              const SizedBox(width: 12),
+              Flexible(
+                child: Text(
+                  rows[i].$2,
+                  textAlign: TextAlign.end,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
                 ),
-              ],
+              ),
+            ],
+          ),
+          if (i != rows.length - 1)
+            Divider(
+              height: 20,
+              color: ClientColors.outline.withValues(alpha: .7),
             ),
-          )
-          .toList(),
+        ],
+      ],
+    );
+  }
+}
+
+class _Pill extends StatelessWidget {
+  const _Pill({required this.label, required this.color});
+
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: .12),
+        borderRadius: BorderRadius.circular(99),
+      ),
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: color,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
     );
   }
 }

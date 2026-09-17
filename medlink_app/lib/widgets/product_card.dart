@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/product.dart';
 import '../../utils/theme.dart';
-import '../screens/branch_manager/branch_manager_design.dart';
+import '../screens/client/client_design.dart';
 
 /// Reusable product card used in CatalogTab and HomeTab.
 /// Tapping navigates to ProductDetailScreen; [onAdd] triggers cart addition.
@@ -22,14 +22,15 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SoftCard(
+    return ClientCard(
       margin: EdgeInsets.zero,
       padding: EdgeInsets.zero,
+      borderRadius: 20,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
+        borderRadius: BorderRadius.circular(20),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppRadius.lg),
+          borderRadius: BorderRadius.circular(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -100,18 +101,6 @@ class ProductCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
-                    if (product.nameEn?.trim().isNotEmpty == true) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        product.nameEn!,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: ClientColors.textMuted,
-                          fontSize: 11,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
                     if (product.dosageForm?.trim().isNotEmpty == true) ...[
                       const SizedBox(height: 2),
                       Text(
@@ -120,7 +109,7 @@ class ProductCard extends StatelessWidget {
                           color: ClientColors.textMuted,
                           fontSize: 11,
                         ),
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],

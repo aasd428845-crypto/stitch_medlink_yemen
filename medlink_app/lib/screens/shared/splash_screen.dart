@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../../utils/theme.dart';
@@ -42,7 +40,10 @@ class _SplashScreenState extends State<SplashScreen>
           child: SafeArea(
             child: Center(
               child: GlassCard(
-                padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 32),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 34,
+                  vertical: 32,
+                ),
                 borderRadius: 32,
                 tint: .82,
                 child: Column(
@@ -71,7 +72,8 @@ class _SplashScreenState extends State<SplashScreen>
                     const SizedBox(height: AppSpacing.lg),
                     Text(
                       'MedLink',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
                             color: BranchColors.primary,
                             fontWeight: FontWeight.w900,
                             letterSpacing: .4,
@@ -86,16 +88,17 @@ class _SplashScreenState extends State<SplashScreen>
                         valueColor: const AlwaysStoppedAnimation(
                           BranchColors.primary,
                         ),
-                        backgroundColor:
-                            BranchColors.primary.withValues(alpha: .15),
+                        backgroundColor: BranchColors.primary.withValues(
+                          alpha: .15,
+                        ),
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       'جارٍ تجهيز تجربتك',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ],
                 ),

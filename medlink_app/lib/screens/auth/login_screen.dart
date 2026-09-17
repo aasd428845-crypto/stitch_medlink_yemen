@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -108,10 +106,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             l10n.appName,
                             textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                              color: BranchColors.primary,
-                              fontWeight: FontWeight.w900,
-                            ),
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(
+                                  color: BranchColors.primary,
+                                  fontWeight: FontWeight.w900,
+                                ),
                           ),
                           const SizedBox(height: 32),
                           Text(
@@ -121,9 +120,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(height: 4),
                           Text(
                             l10n.loginSubtitle,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: BranchColors.onSurfaceVariant,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: BranchColors.onSurfaceVariant,
+                                ),
                           ),
                           const SizedBox(height: 24),
                           if (_errorMessage != null) ...[
@@ -180,7 +180,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   )
                                 : Text(
                                     l10n.loginButton,
-                                    style: const TextStyle(fontWeight: FontWeight.w700),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                           ),
                           const SizedBox(height: 24),
@@ -188,10 +190,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               const Expanded(child: Divider()),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
                                 child: Text(
                                   l10n.orDivider,
-                                  style: const TextStyle(color: BranchColors.onSurfaceVariant),
+                                  style: const TextStyle(
+                                    color: BranchColors.onSurfaceVariant,
+                                  ),
                                 ),
                               ),
                               const Expanded(child: Divider()),
@@ -199,18 +205,24 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 24),
                           OutlinedButton.icon(
-                            onPressed: _isGoogleSubmitting ? null : _submitGoogle,
+                            onPressed: _isGoogleSubmitting
+                                ? null
+                                : _submitGoogle,
                             icon: _isGoogleSubmitting
                                 ? const SizedBox(
                                     height: 18,
                                     width: 18,
-                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
                                   )
                                 : const Icon(Icons.g_mobiledata, size: 26),
                             label: Text(l10n.continueWithGoogle),
                             style: OutlinedButton.styleFrom(
                               minimumSize: const Size.fromHeight(52),
-                              side: const BorderSide(color: BranchColors.outlineVariant),
+                              side: const BorderSide(
+                                color: BranchColors.outlineVariant,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18),
                               ),
@@ -240,4 +252,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

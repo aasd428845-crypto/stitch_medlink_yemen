@@ -33,9 +33,10 @@ class _AddressesScreenState extends State<AddressesScreen> {
     return Theme(
       data: AppTheme.clientLight,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: ClientColors.background,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: ClientColors.surface,
+          scrolledUnderElevation: 0,
           foregroundColor: ClientColors.text,
           title: Text(l10n.deliveryAddress),
         ),
@@ -50,6 +51,12 @@ class _AddressesScreenState extends State<AddressesScreen> {
                       Text(l10n.addressesLoading),
                     ],
                   ),
+                )
+              : controller.error != null && controller.addresses.isEmpty
+              ? _AddressesError(
+                  message: controller.error!,
+                  onRetry: () =>
+                      context.read<OrderController>().loadAddresses(),
                 )
               : controller.addresses.isEmpty
               ? Center(
@@ -81,12 +88,17 @@ class _AddressesScreenState extends State<AddressesScreen> {
                     ),
                   ),
                 )
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-                  itemCount: controller.addresses.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
-                  itemBuilder: (_, i) =>
-                      _AddressTile(address: controller.addresses[i]),
+              : RefreshIndicator(
+                  color: ClientColors.primary,
+                  onRefresh: () =>
+                      context.read<OrderController>().loadAddresses(),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+                    itemCount: controller.addresses.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 10),
+                    itemBuilder: (_, i) =>
+                        _AddressTile(address: controller.addresses[i]),
+                  ),
                 ),
         ),
         floatingActionButton: FloatingActionButton.extended(
@@ -104,18 +116,60 @@ class _AddressesScreenState extends State<AddressesScreen> {
     final result = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      useSafeArea: false,
+      useSafeArea: true,
       enableDrag: false,
-      constraints: BoxConstraints.tightFor(
-        height: MediaQuery.sizeOf(context).height,
-      ),
       backgroundColor: Colors.transparent,
-      builder: (_) => const _AddAddressSheet(),
+      builder: (_) =>
+          Theme(data: AppTheme.clientLight, child: const _AddAddressSheet()),
     );
     if (result == true && mounted) setState(() {});
   }
 }
 
+class _AddressesError extends StatelessWidget {
+  const _AddressesError({required this.message, required this.onRetry});
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: ClientCard(
+          padding: const EdgeInsets.all(24),
+          borderRadius: 28,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const ClientIconBadge(
+                icon: Icons.error_outline_rounded,
+                color: ClientColors.danger,
+                size: 52,
+                iconSize: 26,
+                shape: BoxShape.circle,
+              ),
+              const SizedBox(height: 14),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 16),
+              FilledButton.icon(
+                onPressed: onRetry,
+                icon: const Icon(Icons.refresh_rounded),
+                label: Text(l10n.retry),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 // ─── Add Address Bottom Sheet ─────────────────────────────────────────────────
 
 class _AddAddressSheet extends StatefulWidget {
@@ -156,6 +210,7 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
+    FocusManager.instance.primaryFocus?.unfocus();
     final l10n = AppLocalizations.of(context)!;
     setState(() => _saving = true);
     try {
@@ -208,13 +263,18 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
     return ClipRRect(
       child: Container(
         height: double.infinity,
-        padding: EdgeInsets.fromLTRB(20, topInset + 12, 20, 20 + bottom),
+        padding: EdgeInsets.fromLTRB(20, topInset + 12, 20, 20),
         decoration: const BoxDecoration(color: ClientColors.background),
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: Column(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  padding: EdgeInsets.only(bottom: bottom + 16),
+                  child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -435,7 +495,7 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                     contentPadding: EdgeInsets.zero,
                     value: _isDefault,
                     onChanged: (value) => setState(() => _isDefault = value),
-                    activeColor: ClientColors.primary,
+                    activeThumbColor: ClientColors.primary,
                     title: Text(
                       l10n.defaultAddressLabel,
                       style: Theme.of(context).textTheme.titleSmall,
@@ -448,37 +508,40 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                 ),
                 const SizedBox(height: 24),
 
-                // ── Action buttons ────────────────────────────────────
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.of(context).pop(false),
-                        child: Text(l10n.cancelButton),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      flex: 2,
-                      child: FilledButton.icon(
-                        onPressed: _saving ? null : _save,
-                        icon: _saving
-                            ? const SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : const Icon(Icons.save_outlined),
-                        label: Text(l10n.saveAddressButton),
-                      ),
-                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text(l10n.cancelButton),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    flex: 2,
+                    child: FilledButton.icon(
+                      onPressed: _saving ? null : _save,
+                      icon: _saving
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Icon(Icons.save_outlined),
+                      label: Text(l10n.saveAddressButton),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

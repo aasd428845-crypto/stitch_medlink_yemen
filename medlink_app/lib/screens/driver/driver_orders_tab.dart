@@ -143,8 +143,9 @@ class _DriverOrdersTabState extends State<DriverOrdersTab> {
     final uri = Uri.parse(
       'https://www.google.com/maps/search/?api=1&query=${address!.latitude},${address.longitude}',
     );
-    if (await canLaunchUrl(uri))
+    if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 }
 

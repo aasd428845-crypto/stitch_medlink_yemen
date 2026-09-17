@@ -29,8 +29,9 @@ class _OrdersTabState extends State<OrdersTab> {
     final l10n = AppLocalizations.of(context)!;
     final orderCtrl = context.watch<OrderController>();
 
-    if (orderCtrl.isLoading && orderCtrl.orders.isEmpty)
+    if (orderCtrl.isLoading && orderCtrl.orders.isEmpty) {
       return const Center(child: CircularProgressIndicator());
+    }
 
     if (orderCtrl.error != null && orderCtrl.orders.isEmpty) {
       return Center(

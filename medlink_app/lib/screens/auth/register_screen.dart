@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -115,9 +113,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const SizedBox(height: 4),
                           Text(
                             l10n.registerSubtitle,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: BranchColors.onSurfaceVariant,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: BranchColors.onSurfaceVariant,
+                                ),
                           ),
                           const SizedBox(height: 24),
                           if (_errorMessage != null) ...[
@@ -178,7 +177,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               Checkbox(
                                 value: _acceptedTerms,
                                 activeColor: BranchColors.primary,
-                                onChanged: (v) => setState(() => _acceptedTerms = v ?? false),
+                                onChanged: (v) =>
+                                    setState(() => _acceptedTerms = v ?? false),
                               ),
                               Expanded(
                                 child: Wrap(
@@ -221,7 +221,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   )
                                 : Text(
                                     l10n.registerButton,
-                                    style: const TextStyle(fontWeight: FontWeight.w700),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                           ),
                           const SizedBox(height: 24),
@@ -248,4 +250,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-

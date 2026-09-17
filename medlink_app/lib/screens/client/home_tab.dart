@@ -207,7 +207,7 @@ class _HomeTabState extends State<HomeTab> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
-                  childAspectRatio: 0.60,
+                  childAspectRatio: 0.52,
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (context, i) {

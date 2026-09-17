@@ -230,7 +230,7 @@ class _CatalogTabState extends State<CatalogTab> {
           crossAxisCount: 2,
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
-          childAspectRatio: 0.66,
+          childAspectRatio: 0.46,
         ),
         itemCount: catalog.products.length,
         itemBuilder: (context, i) {

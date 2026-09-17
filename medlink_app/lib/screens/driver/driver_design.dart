@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../../utils/theme.dart';
@@ -21,11 +19,11 @@ class DriverSurface extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SoftCard(
-        margin: margin,
-        padding: padding,
-        borderRadius: 24,
-        child: child,
-      );
+    margin: margin,
+    padding: padding,
+    borderRadius: 24,
+    child: child,
+  );
 }
 
 /// Gradient hero banner for the driver role.
@@ -47,7 +45,11 @@ class DriverHero extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.fromLTRB(
-          AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.sm),
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.sm,
+      ),
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
@@ -96,8 +98,10 @@ class DriverHero extends StatelessWidget {
             children: [
               // Driver badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: .20),
                   borderRadius: BorderRadius.circular(99),
@@ -109,8 +113,11 @@ class DriverHero extends StatelessWidget {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.local_shipping_rounded,
-                        size: 14, color: Colors.white),
+                    Icon(
+                      Icons.local_shipping_rounded,
+                      size: 14,
+                      color: Colors.white,
+                    ),
                     SizedBox(width: 6),
                     Text(
                       'سائق MedLink',
@@ -127,9 +134,9 @@ class DriverHero extends StatelessWidget {
               Text(
                 _greeting,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: .85),
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: Colors.white.withValues(alpha: .85),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
@@ -137,18 +144,18 @@ class DriverHero extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: -0.5,
-                    ),
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  letterSpacing: -0.5,
+                ),
               ),
               const SizedBox(height: 6),
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withValues(alpha: .80),
-                      height: 1.5,
-                    ),
+                  color: Colors.white.withValues(alpha: .80),
+                  height: 1.5,
+                ),
               ),
             ],
           ),
