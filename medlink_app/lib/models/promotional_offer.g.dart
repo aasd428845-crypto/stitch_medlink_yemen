@@ -11,6 +11,9 @@ _$PromotionalOfferImpl _$$PromotionalOfferImplFromJson(
 ) => _$PromotionalOfferImpl(
   id: json['id'] as String,
   title: json['title'] as String,
+  productId: json['product_id'] as String?,
+  discountPercent: (json['discount_percent'] as num?)?.toDouble(),
+  specialPrice: (json['special_price'] as num?)?.toDouble(),
   description: json['description'] as String?,
   imageUrl: json['image_url'] as String?,
   discountText: json['discount_text'] as String?,
@@ -26,6 +29,9 @@ Map<String, dynamic> _$$PromotionalOfferImplToJson(
 ) => <String, dynamic>{
   'id': instance.id,
   'title': instance.title,
+  'product_id': instance.productId,
+  'discount_percent': instance.discountPercent,
+  'special_price': instance.specialPrice,
   'description': instance.description,
   'image_url': instance.imageUrl,
   'discount_text': instance.discountText,

@@ -237,6 +237,7 @@ class _CatalogTabState extends State<CatalogTab> {
           final product = catalog.products[i];
           return ProductCard(
             product: product,
+            offer: catalog.offerForProduct(product.id),
             onTap: () => context.push('/client/product/${product.id}'),
             onAdd: () {
               context.read<CartController>().addItem(product);

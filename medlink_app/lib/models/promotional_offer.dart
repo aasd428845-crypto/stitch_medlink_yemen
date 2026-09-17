@@ -9,6 +9,9 @@ class PromotionalOffer with _$PromotionalOffer {
   const factory PromotionalOffer({
     required String id,
     required String title,
+    @JsonKey(name: 'product_id') String? productId,
+    @JsonKey(name: 'discount_percent') double? discountPercent,
+    @JsonKey(name: 'special_price') double? specialPrice,
     String? description,
     @JsonKey(name: 'image_url') String? imageUrl,
     @JsonKey(name: 'discount_text') String? discountText,

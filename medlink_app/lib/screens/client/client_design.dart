@@ -157,6 +157,7 @@ class ClientFloatingBottomBar extends StatelessWidget {
     required this.onSelect,
     this.onFabPressed,
     this.fabIcon = LucideIcons.shoppingCart,
+    this.fabBadgeCount = 0,
   });
 
   final List<ClientBottomBarItem> items;
@@ -164,6 +165,7 @@ class ClientFloatingBottomBar extends StatelessWidget {
   final ValueChanged<int> onSelect;
   final VoidCallback? onFabPressed;
   final IconData fabIcon;
+  final int fabBadgeCount;
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +203,11 @@ class ClientFloatingBottomBar extends StatelessWidget {
                     showLabel: isWide,
                     onTap: () => onSelect(i),
                   ),
-                _ClientFab(onPressed: onFabPressed, icon: fabIcon),
+                _ClientFab(
+                  onPressed: onFabPressed,
+                  icon: fabIcon,
+                  badgeCount: fabBadgeCount,
+                ),
                 for (var i = mid; i < items.length; i++)
                   _ClientBarItem(
                     item: items[i],
@@ -219,17 +225,27 @@ class ClientFloatingBottomBar extends StatelessWidget {
 }
 
 class ClientBottomBarItem {
-  const ClientBottomBarItem({required this.icon, required this.label});
+  const ClientBottomBarItem({
+    required this.icon,
+    required this.label,
+    this.badgeCount = 0,
+  });
 
   final IconData icon;
   final String label;
+  final int badgeCount;
 }
 
 class _ClientFab extends StatelessWidget {
-  const _ClientFab({required this.onPressed, required this.icon});
+  const _ClientFab({
+    required this.onPressed,
+    required this.icon,
+    required this.badgeCount,
+  });
 
   final VoidCallback? onPressed;
   final IconData icon;
+  final int badgeCount;
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +259,18 @@ class _ClientFab extends StatelessWidget {
           fixedSize: const Size(56, 56),
           shape: const CircleBorder(),
         ),
-        icon: Icon(icon, size: 24),
+        icon: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Icon(icon, size: 24),
+            if (badgeCount > 0)
+              Positioned(
+                top: -10,
+                right: -12,
+                child: _CountBadge(count: badgeCount),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -280,10 +307,23 @@ class _ClientBarItem extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              item.icon,
-              size: 22,
-              color: selected ? ClientColors.primary : ClientColors.textMuted,
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(
+                  item.icon,
+                  size: 22,
+                  color: selected
+                      ? ClientColors.primary
+                      : ClientColors.textMuted,
+                ),
+                if (item.badgeCount > 0)
+                  Positioned(
+                    top: -8,
+                    right: -10,
+                    child: _CountBadge(count: item.badgeCount),
+                  ),
+              ],
             ),
             const SizedBox(height: 3),
             AnimatedContainer(
@@ -309,6 +349,34 @@ class _ClientBarItem extends StatelessWidget {
               ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CountBadge extends StatelessWidget {
+  const _CountBadge({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        color: ClientColors.danger,
+        shape: BoxShape.circle,
+      ),
+      child: Text(
+        count > 9 ? '9+' : '$count',
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 9,
+          fontWeight: FontWeight.w900,
+          height: 1,
         ),
       ),
     );

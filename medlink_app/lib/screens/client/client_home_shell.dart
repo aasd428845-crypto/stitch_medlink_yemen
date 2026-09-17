@@ -34,11 +34,14 @@ class _ClientHomeShellState extends State<ClientHomeShell> {
     final l10n = AppLocalizations.of(context)!;
     final auth = context.watch<AuthController>();
     final cart = context.watch<CartController>();
+    final unreadNotifications =
+      context.watch<NotificationController>().unreadCount;
 
     final tabDefs = [
       (l10n.clientHomeLabel, LucideIcons.home),
       (l10n.clientCatalogLabel, LucideIcons.grid3x3),
       (l10n.clientOrdersLabel, LucideIcons.clipboardList),
+      (l10n.notificationsTitle, LucideIcons.bell),
       (l10n.clientProfileLabel, LucideIcons.user),
     ];
 
@@ -59,41 +62,9 @@ class _ClientHomeShellState extends State<ClientHomeShell> {
             branchName: auth.profile?.branchName,
           ),
           actions: [
-            Builder(
-              builder: (context) {
-                final unread = context
-                    .watch<NotificationController>()
-                    .unreadCount;
-                return IconButton(
-                  tooltip: l10n.notificationsTitle,
-                  icon: Badge(
-                    isLabelVisible: unread > 0,
-                    backgroundColor: ClientColors.danger,
-                    label: Text(
-                      unread > 9 ? '9+' : '$unread',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    child: const Icon(LucideIcons.bell, size: 21),
-                  ),
-                  onPressed: () => context.push('/notifications'),
-                );
-              },
-            ),
-            IconButton(
-              icon: Badge(
-                isLabelVisible: cart.totalItemCount > 0,
-                backgroundColor: ClientColors.danger,
-                label: Text(
-                  '${cart.totalItemCount}',
-                  style: const TextStyle(color: Colors.white),
-                ),
-                child: const Icon(LucideIcons.shoppingCart, size: 21),
-              ),
-              onPressed: () => context.push('/client/cart'),
-            ),
             IconButton(
               tooltip: l10n.clientProfileLabel,
-              onPressed: () => setState(() => _index = 3),
+              onPressed: () => setState(() => _index = 4),
               icon: CircleAvatar(
                 radius: 17,
                 backgroundColor: ClientColors.primarySoft,
@@ -112,12 +83,23 @@ class _ClientHomeShellState extends State<ClientHomeShell> {
         ),
         bottomNavigationBar: ClientFloatingBottomBar(
           items: [
-            for (final tab in tabDefs)
-              ClientBottomBarItem(icon: tab.$2, label: tab.$1),
+            for (var i = 0; i < tabDefs.length; i++)
+              ClientBottomBarItem(
+                icon: tabDefs[i].$2,
+                label: tabDefs[i].$1,
+                badgeCount: i == 3 ? unreadNotifications : 0,
+              ),
           ],
-          selectedIndex: _index,
-          onSelect: (i) => setState(() => _index = i),
+          selectedIndex: _index == 3 ? 4 : _index,
+          onSelect: (i) {
+            if (i == 3) {
+              context.push('/notifications');
+            } else {
+              setState(() => _index = i == 4 ? 3 : i);
+            }
+          },
           fabIcon: LucideIcons.shoppingCart,
+          fabBadgeCount: cart.totalItemCount,
           onFabPressed: () => context.push('/client/cart'),
         ),
       ),

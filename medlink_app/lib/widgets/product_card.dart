@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/product.dart';
+import '../../models/promotional_offer.dart';
 import '../../utils/theme.dart';
 import '../screens/client/client_design.dart';
 
@@ -12,15 +13,24 @@ class ProductCard extends StatelessWidget {
     required this.product,
     required this.onTap,
     required this.onAdd,
+    this.offer,
   });
 
   final Product product;
   final VoidCallback onTap;
   final VoidCallback onAdd;
+  final PromotionalOffer? offer;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final specialPrice = offer?.specialPrice;
+    final discountPercent = offer?.discountPercent;
+    final hasOffer = specialPrice != null || discountPercent != null;
+    final offerPrice = specialPrice ??
+      (discountPercent == null
+        ? null
+        : product.unitPrice * (1 - discountPercent / 100));
 
     return ClientCard(
       margin: EdgeInsets.zero,
@@ -128,11 +138,42 @@ class ProductCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '${product.unitPrice.toStringAsFixed(0)} ر.ي',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: ClientColors.primary,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (hasOffer) ...[
+                            Text(
+                              '${product.unitPrice.toStringAsFixed(0)} ر.ي',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: ClientColors.textMuted,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ),
+                            Text(
+                              '${offerPrice!.toStringAsFixed(0)} ر.ي',
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w800,
+                                color: ClientColors.success,
+                              ),
+                            ),
+                          ] else
+                            Text(
+                              '${product.unitPrice.toStringAsFixed(0)} ر.ي',
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: ClientColors.primary,
+                              ),
+                            ),
+                          if (discountPercent != null)
+                            Text(
+                              'خصم ${discountPercent.toStringAsFixed(0)}%',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: ClientColors.success,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                     SizedBox(

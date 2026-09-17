@@ -207,13 +207,14 @@ class _HomeTabState extends State<HomeTab> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
-                  childAspectRatio: 0.52,
+                  childAspectRatio: 0.46,
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (context, i) {
                     final product = catalog.products[i];
                     return ProductCard(
                       product: product,
+                      offer: catalog.offerForProduct(product.id),
                       onTap: () =>
                           context.push('/client/product/${product.id}'),
                       onAdd: () => _addToCart(context, product),
@@ -480,7 +481,7 @@ class _NewProductsSection extends StatelessWidget {
     }
 
     return SizedBox(
-      height: 302,
+      height: 330,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -492,6 +493,7 @@ class _NewProductsSection extends StatelessWidget {
             width: 190,
             child: ProductCard(
               product: product,
+              offer: context.read<CatalogController>().offerForProduct(product.id),
               onTap: () => context.push('/client/product/${product.id}'),
               onAdd: () => onAdd(product),
             ),
@@ -616,7 +618,7 @@ class _ReorderSection extends StatelessWidget {
     }
 
     return SizedBox(
-      height: 302,
+      height: 330,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -628,6 +630,7 @@ class _ReorderSection extends StatelessWidget {
             width: 190,
             child: ProductCard(
               product: recommendation.product,
+              offer: context.read<CatalogController>().offerForProduct(recommendation.product.id),
               onTap: () =>
                   context.push('/client/product/${recommendation.product.id}'),
               onAdd: () => onAdd(recommendation.product),

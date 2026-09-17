@@ -36,6 +36,14 @@ class CatalogController extends ChangeNotifier {
 
   List<PromotionalOffer> _offers = [];
   List<PromotionalOffer> get offers => _offers;
+  PromotionalOffer? offerForProduct(String productId) {
+    for (final offer in _offers) {
+      if (offer.productId == productId && offer.isCurrentlyActive) {
+        return offer;
+      }
+    }
+    return null;
+  }
   bool _offersLoading = false;
   bool get offersLoading => _offersLoading;
   String? _offersError;

@@ -1,0 +1,1 @@
+Use docs/opencode/FIRST-AUDIT-PROMPT.md as the first non-destructive audit instruction. Do not modify application code during the audit.

@@ -23,6 +23,12 @@ PromotionalOffer _$PromotionalOfferFromJson(Map<String, dynamic> json) {
 mixin _$PromotionalOffer {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
+  @JsonKey(name: 'product_id')
+  String? get productId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'discount_percent')
+  double? get discountPercent => throw _privateConstructorUsedError;
+  @JsonKey(name: 'special_price')
+  double? get specialPrice => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   @JsonKey(name: 'image_url')
   String? get imageUrl => throw _privateConstructorUsedError;
@@ -59,6 +65,9 @@ abstract class $PromotionalOfferCopyWith<$Res> {
   $Res call({
     String id,
     String title,
+    @JsonKey(name: 'product_id') String? productId,
+    @JsonKey(name: 'discount_percent') double? discountPercent,
+    @JsonKey(name: 'special_price') double? specialPrice,
     String? description,
     @JsonKey(name: 'image_url') String? imageUrl,
     @JsonKey(name: 'discount_text') String? discountText,
@@ -87,6 +96,9 @@ class _$PromotionalOfferCopyWithImpl<$Res, $Val extends PromotionalOffer>
   $Res call({
     Object? id = null,
     Object? title = null,
+    Object? productId = freezed,
+    Object? discountPercent = freezed,
+    Object? specialPrice = freezed,
     Object? description = freezed,
     Object? imageUrl = freezed,
     Object? discountText = freezed,
@@ -106,6 +118,18 @@ class _$PromotionalOfferCopyWithImpl<$Res, $Val extends PromotionalOffer>
                 ? _value.title
                 : title // ignore: cast_nullable_to_non_nullable
                       as String,
+            productId: freezed == productId
+                ? _value.productId
+                : productId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            discountPercent: freezed == discountPercent
+                ? _value.discountPercent
+                : discountPercent // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            specialPrice: freezed == specialPrice
+                ? _value.specialPrice
+                : specialPrice // ignore: cast_nullable_to_non_nullable
+                      as double?,
             description: freezed == description
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
@@ -156,6 +180,9 @@ abstract class _$$PromotionalOfferImplCopyWith<$Res>
   $Res call({
     String id,
     String title,
+    @JsonKey(name: 'product_id') String? productId,
+    @JsonKey(name: 'discount_percent') double? discountPercent,
+    @JsonKey(name: 'special_price') double? specialPrice,
     String? description,
     @JsonKey(name: 'image_url') String? imageUrl,
     @JsonKey(name: 'discount_text') String? discountText,
@@ -183,6 +210,9 @@ class __$$PromotionalOfferImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? title = null,
+    Object? productId = freezed,
+    Object? discountPercent = freezed,
+    Object? specialPrice = freezed,
     Object? description = freezed,
     Object? imageUrl = freezed,
     Object? discountText = freezed,
@@ -202,6 +232,18 @@ class __$$PromotionalOfferImplCopyWithImpl<$Res>
             ? _value.title
             : title // ignore: cast_nullable_to_non_nullable
                   as String,
+        productId: freezed == productId
+            ? _value.productId
+            : productId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        discountPercent: freezed == discountPercent
+            ? _value.discountPercent
+            : discountPercent // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        specialPrice: freezed == specialPrice
+            ? _value.specialPrice
+            : specialPrice // ignore: cast_nullable_to_non_nullable
+                  as double?,
         description: freezed == description
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
@@ -245,6 +287,9 @@ class _$PromotionalOfferImpl extends _PromotionalOffer {
   const _$PromotionalOfferImpl({
     required this.id,
     required this.title,
+    @JsonKey(name: 'product_id') this.productId,
+    @JsonKey(name: 'discount_percent') this.discountPercent,
+    @JsonKey(name: 'special_price') this.specialPrice,
     this.description,
     @JsonKey(name: 'image_url') this.imageUrl,
     @JsonKey(name: 'discount_text') this.discountText,
@@ -262,6 +307,15 @@ class _$PromotionalOfferImpl extends _PromotionalOffer {
   final String id;
   @override
   final String title;
+  @override
+  @JsonKey(name: 'product_id')
+  final String? productId;
+  @override
+  @JsonKey(name: 'discount_percent')
+  final double? discountPercent;
+  @override
+  @JsonKey(name: 'special_price')
+  final double? specialPrice;
   @override
   final String? description;
   @override
@@ -288,7 +342,7 @@ class _$PromotionalOfferImpl extends _PromotionalOffer {
 
   @override
   String toString() {
-    return 'PromotionalOffer(id: $id, title: $title, description: $description, imageUrl: $imageUrl, discountText: $discountText, startDate: $startDate, endDate: $endDate, targetGovernorate: $targetGovernorate, isActive: $isActive, createdAt: $createdAt)';
+    return 'PromotionalOffer(id: $id, title: $title, productId: $productId, discountPercent: $discountPercent, specialPrice: $specialPrice, description: $description, imageUrl: $imageUrl, discountText: $discountText, startDate: $startDate, endDate: $endDate, targetGovernorate: $targetGovernorate, isActive: $isActive, createdAt: $createdAt)';
   }
 
   @override
@@ -298,6 +352,12 @@ class _$PromotionalOfferImpl extends _PromotionalOffer {
             other is _$PromotionalOfferImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
+            (identical(other.productId, productId) ||
+                other.productId == productId) &&
+            (identical(other.discountPercent, discountPercent) ||
+                other.discountPercent == discountPercent) &&
+            (identical(other.specialPrice, specialPrice) ||
+                other.specialPrice == specialPrice) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.imageUrl, imageUrl) ||
@@ -321,6 +381,9 @@ class _$PromotionalOfferImpl extends _PromotionalOffer {
     runtimeType,
     id,
     title,
+    productId,
+    discountPercent,
+    specialPrice,
     description,
     imageUrl,
     discountText,
@@ -352,6 +415,9 @@ abstract class _PromotionalOffer extends PromotionalOffer {
   const factory _PromotionalOffer({
     required final String id,
     required final String title,
+    @JsonKey(name: 'product_id') final String? productId,
+    @JsonKey(name: 'discount_percent') final double? discountPercent,
+    @JsonKey(name: 'special_price') final double? specialPrice,
     final String? description,
     @JsonKey(name: 'image_url') final String? imageUrl,
     @JsonKey(name: 'discount_text') final String? discountText,
@@ -370,6 +436,15 @@ abstract class _PromotionalOffer extends PromotionalOffer {
   String get id;
   @override
   String get title;
+  @override
+  @JsonKey(name: 'product_id')
+  String? get productId;
+  @override
+  @JsonKey(name: 'discount_percent')
+  double? get discountPercent;
+  @override
+  @JsonKey(name: 'special_price')
+  double? get specialPrice;
   @override
   String? get description;
   @override
