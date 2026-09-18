@@ -14,6 +14,7 @@ class OrderItem with _$OrderItem {
     required int quantity,
     @JsonKey(name: 'unit_price') required double unitPrice,
     @JsonKey(name: 'is_bonus') @Default(false) bool isBonus,
+    @JsonKey(name: 'bonus_rule_id') String? bonusRuleId,
     @JsonKey(name: 'created_at') String? createdAt,
     Product? product,
   }) = _OrderItem;

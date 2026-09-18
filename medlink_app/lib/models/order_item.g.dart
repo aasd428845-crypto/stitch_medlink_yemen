@@ -14,6 +14,7 @@ _$OrderItemImpl _$$OrderItemImplFromJson(Map<String, dynamic> json) =>
       quantity: (json['quantity'] as num).toInt(),
       unitPrice: (json['unit_price'] as num).toDouble(),
       isBonus: json['is_bonus'] as bool? ?? false,
+      bonusRuleId: json['bonus_rule_id'] as String?,
       createdAt: json['created_at'] as String?,
       product: json['product'] == null
           ? null
@@ -28,6 +29,7 @@ Map<String, dynamic> _$$OrderItemImplToJson(_$OrderItemImpl instance) =>
       'quantity': instance.quantity,
       'unit_price': instance.unitPrice,
       'is_bonus': instance.isBonus,
+      'bonus_rule_id': instance.bonusRuleId,
       'created_at': instance.createdAt,
       'product': instance.product?.toJson(),
     };

@@ -31,6 +31,8 @@ mixin _$OrderItem {
   double get unitPrice => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_bonus')
   bool get isBonus => throw _privateConstructorUsedError;
+  @JsonKey(name: 'bonus_rule_id')
+  String? get bonusRuleId => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   String? get createdAt => throw _privateConstructorUsedError;
   Product? get product => throw _privateConstructorUsedError;
@@ -57,6 +59,7 @@ abstract class $OrderItemCopyWith<$Res> {
     int quantity,
     @JsonKey(name: 'unit_price') double unitPrice,
     @JsonKey(name: 'is_bonus') bool isBonus,
+    @JsonKey(name: 'bonus_rule_id') String? bonusRuleId,
     @JsonKey(name: 'created_at') String? createdAt,
     Product? product,
   });
@@ -85,6 +88,7 @@ class _$OrderItemCopyWithImpl<$Res, $Val extends OrderItem>
     Object? quantity = null,
     Object? unitPrice = null,
     Object? isBonus = null,
+    Object? bonusRuleId = freezed,
     Object? createdAt = freezed,
     Object? product = freezed,
   }) {
@@ -114,6 +118,10 @@ class _$OrderItemCopyWithImpl<$Res, $Val extends OrderItem>
                 ? _value.isBonus
                 : isBonus // ignore: cast_nullable_to_non_nullable
                       as bool,
+            bonusRuleId: freezed == bonusRuleId
+                ? _value.bonusRuleId
+                : bonusRuleId // ignore: cast_nullable_to_non_nullable
+                      as String?,
             createdAt: freezed == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -158,6 +166,7 @@ abstract class _$$OrderItemImplCopyWith<$Res>
     int quantity,
     @JsonKey(name: 'unit_price') double unitPrice,
     @JsonKey(name: 'is_bonus') bool isBonus,
+    @JsonKey(name: 'bonus_rule_id') String? bonusRuleId,
     @JsonKey(name: 'created_at') String? createdAt,
     Product? product,
   });
@@ -186,6 +195,7 @@ class __$$OrderItemImplCopyWithImpl<$Res>
     Object? quantity = null,
     Object? unitPrice = null,
     Object? isBonus = null,
+    Object? bonusRuleId = freezed,
     Object? createdAt = freezed,
     Object? product = freezed,
   }) {
@@ -215,6 +225,10 @@ class __$$OrderItemImplCopyWithImpl<$Res>
             ? _value.isBonus
             : isBonus // ignore: cast_nullable_to_non_nullable
                   as bool,
+        bonusRuleId: freezed == bonusRuleId
+            ? _value.bonusRuleId
+            : bonusRuleId // ignore: cast_nullable_to_non_nullable
+                  as String?,
         createdAt: freezed == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -238,6 +252,7 @@ class _$OrderItemImpl extends _OrderItem {
     required this.quantity,
     @JsonKey(name: 'unit_price') required this.unitPrice,
     @JsonKey(name: 'is_bonus') this.isBonus = false,
+    @JsonKey(name: 'bonus_rule_id') this.bonusRuleId,
     @JsonKey(name: 'created_at') this.createdAt,
     this.product,
   }) : super._();
@@ -262,6 +277,9 @@ class _$OrderItemImpl extends _OrderItem {
   @JsonKey(name: 'is_bonus')
   final bool isBonus;
   @override
+  @JsonKey(name: 'bonus_rule_id')
+  final String? bonusRuleId;
+  @override
   @JsonKey(name: 'created_at')
   final String? createdAt;
   @override
@@ -269,7 +287,7 @@ class _$OrderItemImpl extends _OrderItem {
 
   @override
   String toString() {
-    return 'OrderItem(id: $id, orderId: $orderId, productId: $productId, quantity: $quantity, unitPrice: $unitPrice, isBonus: $isBonus, createdAt: $createdAt, product: $product)';
+    return 'OrderItem(id: $id, orderId: $orderId, productId: $productId, quantity: $quantity, unitPrice: $unitPrice, isBonus: $isBonus, bonusRuleId: $bonusRuleId, createdAt: $createdAt, product: $product)';
   }
 
   @override
@@ -286,6 +304,8 @@ class _$OrderItemImpl extends _OrderItem {
             (identical(other.unitPrice, unitPrice) ||
                 other.unitPrice == unitPrice) &&
             (identical(other.isBonus, isBonus) || other.isBonus == isBonus) &&
+            (identical(other.bonusRuleId, bonusRuleId) ||
+                other.bonusRuleId == bonusRuleId) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.product, product) || other.product == product));
@@ -301,6 +321,7 @@ class _$OrderItemImpl extends _OrderItem {
     quantity,
     unitPrice,
     isBonus,
+    bonusRuleId,
     createdAt,
     product,
   );
@@ -327,6 +348,7 @@ abstract class _OrderItem extends OrderItem {
     required final int quantity,
     @JsonKey(name: 'unit_price') required final double unitPrice,
     @JsonKey(name: 'is_bonus') final bool isBonus,
+    @JsonKey(name: 'bonus_rule_id') final String? bonusRuleId,
     @JsonKey(name: 'created_at') final String? createdAt,
     final Product? product,
   }) = _$OrderItemImpl;
@@ -351,6 +373,9 @@ abstract class _OrderItem extends OrderItem {
   @override
   @JsonKey(name: 'is_bonus')
   bool get isBonus;
+  @override
+  @JsonKey(name: 'bonus_rule_id')
+  String? get bonusRuleId;
   @override
   @JsonKey(name: 'created_at')
   String? get createdAt;

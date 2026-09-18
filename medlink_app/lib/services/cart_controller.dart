@@ -16,8 +16,9 @@ class CartController extends ChangeNotifier {
   String? _bonusGovernorate;
 
   void updateBonusRules(List<BonusRule> rules) {
-    _activeRules = rules;
+    _activeRules = List<BonusRule>.unmodifiable(rules);
     _evaluateBonuses();
+    notifyListeners();
   }
 
   /// Sets the delivery governorate used for location-limited bonus rules.
@@ -117,6 +118,10 @@ class CartController extends ChangeNotifier {
       final end = endParsed == null
           ? null
           : DateTime(endParsed.year, endParsed.month, endParsed.day);
+      // bonus_rules currently uses PostgreSQL `date` columns, so boundaries
+      // are inclusive calendar dates. Keep the comparison date-only on both
+      // sides; parsing a date as UTC would otherwise make it shift a day for
+      // users in Yemen or other positive-offset timezones.
       return (start == null || !today.isBefore(start)) &&
           (end == null || !today.isAfter(end));
     }
@@ -129,7 +134,8 @@ class CartController extends ChangeNotifier {
             rule.freeQuantity > 0 &&
             userItem.quantity >= rule.buyQuantity &&
             isWithinDateWindow(rule) &&
-            (targetGovernorate == null || targetGovernorate == _bonusGovernorate) &&
+            (targetGovernorate == null ||
+                targetGovernorate == _bonusGovernorate) &&
             (rule.productId == userItem.product.id || rule.productId == null);
       }).toList();
       if (candidates.isEmpty) continue;
@@ -151,8 +157,7 @@ class CartController extends ChangeNotifier {
         if (bonusCompare != 0) return bonusCompare;
         final thresholdCompare = a.buyQuantity.compareTo(b.buyQuantity);
         if (thresholdCompare != 0) return thresholdCompare;
-        final createdCompare =
-            (a.createdAt ?? '').compareTo(b.createdAt ?? '');
+        final createdCompare = (a.createdAt ?? '').compareTo(b.createdAt ?? '');
         if (createdCompare != 0) return createdCompare;
         return a.id.compareTo(b.id);
       });

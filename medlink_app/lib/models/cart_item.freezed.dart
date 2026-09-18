@@ -25,6 +25,8 @@ mixin _$CartItem {
   int get quantity => throw _privateConstructorUsedError;
   bool get isBonus => throw _privateConstructorUsedError;
   double get unitPrice => throw _privateConstructorUsedError;
+  @JsonKey(name: 'bonus_rule_id')
+  String? get bonusRuleId => throw _privateConstructorUsedError;
 
   /// Serializes this CartItem to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -41,7 +43,13 @@ abstract class $CartItemCopyWith<$Res> {
   factory $CartItemCopyWith(CartItem value, $Res Function(CartItem) then) =
       _$CartItemCopyWithImpl<$Res, CartItem>;
   @useResult
-  $Res call({Product product, int quantity, bool isBonus, double unitPrice});
+  $Res call({
+    Product product,
+    int quantity,
+    bool isBonus,
+    double unitPrice,
+    @JsonKey(name: 'bonus_rule_id') String? bonusRuleId,
+  });
 
   $ProductCopyWith<$Res> get product;
 }
@@ -65,6 +73,7 @@ class _$CartItemCopyWithImpl<$Res, $Val extends CartItem>
     Object? quantity = null,
     Object? isBonus = null,
     Object? unitPrice = null,
+    Object? bonusRuleId = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -84,6 +93,10 @@ class _$CartItemCopyWithImpl<$Res, $Val extends CartItem>
                 ? _value.unitPrice
                 : unitPrice // ignore: cast_nullable_to_non_nullable
                       as double,
+            bonusRuleId: freezed == bonusRuleId
+                ? _value.bonusRuleId
+                : bonusRuleId // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -109,7 +122,13 @@ abstract class _$$CartItemImplCopyWith<$Res>
   ) = __$$CartItemImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Product product, int quantity, bool isBonus, double unitPrice});
+  $Res call({
+    Product product,
+    int quantity,
+    bool isBonus,
+    double unitPrice,
+    @JsonKey(name: 'bonus_rule_id') String? bonusRuleId,
+  });
 
   @override
   $ProductCopyWith<$Res> get product;
@@ -133,6 +152,7 @@ class __$$CartItemImplCopyWithImpl<$Res>
     Object? quantity = null,
     Object? isBonus = null,
     Object? unitPrice = null,
+    Object? bonusRuleId = freezed,
   }) {
     return _then(
       _$CartItemImpl(
@@ -152,6 +172,10 @@ class __$$CartItemImplCopyWithImpl<$Res>
             ? _value.unitPrice
             : unitPrice // ignore: cast_nullable_to_non_nullable
                   as double,
+        bonusRuleId: freezed == bonusRuleId
+            ? _value.bonusRuleId
+            : bonusRuleId // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -165,6 +189,7 @@ class _$CartItemImpl extends _CartItem {
     required this.quantity,
     this.isBonus = false,
     required this.unitPrice,
+    @JsonKey(name: 'bonus_rule_id') this.bonusRuleId,
   }) : super._();
 
   factory _$CartItemImpl.fromJson(Map<String, dynamic> json) =>
@@ -179,10 +204,13 @@ class _$CartItemImpl extends _CartItem {
   final bool isBonus;
   @override
   final double unitPrice;
+  @override
+  @JsonKey(name: 'bonus_rule_id')
+  final String? bonusRuleId;
 
   @override
   String toString() {
-    return 'CartItem(product: $product, quantity: $quantity, isBonus: $isBonus, unitPrice: $unitPrice)';
+    return 'CartItem(product: $product, quantity: $quantity, isBonus: $isBonus, unitPrice: $unitPrice, bonusRuleId: $bonusRuleId)';
   }
 
   @override
@@ -195,13 +223,21 @@ class _$CartItemImpl extends _CartItem {
                 other.quantity == quantity) &&
             (identical(other.isBonus, isBonus) || other.isBonus == isBonus) &&
             (identical(other.unitPrice, unitPrice) ||
-                other.unitPrice == unitPrice));
+                other.unitPrice == unitPrice) &&
+            (identical(other.bonusRuleId, bonusRuleId) ||
+                other.bonusRuleId == bonusRuleId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, product, quantity, isBonus, unitPrice);
+  int get hashCode => Object.hash(
+    runtimeType,
+    product,
+    quantity,
+    isBonus,
+    unitPrice,
+    bonusRuleId,
+  );
 
   /// Create a copy of CartItem
   /// with the given fields replaced by the non-null parameter values.
@@ -223,6 +259,7 @@ abstract class _CartItem extends CartItem {
     required final int quantity,
     final bool isBonus,
     required final double unitPrice,
+    @JsonKey(name: 'bonus_rule_id') final String? bonusRuleId,
   }) = _$CartItemImpl;
   const _CartItem._() : super._();
 
@@ -237,6 +274,9 @@ abstract class _CartItem extends CartItem {
   bool get isBonus;
   @override
   double get unitPrice;
+  @override
+  @JsonKey(name: 'bonus_rule_id')
+  String? get bonusRuleId;
 
   /// Create a copy of CartItem
   /// with the given fields replaced by the non-null parameter values.

@@ -5,8 +5,9 @@
 -- A bonus order item is free financially but still consumes one physical
 -- inventory unit. This replaces only the allocation RPC: it aggregates the
 -- paid and bonus lines per product, deducts that physical total once, and
--- invoices only the paid portion. The existing financial bonus trigger keeps
--- recording the bonus movement and does not mutate public.inventory.
+-- invoices only the paid portion. The shared schema currently has no
+-- financial-inventory trigger; this RPC is therefore the sole operational
+-- inventory deduction and the order_items split remains the audit source.
 -- =============================================================
 
 create or replace function public.branch_allocate_order(
@@ -31,6 +32,7 @@ declare
   v_required_qty int;
   v_paid_qty int;
   v_paid_unit_price numeric(10,2);
+  v_allocated_any boolean := false;
 begin
   if public.current_user_role() <> 'branch_manager' then
     raise exception 'Only a branch manager can allocate orders';
@@ -60,9 +62,10 @@ begin
         as x(product_id uuid, allocated_qty int)
      where product_id is not null and allocated_qty is not null and allocated_qty > 0
      group by product_id
-  loop
+   loop
+     v_allocated_any := true;
     -- Both paid and is_bonus order lines are physical demand. The explicit
-    -- split remains available in order_items for audit and financial movement.
+    -- split remains available in order_items for audit and analytics.
     select
       coalesce(sum(quantity), 0)::int,
       coalesce(sum(quantity) filter (where not is_bonus), 0)::int,
@@ -105,7 +108,11 @@ begin
     end if;
   end loop;
 
-  update public.orders
+   if not v_allocated_any then
+     raise exception 'At least one physical allocation is required';
+   end if;
+
+   update public.orders
      set status = 'assigned',
          scheduled_delivery_at = p_expected_delivery_date
    where id = p_order_id;

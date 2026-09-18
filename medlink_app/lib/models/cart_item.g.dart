@@ -12,6 +12,7 @@ _$CartItemImpl _$$CartItemImplFromJson(Map<String, dynamic> json) =>
       quantity: (json['quantity'] as num).toInt(),
       isBonus: json['isBonus'] as bool? ?? false,
       unitPrice: (json['unitPrice'] as num).toDouble(),
+      bonusRuleId: json['bonus_rule_id'] as String?,
     );
 
 Map<String, dynamic> _$$CartItemImplToJson(_$CartItemImpl instance) =>
@@ -20,4 +21,5 @@ Map<String, dynamic> _$$CartItemImplToJson(_$CartItemImpl instance) =>
       'quantity': instance.quantity,
       'isBonus': instance.isBonus,
       'unitPrice': instance.unitPrice,
+      'bonus_rule_id': instance.bonusRuleId,
     };

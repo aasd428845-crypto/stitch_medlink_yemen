@@ -5,6 +5,7 @@ import '../models/bonus_rule.dart';
 import '../models/cart_item.dart';
 import '../models/client_address.dart';
 import '../models/order.dart';
+import '../models/order_distribution.dart';
 import '../models/product.dart';
 import '../models/special_request.dart';
 import '../utils/constants.dart';
@@ -32,6 +33,10 @@ class OrderService {
   // ── Bonus Rules ────────────────────────────────────────────────────────────
 
   /// Fetches active bonus rules from `public.bonus_rules`.
+  ///
+  /// Date-window and governorate checks are repeated in CartController and
+  /// enforced again by the order creation RPC. Keeping the complete active
+  /// set here lets the cart recalculate when the address or quantity changes.
   Future<List<BonusRule>> fetchBonusRules() async {
     try {
       final rows = await _client
@@ -155,52 +160,61 @@ class OrderService {
     }
 
     try {
-      // Pick first active branch as target (or null)
-      String? branchId;
-      final branches = await _client.from('branches').select('id').limit(1);
-      if ((branches as List).isNotEmpty) {
-        branchId = branches.first['id'] as String?;
-      }
+      // The client cart is only an estimate. The security-definer RPC resolves
+      // the current product prices, validates the selected bonus rule, and
+      // calculates the payable total in one transaction.
+      final orderId =
+          await _client.rpc(
+                'create_order_with_items',
+                params: {
+                  'p_delivery_address_id': deliveryAddressId,
+                  'p_items': items
+                      .map(
+                        (item) => {
+                          'product_id': item.product.id,
+                          'quantity': item.quantity,
+                          'unit_price': item.unitPrice,
+                          'is_bonus': item.isBonus,
+                          'bonus_rule_id': item.bonusRuleId,
+                        },
+                      )
+                      .toList(),
+                  'p_notes': notes,
+                },
+              )
+              as String;
 
-      // Calculate total payable amount (bonus items have unitPrice = 0)
-      final totalAmount = items.fold<double>(
-        0.0,
-        (sum, item) => sum + (item.quantity * item.unitPrice),
-      );
-
-      // Insert Order row
       final orderRow = await _client
           .from('orders')
-          .insert({
-            'client_id': userId,
-            'branch_id': branchId,
-            'status': 'pending',
-            'delivery_address_id': deliveryAddressId,
-            'total_amount': totalAmount,
-            'notes': notes,
-          })
           .select()
+          .eq('id', orderId)
           .single();
-
-      final orderId = orderRow['id'] as String;
-
-      // Insert Order Items
-      final orderItemPayloads = items.map((item) {
-        return {
-          'order_id': orderId,
-          'product_id': item.product.id,
-          'quantity': item.quantity,
-          'unit_price': item.unitPrice,
-          'is_bonus': item.isBonus,
-        };
-      }).toList();
-
-      await _client.from('order_items').insert(orderItemPayloads);
 
       _logSuccess('createOrder');
       return OrderModel.fromJson(orderRow);
     } catch (e, st) {
       _logError('createOrder', e, st);
+      rethrow;
+    }
+  }
+
+  /// Returns physical distribution facts without counting bonus units as paid
+  /// sales. The RPC applies the same RLS-shaped visibility rules for clients,
+  /// branch managers, drivers, and the company director.
+  Future<List<OrderDistribution>> fetchOrderProductDistribution({
+    String? orderId,
+  }) async {
+    try {
+      final rows = await _client.rpc(
+        'get_order_product_distribution',
+        params: {'p_order_id': orderId},
+      );
+      _logSuccess('fetchOrderProductDistribution');
+      return (rows as List)
+          .map((row) => OrderDistribution.fromJson(row as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      _logError('fetchOrderProductDistribution', e, st);
       rethrow;
     }
   }

@@ -7,7 +7,7 @@
 ثلاثة مجلدات migrations في المستودع:
 | المجلد | الملفات | الدور |
 |---|---|---|
-| `supabase/migrations/` (الجذر) | 0001 → 0015 | **السجل الرئيسي المشترك** (`.agents/memory/shared-migration-numbering.md` يقرّ بأن الجذر authoritative) |
+| `supabase/migrations/` (الجذر) | 0001 → 0017 | **السجل الرئيسي المشترك** (`.agents/memory/shared-migration-numbering.md` يقرّ بأن الجذر authoritative) |
 | `Medlik-Waap/supabase/migrations/` | 0001 → 0015 | سجل مكمل للمدير العام/المالي — نفس القاعدة الفعلية |
 | `medlink_app/supabase/migrations/` | 0012 فقط | ملف محلي بتكرار رقم 0012 — محذَّر من التطبيق كما هو |
 
@@ -18,7 +18,9 @@
 - `0007`: `chat_rooms`, `chat_messages`, `driver_locations`.
 - `0009`: أعمدة `orders.priority`, `orders.delivered_at`, `warehouse_inventory.reorder_level`, `invoices.branch_id` + RPC `branch_allocate_order`.
 - `0010`: `notification_preferences`, `branch_bank_accounts` + RPCs إعدادات/تحويل مخزون.
-- `0012`: `special_requests`. `0014`: حقول عنوان موسعة. `0015`: bucket `product-images` + سياسات مدير عام (الملف الجديد غير المطبق بعد — كان untracked ثم دُمج في commit).
+- `0012`: `special_requests`. `0014`: حقول عنوان موسعة. `0015`: bucket `product-images` + سياسات مدير عام.
+- `0016`: إصلاح `branch_allocate_order` ليجمع paid + bonus ويخصم الكمية الفيزيائية مرة واحدة، مع إصدار فاتورة للجزء المدفوع فقط.
+- `0017`: `order_items.bonus_rule_id`، حماية سعر سطر bonus، RPC `create_order_with_items` للتحقق الخادمي من القاعدة/السعر/الإجمالي، وRPC `get_order_product_distribution` للتحليل.
 
 ## 3. جداول طبقة الويب (Medlik-Waap على نفس القاعدة)
 - `0004_phase4`: `warehouse_inventory` (بنسخته الخاصة قبل 0009 الذي أضاف reorder_level)، `invoices`، `payments` + أعمدة `users.credit_limit/current_balance` + triggerا رصيد (`trg_invoice_increase_balance`, `trg_payment_decrease_balance`).
@@ -30,6 +32,8 @@
 | RPC | معرّف في SQL | مستهلك Flutter | مستهلك ويب |
 |---|---|---|---|
 | `branch_allocate_order` | 0009 | branch_service.dart | — |
+| `create_order_with_items` | 0017 | order_service.dart | — |
+| `get_order_product_distribution` | 0017 | order_service.dart | — |
 | `branch_add_stock_batch` | 0011 | branch_service.dart | — |
 | `branch_set_default_bank_account` | 0010 | branch_service.dart | — |
 | `branch_transfer_stock_between_branches` | 0010 | branch_service.dart | — |
@@ -41,7 +45,7 @@
 
 ## 5. سياسات RLS (الخلاصة)
 - users: select ذاتي/مدير عام (`0001:69-70`)؛ update ذاتي مقيّد بعد `0005` (منع ترويج الدور/الحالة) — إغلاق ثغرة موثقة في ترويسة 0005.
-- orders/order_items: العميل يقرأ/يُدرج طلباته؛ المدير يحدّث طلبات فرعه (0002)؛ السائق select عبر `0006`.
+- orders/order_items: العميل يقرأ طلباته، لكن الإنشاء أصبح عبر `create_order_with_items` فقط (0017)؛ المدير يحدّث طلبات فرعه (0002)؛ السائق select عبر `0006`.
 - inventory: قراءة مصادَقة، تحديث مدير فرع، إدراج/حذف مدير عام (0002+0004).
 - invoices: إدراج/تحديث مدير فرع لفرعه (0009)، select مدير فرع (0013)، بينما نسخة الويب 0004W أعطت select لأي مصادَق — انظر PROJECT_RISKS (تضارب نطاق invoices بين المستودعين).
 - driver_locations: 0008 يقصّر الرؤية (مدير الفرع لسائقيه فقط، العميل أثناء `in_progress` فقط) — إصلاح موثق لثغرة 0007.
