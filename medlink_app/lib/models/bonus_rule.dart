@@ -8,7 +8,7 @@ part 'bonus_rule.g.dart';
 class BonusRule with _$BonusRule {
   const factory BonusRule({
     required String id,
-    @JsonKey(name: 'product_id') required String productId,
+    @JsonKey(name: 'product_id') String? productId,
     @JsonKey(name: 'buy_quantity') required int buyQuantity,
     @JsonKey(name: 'free_quantity') required int freeQuantity,
     @JsonKey(name: 'is_stackable') @Default(true) bool isStackable,

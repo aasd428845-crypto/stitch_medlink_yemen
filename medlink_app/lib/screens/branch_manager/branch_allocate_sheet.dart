@@ -52,14 +52,28 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
     final availableByProduct = <String, int>{
       for (final item in stock) item.productId: item.quantity,
     };
+    final paidByProduct = <String, int>{};
+    final bonusByProduct = <String, int>{};
+    final productNameById = <String, String>{};
     for (final item in widget.order.items ?? []) {
-      if (item.isBonus) continue;
-      final required = item.quantity;
-      final available = availableByProduct[item.productId] ?? 0;
+      productNameById[item.productId] = item.product?.name ?? '—';
+      final quantities = item.isBonus ? bonusByProduct : paidByProduct;
+      quantities[item.productId] = (quantities[item.productId] ?? 0) + item.quantity;
+    }
+    for (final productId in {
+      ...paidByProduct.keys,
+      ...bonusByProduct.keys,
+    }) {
+      final paidQuantity = paidByProduct[productId] ?? 0;
+      final bonusQuantity = bonusByProduct[productId] ?? 0;
+      final required = paidQuantity + bonusQuantity;
+      final available = availableByProduct[productId] ?? 0;
       _rows.add(_RowState(
-        productId: item.productId,
-        productName: item.product?.name ?? '—',
+        productId: productId,
+        productName: productNameById[productId] ?? '—',
         required: required,
+        paidQuantity: paidQuantity,
+        bonusQuantity: bonusQuantity,
         available: available,
       ));
     }
@@ -280,7 +294,7 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
                 ),
                 const SizedBox(height: 22),
                 // Items table
-                Text('الأصناف المطلوبة',
+                Text('الأصناف المطلوبة (يشمل البونص)',
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium
@@ -305,7 +319,7 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
                                     color: BranchColors.onSurfaceVariant,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11))),
-                            Expanded(child: Text('المطلوب',
+                            Expanded(child: Text('الإجمالي',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: BranchColors.onSurfaceVariant,
@@ -443,12 +457,17 @@ class _RowState {
     required this.productId,
     required this.productName,
     required this.required,
+    required this.paidQuantity,
+    required this.bonusQuantity,
     required this.available,
   }) : controller = TextEditingController(text: '$available');
 
   final String productId;
   final String productName;
+  /// Paid + bonus quantity: this is the physical stock requirement.
   final int required;
+  final int paidQuantity;
+  final int bonusQuantity;
   int available;
   final TextEditingController controller;
 }
@@ -478,13 +497,22 @@ class _ItemRow extends StatelessWidget {
         children: [
           Expanded(
             flex: 3,
-            child: Text(row.productName,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    color: BranchColors.onSurface,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 13)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(row.productName,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: BranchColors.onSurface,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13)),
+                const SizedBox(height: 2),
+                Text('مدفوع ${row.paidQuantity} + بونص ${row.bonusQuantity}',
+                    style: const TextStyle(
+                        color: BranchColors.onSurfaceVariant, fontSize: 10)),
+              ],
+            ),
           ),
           Expanded(
             child: Text('${row.required}',

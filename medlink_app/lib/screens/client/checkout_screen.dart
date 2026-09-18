@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/client_address.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/cart_controller.dart';
 import '../../services/order_controller.dart';
@@ -24,8 +25,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<OrderController>().loadAddresses();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final order = context.read<OrderController>();
+      await order.loadAddresses();
+      if (mounted) _syncBonusGovernorate(order.selectedAddress?.governorate);
     });
   }
 
@@ -33,6 +36,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   void dispose() {
     _notesController.dispose();
     super.dispose();
+  }
+
+  void _syncBonusGovernorate(String? governorate) {
+    context.read<CartController>().setBonusGovernorate(governorate);
+  }
+
+  void _selectAddress(ClientAddress address) {
+    context.read<OrderController>().selectAddress(address);
+    _syncBonusGovernorate(address.governorate);
   }
 
   Future<void> _submit() async {
@@ -46,6 +58,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ).showSnackBar(SnackBar(content: Text(l10n.selectDeliveryAddress)));
       return;
     }
+    _syncBonusGovernorate(orderCtrl.selectedAddress!.governorate);
     try {
       final order = await orderCtrl.submitOrder(
         cartItems: cart.items,
@@ -144,7 +157,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       borderRadius: 22,
                       padding: const EdgeInsets.all(14),
                       child: InkWell(
-                        onTap: () => orderCtrl.selectAddress(addr),
+                        onTap: () => _selectAddress(addr),
                         borderRadius: BorderRadius.circular(22),
                         child: Row(
                           children: [
@@ -320,3 +333,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 }
+import '../../models/client_address.dart';
+import '../../models/client_address.dart';
+import '../../models/client_address.dart';
