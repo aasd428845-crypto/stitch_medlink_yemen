@@ -45,7 +45,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registerTitle => 'Create Account';
 
   @override
-  String get registerSubtitle => 'Register your details — your account will be reviewed by management';
+  String get registerSubtitle =>
+      'Register your details — your account will be reviewed by management';
 
   @override
   String get nameLabel => 'Full Name';
@@ -75,7 +76,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pendingApprovalTitle => 'Awaiting Review';
 
   @override
-  String get pendingApprovalMessage => 'Your registration has been received. Your account is currently under review by management. You will be notified once approved.';
+  String get pendingApprovalMessage =>
+      'Your registration has been received. Your account is currently under review by management. You will be notified once approved.';
 
   @override
   String get pendingApprovalRefresh => 'Refresh Status';
@@ -87,19 +89,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rejectedTitle => 'Account Rejected';
 
   @override
-  String get rejectedMessage => 'Sorry, your account registration has been rejected by management. Please contact support for more information.';
+  String get rejectedMessage =>
+      'Sorry, your account registration has been rejected by management. Please contact support for more information.';
 
   @override
   String get suspendedTitle => 'Account Suspended';
 
   @override
-  String get suspendedMessage => 'This account has been temporarily suspended by management. Please contact support for more details.';
+  String get suspendedMessage =>
+      'This account has been temporarily suspended by management. Please contact support for more details.';
 
   @override
   String get directorNotSupportedTitle => 'Access Unavailable';
 
   @override
-  String get directorNotSupportedMessage => 'Company director accounts are managed exclusively through the dedicated web platform and cannot sign in from the mobile app.';
+  String get directorNotSupportedMessage =>
+      'Company director accounts are managed exclusively through the dedicated web platform and cannot sign in from the mobile app.';
 
   @override
   String get backToLogin => 'Back to Sign In';
@@ -111,19 +116,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validationEmailInvalid => 'Invalid email format';
 
   @override
-  String get validationPasswordShort => 'Password must be at least 6 characters';
+  String get validationPasswordShort =>
+      'Password must be at least 6 characters';
 
   @override
   String get validationPasswordMismatch => 'Passwords do not match';
 
   @override
-  String get validationTermsRequired => 'You must agree to the Terms & Privacy Policy to continue';
+  String get validationTermsRequired =>
+      'You must agree to the Terms & Privacy Policy to continue';
 
   @override
   String get genericErrorTitle => 'An Error Occurred';
 
   @override
-  String get networkError => 'Could not connect to the server. Check your internet connection and try again.';
+  String get networkError =>
+      'Could not connect to the server. Check your internet connection and try again.';
 
   @override
   String get invalidCredentials => 'Incorrect email or password';
@@ -135,16 +143,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unknownError => 'An unexpected error occurred, please try again';
 
   @override
-  String get dbDuplicateError => 'This item already exists and cannot be duplicated';
+  String get dbDuplicateError =>
+      'This item already exists and cannot be duplicated';
 
   @override
-  String get dbColumnNotFoundError => 'A data structure error occurred, please try again later';
+  String get dbColumnNotFoundError =>
+      'A data structure error occurred, please try again later';
 
   @override
-  String get dbPermissionDeniedError => 'You don\'t have permission to perform this action';
+  String get dbPermissionDeniedError =>
+      'You don\'t have permission to perform this action';
 
   @override
-  String get dbForeignKeyError => 'This action can\'t be completed because this item is linked to other data';
+  String get dbForeignKeyError =>
+      'This action can\'t be completed because this item is linked to other data';
 
   @override
   String get dbUnknownError => 'A server error occurred, please try again';
@@ -177,7 +189,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get digitalCardSubtitle => 'Client details and QR code';
 
   @override
-  String get digitalCardInstruction => 'Show this code to verify your digital card';
+  String get digitalCardInstruction =>
+      'Show this code to verify your digital card';
 
   @override
   String get manageDeliveryAddresses => 'Manage delivery addresses';
@@ -195,7 +208,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notAvailableLabel => 'Not specified';
 
   @override
-  String get businessProfileNote => 'Core account details are managed through the profile registered in the system.';
+  String get businessProfileNote =>
+      'Core account details are managed through the profile registered in the system.';
 
   @override
   String get termsPrivacyTitle => 'Terms & Privacy Policy';
@@ -207,13 +221,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get termsSectionTitle => 'Terms and Conditions';
 
   @override
-  String get termsSectionBody => 'By using MedLink, you confirm that your details are accurate and agree to use the app lawfully to request medicines and medical products. Orders remain subject to availability, review, and branch delivery.';
+  String get termsSectionBody =>
+      'By using MedLink, you confirm that your details are accurate and agree to use the app lawfully to request medicines and medical products. Orders remain subject to availability, review, and branch delivery.';
 
   @override
   String get privacySectionTitle => 'Privacy';
 
   @override
-  String get privacySectionBody => 'We use account, address, and order data to operate the service, deliver orders, and improve support. The app does not expose your data to other customers, and access is governed by database policies and account permissions.';
+  String get privacySectionBody =>
+      'We use account, address, and order data to operate the service, deliver orders, and improve support. The app does not expose your data to other customers, and access is governed by database policies and account permissions.';
 
   @override
   String get branchDashboardLabel => 'Dashboard';
@@ -363,7 +379,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noNewProducts => 'No new products are available at the moment';
 
   @override
-  String get noReorderRecommendations => 'Reorder suggestions will appear after enough purchase history is available';
+  String get noReorderRecommendations =>
+      'Reorder suggestions will appear after enough purchase history is available';
 
   @override
   String get currentOffersSection => 'Current Offers';
@@ -507,7 +524,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get defaultAddressLabel => 'Use this as the default address';
 
   @override
-  String get defaultAddressHint => 'It will be selected automatically for new orders.';
+  String get defaultAddressHint =>
+      'It will be selected automatically for new orders.';
 
   @override
   String get defaultAddressBadge => 'Default address';
@@ -522,7 +540,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noSavedAddress => 'No saved address yet';
 
   @override
-  String get addAddressForDelivery => 'Add an address to continue with delivery';
+  String get addAddressForDelivery =>
+      'Add an address to continue with delivery';
 
   @override
   String get selectDeliveryAddress => 'Select a delivery address first';
@@ -552,13 +571,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get specialRequestTitle => 'Special Request';
 
   @override
-  String get specialRequestSubtitle => 'Request a medicine or product not currently available in the catalog';
+  String get specialRequestSubtitle =>
+      'Request a medicine or product not currently available in the catalog';
 
   @override
   String get productNameLabel => 'Product Name';
 
   @override
-  String get productNameHint => 'e.g. a specific medicine with a specific dosage';
+  String get productNameHint =>
+      'e.g. a specific medicine with a specific dosage';
 
   @override
   String get specialQuantityLabel => 'Quantity';
@@ -570,7 +591,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get specialSubmit => 'Send Special Request';
 
   @override
-  String get specialSuccess => 'Your special request has been sent. We\'ll notify you when it\'s available.';
+  String get specialSuccess =>
+      'Your special request has been sent. We\'ll notify you when it\'s available.';
 
   @override
   String get specialEmptyName => 'Please enter the product name';
@@ -579,7 +601,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orderSuccessTitle => 'Order Sent Successfully!';
 
   @override
-  String get orderSuccessSubtitle => 'Your order will be directed to the nearest branch for preparation and delivery.';
+  String get orderSuccessSubtitle =>
+      'Your order will be directed to the nearest branch for preparation and delivery.';
 
   @override
   String get viewOrderDetails => 'Track Order Details';
@@ -666,7 +689,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverOrderEarning => 'Commission Details';
 
   @override
-  String get driverChatComingSoon => 'Live chat will be available in an upcoming phase';
+  String get driverChatComingSoon =>
+      'Live chat will be available in an upcoming phase';
 
   @override
   String get driverThisMonth => 'This Month';
@@ -687,7 +711,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverRoleLabel => 'MedLink Driver';
 
   @override
-  String get driverHeroSubtitle => 'Track delivery tasks and order status from one screen.';
+  String get driverHeroSubtitle =>
+      'Track delivery tasks and order status from one screen.';
 
   @override
   String get notificationsTitle => 'Notifications';
@@ -699,7 +724,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationsEmpty => 'No notifications yet';
 
   @override
-  String get notificationsEmptyHint => 'Your notifications will appear here when they arrive.';
+  String get notificationsEmptyHint =>
+      'Your notifications will appear here when they arrive.';
 
   @override
   String get offerDetailTitle => 'Offer Details';
@@ -717,7 +743,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changePasswordTitle => 'Change Password';
 
   @override
-  String get changePasswordSubtitle => 'You must change your temporary password before continuing';
+  String get changePasswordSubtitle =>
+      'You must change your temporary password before continuing';
 
   @override
   String get newPasswordLabel => 'New Password';
@@ -756,7 +783,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get availableQuantity => 'Available';
 
   @override
-  String get reorderAddedToCart => 'Items were added to the cart at current prices';
+  String get reorderAddedToCart =>
+      'Items were added to the cart at current prices';
 
   @override
   String get autoBonusBadge => 'Auto Bonus 🎁';
@@ -801,7 +829,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverCreatedSuccess => 'Success';
 
   @override
-  String get driverCreatedMessage => 'Driver account created successfully. They can now sign in with the temporary password.';
+  String get driverCreatedMessage =>
+      'Driver account created successfully. They can now sign in with the temporary password.';
 
   @override
   String get driverActionSuccess => 'Operation completed successfully';
@@ -891,7 +920,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverLocationUpdated => 'Your location has been updated';
 
   @override
-  String get driverLocationPermissionDenied => 'Please allow location access to enable live delivery';
+  String get driverLocationPermissionDenied =>
+      'Please allow location access to enable live delivery';
 
   @override
   String get driverLocationUnavailable => 'Location is currently unavailable';
@@ -918,5 +948,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get branchNotAssignedTitle => 'No branch assigned to your account';
 
   @override
-  String get branchNotAssignedMessage => 'This section couldn\'t load because your account isn\'t linked to a branch yet. Please contact company management to assign your branch.';
+  String get branchNotAssignedMessage =>
+      'This section couldn\'t load because your account isn\'t linked to a branch yet. Please contact company management to assign your branch.';
 }
