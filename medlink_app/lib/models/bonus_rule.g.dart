@@ -9,7 +9,7 @@ part of 'bonus_rule.dart';
 _$BonusRuleImpl _$$BonusRuleImplFromJson(Map<String, dynamic> json) =>
     _$BonusRuleImpl(
       id: json['id'] as String,
-      productId: json['product_id'] as String,
+      productId: json['product_id'] as String?,
       buyQuantity: (json['buy_quantity'] as num).toInt(),
       freeQuantity: (json['free_quantity'] as num).toInt(),
       isStackable: json['is_stackable'] as bool? ?? true,

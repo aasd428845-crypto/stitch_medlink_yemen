@@ -23,7 +23,7 @@ BonusRule _$BonusRuleFromJson(Map<String, dynamic> json) {
 mixin _$BonusRule {
   String get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'product_id')
-  String get productId => throw _privateConstructorUsedError;
+  String? get productId => throw _privateConstructorUsedError;
   @JsonKey(name: 'buy_quantity')
   int get buyQuantity => throw _privateConstructorUsedError;
   @JsonKey(name: 'free_quantity')
@@ -58,7 +58,7 @@ abstract class $BonusRuleCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    @JsonKey(name: 'product_id') String productId,
+    @JsonKey(name: 'product_id') String? productId,
     @JsonKey(name: 'buy_quantity') int buyQuantity,
     @JsonKey(name: 'free_quantity') int freeQuantity,
     @JsonKey(name: 'is_stackable') bool isStackable,
@@ -86,7 +86,7 @@ class _$BonusRuleCopyWithImpl<$Res, $Val extends BonusRule>
   @override
   $Res call({
     Object? id = null,
-    Object? productId = null,
+    Object? productId = freezed,
     Object? buyQuantity = null,
     Object? freeQuantity = null,
     Object? isStackable = null,
@@ -102,10 +102,10 @@ class _$BonusRuleCopyWithImpl<$Res, $Val extends BonusRule>
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
                       as String,
-            productId: null == productId
+            productId: freezed == productId
                 ? _value.productId
                 : productId // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             buyQuantity: null == buyQuantity
                 ? _value.buyQuantity
                 : buyQuantity // ignore: cast_nullable_to_non_nullable
@@ -155,7 +155,7 @@ abstract class _$$BonusRuleImplCopyWith<$Res>
   @useResult
   $Res call({
     String id,
-    @JsonKey(name: 'product_id') String productId,
+    @JsonKey(name: 'product_id') String? productId,
     @JsonKey(name: 'buy_quantity') int buyQuantity,
     @JsonKey(name: 'free_quantity') int freeQuantity,
     @JsonKey(name: 'is_stackable') bool isStackable,
@@ -182,7 +182,7 @@ class __$$BonusRuleImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? productId = null,
+    Object? productId = freezed,
     Object? buyQuantity = null,
     Object? freeQuantity = null,
     Object? isStackable = null,
@@ -198,10 +198,10 @@ class __$$BonusRuleImplCopyWithImpl<$Res>
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
                   as String,
-        productId: null == productId
+        productId: freezed == productId
             ? _value.productId
             : productId // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         buyQuantity: null == buyQuantity
             ? _value.buyQuantity
             : buyQuantity // ignore: cast_nullable_to_non_nullable
@@ -244,7 +244,7 @@ class __$$BonusRuleImplCopyWithImpl<$Res>
 class _$BonusRuleImpl extends _BonusRule {
   const _$BonusRuleImpl({
     required this.id,
-    @JsonKey(name: 'product_id') required this.productId,
+    @JsonKey(name: 'product_id') this.productId,
     @JsonKey(name: 'buy_quantity') required this.buyQuantity,
     @JsonKey(name: 'free_quantity') required this.freeQuantity,
     @JsonKey(name: 'is_stackable') this.isStackable = true,
@@ -262,7 +262,7 @@ class _$BonusRuleImpl extends _BonusRule {
   final String id;
   @override
   @JsonKey(name: 'product_id')
-  final String productId;
+  final String? productId;
   @override
   @JsonKey(name: 'buy_quantity')
   final int buyQuantity;
@@ -351,7 +351,7 @@ class _$BonusRuleImpl extends _BonusRule {
 abstract class _BonusRule extends BonusRule {
   const factory _BonusRule({
     required final String id,
-    @JsonKey(name: 'product_id') required final String productId,
+    @JsonKey(name: 'product_id') final String? productId,
     @JsonKey(name: 'buy_quantity') required final int buyQuantity,
     @JsonKey(name: 'free_quantity') required final int freeQuantity,
     @JsonKey(name: 'is_stackable') final bool isStackable,
@@ -370,7 +370,7 @@ abstract class _BonusRule extends BonusRule {
   String get id;
   @override
   @JsonKey(name: 'product_id')
-  String get productId;
+  String? get productId;
   @override
   @JsonKey(name: 'buy_quantity')
   int get buyQuantity;

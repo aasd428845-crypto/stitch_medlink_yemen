@@ -495,7 +495,7 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                     contentPadding: EdgeInsets.zero,
                     value: _isDefault,
                     onChanged: (value) => setState(() => _isDefault = value),
-                    activeThumbColor: ClientColors.primary,
+                    activeColor: ClientColors.primary,
                     title: Text(
                       l10n.defaultAddressLabel,
                       style: Theme.of(context).textTheme.titleSmall,

@@ -466,6 +466,19 @@ class BranchController extends ChangeNotifier {
     await loadInventory();
   }
 
+  Future<void> transferStockIntoCurrentBranch({
+    required String productId,
+    required String fromBranchId,
+    required int quantity,
+  }) async {
+    await _branchService.transferStockIntoCurrentBranch(
+      productId: productId,
+      fromBranchId: fromBranchId,
+      quantity: quantity,
+    );
+    await loadInventory();
+  }
+
   // ── Order allocation (Section 2) ──────────────────────────────────────────
 
   /// Runs the atomic allocation RPC (migration 0009) and refreshes the order

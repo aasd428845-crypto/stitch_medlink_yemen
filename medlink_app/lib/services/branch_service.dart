@@ -34,6 +34,8 @@ class BranchService {
       'delivery_address:client_addresses(*), '
       'client:users!orders_client_id_fkey(*), '
       'assigned_driver:users!orders_assigned_driver_id_fkey(*)';
+  static const _orderWithItemsSelect =
+      '$_orderSelect, items:order_items(*, product:products(*))';
 
   /// Orders currently routed to [branchId]. Optionally filtered by [status].
   Future<List<OrderModel>> fetchBranchOrders(
@@ -41,8 +43,10 @@ class BranchService {
     String? status,
   }) async {
     try {
-      var query =
-          _client.from('orders').select(_orderSelect).eq('branch_id', branchId);
+      var query = _client
+          .from('orders')
+          .select(_orderWithItemsSelect)
+          .eq('branch_id', branchId);
       if (status != null && status.isNotEmpty) {
         query = query.eq('status', status);
       }
@@ -63,7 +67,7 @@ class BranchService {
     try {
       final row = await _client
           .from('orders')
-          .select('$_orderSelect, items:order_items(*, product:products(*))')
+          .select(_orderWithItemsSelect)
           .eq('id', orderId)
           .maybeSingle();
       _logSuccess('fetchOrderDetailForBranch');
@@ -402,6 +406,27 @@ class BranchService {
       _logSuccess('transferStockBetweenBranches');
     } catch (e, st) {
       _logError('transferStockBetweenBranches', e, st);
+      rethrow;
+    }
+  }
+
+  /// Moves stock from another branch into the current manager's branch.
+  /// This is used by smart order allocation; the manager cannot choose an
+  /// arbitrary destination or source outside this direction.
+  Future<void> transferStockIntoCurrentBranch({
+    required String productId,
+    required String fromBranchId,
+    required int quantity,
+  }) async {
+    try {
+      await _client.rpc('branch_transfer_stock_into_current_branch', params: {
+        'p_product_id': productId,
+        'p_from_branch_id': fromBranchId,
+        'p_quantity': quantity,
+      });
+      _logSuccess('transferStockIntoCurrentBranch');
+    } catch (e, st) {
+      _logError('transferStockIntoCurrentBranch', e, st);
       rethrow;
     }
   }

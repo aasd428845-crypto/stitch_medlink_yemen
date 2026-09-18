@@ -57,8 +57,12 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
     final productNameById = <String, String>{};
     for (final item in widget.order.items ?? []) {
       productNameById[item.productId] = item.product?.name ?? '—';
-      final quantities = item.isBonus ? bonusByProduct : paidByProduct;
-      quantities[item.productId] = (quantities[item.productId] ?? 0) + item.quantity;
+      final Map<String, int> quantities =
+          item.isBonus ? bonusByProduct : paidByProduct;
+      final previousQuantity = quantities[item.productId] ?? 0;
+      quantities[item.productId] = int.parse(
+        (previousQuantity + item.quantity.toInt()).toString(),
+      );
     }
     for (final productId in {
       ...paidByProduct.keys,
@@ -146,9 +150,9 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
                 'لا يوجد مخزون كافٍ لصنف "${r.productName}" في الفروع الأخرى');
           }
           final source = candidates.first;
-          await branch.transferStock(
+          await branch.transferStockIntoCurrentBranch(
             productId: r.productId,
-            toBranchId: source['branch_id'] as String,
+            fromBranchId: source['branch_id'] as String,
             quantity: need,
           );
           r.available += need;
@@ -460,7 +464,7 @@ class _RowState {
     required this.paidQuantity,
     required this.bonusQuantity,
     required this.available,
-  }) : controller = TextEditingController(text: '$available');
+  }) : controller = TextEditingController(text: '$required');
 
   final String productId;
   final String productName;

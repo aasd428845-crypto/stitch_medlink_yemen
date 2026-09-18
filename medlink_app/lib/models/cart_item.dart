@@ -12,6 +12,7 @@ class CartItem with _$CartItem {
     required int quantity,
     @Default(false) bool isBonus,
     required double unitPrice,
+    @JsonKey(name: 'bonus_rule_id') String? bonusRuleId,
   }) = _CartItem;
 
   const CartItem._();

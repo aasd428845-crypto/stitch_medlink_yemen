@@ -32,6 +32,7 @@ class CartController extends ChangeNotifier {
   String? _normalizeGovernorate(String? value) {
     final normalized = value?.trim().toLowerCase();
     return normalized == null || normalized.isEmpty ? null : normalized;
+  }
 
   /// All cart lines: user items + auto-computed bonus lines
   List<CartItem> get items => [..._userItems, ..._bonusItems];
@@ -168,6 +169,7 @@ class CartController extends ChangeNotifier {
             quantity: bonusQty,
             isBonus: true,
             unitPrice: 0.0,
+            bonusRuleId: rule.id,
           ),
         );
       }

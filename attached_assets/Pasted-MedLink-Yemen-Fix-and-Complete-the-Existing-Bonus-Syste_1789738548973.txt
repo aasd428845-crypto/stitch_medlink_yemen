@@ -1,0 +1,182 @@
+MedLink Yemen — Fix and Complete the Existing Bonus System
+
+Do NOT rebuild the Bonus system. The existing system is already implemented and working through:
+
+Web/Admin → bonus_rules → Flutter Customer → CartController → order_items.is_bonus → Branch Manager → Driver.
+
+Your task is to fix the existing implementation and make it production-safe.
+
+Before changing anything:
+- Review the Flutter project and the embedded Web/Admin project.
+- Review the existing Supabase/PostgreSQL migrations in both project sections.
+- Follow the existing migration numbering and do not create duplicate tables or columns.
+- Do not change unrelated Customer, Driver, Branch Manager or Offers functionality.
+
+Fix these identified issues:
+
+1. BONUS RULE VALIDITY
+
+CartController must only apply a bonus rule when:
+- is_active = true
+- current date/time is within start_date and end_date
+- the customer is eligible for target_governorate when the rule has a target governorate.
+
+Do not apply expired or future rules.
+
+2. MULTIPLE BONUS RULES
+
+Review the existing business logic for multiple matching rules.
+
+Do not simply use the first database row returned.
+
+Implement deterministic behavior and document the rule-selection logic so the same cart always produces the same bonus result.
+
+Do not invent complicated stacking behavior unless supported by the existing bonus_rules fields.
+
+3. GENERAL BONUS RULES
+
+The database allows product_id to be null.
+
+Determine from the existing Admin UI and business model what a product_id-null rule is intended to mean.
+
+If it is intended as a general rule, implement it correctly.
+If the existing system does not define its meaning clearly, do not guess. Document it as a remaining business decision instead of introducing incorrect behavior.
+
+4. BONUS INVENTORY
+
+This is critical.
+
+A bonus product is free in price, but it is still a physical unit leaving branch inventory.
+
+Example:
+Buy 10 + 1 free
+
+The operational inventory must account for all 11 units that are actually supplied.
+
+Review:
+- branch_allocate_order RPC
+- Branch Manager allocation logic
+- inventory table
+- order_items.is_bonus
+- financial inventory movement
+
+Implement the safest solution that preserves existing data and business rules.
+
+Do NOT double-deduct inventory.
+
+The final behavior must be auditable:
+- paid quantity
+- bonus quantity
+- total physical quantity supplied
+
+must remain distinguishable.
+
+5. CUSTOMER ORDER
+
+Keep bonus lines visible to the Customer.
+
+Bonus lines must:
+- show a clear Bonus/Gift label
+- have price = 0
+- not increase the payable order total
+- remain part of the order_items record
+- appear correctly in Order Details.
+
+6. BRANCH MANAGER
+
+Branch Manager must see bonus quantities clearly.
+
+Update allocation logic so physical bonus quantities are handled correctly without treating them as payable sales.
+
+Do not remove bonus lines from the order.
+
+7. DRIVER
+
+Driver should continue seeing bonus items in the final order.
+
+Do not make the Driver calculate or modify Bonus rules.
+
+Only display the final confirmed bonus quantity.
+
+8. FINANCIAL / INVENTORY RECORDS
+
+Review the existing financial trigger for bonus inventory movements.
+
+Make sure the financial inventory movement and operational inventory remain consistent.
+
+Do not create duplicate inventory deductions.
+
+9. ANALYTICS
+
+Bonus quantities must NOT be counted as normal paid sales.
+
+However, they MUST remain available for physical demand/consumption analysis.
+
+Where appropriate, distinguish:
+- paid_sales_quantity
+- bonus_quantity
+- total_distributed_quantity
+
+Do not simply delete bonus quantities from all analytics because future MedLink forecasting will need to know how many physical units were distributed.
+
+10. ADMIN NOTIFICATIONS
+
+Review Bonus Rule creation and editing.
+
+If the existing system sends a customer notification when a rule is created, determine whether editing/activation/deactivation should also generate an appropriate notification.
+
+Do not create notification spam.
+
+11. WEB/ADMIN
+
+Keep the existing Bonus Rule management UI.
+
+Do not rebuild it unless required by the fixes above.
+
+Make sure Admin-created rules are compatible with the exact Flutter Customer calculation logic.
+
+12. DATABASE
+
+If a schema/RPC/trigger change is genuinely required:
+- create the next correct migration number
+- follow the existing migration order
+- document the SQL clearly
+- update the corresponding database documentation/reference in both project sections where applicable
+- preserve existing data
+- review RLS and permissions
+- do not duplicate existing structures.
+
+13. TEST THE COMPLETE FLOW
+
+Test at least these scenarios:
+
+A. Buy 10 → 1 free
+B. Buy 20 with stackable=true
+C. Buy 20 with stackable=false
+D. Rule not started yet
+E. Rule expired
+F. Wrong target governorate
+G. Correct target governorate
+H. Cart quantity changes
+I. Removing the qualifying product
+J. Order creation
+K. Branch allocation
+L. Driver order
+M. Inventory deduction
+N. Financial inventory movement
+O. Analytics
+
+Finally review both Flutter and Web/Admin again.
+
+Do not stop at compilation.
+
+Report briefly:
+- files changed
+- database migrations/RPCs/triggers changed
+- exact Bonus flow after the fix
+- inventory behavior
+- analytics behavior
+- tests performed
+- remaining issues or business decisions required
+
+Do not modify unrelated UI or rebuild the existing Bonus/Offers systems.

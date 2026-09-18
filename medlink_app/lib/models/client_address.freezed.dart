@@ -32,7 +32,7 @@ mixin _$ClientAddress {
   @JsonKey(name: 'is_default')
   bool get isDefault => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
-  String? get createdAt => throw _privateConstructorUsedError;
+  String? get createdAt => throw _privateConstructorUsedError; // ── New extended fields ────────────────────────────────────────────────
   @JsonKey(name: 'owner_name')
   String? get ownerName => throw _privateConstructorUsedError;
   String? get phone => throw _privateConstructorUsedError;
@@ -347,6 +347,7 @@ class _$ClientAddressImpl extends _ClientAddress {
   @override
   @JsonKey(name: 'created_at')
   final String? createdAt;
+  // ── New extended fields ────────────────────────────────────────────────
   @override
   @JsonKey(name: 'owner_name')
   final String? ownerName;
@@ -479,7 +480,7 @@ abstract class _ClientAddress extends ClientAddress {
   bool get isDefault;
   @override
   @JsonKey(name: 'created_at')
-  String? get createdAt;
+  String? get createdAt; // ── New extended fields ────────────────────────────────────────────────
   @override
   @JsonKey(name: 'owner_name')
   String? get ownerName;
