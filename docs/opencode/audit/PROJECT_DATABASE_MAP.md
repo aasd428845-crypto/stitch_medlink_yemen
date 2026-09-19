@@ -8,7 +8,7 @@
 | المجلد | الملفات | الدور |
 |---|---|---|
 | `supabase/migrations/` (الجذر) | 0001 → 0017 | **السجل الرئيسي المشترك** (`.agents/memory/shared-migration-numbering.md` يقرّ بأن الجذر authoritative) |
-| `Medlik-Waap/supabase/migrations/` | 0001 → 0015 | سجل مكمل للمدير العام/المالي — نفس القاعدة الفعلية |
+| `Medlik-Waap/supabase/migrations/` | 0001 → 0017 | سجل مكمل للمدير العام/المالي — نفس القاعدة الفعلية، مع مزامنة Bonus 0016/0017 |
 | `medlink_app/supabase/migrations/` | 0012 فقط | ملف محلي بتكرار رقم 0012 — محذَّر من التطبيق كما هو |
 
 ## 2. الجداول — النواة التشغيلية (الجذر)
@@ -19,8 +19,8 @@
 - `0009`: أعمدة `orders.priority`, `orders.delivered_at`, `warehouse_inventory.reorder_level`, `invoices.branch_id` + RPC `branch_allocate_order`.
 - `0010`: `notification_preferences`, `branch_bank_accounts` + RPCs إعدادات/تحويل مخزون.
 - `0012`: `special_requests`. `0014`: حقول عنوان موسعة. `0015`: bucket `product-images` + سياسات مدير عام.
-- `0016`: إصلاح `branch_allocate_order` ليجمع paid + bonus ويخصم الكمية الفيزيائية مرة واحدة، مع إصدار فاتورة للجزء المدفوع فقط.
-- `0017`: `order_items.bonus_rule_id`، حماية سعر سطر bonus، RPC `create_order_with_items` للتحقق الخادمي من القاعدة/السعر/الإجمالي، وRPC `get_order_product_distribution` للتحليل.
+- `0016`: إصلاح `branch_allocate_order` ليشترط تخصيص paid + bonus كاملاً، ويخصم الكمية الفيزيائية مرة واحدة، مع إصدار فاتورة للجزء المدفوع فقط. النسخة نفسها موجودة في مشروع Web/Admin.
+- `0017`: `order_items.bonus_rule_id`، حماية سعر سطر bonus، RPC `create_order_with_items` للتحقق الخادمي من القاعدة/السعر/الإجمالي، وRPC `get_order_product_distribution` للتحليل. النسخة نفسها موجودة في مشروع Web/Admin.
 
 ## 3. جداول طبقة الويب (Medlik-Waap على نفس القاعدة)
 - `0004_phase4`: `warehouse_inventory` (بنسخته الخاصة قبل 0009 الذي أضاف reorder_level)، `invoices`، `payments` + أعمدة `users.credit_limit/current_balance` + triggerا رصيد (`trg_invoice_increase_balance`, `trg_payment_decrease_balance`).

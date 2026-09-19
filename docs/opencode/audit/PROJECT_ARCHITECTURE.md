@@ -26,7 +26,7 @@ MedLink Yemen هو نظام توزيع صيدلاني B2B متعدد التطب�
 1. العميل يسجّل → صف users عبر trigger `handle_new_user` (`supabase/migrations/0001_initial_schema.sql:26-50`) → `account_status='pending_approval'` افتراضياً (`0003:1-3`).
 2. الموافقة من لوحة الويب عبر Edge Function `manage-client-account` (`Medlik-Waap/supabase/functions/manage-client-account/index.ts`، استدعاء: `Medlik-Waap/artifacts/pharma-pwa/src/lib/clientApprovalApi.ts`).
 3. العميل يتصفح الكتالوج ويطلب: `medlink_app/lib/services/order_service.dart` (`createOrder`) — يستدعي RPC `create_order_with_items` (0017)، الذي يتحقق خادمياً من القاعدة الفائزة والسعر والإجمالي، ثم يحفظ paid/bonus و`bonus_rule_id`.
-4. مدير الفرع يخصّص الطلب ذرياً: RPC `branch_allocate_order` (0016) — يجمع paid + bonus لكل منتج، يخصم الكمية الفيزيائية مرة واحدة، ويفوتر الجزء المدفوع فقط.
+4. مدير الفرع يخصّص الطلب ذرياً: RPC `branch_allocate_order` (0016) — يشترط تخصيص paid + bonus لكل منتج بالكامل، يخصم الكمية الفيزيائية مرة واحدة، ويفوتر الجزء المدفوع فقط.
 5. السائق يتقدم بحالة الطلب: RPC `driver_advance_order_status` (`supabase/migrations/0006`) من `medlink_app/lib/services/driver_orders_service.dart`.
 6. عند `delivered` يُملأ `delivered_at` تلقائياً: trigger `trg_orders_set_delivered_at` (`0009:55-58`).
 7. المدير العام يراقب كل شيء من `Medlik-Waap/artifacts/pharma-pwa/src/pages/director/*` (KPIs، كتالوج، مخزون، عروض، بونص، ذمم، نظام مالي كامل).
@@ -34,7 +34,7 @@ MedLink Yemen هو نظام توزيع صيدلاني B2B متعدد التطب�
 ### Bonus rules — contract
 - `product_id IS NULL` قاعدة عامة للمنتج، بينما القاعدة ذات المنتج المحدد لها أولوية.
 - عند وجود أكثر من قاعدة مطابقة: أعلى bonus مكتسب، ثم أقل buy threshold، ثم أقدم `created_at`، ثم أصغر `id`.
-- `is_stackable=false` يمنح bonus مرة واحدة عند بلوغ الشرط؛ `true` يحسب مضاعفات الشرط.
+- `is_stackable=false` يمنح bonus مرة واحدة عند بلوغ الشرط؛ `true` يحسب مضاعفات عتبة القاعدة الفائزة نفسها، ولا يجمع قواعد مختلفة.
 - الصلاحية تشمل `is_active` والتاريخ الشامل والمحافظة المستهدفة. سطور bonus مجانية للمحاسبة لكنها وحدات فيزيائية للمخزون.
 
 ## 4. حدود الخدمات

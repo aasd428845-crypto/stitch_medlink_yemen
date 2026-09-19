@@ -54,6 +54,31 @@ begin
     raise exception 'Only pending orders can be allocated (current: %)', v_status;
   end if;
 
+  -- An order is assigned only after every product has its complete physical
+  -- demand allocated. This includes free bonus units: Buy 10 + Bonus 1
+  -- requires an allocation of 11, not 10.
+  for v_alloc in
+    select oi.product_id,
+           sum(oi.quantity)::int as required_qty,
+           coalesce((
+             select sum(x.allocated_qty)::int
+               from jsonb_to_recordset(coalesce(p_allocations, '[]'::jsonb))
+                 as x(product_id uuid, allocated_qty int)
+              where x.product_id = oi.product_id
+                and x.allocated_qty is not null
+                and x.allocated_qty > 0
+           ), 0)::int as allocated_qty
+      from public.order_items oi
+     where oi.order_id = p_order_id
+     group by oi.product_id
+  loop
+    if v_alloc.allocated_qty <> v_alloc.required_qty then
+      raise exception
+        'Full physical allocation required for product % (need %, received %)',
+        v_alloc.product_id, v_alloc.required_qty, v_alloc.allocated_qty;
+    end if;
+  end loop;
+
   -- Aggregate client input by product so a repeated JSON entry cannot cause
   -- separate checks/updates for the same physical stock row.
   for v_alloc in
@@ -78,8 +103,8 @@ begin
       raise exception 'Product % is not part of order %',
         v_alloc.product_id, p_order_id;
     end if;
-    if v_alloc.allocated_qty > v_required_qty then
-      raise exception 'Allocated quantity for product % exceeds ordered physical quantity %',
+    if v_alloc.allocated_qty <> v_required_qty then
+      raise exception 'Allocated quantity for product % must equal ordered physical quantity %',
         v_alloc.product_id, v_required_qty;
     end if;
 
