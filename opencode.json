@@ -5,21 +5,32 @@
     "servers": {
       "context7": {
         "type": "remote",
-        "url": "https://mcp.context7.com/mcp",
-        "disabled": true
+        "url": "https://mcp.context7.com/mcp"
       },
       "figma": {
         "type": "remote",
-        "url": "https://mcp.figma.com/mcp",
-        "disabled": true
+        "url": "https://mcp.figma.com/mcp"
       },
       "playwright": {
         "type": "local",
         "command": [
-          "npx",
-          "-y",
-          "@playwright/mcp@latest"
+          "/home/adman/.local/share/fnm/node-versions/v22.23.2/installation/bin/node",
+          "/home/adman/.local/lib/node_modules/@playwright/mcp/cli.js"
         ],
+        "timeout": 30000
+      },
+      "supabase": {
+        "type": "local",
+        "command": [
+          "/home/adman/.local/share/fnm/node-versions/v22.23.2/installation/bin/npx",
+          "-y",
+          "@supabase/mcp-server-supabase@latest",
+          "--read-only",
+          "--project-ref=lmkomzqioneuyvatzsov"
+        ],
+        "environment": {
+          "SUPABASE_ACCESS_TOKEN": "{env:SUPABASE_ACCESS_TOKEN}"
+        },
         "timeout": 30000
       },
       "github": {
