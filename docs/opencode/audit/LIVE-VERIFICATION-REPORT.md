@@ -538,6 +538,37 @@ ledger + accounts + rules_v2 + redemptions + withdrawals + settings + audit + RL
 1. التصميم مكتمل (A–U) بلا SQL. 2. الجداول: accounts/ledger/rules_v2/redemptions/withdrawals/settings/audit. 3. الـRPCs: §L (14 عملية). 4. لـ0019+: توسيع الخصم + dashboards + أي ترحيل معتمد. 5. صفر خطر على الحالي (لا كسر، لا افتراضات حية، سياسات يدوية محفوظة). ### إجابات 1-6
 1. التصميم مكتمل (A–U) بلا SQL. 2. الجداول: accounts/ledger/rules_v2/redemptions/withdrawals/settings/audit. 3. الـRPCs: §L (14 عملية). 4. لـ0019+: توسيع الخصم + dashboards + أي ترحيل معتمد. 5. صفر خطر على الحالي (لا كسر، لا افتراضات حية، سياسات يدوية محفوظة). 6. مراجعتك المطلوبة: الجداول/RPCs/الحدود القابلة للضبط + تأكيد عدم كتابة SQL بعد.
 
+## EARN ATTRIBUTION — إغلاق التتبع لكل EARN (2026-09-20 — تعديل 0018 فقط، بلا تنفيذ)
+> العيب المثبت: سقف `least(amount, available)` على مستوى الحساب لا يُسند لأي EARN — لا إجابة حتمية عن بقايا EARN محدد.
+
+### 1. Current defect
+`expire_bonus` كان يخصم `least(EARN, available)` دون رابط: EARN=A‏100 + EARN=B‏100 − استهلاك 80 → قد يُنسب للأول 100 رغم أن 80 منها قد تكون منه.
+
+### 2. Chosen attribution model
+جدول `bonus_earn_allocations` (الجديد، الثامن): كل مدين يُموَّل من أقدم الدائنات أولًا — **سياسة صريحة مكتوبة في Migration** (ليست FIFO صامتة): `ORDER BY created_at, id` في `bonus_allocate_spend`. الحساب الزمني وحده لا يكفي لأنه لا يربط صفًا بصف — الربط هو الإثبات.
+
+### 3. Why deterministic
+نفس المدخلات + نفس الترتيب الزمني = نفس التوزيع دائمًا؛ محمي بقفل الحساب + فحص كفاية مسبق + استثناء عند العجز.
+
+### 4-7. Changes
+- ملف واحد: `supabase/migrations/0018_bonus_financial_system.sql` (1463 سطرًا). جدول + RLS (قراءة ذاتية/مدير، بلا كتابة مباشرة) + فهرس + `bonus_credit_remaining` (الباقي = المبلغ − المخصص − المعوَّض) + `bonus_allocate_spend` + توصيلهما في طلبي الاسترداد/السحب + حذف التخصيصات مع إلغاء الحجز + سقف العكس بالمتبقي + حلقة انتهاء بالمتبقي + منحتان.
+- لا EARN أصلي عُدل؛ كل تصحيح تعويضي؛ idempotency والفهرس الجزئي كما هما.
+
+### 8. Concurrency
+قفل الحساب يُسلسل؛ الفهرس الجزئي يمنع التعويض المزدوج؛ ON CONFLICT تخطٍ رشيق.
+
+### 9. Idempotency
+إعادة التشغيل تُنتج صفرًا جديدًا (البواقي المحدثة + الحراس + التعارض).
+
+### 10. A–L scenario results
+- A: انتهاء كامل للمتبقي. B/C/D: الأقدم يُستهلك تخصيصًا أولًا فينتهي الأحدث ببقاياه المثبتة. E/F: OPENING/LEGACY دائنات عادية قابلة للتخصيص (لا تنتهي — خارج نطاق الانتهاء). G: عكس EARN مسقوف بالمتبقي. H: عكس استهلاك = تعويض موجب دائن جديد (موثق). I: تسلسل + فهرس. J: صفر جديد. K: الحجوزات المعلقة محسوبة مخصصة فتُحمى من الانتهاء. L: البواقي فقط هي ما ينتهي — السالب مستحيل بنيويًا (مجموع البواقي = المتاح).
+- K تفصيلًا: `bonus_credit_remaining` = amount − Σallocations − Σ(EXPIRATION/REVERSAL عليه) — الإجابة الحتمية المطلوبة.
+
+### 11. Static SQL verification
+توازن `$$`/BEGIN-END؛ 20 دالة/19 منحًا بتطابق نوعي؛ بلا مراجع معلقة؛ بلا إدخالات محظورة؛ definer+search_path شامل.
+
+### 12-14. Line count 1463. Supabase DB changed: NO. SQL executed: NO. 0017 changed: NO. Existing migrations changed: NO. Final verdict: READY FOR MANUAL REVIEW (بانتظار مراجعتك — لا تنفيذ).
+
 ## Migration 0018 — Final Integrity Fix (2026-09-20 — STATIC فقط)
 > الملف 1304 أسطر بعد الإصلاح. **LIVE DB CHANGED: NO. SQL EXECUTED ON SUPABASE: NO.**
 

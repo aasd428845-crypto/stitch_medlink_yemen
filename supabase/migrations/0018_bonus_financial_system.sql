@@ -338,6 +338,44 @@ create policy "bonus_audit_director_select" on public.bonus_audit_trail
 
 -- No UPDATE/DELETE policies for anyone: audit rows are immutable.
 
+-- ─────────────────────────────────────────
+-- 8. bonus_earn_allocations — lot-level attribution linkage.
+--    EXPLICIT deterministic policy (written here, not silent):
+--    every spending debit is funded from the oldest POSTED positive
+--    credit lots first (by created_at, then id). This makes the
+--    answer "how much of EARN X is still unused?" provable:
+--    X.amount − allocated(X) − compensated(X).
+--    Allocation rows of a voided PENDING reservation die with it
+--    (CASCADE); POSTED history is never touched.
+-- ─────────────────────────────────────────
+create table if not exists public.bonus_earn_allocations (
+  id uuid primary key default gen_random_uuid(),
+  account_id uuid not null references public.bonus_accounts(user_id)
+    on delete restrict,
+  credit_ledger_id uuid not null references public.bonus_ledger(id)
+    on delete restrict,
+  debit_ledger_id uuid not null references public.bonus_ledger(id)
+    on delete cascade,
+  amount numeric(12,2) not null check (amount > 0),
+  created_at timestamptz not null default now(),
+  unique (debit_ledger_id, credit_ledger_id)
+);
+
+create index if not exists bonus_earn_alloc_account_credit_idx
+  on public.bonus_earn_allocations (credit_ledger_id);
+
+alter table public.bonus_earn_allocations enable row level security;
+
+drop policy if exists "bonus_alloc_client_select" on public.bonus_earn_allocations;
+create policy "bonus_alloc_client_select" on public.bonus_earn_allocations
+  for select using (account_id = auth.uid());
+
+drop policy if exists "bonus_alloc_director_select" on public.bonus_earn_allocations;
+create policy "bonus_alloc_director_select" on public.bonus_earn_allocations
+  for select using (public.current_user_role() = 'company_director');
+
+-- No direct writes for anyone: RPC-only linkage.
+
 -- =============================================================
 -- RPCs — all SECURITY DEFINER with fixed search_path.
 -- Ownership and roles are enforced inside; RLS stays restrictive.
@@ -384,6 +422,95 @@ begin
    where account_id = p_user_id and status = 'PENDING';
 
   return query select (v_earned - v_used - v_reserved)::numeric, v_reserved;
+end $$;
+
+-- Attributable remainder of ONE credit lot: its amount minus everything
+-- already funded from it (allocations, including PENDING reservations)
+-- minus compensations already applied to it (EXPIRATION/REVERSAL).
+-- Single source of truth for expiry and reversal caps.
+create or replace function public.bonus_credit_remaining(p_credit_id uuid)
+returns numeric
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_amount numeric;
+  v_acct uuid;
+  v_alloc numeric(12,2) := 0;
+  v_comp numeric(12,2) := 0;
+begin
+  if auth.uid() is null then raise exception 'Authentication required'; end if;
+
+  select amount, account_id into v_amount, v_acct
+    from public.bonus_ledger where id = p_credit_id for update;
+  if not found then raise exception 'Ledger entry % not found', p_credit_id; end if;
+  if v_amount is null or v_amount <= 0 then return 0; end if;
+  if auth.uid() <> v_acct
+     and public.current_user_role() <> 'company_director' then
+    raise exception 'Not permitted to read this bonus lot';
+  end if;
+
+  select coalesce(sum(amount), 0) into v_alloc
+    from public.bonus_earn_allocations
+   where credit_ledger_id = p_credit_id;
+
+  select coalesce(sum(-amount), 0) into v_comp
+    from public.bonus_ledger
+   where reverses_id = p_credit_id
+     and txn_type in ('EXPIRATION', 'REVERSAL')
+     and status = 'POSTED';
+
+  return greatest(v_amount - v_alloc - v_comp, 0);
+end $$;
+
+-- Funds one spending debit from the oldest lots first (policy §8 header).
+-- Raises on shortfall (callers pre-check funds, so this is a backstop).
+create or replace function public.bonus_allocate_spend(
+  p_debit_id uuid,
+  p_account_id uuid,
+  p_need numeric
+)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_left numeric := p_need;
+  v_lot uuid;
+  v_rem numeric;
+  v_take numeric;
+begin
+  if auth.uid() is null then raise exception 'Authentication required'; end if;
+  if auth.uid() <> p_account_id
+     and public.current_user_role() <> 'company_director' then
+    raise exception 'Not permitted to allocate this bonus account';
+  end if;
+  if p_need is null or p_need <= 0 then
+    raise exception 'Allocation need must be positive';
+  end if;
+
+  for v_lot in
+    select id from public.bonus_ledger
+     where account_id = p_account_id
+       and status = 'POSTED'
+       and amount > 0
+     order by created_at, id
+  loop
+    exit when v_left <= 0;
+    v_rem := public.bonus_credit_remaining(v_lot);
+    if v_rem <= 0 then continue; end if;
+    v_take := least(v_rem, v_left);
+    insert into public.bonus_earn_allocations
+      (account_id, credit_ledger_id, debit_ledger_id, amount)
+    values (p_account_id, v_lot, p_debit_id, v_take);
+    v_left := v_left - v_take;
+  end loop;
+
+  if v_left > 0 then
+    raise exception 'Attribution shortfall: % unattributed', v_left;
+  end if;
 end $$;
 
 -- 1) open_bonus_account — director only, idempotent per customer.
@@ -696,6 +823,9 @@ begin
           v_redemption_id, v_client, 'reservation')
   returning id into v_ledger_id;
 
+  -- Attribute the reservation to specific credit lots now (provable later).
+  perform public.bonus_allocate_spend(v_ledger_id, v_client, v_value);
+
   update public.bonus_redemptions
      set ledger_id = v_ledger_id
    where id = v_redemption_id;
@@ -808,6 +938,10 @@ begin
     raise exception 'Not permitted to cancel redemptions';
   end if;
 
+  -- Release the reservation AND its lot attributions together.
+  delete from public.bonus_earn_allocations
+   where debit_ledger_id = v_row.ledger_id;
+
   delete from public.bonus_ledger where id = v_row.ledger_id and status = 'PENDING';
 
   update public.bonus_redemptions
@@ -850,6 +984,10 @@ begin
   if v_role not in ('client', 'company_director') then
     raise exception 'Not permitted to cancel withdrawals';
   end if;
+
+  -- Release the reservation AND its lot attributions together.
+  delete from public.bonus_earn_allocations
+   where debit_ledger_id = v_row.ledger_id;
 
   delete from public.bonus_ledger where id = v_row.ledger_id and status = 'PENDING';
 
@@ -949,6 +1087,9 @@ begin
           v_withdrawal_id, v_client, 'reservation')
   returning id into v_ledger_id;
 
+  -- Attribute the reservation to specific credit lots now (provable later).
+  perform public.bonus_allocate_spend(v_ledger_id, v_client, p_amount);
+
   update public.bonus_withdrawals
      set ledger_id = v_ledger_id
    where id = v_withdrawal_id;
@@ -1038,6 +1179,10 @@ begin
     if p_reason is null or btrim(p_reason) = '' then
       raise exception 'Rejection requires a reason';
     end if;
+    -- Release the reservation AND its lot attributions together.
+    delete from public.bonus_earn_allocations
+     where debit_ledger_id = v_row.ledger_id;
+
     delete from public.bonus_ledger
      where id = v_row.ledger_id and status = 'PENDING';
 
@@ -1155,6 +1300,7 @@ declare
   v_row public.bonus_ledger%rowtype;
   v_existing uuid;
   v_reversal_id uuid;
+  v_cap numeric;
 begin
   if v_actor is null then raise exception 'Authentication required'; end if;
   if public.current_user_role() <> 'company_director' then
@@ -1186,11 +1332,23 @@ begin
     raise exception 'Ledger entry % already has an effective reversal', p_ledger_id;
   end if;
 
+  -- Cap credit reversals at the attributable remainder: reversing more
+  -- than what is still unused of this lot would fabricate money.
+  -- Debit reversals (undoing a consumption) compensate in full.
+  if v_row.amount > 0 then
+    v_cap := public.bonus_credit_remaining(p_ledger_id);
+    if v_cap <= 0 then
+      raise exception 'Ledger entry % has no reversible remainder', p_ledger_id;
+    end if;
+  else
+    v_cap := -v_row.amount;
+  end if;
+
   -- The original row is never touched: compensation only.
   insert into public.bonus_ledger
     (account_id, txn_type, amount, status, order_id, withdrawal_id,
      redemption_id, rule_id, reverses_id, actor, reference, notes, idempotency_key)
-  values (v_row.account_id, 'REVERSAL', -v_row.amount, 'POSTED',
+  values (v_row.account_id, 'REVERSAL', -v_cap, 'POSTED',
           v_row.order_id, v_row.withdrawal_id, v_row.redemption_id,
           v_row.rule_id, v_row.id, v_actor, v_row.reference,
           'Reversal of ' || v_row.id::text || ': ' || p_reason,
@@ -1201,7 +1359,7 @@ begin
     (entity, entity_id, action, actor, old_value, new_value, reason)
   values ('bonus_ledger', v_reversal_id, 'REVERSAL', v_actor,
           jsonb_build_object('reversed', v_row.id),
-          jsonb_build_object('amount', -v_row.amount), p_reason);
+          jsonb_build_object('amount', -v_cap), p_reason);
 
   return v_reversal_id;
 end $$;
@@ -1222,8 +1380,7 @@ declare
   v_expiry_days int;
   v_count int := 0;
   v_n int;
-  v_available numeric;
-  v_reserved numeric;
+  v_rem numeric;
   v_row record;
 begin
   if v_actor is null then raise exception 'Authentication required'; end if;
@@ -1252,12 +1409,12 @@ begin
      order by l.account_id, l.created_at
      for update of l
   loop
-    -- Cap at the account's currently available balance: never expire
-    -- more than what is actually expirable, even under reruns/races.
-    -- (The partial unique index on reverses_id is the backstop.)
-    select * into v_available, v_reserved
-      from public.bonus_account_funds(v_row.account_id);
-    if v_available <= 0 then continue; end if;
+    -- Attributable remainder of THIS earn lot only (never the
+    -- account-wide balance): amount − allocations − compensations.
+    -- A lot that is fully consumed, reversed, or expired yields 0
+    -- and is skipped. The partial unique index is the backstop.
+    select public.bonus_credit_remaining(v_row.id) into v_rem;
+    if v_rem <= 0 then continue; end if;
 
     -- Original EARN row is never touched: compensation only, linked.
     -- ON CONFLICT makes concurrent/duplicate runs skip gracefully instead
@@ -1266,7 +1423,7 @@ begin
       (account_id, txn_type, amount, status, rule_id, reverses_id,
        actor, notes)
     values (v_row.account_id, 'EXPIRATION',
-            -least(v_row.amount, v_available), 'POSTED',
+            -v_rem, 'POSTED',
             null, v_row.id, v_actor, 'Expired EARN ' || v_row.id::text)
     on conflict (reverses_id)
       where reverses_id is not null and txn_type in ('REVERSAL', 'EXPIRATION')
@@ -1286,6 +1443,8 @@ end $$;
 -- Grants: clients may call request/cancel flows; everything else is
 -- still role-gated inside the functions. No table-level writes granted.
 grant execute on function public.bonus_account_funds(uuid) to authenticated;
+grant execute on function public.bonus_credit_remaining(uuid) to authenticated;
+grant execute on function public.bonus_allocate_spend(uuid, uuid, numeric) to authenticated;
 grant execute on function public.open_bonus_account(uuid, text, text) to authenticated;
 grant execute on function public.post_opening_balance(uuid, numeric, text, text, text) to authenticated;
 grant execute on function public.post_legacy_migration(uuid, numeric, text, text, text) to authenticated;
