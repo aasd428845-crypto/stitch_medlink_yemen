@@ -5,6 +5,7 @@ import '../models/bonus_rule.dart';
 import '../models/cart_item.dart';
 import '../models/client_address.dart';
 import '../models/order.dart';
+import '../models/order_cancellation.dart';
 import '../models/order_distribution.dart';
 import '../models/product.dart';
 import '../models/special_request.dart';
@@ -343,6 +344,62 @@ class OrderService {
       return OrderModel.fromJson(row);
     } catch (e, st) {
       _logError('fetchOrderDetails', e, st);
+      rethrow;
+    }
+  }
+
+  /// Cancels the caller's own order through the financial cancellation RPC
+  /// (`cancel_order_with_discount`): atomic status flip with conditional
+  /// compensating REVERSAL plus cancellation history row. Returns the
+  /// reversal ledger id, or null when no discount existed. The server
+  /// enforces ownership, pending state (H1), policy snapshot, and
+  /// idempotency; the reason is required and stored server-side.
+  Future<String?> cancelOrder({
+    required String orderId,
+    required String reason,
+    String? idempotencyKey,
+  }) async {
+    if (_client.auth.currentUser == null) {
+      throw const AuthException('المستخدم غير مسجل الدخول');
+    }
+    try {
+      final data = await _client.rpc(
+        'cancel_order_with_discount',
+        params: {
+          'p_order_id': orderId,
+          'p_reason': reason,
+          if (idempotencyKey != null) 'p_idempotency_key': idempotencyKey,
+        },
+      );
+      _logSuccess('cancelOrder');
+      return data as String?;
+    } catch (e, st) {
+      _logError('cancelOrder', e, st);
+      rethrow;
+    }
+  }
+
+  /// Reads the caller's cancellation history for one order, newest first.
+  /// Read-only: RLS exposes no write policies; rows are written server-side
+  /// inside the cancel transaction only.
+  Future<List<OrderCancellation>> fetchOrderCancellationHistory(
+    String orderId,
+  ) async {
+    if (_client.auth.currentUser == null) {
+      throw const AuthException('المستخدم غير مسجل الدخول');
+    }
+    try {
+      final rows = await _client
+          .from('order_cancellations')
+          .select()
+          .eq('order_id', orderId)
+          .order('cancelled_at', ascending: false);
+      _logSuccess('fetchOrderCancellationHistory');
+      return (rows as List)
+          .map((r) => OrderCancellation.fromJson(r as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      _logError('fetchOrderCancellationHistory', e, st);
       rethrow;
     }
   }

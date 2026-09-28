@@ -538,6 +538,20 @@ ledger + accounts + rules_v2 + redemptions + withdrawals + settings + audit + RL
 1. التصميم مكتمل (A–U) بلا SQL. 2. الجداول: accounts/ledger/rules_v2/redemptions/withdrawals/settings/audit. 3. الـRPCs: §L (14 عملية). 4. لـ0019+: توسيع الخصم + dashboards + أي ترحيل معتمد. 5. صفر خطر على الحالي (لا كسر، لا افتراضات حية، سياسات يدوية محفوظة). ### إجابات 1-6
 1. التصميم مكتمل (A–U) بلا SQL. 2. الجداول: accounts/ledger/rules_v2/redemptions/withdrawals/settings/audit. 3. الـRPCs: §L (14 عملية). 4. لـ0019+: توسيع الخصم + dashboards + أي ترحيل معتمد. 5. صفر خطر على الحالي (لا كسر، لا افتراضات حية، سياسات يدوية محفوظة). 6. مراجعتك المطلوبة: الجداول/RPCs/الحدود القابلة للضبط + تأكيد عدم كتابة SQL بعد.
 
+## PHASE 4 — 0019 IMPLEMENTATION REPORT (كتابة فقط، بلا تطبيق)
+1. الملفات: `supabase/migrations/0019_bonus_earn_engine.sql` جديد (442 سطرًا)؛ لا ملف آخر مُس.
+2. جديد: عمودا `value_basis` + `product_values` (ALTER rules_v2)؛ تعديل CHECK الـmode (+SALES)؛ جدول pending + RLS؛ دوال validate/evaluate/trigger-fn/processor؛ trigger التسليم؛ منح processor فقط.
+3. دوال: validate/evaluate/on_delivered/process_pending (4). 4. trigger واحد. 5. فهرس pending واحد. 6. سياسات pending (قراءة ذاتية/مدير). 7. منح: processor فقط. 8. اختبارات: محظور حيًا (لا test DB) — مصفوفة الاختبار موثقة من PHASE 3.7. 9. Static: توازن `$$`/BEGIN-END؛ مراجع أعمدة موجودة؛ بلا GL (تطابق نصي وحيد في تعليق الحدود). 10. لم يُنفذ: parental NONE→SALES، SUSPENDED→pending، usage ledger-derived، مفتاح حتمي — كلها داخل الملف بلا تفعيل حي. 11. متبقي: وحدة bonus_value (BUSINESS)، سياسة الإلغاء بعد الاستهلاك (BUSINESS).
+- **0019 WRITTEN — NOT APPLIED TO SUPABASE.**
+
+## FINAL TARGETED FIX — allocate/ROW_COUNT/asymmetry (2026-09-20 — تعديل 0018 فقط)
+- F1 (إلزامي): `bonus_allocate_spend` ترفض الآن أي debit غير (موجود + نفس الحساب + PENDING + سالب + REDEEM_PRODUCT/CASH_WITHDRAWAL) وتشترط `p_need = -amount` تمامًا + قفل صف الـdebit. التوقيعات ثابتة.
+- F2: `fulfill_redemption` + `mark_withdrawal_paid` يتحققان `ROW_COUNT=1` قبل قلب الحالة (استثناء وإلا).
+- F3: سلوك UNDER_REVIEW في الإلغاء محفوظ + توثيق صريح بعدم الحسم التجاري (DOCUMENTED، بلا قرار).
+- Attribution: Lots = كل الموجبة POSTED (موثق في §8 — لا تعارض؛ التسمية التاريخية محفوظة مع توضيح credit-lot).
+- الملف 1507 أسطر (+44/−1 مقابل HEAD)؛ grants/RLS/FKs/trigger بلا تغيير؛ static: توازن + تغطية منح + حراس مؤكدة.
+- الحية لم تتغير: DB changed NO، SQL executed NO.
+
 ## EARN ATTRIBUTION — إغلاق التتبع لكل EARN (2026-09-20 — تعديل 0018 فقط، بلا تنفيذ)
 > العيب المثبت: سقف `least(amount, available)` على مستوى الحساب لا يُسند لأي EARN — لا إجابة حتمية عن بقايا EARN محدد.
 
@@ -682,3 +696,39 @@ Earned=Σموجب؛ Used=Σمستهلك/مسحوب/منتهي؛ Reserved=ΣPENDI
 - DEFERRED: جدول سطور الاسترداد، توسيع الخصم، UI، الترحيل الفعلي.
 - **FINAL DESIGN VERDICT: 1. READY FOR SQL** (مشروط بمراجعتك — لا SQL كُتب).
 - **تصريح: DESIGN ONLY — لا SQL كُتب أو نُفذ، لا ملفات/قاعدة عُدلت.**
+
+## PHASE 4.1 — 0019 CORRECTIVE REVIEW REPORT (تعديل 0019 فقط، بلا تنفيذ)
+> 609 أسطر. كل تحقق ساكن محلي. 0017/0018/Tطبيق untouched.
+
+### A. التعديلات وأسبابها
+1. `bonus_check_rule_v2()` الجديدة + trigger تحقق `BEFORE INSERT OR UPDATE` (سبب: الحماية DB-level لا RLS) + فحص `product_values` العميق + حارس `customer_type` (بلا عمود مستخدمين — IMPLEMENTATION GAP موثق) + منع `product_values` خارج PER_PRODUCT.
+2. المقيّم: تصنيف بلا `SQLERRM LIKE` (صفر بقايا)؛ pending لكل قاعدة بلقطات؛ تواريخ Asia/Aden (عرف اليمن)؛ أولوية ASC موثقة.
+3. الـtrigger: بلا كتلة استثناءات (الحالات المسماة صراحة)؛ holds الموقوفة بلا لقطة قاعدة (موثق).
+4. المعالج: إعادة تشغيل من اللقطة + مسار holds + `PROCESSED` بلا حذف.
+5. منح: REVOKE الخمس الداخلية؛ processor وحده ممنوح (مع فحص مدير داخلي).
+
+### B. مشاكل أُصلحت
+SQLERRM LIKE؛ pending لكل طلب (روابط عشوائية)؛ معالج يعيد القراءة الحية؛ current_date الغامضة؛ أولوية غير موثقة؛ منح ضمنية للدوال الداخلية.
+
+### C. BUSINESS DECISION المتبقي
+وحدة `bonus_value` فقط (B1-B3 محلولة تقنيًا أعلاه).
+
+### D-K. تحقق/أدلة
+Static: توازن $$/BEGIN-END (9/9)؛ دوال 6؛ منح/سحب كما أعلاه. E. 0017/0018 untouched (grep مؤكد: لا إشارة). F. DB changed NO. G. SQL executed NO. H. ملفات معدلة: `0019` فقط (+~167 سطرًا).
+**0019 READY FOR FINAL REVIEW — NOT APPLIED.**
+
+## PHASE 4.2 — 0019 FINAL CORRECTIVE REVIEW REPORT (تعديل 0019 فقط، بلا تنفيذ)
+> 624 أسطر. صفر `SQLERRM LIKE`. كل `WHEN OTHERS` متبقٍ (3) مقترن بمعالجات transient صريحة (`40001/40P01/55P03`) وينتهي بـ`raise`.
+
+### A. Catch-alls المصححة
+المقيّم (per-rule) والمعالج (مساران) أصبحا: transient → pending مرئي قابل لإعادة المحاولة؛ الباقي → `raise` صريح. لا تحويل صامت إطلاقًا.
+
+### B. التصنيف
+Transient = `40001/40P01/55P03` فقط (موثقة كقابلة لإعادة المحاولة). Config (BONUS_CONFIG_ERROR) وإعداد/سلامة/قاتل = صاخبة + rollback آمن.
+
+### C-H. المؤكد
+Trigger بلا استثناءات (معلّق/صاخب/قاتل كما صُمم)؛ المعالج يُرجع ledger عند النجاح وnull مع PENDING عند العابر فقط؛ لقطات ملزمة؛ الحدود الدنيا على الشرائح المؤهلة (موثق)؛ customer_type محروس بلا عمود (GAP)؛ الأمان/المنح بلا تغيير.
+
+### I-N. السلامة
+0017/0018 untouched (فحص إشاري)؛ DB changed NO؛ SQL executed NO؛ ملفات معدلة: `0019` فقط.
+**0019 READY FOR FINAL REVIEW — NOT APPLIED.**

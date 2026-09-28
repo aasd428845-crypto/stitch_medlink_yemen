@@ -11,6 +11,8 @@ import '../../widgets/order_status_chip.dart';
 import '../../widgets/rate_driver_sheet.dart';
 import '../../widgets/driver_location_map.dart';
 import 'client_design.dart';
+import 'order_cancel_section.dart';
+import 'order_discount_section.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   const OrderDetailScreen({super.key, required this.orderId});
@@ -167,6 +169,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   ratingLoaded: _ratingLoaded,
                   onRatePressed: _openRatingSheet,
                   onReorderPressed: _reorder,
+                  onDiscountChanged: _load,
                 ),
         ),
       ),
@@ -182,6 +185,7 @@ class _OrderContent extends StatelessWidget {
     required this.ratingLoaded,
     required this.onRatePressed,
     required this.onReorderPressed,
+    required this.onDiscountChanged,
   });
   final OrderModel order;
   final AppLocalizations l10n;
@@ -189,6 +193,7 @@ class _OrderContent extends StatelessWidget {
   final bool ratingLoaded;
   final VoidCallback onRatePressed;
   final VoidCallback onReorderPressed;
+  final VoidCallback onDiscountChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -470,6 +475,18 @@ class _OrderContent extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          if (order.status == 'pending')
+            OrderDiscountSection(
+              orderId: order.id,
+              status: order.status,
+              totalAmount: order.totalAmount,
+              onChanged: onDiscountChanged,
+            ),
+          OrderCancelSection(
+            orderId: order.id,
+            status: order.status,
+            onChanged: onDiscountChanged,
           ),
           if (isDelivered) ...[
             const SizedBox(height: 16),

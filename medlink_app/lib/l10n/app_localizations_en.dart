@@ -950,4 +950,205 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get branchNotAssignedMessage =>
       'This section couldn\'t load because your account isn\'t linked to a branch yet. Please contact company management to assign your branch.';
+
+  @override
+  String get bonusAccountLabel => 'Account';
+
+  @override
+  String get bonusAmountLabel => 'Amount';
+
+  @override
+  String get bonusAvailable => 'Available';
+
+  @override
+  String get bonusCancelAction => 'Back';
+
+  @override
+  String get bonusCancelMessage =>
+      'Reserved amount will be released. Continue?';
+
+  @override
+  String get bonusCancelRequest => 'Cancel';
+
+  @override
+  String get bonusCancelTitle => 'Cancel request';
+
+  @override
+  String get bonusConfirmAction => 'Confirm';
+
+  @override
+  String get bonusConfirmTitle => 'Confirm action';
+
+  @override
+  String get bonusDetailsTitle => 'Transaction details';
+
+  @override
+  String get bonusEmptyHistory => 'No transactions yet';
+
+  @override
+  String get bonusEmptyRedemptions => 'No redemption requests';
+
+  @override
+  String get bonusEmptyWallet => 'No bonus balance yet';
+
+  @override
+  String get bonusEmptyWithdrawals => 'No withdrawal requests';
+
+  @override
+  String get bonusEstimatedValue => 'Estimated value';
+
+  @override
+  String get bonusFilterAll => 'All';
+
+  @override
+  String get bonusHistorySubtitle => 'All financial wallet transactions';
+
+  @override
+  String get bonusHistoryTitle => 'Bonus history';
+
+  @override
+  String get bonusInvalidAmount => 'Enter a valid amount greater than zero';
+
+  @override
+  String get bonusLoadError => 'Could not load wallet data';
+
+  @override
+  String get bonusMethodHint => 'e.g. cash, bank transfer';
+
+  @override
+  String get bonusMethodLabel => 'Receiving method';
+
+  @override
+  String get bonusNoProducts => 'No products available';
+
+  @override
+  String get bonusNotesLabel => 'Notes';
+
+  @override
+  String get bonusOrderLabel => 'Order';
+
+  @override
+  String get bonusProductLabel => 'Product';
+
+  @override
+  String get bonusQuantityLabel => 'Quantity';
+
+  @override
+  String get bonusRecentActivity => 'Recent activity';
+
+  @override
+  String get bonusRedeemPickProduct => 'Select a product first';
+
+  @override
+  String get bonusRedeemTitle => 'Redeem product';
+
+  @override
+  String get bonusRedemptionItem => 'Product redemption';
+
+  @override
+  String get bonusRedemptionsTab => 'Redemptions';
+
+  @override
+  String get bonusReferenceLabel => 'Reference';
+
+  @override
+  String get bonusRefresh => 'Refresh';
+
+  @override
+  String get bonusRequestsTitle => 'My requests';
+
+  @override
+  String get bonusReserved => 'Reserved';
+
+  @override
+  String get bonusRetry => 'Retry';
+
+  @override
+  String get bonusRuleLabel => 'Rule';
+
+  @override
+  String get bonusSearchProducts => 'Search products...';
+
+  @override
+  String get bonusServerConfirms =>
+      'Final value is confirmed by the server after submit.';
+
+  @override
+  String get bonusStatusPending => 'Pending';
+
+  @override
+  String get bonusStatusPosted => 'Posted';
+
+  @override
+  String get bonusSubmitError => 'Could not submit the request';
+
+  @override
+  String get bonusSubmitRedemption => 'Submit redemption';
+
+  @override
+  String get bonusSubmitWithdrawal => 'Submit withdrawal';
+
+  @override
+  String get bonusValueLabel => 'Value';
+
+  @override
+  String get bonusViewAll => 'View all';
+
+  @override
+  String get bonusWalletSubtitle => 'Financial bonus balance and activity';
+
+  @override
+  String get bonusWalletTitle => 'Bonus wallet';
+
+  @override
+  String get bonusWithdrawTitle => 'Cash withdrawal';
+
+  @override
+  String get bonusWithdrawalsTab => 'Withdrawals';
+
+  @override
+  String get orderDiscountTitle => 'Pay with bonus';
+
+  @override
+  String get orderDiscountSubtitle =>
+      'Use your bonus balance to discount this order';
+
+  @override
+  String get orderDiscountAvailable => 'Available bonus';
+
+  @override
+  String get orderDiscountAmountHint => 'Discount amount';
+
+  @override
+  String get orderDiscountApply => 'Apply discount';
+
+  @override
+  String get orderDiscountApplied => 'Discount applied';
+
+  @override
+  String get orderDiscountPayable => 'Payable after discount';
+
+  @override
+  String get orderDiscountRemove => 'Remove discount';
+
+  @override
+  String get branchCancelReasonHint => 'Cancellation reason';
+
+  @override
+  String get branchCancelReasonEmpty => 'Please enter a cancellation reason';
+
+  @override
+  String get orderCancelAction => 'Cancel order';
+
+  @override
+  String get orderCancelReasonHint => 'Reason for cancellation';
+
+  @override
+  String get orderCancelConfirm => 'Confirm cancellation';
+
+  @override
+  String get orderCancelHistoryTitle => 'Cancellation history';
+
+  @override
+  String get orderCancelReasonEmpty => 'Please enter a cancellation reason';
 }

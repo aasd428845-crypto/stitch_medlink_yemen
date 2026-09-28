@@ -7,6 +7,8 @@ import 'l10n/app_localizations.dart';
 import 'routing/app_router.dart';
 import 'services/auth_controller.dart';
 import 'services/auth_service.dart';
+import 'services/bonus_wallet_controller.dart';
+import 'services/bonus_wallet_service.dart';
 import 'services/branch_controller.dart';
 import 'services/branch_service.dart';
 import 'services/cart_controller.dart';
@@ -52,6 +54,8 @@ class _MedLinkAppState extends State<MedLinkApp> {
   late final DriverOrdersController _driverOrdersController;
   late final NotificationService _notificationService;
   late final NotificationController _notificationController;
+  late final BonusWalletService _bonusWalletService;
+  late final BonusWalletController _bonusWalletController;
   late final ChatService _chatService;
   late final ChatController _chatController;
   late final GoRouter _router;
@@ -80,6 +84,8 @@ class _MedLinkAppState extends State<MedLinkApp> {
       _notificationService,
       _authController,
     );
+    _bonusWalletService = BonusWalletService(supabase);
+    _bonusWalletController = BonusWalletController(_bonusWalletService);
     _chatService = ChatService(supabase);
     _chatController = ChatController(_chatService);
     _router = buildRouter(_authController);
@@ -103,6 +109,7 @@ class _MedLinkAppState extends State<MedLinkApp> {
     _driverOrdersController.dispose();
     _notificationController.dispose();
     _chatController.dispose();
+    _bonusWalletController.dispose();
     super.dispose();
   }
 
@@ -134,6 +141,10 @@ class _MedLinkAppState extends State<MedLinkApp> {
         ),
         Provider<ChatService>.value(value: _chatService),
         ChangeNotifierProvider<ChatController>.value(value: _chatController),
+        Provider<BonusWalletService>.value(value: _bonusWalletService),
+        ChangeNotifierProvider<BonusWalletController>.value(
+          value: _bonusWalletController,
+        ),
       ],
       child: MaterialApp.router(
         title: 'MedLink Yemen',

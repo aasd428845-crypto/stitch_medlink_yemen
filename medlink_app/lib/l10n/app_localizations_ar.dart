@@ -943,4 +943,204 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get branchNotAssignedMessage =>
       'تعذّر تحميل بيانات هذا القسم لأن حسابك غير مرتبط بأي فرع بعد. يرجى التواصل مع إدارة الشركة لتعيين فرعك.';
+
+  @override
+  String get bonusAccountLabel => 'الحساب';
+
+  @override
+  String get bonusAmountLabel => 'المبلغ';
+
+  @override
+  String get bonusAvailable => 'المتاح';
+
+  @override
+  String get bonusCancelAction => 'تراجع';
+
+  @override
+  String get bonusCancelMessage =>
+      'سيتم تحرير المبلغ المحجوز. هل تريد المتابعة؟';
+
+  @override
+  String get bonusCancelRequest => 'إلغاء';
+
+  @override
+  String get bonusCancelTitle => 'إلغاء الطلب';
+
+  @override
+  String get bonusConfirmAction => 'تأكيد';
+
+  @override
+  String get bonusConfirmTitle => 'تأكيد العملية';
+
+  @override
+  String get bonusDetailsTitle => 'تفاصيل الحركة';
+
+  @override
+  String get bonusEmptyHistory => 'لا توجد حركات بعد';
+
+  @override
+  String get bonusEmptyRedemptions => 'لا توجد طلبات استبدال';
+
+  @override
+  String get bonusEmptyWallet => 'لا يوجد رصيد بونص بعد';
+
+  @override
+  String get bonusEmptyWithdrawals => 'لا توجد طلبات سحب';
+
+  @override
+  String get bonusEstimatedValue => 'القيمة التقديرية';
+
+  @override
+  String get bonusFilterAll => 'الكل';
+
+  @override
+  String get bonusHistorySubtitle => 'كل حركات المحفظة المالية';
+
+  @override
+  String get bonusHistoryTitle => 'سجل البونص';
+
+  @override
+  String get bonusInvalidAmount => 'أدخل مبلغًا صحيحًا أكبر من صفر';
+
+  @override
+  String get bonusLoadError => 'تعذر تحميل بيانات المحفظة';
+
+  @override
+  String get bonusMethodHint => 'مثال: نقدًا، تحويل بنكي';
+
+  @override
+  String get bonusMethodLabel => 'طريقة الاستلام';
+
+  @override
+  String get bonusNoProducts => 'لا توجد منتجات متاحة';
+
+  @override
+  String get bonusNotesLabel => 'ملاحظات';
+
+  @override
+  String get bonusOrderLabel => 'الطلب';
+
+  @override
+  String get bonusProductLabel => 'المنتج';
+
+  @override
+  String get bonusQuantityLabel => 'الكمية';
+
+  @override
+  String get bonusRecentActivity => 'النشاط الأخير';
+
+  @override
+  String get bonusRedeemPickProduct => 'اختر المنتج أولاً';
+
+  @override
+  String get bonusRedeemTitle => 'استبدال بمنتج';
+
+  @override
+  String get bonusRedemptionItem => 'استبدال منتج';
+
+  @override
+  String get bonusRedemptionsTab => 'الاستبدال';
+
+  @override
+  String get bonusReferenceLabel => 'المرجع';
+
+  @override
+  String get bonusRefresh => 'تحديث';
+
+  @override
+  String get bonusRequestsTitle => 'طلباتي';
+
+  @override
+  String get bonusReserved => 'المحجوز';
+
+  @override
+  String get bonusRetry => 'إعادة المحاولة';
+
+  @override
+  String get bonusRuleLabel => 'القاعدة';
+
+  @override
+  String get bonusSearchProducts => 'ابحث عن منتج...';
+
+  @override
+  String get bonusServerConfirms =>
+      'القيمة النهائية يعتمدها النظام بعد الإرسال.';
+
+  @override
+  String get bonusStatusPending => 'معلّق';
+
+  @override
+  String get bonusStatusPosted => 'مرحّل';
+
+  @override
+  String get bonusSubmitError => 'تعذر إرسال الطلب';
+
+  @override
+  String get bonusSubmitRedemption => 'إرسال طلب الاستبدال';
+
+  @override
+  String get bonusSubmitWithdrawal => 'إرسال طلب السحب';
+
+  @override
+  String get bonusValueLabel => 'القيمة';
+
+  @override
+  String get bonusViewAll => 'عرض الكل';
+
+  @override
+  String get bonusWalletSubtitle => 'الرصيد المالي للبونص والحركات';
+
+  @override
+  String get bonusWalletTitle => 'محفظة البونص';
+
+  @override
+  String get bonusWithdrawTitle => 'سحب نقدي';
+
+  @override
+  String get bonusWithdrawalsTab => 'السحب';
+
+  @override
+  String get orderDiscountTitle => 'الدفع بالبونص';
+
+  @override
+  String get orderDiscountSubtitle => 'استخدم رصيد البونص لخصم قيمة هذا الطلب';
+
+  @override
+  String get orderDiscountAvailable => 'البونص المتاح';
+
+  @override
+  String get orderDiscountAmountHint => 'مبلغ الخصم';
+
+  @override
+  String get orderDiscountApply => 'تطبيق الخصم';
+
+  @override
+  String get orderDiscountApplied => 'تم تطبيق الخصم';
+
+  @override
+  String get orderDiscountPayable => 'المستحق بعد الخصم';
+
+  @override
+  String get orderDiscountRemove => 'إزالة الخصم';
+
+  @override
+  String get branchCancelReasonHint => 'سبب الإلغاء';
+
+  @override
+  String get branchCancelReasonEmpty => 'يرجى إدخال سبب الإلغاء';
+
+  @override
+  String get orderCancelAction => 'إلغاء الطلب';
+
+  @override
+  String get orderCancelReasonHint => 'سبب الإلغاء';
+
+  @override
+  String get orderCancelConfirm => 'تأكيد الإلغاء';
+
+  @override
+  String get orderCancelHistoryTitle => 'سجل الإلغاء';
+
+  @override
+  String get orderCancelReasonEmpty => 'يرجى إدخال سبب الإلغاء';
 }

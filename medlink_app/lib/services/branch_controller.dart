@@ -5,6 +5,7 @@ import '../models/inventory_item.dart';
 import '../models/invoice.dart';
 import '../models/order.dart';
 import '../models/user_profile.dart';
+import 'bonus_wallet_controller.dart' show newIdempotencyKey;
 import 'branch_service.dart';
 import 'catalog_service.dart';
 import 'driver_service.dart';
@@ -262,6 +263,61 @@ class BranchController extends ChangeNotifier {
   Future<void> updateOrderStatus(String orderId, String status) async {
     await _branchService.updateOrderStatus(orderId, status);
     await loadOrders();
+  }
+
+  bool _isCancelling = false;
+  bool get isCancelling => _isCancelling;
+
+  String? _cancelError;
+  String? get cancelError => _cancelError;
+
+  // Logical-operation idempotency, mirroring BonusWalletController: one key
+  // per (order, reason), retained across retries of the same operation so a
+  // timeout retry can never post a second financial effect server-side.
+  String? _cancelKey;
+  String _cancelSig = '';
+
+  /// Cancels an order through the financial cancellation RPC. Returns the
+  /// reversal ledger id (null when no discount existed). Guards double
+  /// submit; server enforces authorization, state, funds, and idempotency.
+  Future<String?> cancelOrderWithDiscount({
+    required String orderId,
+    required String reason,
+  }) async {
+    if (_isCancelling) return null;
+    _isCancelling = true;
+    _cancelError = null;
+    notifyListeners();
+    try {
+      final sig = '$orderId|$reason';
+      if (_cancelKey == null || _cancelSig != sig) {
+        _cancelKey = newIdempotencyKey();
+        _cancelSig = sig;
+      }
+      final id = await _branchService.cancelOrderWithDiscount(
+        orderId: orderId,
+        reason: reason,
+        idempotencyKey: _cancelKey,
+      );
+      _cancelKey = null;
+      _cancelSig = '';
+      await loadOrders();
+      return id;
+    } catch (e) {
+      // Key retained: retry reuses it, so the server dedupes.
+      _cancelError = e.toString();
+      rethrow;
+    } finally {
+      _isCancelling = false;
+      notifyListeners();
+    }
+  }
+
+  /// Discards the pending cancellation attempt. Next submit mints fresh.
+  void discardPendingCancellation() {
+    _cancelKey = null;
+    _cancelSig = '';
+    _cancelError = null;
   }
 
   Future<void> transferOrder(String orderId, String targetBranchId) async {

@@ -16,6 +16,11 @@ import '../screens/client/cart_screen.dart';
 import '../screens/client/checkout_screen.dart';
 import '../screens/client/client_home_shell.dart';
 import '../screens/client/addresses_screen.dart';
+import '../screens/client/bonus_history_screen.dart';
+import '../screens/client/bonus_redeem_screen.dart';
+import '../screens/client/bonus_requests_screen.dart';
+import '../screens/client/bonus_wallet_screen.dart';
+import '../screens/client/bonus_withdraw_screen.dart';
 import '../screens/client/business_profile_screen.dart';
 import '../screens/client/digital_card_screen.dart';
 import '../screens/client/legal_screen.dart';
@@ -157,6 +162,26 @@ GoRouter buildRouter(AuthController authController) {
           GoRoute(
             path: 'special-request',
             builder: (context, state) => const SpecialRequestScreen(),
+          ),
+          GoRoute(
+            path: 'bonus-wallet',
+            builder: (context, state) => const BonusWalletScreen(),
+          ),
+          GoRoute(
+            path: 'bonus-history',
+            builder: (context, state) => const BonusHistoryScreen(),
+          ),
+          GoRoute(
+            path: 'bonus-redeem',
+            builder: (context, state) => const BonusRedeemScreen(),
+          ),
+          GoRoute(
+            path: 'bonus-withdraw',
+            builder: (context, state) => const BonusWithdrawScreen(),
+          ),
+          GoRoute(
+            path: 'bonus-requests',
+            builder: (context, state) => const BonusRequestsScreen(),
           ),
         ],
       ),

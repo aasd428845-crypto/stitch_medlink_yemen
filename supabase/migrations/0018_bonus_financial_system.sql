@@ -340,6 +340,12 @@ create policy "bonus_audit_director_select" on public.bonus_audit_trail
 
 -- ─────────────────────────────────────────
 -- 8. bonus_earn_allocations — lot-level attribution linkage.
+--    Lots are ALL positive POSTED credits (EARN, OPENING_BALANCE,
+--    LEGACY_MIGRATION, and any future positive compensation) — by design
+--    the whole positive balance funds spending, not EARN rows only.
+--    (The table name is historical; semantics below are credit-lot
+--    attribution.)
+--    EXPLICIT deterministic policy (written here, not silent):
 --    EXPLICIT deterministic policy (written here, not silent):
 --    every spending debit is funded from the oldest POSTED positive
 --    credit lots first (by created_at, then id). This makes the
@@ -481,6 +487,7 @@ declare
   v_lot uuid;
   v_rem numeric;
   v_take numeric;
+  v_debit public.bonus_ledger%rowtype;
 begin
   if auth.uid() is null then raise exception 'Authentication required'; end if;
   if auth.uid() <> p_account_id
@@ -489,6 +496,30 @@ begin
   end if;
   if p_need is null or p_need <= 0 then
     raise exception 'Allocation need must be positive';
+  end if;
+
+  -- Hardened debit validation: the debit must exist, belong to the same
+  -- account, be a PENDING negative spending row of an allowed type, and
+  -- the requested funding must equal it exactly (no over/under funding).
+  select * into v_debit from public.bonus_ledger
+   where id = p_debit_id for update;
+  if not found then
+    raise exception 'Debit ledger entry % not found', p_debit_id;
+  end if;
+  if v_debit.account_id <> p_account_id then
+    raise exception 'Debit % does not belong to account %', p_debit_id, p_account_id;
+  end if;
+  if v_debit.status <> 'PENDING' then
+    raise exception 'Only PENDING debits can be funded (current: %)', v_debit.status;
+  end if;
+  if v_debit.amount >= 0 then
+    raise exception 'Only negative spending debits can be funded';
+  end if;
+  if v_debit.txn_type not in ('REDEEM_PRODUCT', 'CASH_WITHDRAWAL') then
+    raise exception 'Transaction type % cannot be lot-funded', v_debit.txn_type;
+  end if;
+  if p_need <> -v_debit.amount then
+    raise exception 'Funding % does not equal debit amount %', p_need, -v_debit.amount;
   end if;
 
   for v_lot in
@@ -883,6 +914,7 @@ as $$
 declare
   v_actor uuid := auth.uid();
   v_row public.bonus_redemptions%rowtype;
+  v_flipped int;
 begin
   if v_actor is null then raise exception 'Authentication required'; end if;
   if public.current_user_role() <> 'company_director' then
@@ -899,6 +931,10 @@ begin
   update public.bonus_ledger
      set status = 'POSTED'
    where id = v_row.ledger_id and status = 'PENDING';
+  get diagnostics v_flipped = row_count;
+  if v_flipped <> 1 then
+    raise exception 'Reservation % was not consumed; aborting fulfillment', v_row.ledger_id;
+  end if;
 
   update public.bonus_redemptions
      set status = 'FULFILLED', updated_at = now()
@@ -957,7 +993,10 @@ begin
 end $$;
 
 -- 9a) cancel_withdrawal — client (own PENDING/UNDER_REVIEW) or director
---     releases the reservation. (CANCELLED is reachable only via this path.)
+--     releases the reservation. (Wider than cancel_redemption, which allows
+--     PENDING only: preserved as-is; whether UNDER_REVIEW cancellation is
+--     intended business policy is left for explicit confirmation, the
+--     behavior is unchanged and fully guarded either way.)
 create or replace function public.cancel_withdrawal(p_withdrawal_id uuid)
 returns void
 language plpgsql
@@ -1215,6 +1254,7 @@ as $$
 declare
   v_actor uuid := auth.uid();
   v_row public.bonus_withdrawals%rowtype;
+  v_flipped int;
 begin
   if v_actor is null then raise exception 'Authentication required'; end if;
   if public.current_user_role() <> 'company_director' then
@@ -1234,6 +1274,10 @@ begin
   update public.bonus_ledger
      set status = 'POSTED'
    where id = v_row.ledger_id and status = 'PENDING';
+  get diagnostics v_flipped = row_count;
+  if v_flipped <> 1 then
+    raise exception 'Reservation % was not consumed; aborting payment', v_row.ledger_id;
+  end if;
 
   update public.bonus_withdrawals
      set status = 'PAID', paid_by = v_actor, paid_at = now(),

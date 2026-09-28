@@ -119,12 +119,50 @@ class BranchService {
 
   /// Updates the order status directly (accept/reject/mark in-progress/
   /// delivered/cancelled).
+  ///
+  /// NOTE: order cancellation must NOT use this method. Cancellations go
+  /// through [cancelOrderWithDiscount] so the financial reversal, history,
+  /// and audit happen atomically server-side (0021/0022).
   Future<void> updateOrderStatus(String orderId, String status) async {
+    assert(
+      status != 'cancelled',
+      'Use cancelOrderWithDiscount for cancellations, never a direct write.',
+    );
     try {
       await _client.from('orders').update({'status': status}).eq('id', orderId);
       _logSuccess('updateOrderStatus');
     } catch (e, st) {
       _logError('updateOrderStatus', e, st);
+      rethrow;
+    }
+  }
+
+  /// Cancels an order through the financial cancellation RPC
+  /// (`cancel_order_with_discount`, 0021/0022): atomic status flip with
+  /// conditional compensating REVERSAL plus cancellation history.
+  /// Returns the reversal ledger id, or null when no discount existed.
+  /// Server enforces ownership/state/policy; the reason is required.
+  Future<String?> cancelOrderWithDiscount({
+    required String orderId,
+    required String reason,
+    String? idempotencyKey,
+  }) async {
+    if (_client.auth.currentUser == null) {
+      throw const AuthException('المستخدم غير مسجل الدخول');
+    }
+    try {
+      final data = await _client.rpc(
+        'cancel_order_with_discount',
+        params: {
+          'p_order_id': orderId,
+          'p_reason': reason,
+          if (idempotencyKey != null) 'p_idempotency_key': idempotencyKey,
+        },
+      );
+      _logSuccess('cancelOrderWithDiscount');
+      return data as String?;
+    } catch (e, st) {
+      _logError('cancelOrderWithDiscount', e, st);
       rethrow;
     }
   }

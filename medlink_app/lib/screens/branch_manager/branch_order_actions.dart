@@ -133,29 +133,120 @@ Future<void> showRejectOrderConfirm(
   BuildContext context,
   OrderModel order,
 ) async {
-  final l10n = AppLocalizations.of(context)!;
-  final branch = context.read<BranchController>();
-
-  final confirmed = await showDialog<bool>(
+  await showDialog<bool>(
     context: context,
-    builder: (dialogCtx) => AlertDialog(
+    builder: (dialogCtx) => _RejectOrderDialog(order: order),
+  );
+}
+
+/// Cancel dialog owned lifecycle: text controller is created and disposed
+/// with the dialog State, so no rebuild can touch it after disposal.
+/// Submits through [BranchController.cancelOrderWithDiscount] (financial
+/// RPC) — never a direct status write.
+class _RejectOrderDialog extends StatefulWidget {
+  const _RejectOrderDialog({required this.order});
+
+  final OrderModel order;
+
+  @override
+  State<_RejectOrderDialog> createState() => _RejectOrderDialogState();
+}
+
+class _RejectOrderDialogState extends State<_RejectOrderDialog> {
+  final TextEditingController _reasonCtrl = TextEditingController();
+  bool _submitting = false;
+  String? _error;
+  bool _reasonEmpty = false;
+
+  @override
+  void dispose() {
+    _reasonCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final reason = _reasonCtrl.text.trim();
+    if (reason.isEmpty) {
+      setState(() => _reasonEmpty = true);
+      return;
+    }
+    if (_submitting) return;
+    setState(() {
+      _submitting = true;
+      _error = null;
+      _reasonEmpty = false;
+    });
+    try {
+      await context.read<BranchController>().cancelOrderWithDiscount(
+            orderId: widget.order.id,
+            reason: reason,
+          );
+      if (mounted) Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _submitting = false;
+        _error = e.toString().replaceAll('Exception: ', '');
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AlertDialog(
       title: Text(l10n.branchRejectOrder),
-      content: Text(l10n.branchStatusUpdateConfirm),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.branchStatusUpdateConfirm),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _reasonCtrl,
+              enabled: !_submitting,
+              maxLines: 2,
+              decoration: InputDecoration(
+                labelText: l10n.branchCancelReasonHint,
+                errorText:
+                    _reasonEmpty ? l10n.branchCancelReasonEmpty : null,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            if (_error != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                _error!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: BranchColors.error,
+                    ),
+              ),
+            ],
+          ],
+        ),
+      ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(dialogCtx, false),
+          onPressed:
+              _submitting ? null : () => Navigator.pop(context, false),
           child: const Text('إلغاء'),
         ),
         FilledButton(
           style: FilledButton.styleFrom(backgroundColor: BranchColors.error),
-          onPressed: () => Navigator.pop(dialogCtx, true),
-          child: Text(l10n.branchRejectOrder),
+          onPressed: _submitting ? null : _submit,
+          child: _submitting
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : Text(l10n.branchRejectOrder),
         ),
       ],
-    ),
-  );
-
-  if (confirmed == true) {
-    await branch.updateOrderStatus(order.id, 'cancelled');
+    );
   }
 }

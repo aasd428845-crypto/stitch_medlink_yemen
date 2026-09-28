@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/auth_controller.dart';
 import '../../services/auth_service.dart';
+import '../../services/bonus_wallet_controller.dart';
 import '../../utils/theme.dart';
 import 'client_design.dart';
 
@@ -76,6 +77,8 @@ class AccountTab extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
+        const _WalletSummaryCard(),
+        const SizedBox(height: 16),
         _AccountTile(
           icon: Icons.qr_code_2_rounded,
           title: l10n.digitalCardTitle,
@@ -138,6 +141,94 @@ class AccountTab extends StatelessWidget {
 
   Future<void> _signOut(BuildContext context) async {
     await context.read<AuthService>().signOut();
+  }
+}
+
+/// Compact wallet summary shown on the account tab. Loads once per view
+/// and navigates to the full wallet screen on tap.
+class _WalletSummaryCard extends StatefulWidget {
+  const _WalletSummaryCard();
+
+  @override
+  State<_WalletSummaryCard> createState() => _WalletSummaryCardState();
+}
+
+class _WalletSummaryCardState extends State<_WalletSummaryCard> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => context.read<BonusWalletController>().loadWallet(),
+    );
+  }
+
+  String _fmt(double value) {
+    final abs = value.abs();
+    final text = abs == abs.truncateToDouble()
+        ? abs.toInt().toString()
+        : abs.toStringAsFixed(2);
+    return '${value < 0 ? '-' : '+'}$text';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final wallet = context.watch<BonusWalletController>();
+    final funds = wallet.funds;
+
+    return ClientCard(
+      padding: const EdgeInsets.all(14),
+      borderRadius: 22,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: () => context.push('/client/bonus-wallet'),
+        child: Row(
+          children: [
+            const ClientIconBadge(
+              icon: Icons.account_balance_wallet_rounded,
+              color: ClientColors.primary,
+              size: 44,
+              iconSize: 20,
+              borderRadius: 14,
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.bonusWalletTitle,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 2),
+                  if (wallet.isLoading && funds == null)
+                    Text(
+                      l10n.bonusRefresh,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    )
+                  else if (wallet.error != null && funds == null)
+                    Text(
+                      l10n.bonusLoadError,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    )
+                  else
+                    Text(
+                      '${l10n.bonusAvailable}: ${_fmt(funds?.available ?? 0)}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.chevron_left_rounded,
+              color: ClientColors.textMuted,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

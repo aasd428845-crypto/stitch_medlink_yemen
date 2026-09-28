@@ -3,8 +3,10 @@ import 'package:flutter/foundation.dart';
 import '../models/cart_item.dart';
 import '../models/client_address.dart';
 import '../models/order.dart';
+import '../models/order_cancellation.dart';
 import '../models/product.dart';
 import '../models/special_request.dart';
+import 'bonus_wallet_controller.dart' show newIdempotencyKey;
 import 'order_service.dart';
 
 class MissingDeliveryAddressException implements Exception {
@@ -157,6 +159,81 @@ class OrderController extends ChangeNotifier {
       rethrow;
     } finally {
       _setLoading(false);
+    }
+  }
+
+  bool _isCancelling = false;
+  bool get isCancelling => _isCancelling;
+
+  String? _cancelError;
+  String? get cancelError => _cancelError;
+
+  // Logical-operation idempotency, mirroring BonusWalletController: one key
+  // per (order, reason), retained across retries of the same operation so a
+  // timeout retry can never post a second financial effect server-side.
+  // Keys clear only on success (or explicit discard).
+  String? _cancelKey;
+  String _cancelSig = '';
+
+  List<OrderCancellation> _cancellationHistory = [];
+  List<OrderCancellation> get cancellationHistory => _cancellationHistory;
+
+  /// Cancels the caller's own order through the financial cancellation RPC.
+  /// Returns the reversal ledger id (null when no discount existed). Guards
+  /// double-submit; the server enforces ownership, pending state (H1),
+  /// policy snapshot, and idempotency.
+  Future<String?> cancelOrder({
+    required String orderId,
+    required String reason,
+  }) async {
+    if (_isCancelling) return null;
+    _isCancelling = true;
+    _cancelError = null;
+    notifyListeners();
+    try {
+      final sig = '$orderId|$reason';
+      if (_cancelKey == null || _cancelSig != sig) {
+        _cancelKey = newIdempotencyKey();
+        _cancelSig = sig;
+      }
+      final id = await _service.cancelOrder(
+        orderId: orderId,
+        reason: reason,
+        idempotencyKey: _cancelKey,
+      );
+      _cancelKey = null;
+      _cancelSig = '';
+      await loadClientOrders();
+      await loadCancellationHistory(orderId);
+      return id;
+    } catch (e) {
+      // Key retained: retry reuses it, so the server dedupes.
+      _cancelError = e.toString();
+      rethrow;
+    } finally {
+      _isCancelling = false;
+      notifyListeners();
+    }
+  }
+
+  /// Discards the pending cancellation attempt. Next submit mints fresh.
+  void discardPendingCancellation() {
+    _cancelKey = null;
+    _cancelSig = '';
+    _cancelError = null;
+  }
+
+  /// Loads the cancellation history for one order (read-only; RLS-scoped).
+  Future<void> loadCancellationHistory(String orderId) async {
+    try {
+      _cancellationHistory = await _service.fetchOrderCancellationHistory(
+        orderId,
+      );
+      notifyListeners();
+    } catch (e) {
+      _cancelError = e.toString();
+      notifyListeners();
+      rethrow;
     }
   }
 

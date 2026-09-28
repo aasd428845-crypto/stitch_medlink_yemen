@@ -1921,6 +1921,402 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تعذّر تحميل بيانات هذا القسم لأن حسابك غير مرتبط بأي فرع بعد. يرجى التواصل مع إدارة الشركة لتعيين فرعك.'**
   String get branchNotAssignedMessage;
+
+  /// No description provided for @bonusAccountLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب'**
+  String get bonusAccountLabel;
+
+  /// No description provided for @bonusAmountLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ'**
+  String get bonusAmountLabel;
+
+  /// No description provided for @bonusAvailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'المتاح'**
+  String get bonusAvailable;
+
+  /// No description provided for @bonusCancelAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تراجع'**
+  String get bonusCancelAction;
+
+  /// No description provided for @bonusCancelMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم تحرير المبلغ المحجوز. هل تريد المتابعة؟'**
+  String get bonusCancelMessage;
+
+  /// No description provided for @bonusCancelRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get bonusCancelRequest;
+
+  /// No description provided for @bonusCancelTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الطلب'**
+  String get bonusCancelTitle;
+
+  /// No description provided for @bonusConfirmAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد'**
+  String get bonusConfirmAction;
+
+  /// No description provided for @bonusConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد العملية'**
+  String get bonusConfirmTitle;
+
+  /// No description provided for @bonusDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الحركة'**
+  String get bonusDetailsTitle;
+
+  /// No description provided for @bonusEmptyHistory.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد حركات بعد'**
+  String get bonusEmptyHistory;
+
+  /// No description provided for @bonusEmptyRedemptions.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات استبدال'**
+  String get bonusEmptyRedemptions;
+
+  /// No description provided for @bonusEmptyWallet.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد رصيد بونص بعد'**
+  String get bonusEmptyWallet;
+
+  /// No description provided for @bonusEmptyWithdrawals.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات سحب'**
+  String get bonusEmptyWithdrawals;
+
+  /// No description provided for @bonusEstimatedValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'القيمة التقديرية'**
+  String get bonusEstimatedValue;
+
+  /// No description provided for @bonusFilterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get bonusFilterAll;
+
+  /// No description provided for @bonusHistorySubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل حركات المحفظة المالية'**
+  String get bonusHistorySubtitle;
+
+  /// No description provided for @bonusHistoryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل البونص'**
+  String get bonusHistoryTitle;
+
+  /// No description provided for @bonusInvalidAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل مبلغًا صحيحًا أكبر من صفر'**
+  String get bonusInvalidAmount;
+
+  /// No description provided for @bonusLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل بيانات المحفظة'**
+  String get bonusLoadError;
+
+  /// No description provided for @bonusMethodHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مثال: نقدًا، تحويل بنكي'**
+  String get bonusMethodHint;
+
+  /// No description provided for @bonusMethodLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'طريقة الاستلام'**
+  String get bonusMethodLabel;
+
+  /// No description provided for @bonusNoProducts.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد منتجات متاحة'**
+  String get bonusNoProducts;
+
+  /// No description provided for @bonusNotesLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات'**
+  String get bonusNotesLabel;
+
+  /// No description provided for @bonusOrderLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلب'**
+  String get bonusOrderLabel;
+
+  /// No description provided for @bonusProductLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المنتج'**
+  String get bonusProductLabel;
+
+  /// No description provided for @bonusQuantityLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكمية'**
+  String get bonusQuantityLabel;
+
+  /// No description provided for @bonusRecentActivity.
+  ///
+  /// In ar, this message translates to:
+  /// **'النشاط الأخير'**
+  String get bonusRecentActivity;
+
+  /// No description provided for @bonusRedeemPickProduct.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر المنتج أولاً'**
+  String get bonusRedeemPickProduct;
+
+  /// No description provided for @bonusRedeemTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'استبدال بمنتج'**
+  String get bonusRedeemTitle;
+
+  /// No description provided for @bonusRedemptionItem.
+  ///
+  /// In ar, this message translates to:
+  /// **'استبدال منتج'**
+  String get bonusRedemptionItem;
+
+  /// No description provided for @bonusRedemptionsTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاستبدال'**
+  String get bonusRedemptionsTab;
+
+  /// No description provided for @bonusReferenceLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المرجع'**
+  String get bonusReferenceLabel;
+
+  /// No description provided for @bonusRefresh.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث'**
+  String get bonusRefresh;
+
+  /// No description provided for @bonusRequestsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلباتي'**
+  String get bonusRequestsTitle;
+
+  /// No description provided for @bonusReserved.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحجوز'**
+  String get bonusReserved;
+
+  /// No description provided for @bonusRetry.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة المحاولة'**
+  String get bonusRetry;
+
+  /// No description provided for @bonusRuleLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'القاعدة'**
+  String get bonusRuleLabel;
+
+  /// No description provided for @bonusSearchProducts.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث عن منتج...'**
+  String get bonusSearchProducts;
+
+  /// No description provided for @bonusServerConfirms.
+  ///
+  /// In ar, this message translates to:
+  /// **'القيمة النهائية يعتمدها النظام بعد الإرسال.'**
+  String get bonusServerConfirms;
+
+  /// No description provided for @bonusStatusPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'معلّق'**
+  String get bonusStatusPending;
+
+  /// No description provided for @bonusStatusPosted.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرحّل'**
+  String get bonusStatusPosted;
+
+  /// No description provided for @bonusSubmitError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر إرسال الطلب'**
+  String get bonusSubmitError;
+
+  /// No description provided for @bonusSubmitRedemption.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال طلب الاستبدال'**
+  String get bonusSubmitRedemption;
+
+  /// No description provided for @bonusSubmitWithdrawal.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال طلب السحب'**
+  String get bonusSubmitWithdrawal;
+
+  /// No description provided for @bonusValueLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'القيمة'**
+  String get bonusValueLabel;
+
+  /// No description provided for @bonusViewAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض الكل'**
+  String get bonusViewAll;
+
+  /// No description provided for @bonusWalletSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرصيد المالي للبونص والحركات'**
+  String get bonusWalletSubtitle;
+
+  /// No description provided for @bonusWalletTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظة البونص'**
+  String get bonusWalletTitle;
+
+  /// No description provided for @bonusWithdrawTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سحب نقدي'**
+  String get bonusWithdrawTitle;
+
+  /// No description provided for @bonusWithdrawalsTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'السحب'**
+  String get bonusWithdrawalsTab;
+
+  /// No description provided for @orderDiscountTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدفع بالبونص'**
+  String get orderDiscountTitle;
+
+  /// No description provided for @orderDiscountSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'استخدم رصيد البونص لخصم قيمة هذا الطلب'**
+  String get orderDiscountSubtitle;
+
+  /// No description provided for @orderDiscountAvailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'البونص المتاح'**
+  String get orderDiscountAvailable;
+
+  /// No description provided for @orderDiscountAmountHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مبلغ الخصم'**
+  String get orderDiscountAmountHint;
+
+  /// No description provided for @orderDiscountApply.
+  ///
+  /// In ar, this message translates to:
+  /// **'تطبيق الخصم'**
+  String get orderDiscountApply;
+
+  /// No description provided for @orderDiscountApplied.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تطبيق الخصم'**
+  String get orderDiscountApplied;
+
+  /// No description provided for @orderDiscountPayable.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستحق بعد الخصم'**
+  String get orderDiscountPayable;
+
+  /// No description provided for @orderDiscountRemove.
+  ///
+  /// In ar, this message translates to:
+  /// **'إزالة الخصم'**
+  String get orderDiscountRemove;
+
+  /// No description provided for @branchCancelReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب الإلغاء'**
+  String get branchCancelReasonHint;
+
+  /// No description provided for @branchCancelReasonEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى إدخال سبب الإلغاء'**
+  String get branchCancelReasonEmpty;
+
+  /// No description provided for @orderCancelAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الطلب'**
+  String get orderCancelAction;
+
+  /// No description provided for @orderCancelReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب الإلغاء'**
+  String get orderCancelReasonHint;
+
+  /// No description provided for @orderCancelConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الإلغاء'**
+  String get orderCancelConfirm;
+
+  /// No description provided for @orderCancelHistoryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الإلغاء'**
+  String get orderCancelHistoryTitle;
+
+  /// No description provided for @orderCancelReasonEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى إدخال سبب الإلغاء'**
+  String get orderCancelReasonEmpty;
 }
 
 class _AppLocalizationsDelegate
