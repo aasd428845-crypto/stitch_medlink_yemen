@@ -1,0 +1,66 @@
+# PHASE 61 — isolated local Supabase slice for bonus max_earn E2E (NOT for production).
+# UNTRACKED local-only config. Secrets live in .jwt_secret / .db_password
+# (same directory, 0600, never committed, never shared). No cloud URLs,
+# no production keys, no Supabase CLI involvement anywhere in this file.
+# Services bind to 127.0.0.1 ONLY. Ports: DB 55432, PostgREST 55421,
+# GoTrue 55999 — all clear of defaults and of existing resources.
+
+name: ph61
+
+networks:
+  ph61_net:
+    name: ph61_net
+    driver: bridge
+
+volumes:
+  ph61_pgdata:
+    name: ph61_pgdata
+
+services:
+  ph61_pg:
+    image: public.ecr.aws/supabase/postgres:17.6.1.155
+    container_name: ph61_pg
+    restart: "no"
+    networks:
+      - ph61_net
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - ph61_pgdata:/var/lib/postgresql/data
+    env_file:
+      - .db_password.env
+    environment:
+      POSTGRES_DB: ph61_test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ph61_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  ph61_auth:
+    image: public.ecr.aws/supabase/gotrue:v2.197.0
+    container_name: ph61_auth
+    restart: "no"
+    networks:
+      - ph61_net
+    ports:
+      - "127.0.0.1:55999:9999"
+    depends_on:
+      ph61_pg:
+        condition: service_healthy
+    env_file:
+      - .gotrue.env
+
+  ph61_rest:
+    image: public.ecr.aws/supabase/postgrest:v14.5
+    container_name: ph61_rest
+    restart: "no"
+    networks:
+      - ph61_net
+    ports:
+      - "127.0.0.1:55421:3000"
+    depends_on:
+      ph61_pg:
+        condition: service_healthy
+    env_file:
+      - .postgrest.env
