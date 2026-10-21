@@ -54,133 +54,141 @@ class _BonusHistoryScreenState extends State<BonusHistoryScreen> {
       return true;
     }).toList();
 
-    return Scaffold(
-      backgroundColor: ClientColors.background,
-      appBar: AppBar(
-        title: Text(l10n.bonusHistoryTitle),
+    return Theme(
+      data: AppTheme.clientLight,
+      child: Scaffold(
         backgroundColor: ClientColors.background,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            tooltip: l10n.bonusRefresh,
-            onPressed: wallet.isLoading ? null : wallet.loadHistory,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 48,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              children: [
-                _FilterChip(
-                  label: l10n.bonusFilterAll,
-                  selected: _typeFilter.isEmpty && _statusFilter.isEmpty,
-                  onTap: () => setState(() {
-                    _typeFilter = '';
-                    _statusFilter = '';
-                  }),
+        appBar: AppBar(
+          title: Text(l10n.bonusHistoryTitle),
+          backgroundColor: ClientColors.background,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh_rounded),
+              tooltip: l10n.bonusRefresh,
+              onPressed: wallet.isLoading ? null : wallet.loadHistory,
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            SizedBox(
+              height: 48,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
                 ),
-                _FilterChip(
-                  label: l10n.bonusStatusPosted,
-                  selected: _statusFilter == 'POSTED',
-                  onTap: () => setState(() {
-                    _statusFilter = _statusFilter == 'POSTED' ? '' : 'POSTED';
-                  }),
-                ),
-                _FilterChip(
-                  label: l10n.bonusStatusPending,
-                  selected: _statusFilter == 'PENDING',
-                  onTap: () => setState(() {
-                    _statusFilter = _statusFilter == 'PENDING' ? '' : 'PENDING';
-                  }),
-                ),
-                for (final t in _knownTypes)
+                children: [
                   _FilterChip(
-                    label: bonusTxnLabel(t),
-                    selected: _typeFilter == t,
+                    label: l10n.bonusFilterAll,
+                    selected: _typeFilter.isEmpty && _statusFilter.isEmpty,
                     onTap: () => setState(() {
-                      _typeFilter = _typeFilter == t ? '' : t;
+                      _typeFilter = '';
+                      _statusFilter = '';
                     }),
                   ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Builder(
-              builder: (context) {
-                if (wallet.isLoading && wallet.entries.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (wallet.error != null && wallet.entries.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.error_outline_rounded,
-                            size: 48,
-                            color: ClientColors.danger,
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            l10n.bonusLoadError,
-                            style: Theme.of(context).textTheme.titleSmall,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 16),
-                          FilledButton.icon(
-                            onPressed: wallet.loadHistory,
-                            icon: const Icon(Icons.refresh_rounded),
-                            label: Text(l10n.bonusRetry),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-                if (entries.isEmpty) {
-                  return Center(
-                    child: ClientCard(
-                      padding: const EdgeInsets.all(32),
-                      borderRadius: 28,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ClientIconBadge(
-                            icon: Icons.receipt_long_rounded,
-                            color: ClientColors.primary,
-                            size: 56,
-                            iconSize: 26,
-                            borderRadius: 18,
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            l10n.bonusEmptyHistory,
-                            style: Theme.of(context).textTheme.titleSmall,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-                return RefreshIndicator(
-                  onRefresh: wallet.loadHistory,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
-                    itemCount: entries.length,
-                    itemBuilder: (context, i) =>
-                        _HistoryTile(entry: entries[i]),
+                  _FilterChip(
+                    label: l10n.bonusStatusPosted,
+                    selected: _statusFilter == 'POSTED',
+                    onTap: () => setState(() {
+                      _statusFilter = _statusFilter == 'POSTED' ? '' : 'POSTED';
+                    }),
                   ),
-                );
-              },
+                  _FilterChip(
+                    label: l10n.bonusStatusPending,
+                    selected: _statusFilter == 'PENDING',
+                    onTap: () => setState(() {
+                      _statusFilter = _statusFilter == 'PENDING'
+                          ? ''
+                          : 'PENDING';
+                    }),
+                  ),
+                  for (final t in _knownTypes)
+                    _FilterChip(
+                      label: bonusTxnLabel(t),
+                      selected: _typeFilter == t,
+                      onTap: () => setState(() {
+                        _typeFilter = _typeFilter == t ? '' : t;
+                      }),
+                    ),
+                ],
+              ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Builder(
+                builder: (context) {
+                  if (wallet.isLoading && wallet.entries.isEmpty) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (wallet.error != null && wallet.entries.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.error_outline_rounded,
+                              size: 48,
+                              color: ClientColors.danger,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              l10n.bonusLoadError,
+                              style: Theme.of(context).textTheme.titleSmall,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 16),
+                            FilledButton.icon(
+                              onPressed: wallet.loadHistory,
+                              icon: const Icon(Icons.refresh_rounded),
+                              label: Text(l10n.bonusRetry),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  if (entries.isEmpty) {
+                    return Center(
+                      child: ClientCard(
+                        padding: const EdgeInsets.all(32),
+                        borderRadius: 28,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ClientIconBadge(
+                              icon: Icons.receipt_long_rounded,
+                              color: ClientColors.primary,
+                              size: 56,
+                              iconSize: 26,
+                              borderRadius: 18,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              l10n.bonusEmptyHistory,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return RefreshIndicator(
+                    onRefresh: wallet.loadHistory,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+                      itemCount: entries.length,
+                      itemBuilder: (context, i) =>
+                          _HistoryTile(entry: entries[i]),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -245,10 +253,7 @@ class _HistoryTile extends StatelessWidget {
             MapEntry(l10n.bonusRuleLabel, entry.ruleId!),
           if (entry.notes != null && entry.notes!.isNotEmpty)
             MapEntry(l10n.bonusNotesLabel, entry.notes!),
-          MapEntry(
-            l10n.bonusAccountLabel,
-            l10n.bonusWalletTitle,
-          ),
+          MapEntry(l10n.bonusAccountLabel, l10n.bonusWalletTitle),
         ];
         return SafeArea(
           child: Padding(
@@ -302,15 +307,12 @@ class _HistoryTile extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 6),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   r.key,
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.bodySmall,
+                                  style: Theme.of(context).textTheme.bodySmall,
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(

@@ -106,20 +106,16 @@ class HelpSupportScreen extends StatelessWidget {
     final isClient = role == UserRole.client;
 
     return Theme(
-      data: isClient ? AppTheme.clientLight : AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: Scaffold(
-        backgroundColor: isClient
-            ? ClientColors.background
-            : BranchColors.background,
+        backgroundColor: ClientColors.background,
         appBar: AppBar(
           backgroundColor: isClient
               ? ClientColors.surface
-              : BranchColors.background,
+              : ClientColors.background,
           elevation: 0,
           scrolledUnderElevation: 0,
-          foregroundColor: isClient
-              ? ClientColors.text
-              : BranchColors.onSurface,
+          foregroundColor: ClientColors.text,
           title: Text(l10n.helpSupportTitle),
         ),
         body: isClient
@@ -132,13 +128,18 @@ class HelpSupportScreen extends StatelessWidget {
                 ),
               )
             : BranchGlassBackground(
+                colors: ClientColors.glassBackgroundColors,
+                orbColors: ClientColors.glassOrbColors,
                 child: ListView(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                   children: [
                     BranchSectionTitle(
                       title: l10n.helpFaqSection,
                       icon: Icons.quiz_outlined,
-                      iconColor: BranchColors.primary,
+                      iconColor: ClientColors.primary,
+                      accentColors: const [ClientColors.primary],
+                      titleColor: ClientColors.navy,
+                      mutedColor: ClientColors.textMuted,
                     ),
                     const SizedBox(height: 12),
                     for (final entry in faqs)
@@ -153,7 +154,7 @@ class HelpSupportScreen extends StatelessWidget {
                               children: [
                                 PastelIconBadge(
                                   icon: Icons.question_mark_rounded,
-                                  color: BranchColors.primary,
+                                  color: ClientColors.primary,
                                   size: 32,
                                   iconSize: 16,
                                   borderRadius: 10,
@@ -186,28 +187,31 @@ class HelpSupportScreen extends StatelessWidget {
                     BranchSectionTitle(
                       title: l10n.helpContactSection,
                       icon: Icons.headset_mic_rounded,
-                      iconColor: BranchColors.success,
+                      iconColor: ClientColors.success,
+                      accentColors: const [ClientColors.primary],
+                      titleColor: ClientColors.navy,
+                      mutedColor: ClientColors.textMuted,
                     ),
                     const SizedBox(height: 12),
                     _ContactTile(
                       icon: Icons.phone_rounded,
                       label: l10n.helpCallUs,
                       subtitle: _phoneNumber,
-                      color: BranchColors.primary,
+                      color: ClientColors.primary,
                       onTap: () => _launch('tel:$_phoneNumber'),
                     ),
                     _ContactTile(
                       icon: Icons.chat_rounded,
                       label: l10n.helpWhatsapp,
                       subtitle: '+$_whatsappNumber',
-                      color: BranchColors.success,
+                      color: ClientColors.success,
                       onTap: () => _launch('https://wa.me/$_whatsappNumber'),
                     ),
                     _ContactTile(
                       icon: Icons.email_rounded,
                       label: l10n.helpEmailUs,
                       subtitle: _email,
-                      color: BranchColors.primaryContainer,
+                      color: ClientColors.primaryDark,
                       onTap: () =>
                           _launch('mailto:$_email?subject=MedLink Support'),
                     ),
@@ -394,12 +398,10 @@ class _ContactTile extends StatelessWidget {
               ],
             ),
           ),
-          Icon(
+          const Icon(
             Icons.arrow_forward_ios_rounded,
             size: 14,
-            color: isClient
-                ? ClientColors.textMuted
-                : BranchColors.onSurfaceVariant,
+            color: ClientColors.textMuted,
           ),
         ],
       ),

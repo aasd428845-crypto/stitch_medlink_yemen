@@ -6,15 +6,14 @@ import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/notification_model.dart';
-import '../../services/auth_controller.dart';
 import '../../services/notification_controller.dart';
-import '../../utils/constants.dart';
 import '../../utils/theme.dart';
 import '../../widgets/error_banner.dart';
+import '../client/client_design.dart';
 
 /// Notification centre — shared across all roles.
 /// Accessible via the bell icon in the AppBar from any home shell.
-/// Uses a soft pastel gradient background to match the branch manager theme.
+/// Uses the client glass background so every role sees the same design.
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -35,20 +34,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final ctrl = context.watch<NotificationController>();
-    final isClient =
-        context.watch<AuthController>().profile?.role == UserRole.client;
-    final palette = _NotificationPalette(isClient);
 
     return Theme(
-      data: isClient ? AppTheme.clientLight : AppTheme.branchManagerLight,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: palette.backgroundGradient,
-          ),
-        ),
+      data: AppTheme.clientLight,
+      child: ClientGlassBackground(
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -61,15 +50,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   width: 34,
                   height: 34,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: palette.heroGradient,
+                    gradient: const LinearGradient(
+                      colors: [ClientColors.primary, ClientColors.primaryDark],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: palette.accent.withValues(alpha: .28),
+                        color: ClientColors.primary.withValues(alpha: .28),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -85,7 +74,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 Text(
                   l10n.notificationsTitle,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: palette.text,
+                    color: ClientColors.text,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -100,12 +89,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     icon: Icon(
                       LucideIcons.checkCheck,
                       size: 16,
-                      color: palette.accent,
+                      color: ClientColors.primary,
                     ),
                     label: Text(
                       l10n.notificationsMarkAllRead,
-                      style: TextStyle(
-                        color: palette.accent,
+                      style: const TextStyle(
+                        color: ClientColors.primary,
                         fontWeight: FontWeight.w700,
                         fontSize: 12,
                       ),
@@ -131,7 +120,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       _GradientButton(
                         label: l10n.retry,
                         onPressed: ctrl.loadNotifications,
-                        isClient: isClient,
                       ),
                     ],
                   ),
@@ -141,14 +129,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               if (ctrl.notifications.isEmpty) {
                 return _EmptyNotifications(
                   message: l10n.notificationsEmpty,
-                  isClient: isClient,
                   secondaryMessage: l10n.notificationsEmptyHint,
                 );
               }
 
               return RefreshIndicator(
-                color: palette.accent,
-                backgroundColor: Colors.white,
+                color: ClientColors.primary,
+                backgroundColor: ClientColors.surface,
                 onRefresh: ctrl.loadNotifications,
                 child: ListView.builder(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
@@ -158,7 +145,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     return _NotifCard(
                       notification: notif,
                       onTap: () => ctrl.markAsRead(notif.id),
-                      isClient: isClient,
                     );
                   },
                 ),
@@ -174,15 +160,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 // ─── Notification Card ────────────────────────────────────────────────────────
 
 class _NotifCard extends StatelessWidget {
-  const _NotifCard({
-    required this.notification,
-    required this.onTap,
-    required this.isClient,
-  });
+  const _NotifCard({required this.notification, required this.onTap});
 
   final NotificationModel notification;
   final VoidCallback onTap;
-  final bool isClient;
 
   IconData get _icon {
     return switch (notification.targetRole) {
@@ -193,17 +174,10 @@ class _NotifCard extends StatelessWidget {
     };
   }
 
-  List<Color> get _gradient {
-    if (isClient) {
-      return const [ClientColors.primary, ClientColors.primaryDark];
-    }
-    return switch (notification.targetRole) {
-      'client' => BranchColors.metricBlueGradient,
-      'branch_manager' => BranchColors.metricPurpleGradient,
-      'driver' => BranchColors.metricGreenGradient,
-      _ => BranchColors.glassHeroGradient,
-    };
-  }
+  List<Color> get _gradient => const [
+    ClientColors.primary,
+    ClientColors.primaryDark,
+  ];
 
   String _formatDate(String? createdAt) {
     if (createdAt == null) return '';
@@ -228,18 +202,12 @@ class _NotifCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           color: isUnread
-              ? (isClient
-                        ? ClientColors.primary
-                        : BranchColors.glassHeroGradient.first)
-                    .withValues(alpha: .04)
+              ? ClientColors.primary.withValues(alpha: .04)
               : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isUnread
-                ? (isClient
-                          ? ClientColors.primary
-                          : BranchColors.glassHeroGradient.first)
-                      .withValues(alpha: .20)
+                ? ClientColors.primary.withValues(alpha: .20)
                 : Colors.grey.shade100,
             width: isUnread ? 1.5 : 1,
           ),
@@ -291,9 +259,7 @@ class _NotifCard extends StatelessWidget {
                             notification.title,
                             style: Theme.of(context).textTheme.titleSmall
                                 ?.copyWith(
-                                  color: isClient
-                                      ? ClientColors.text
-                                      : BranchColors.onSurface,
+                                  color: ClientColors.text,
                                   fontWeight: isUnread
                                       ? FontWeight.w800
                                       : FontWeight.w600,
@@ -309,9 +275,7 @@ class _NotifCard extends StatelessWidget {
                             margin: const EdgeInsets.only(right: 4),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: isClient
-                                  ? ClientColors.primary
-                                  : BranchColors.glassWarmGradient.first,
+                              color: ClientColors.primary,
                             ),
                           ),
                       ],
@@ -320,9 +284,7 @@ class _NotifCard extends StatelessWidget {
                     Text(
                       notification.body,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isClient
-                            ? ClientColors.textMuted
-                            : BranchColors.onSurfaceVariant,
+                        color: ClientColors.textMuted,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -333,19 +295,13 @@ class _NotifCard extends StatelessWidget {
                         Icon(
                           LucideIcons.clock,
                           size: 11,
-                          color: isClient
-                              ? ClientColors.textMuted
-                              : BranchColors.onSurfaceVariant,
+                          color: ClientColors.textMuted,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           _formatDate(notification.createdAt),
                           style: Theme.of(context).textTheme.labelSmall
-                              ?.copyWith(
-                                color: isClient
-                                    ? ClientColors.textMuted
-                                    : BranchColors.onSurfaceVariant,
-                              ),
+                              ?.copyWith(color: ClientColors.textMuted),
                         ),
                       ],
                     ),
@@ -365,12 +321,10 @@ class _NotifCard extends StatelessWidget {
 class _EmptyNotifications extends StatelessWidget {
   const _EmptyNotifications({
     required this.message,
-    required this.isClient,
     required this.secondaryMessage,
   });
 
   final String message;
-  final bool isClient;
   final String secondaryMessage;
 
   @override
@@ -400,23 +354,17 @@ class _EmptyNotifications extends StatelessWidget {
                     height: 72,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: isClient
-                            ? const [
-                                ClientColors.primary,
-                                ClientColors.primaryDark,
-                              ]
-                            : BranchColors.glassHeroGradient,
+                      gradient: const LinearGradient(
+                        colors: [
+                          ClientColors.primary,
+                          ClientColors.primaryDark,
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color:
-                              (isClient
-                                      ? ClientColors.primary
-                                      : BranchColors.glassHeroGradient.first)
-                                  .withValues(alpha: .30),
+                          color: ClientColors.primary.withValues(alpha: .30),
                           blurRadius: 20,
                           offset: const Offset(0, 6),
                         ),
@@ -434,9 +382,7 @@ class _EmptyNotifications extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: isClient
-                          ? ClientColors.text
-                          : BranchColors.onSurface,
+                      color: ClientColors.text,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -444,9 +390,7 @@ class _EmptyNotifications extends StatelessWidget {
                     secondaryMessage,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: isClient
-                          ? ClientColors.textMuted
-                          : BranchColors.onSurfaceVariant,
+                      color: ClientColors.textMuted,
                     ),
                   ),
                 ],
@@ -462,15 +406,10 @@ class _EmptyNotifications extends StatelessWidget {
 // ─── Gradient Button ──────────────────────────────────────────────────────────
 
 class _GradientButton extends StatelessWidget {
-  const _GradientButton({
-    required this.label,
-    required this.onPressed,
-    required this.isClient,
-  });
+  const _GradientButton({required this.label, required this.onPressed});
 
   final String label;
   final VoidCallback onPressed;
-  final bool isClient;
 
   @override
   Widget build(BuildContext context) {
@@ -480,21 +419,15 @@ class _GradientButton extends StatelessWidget {
         height: 48,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isClient
-                ? const [ClientColors.primary, ClientColors.primaryDark]
-                : BranchColors.glassHeroGradient,
+          gradient: const LinearGradient(
+            colors: [ClientColors.primary, ClientColors.primaryDark],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(99),
           boxShadow: [
             BoxShadow(
-              color:
-                  (isClient
-                          ? ClientColors.primary
-                          : BranchColors.glassHeroGradient.first)
-                      .withValues(alpha: .30),
+              color: ClientColors.primary.withValues(alpha: .30),
               blurRadius: 14,
               offset: const Offset(0, 5),
             ),
@@ -511,24 +444,4 @@ class _GradientButton extends StatelessWidget {
       ),
     );
   }
-}
-
-class _NotificationPalette {
-  _NotificationPalette(this.isClient)
-    : backgroundGradient = isClient
-          ? const [ClientColors.surface, ClientColors.background]
-          : const [BranchColors.background, Color(0xFFF1EEFF)],
-      heroGradient = isClient
-          ? const [ClientColors.primary, ClientColors.primaryDark]
-          : BranchColors.glassHeroGradient,
-      accent = isClient
-          ? ClientColors.primary
-          : BranchColors.glassHeroGradient.first,
-      text = isClient ? ClientColors.text : BranchColors.onSurface;
-
-  final bool isClient;
-  final List<Color> backgroundGradient;
-  final List<Color> heroGradient;
-  final Color accent;
-  final Color text;
 }

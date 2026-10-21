@@ -80,14 +80,8 @@ class _BonusRedeemScreenState extends State<BonusRedeemScreen> {
                 style: Theme.of(sheetContext).textTheme.titleMedium,
               ),
               const SizedBox(height: 12),
-              _ReviewRow(
-                label: l10n.bonusProductLabel,
-                value: product.name,
-              ),
-              _ReviewRow(
-                label: l10n.bonusQuantityLabel,
-                value: '$_quantity',
-              ),
+              _ReviewRow(label: l10n.bonusProductLabel, value: product.name),
+              _ReviewRow(label: l10n.bonusQuantityLabel, value: '$_quantity'),
               _ReviewRow(
                 label: l10n.bonusEstimatedValue,
                 value: _formatAmount(_estimate),
@@ -122,10 +116,7 @@ class _BonusRedeemScreenState extends State<BonusRedeemScreen> {
     );
     if (confirmed != true || !mounted) return;
     try {
-      await wallet.submitRedemption(
-        productId: product.id,
-        quantity: _quantity,
-      );
+      await wallet.submitRedemption(productId: product.id, quantity: _quantity);
       if (!mounted) return;
       context.pushReplacement('/client/bonus-requests');
     } catch (_) {
@@ -147,143 +138,151 @@ class _BonusRedeemScreenState extends State<BonusRedeemScreen> {
       return p.name.toLowerCase().contains(q);
     }).toList();
 
-    return Scaffold(
-      backgroundColor: ClientColors.background,
-      appBar: AppBar(
-        title: Text(l10n.bonusRedeemTitle),
+    return Theme(
+      data: AppTheme.clientLight,
+      child: Scaffold(
         backgroundColor: ClientColors.background,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
-        children: [
-          ClientCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClientSectionTitle(
-                  title: l10n.bonusAvailable,
-                  icon: Icons.account_balance_wallet_rounded,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  _formatAmount(wallet.funds?.available ?? 0),
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          ClientSearchField(
-            controller: _searchCtrl,
-            hintText: l10n.bonusSearchProducts,
-            onSubmitted: (_) {},
-            onChanged: (_) => setState(() {}),
-          ),
-          const SizedBox(height: 8),
-          if (catalog.products.isEmpty && !catalog.isLoading)
-            ClientCard(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Center(child: Text(l10n.bonusNoProducts)),
-              ),
-            )
-          else
-            for (final p in products.take(30))
-              _ProductPickTile(
-                product: p,
-                selected: _selected?.id == p.id,
-                onTap: () => setState(() {
-                  _selected = p;
-                  _formError = null;
-                }),
-              ),
-          const SizedBox(height: 16),
-          if (_selected != null)
+        appBar: AppBar(
+          title: Text(l10n.bonusRedeemTitle),
+          backgroundColor: ClientColors.background,
+        ),
+        body: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+          children: [
             ClientCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ClientSectionTitle(
+                    title: l10n.bonusAvailable,
+                    icon: Icons.account_balance_wallet_rounded,
+                  ),
+                  const SizedBox(height: 4),
                   Text(
-                    _selected!.name,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.bonusQuantityLabel,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.remove_circle_outline_rounded),
-                            onPressed: _quantity > 1
-                                ? () => setState(() => _quantity--)
-                                : null,
-                          ),
-                          Text(
-                            '$_quantity',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.add_circle_outline_rounded),
-                            onPressed: () => setState(() => _quantity++),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.bonusEstimatedValue,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      Text(
-                        _formatAmount(_estimate),
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
+                    _formatAmount(wallet.funds?.available ?? 0),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ],
               ),
             ),
-          if (_formError != null) ...[
+            const SizedBox(height: 16),
+            ClientSearchField(
+              controller: _searchCtrl,
+              hintText: l10n.bonusSearchProducts,
+              onSubmitted: (_) {},
+              onChanged: (_) => setState(() {}),
+            ),
             const SizedBox(height: 8),
-            Text(
-              _formError!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: ClientColors.danger,
+            if (catalog.products.isEmpty && !catalog.isLoading)
+              ClientCard(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Center(child: Text(l10n.bonusNoProducts)),
+                ),
+              )
+            else
+              for (final p in products.take(30))
+                _ProductPickTile(
+                  product: p,
+                  selected: _selected?.id == p.id,
+                  onTap: () => setState(() {
+                    _selected = p;
+                    _formError = null;
+                  }),
+                ),
+            const SizedBox(height: 16),
+            if (_selected != null)
+              ClientCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _selected!.name,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.bonusQuantityLabel,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.remove_circle_outline_rounded,
+                              ),
+                              onPressed: _quantity > 1
+                                  ? () => setState(() => _quantity--)
+                                  : null,
+                            ),
+                            Text(
+                              '$_quantity',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.add_circle_outline_rounded,
+                              ),
+                              onPressed: () => setState(() => _quantity++),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.bonusEstimatedValue,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Text(
+                          _formatAmount(_estimate),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w800),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            if (_formError != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                _formError!,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: ClientColors.danger),
+              ),
+            ],
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              onPressed: wallet.isSubmitting || _selected == null
+                  ? null
+                  : _confirm,
+              icon: wallet.isSubmitting
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.check_circle_outline_rounded),
+              label: Text(l10n.bonusSubmitRedemption),
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(52),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                ),
               ),
             ),
           ],
-          const SizedBox(height: 16),
-          FilledButton.icon(
-            onPressed: wallet.isSubmitting || _selected == null ? null : _confirm,
-            icon: wallet.isSubmitting
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.check_circle_outline_rounded),
-            label: Text(l10n.bonusSubmitRedemption),
-            style: FilledButton.styleFrom(
-              minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -315,9 +314,9 @@ class _ReviewRow extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
               textAlign: TextAlign.end,
             ),
           ),

@@ -20,13 +20,13 @@ class AppLogo extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: backgroundColor ?? AppColors.primary,
+        color: backgroundColor ?? ClientColors.primary,
         borderRadius: BorderRadius.circular(size * 0.28),
       ),
       child: Center(
         child: Icon(
           Icons.local_hospital_rounded,
-          color: foregroundColor ?? AppColors.onPrimary,
+          color: foregroundColor ?? Colors.white,
           size: size * 0.55,
         ),
       ),

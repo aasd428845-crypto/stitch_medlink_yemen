@@ -79,10 +79,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: BranchGlassBackground(
+          colors: ClientColors.glassBackgroundColors,
+          orbColors: ClientColors.glassOrbColors,
           child: SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -108,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.headlineMedium
                                 ?.copyWith(
-                                  color: BranchColors.primary,
+                                  color: ClientColors.primary,
                                   fontWeight: FontWeight.w900,
                                 ),
                           ),
@@ -121,9 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             l10n.loginSubtitle,
                             style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: BranchColors.onSurfaceVariant,
-                                ),
+                                ?.copyWith(color: ClientColors.textMuted),
                           ),
                           const SizedBox(height: 24),
                           if (_errorMessage != null) ...[
@@ -163,8 +163,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: _isSubmitting ? null : _submit,
                             style: FilledButton.styleFrom(
                               minimumSize: const Size.fromHeight(52),
-                              backgroundColor: BranchColors.primaryContainer,
-                              foregroundColor: BranchColors.onPrimary,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18),
                               ),
@@ -175,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     width: 20,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      color: BranchColors.onPrimary,
+                                      color: Colors.white,
                                     ),
                                   )
                                 : Text(
@@ -196,7 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Text(
                                   l10n.orDivider,
                                   style: const TextStyle(
-                                    color: BranchColors.onSurfaceVariant,
+                                    color: ClientColors.textMuted,
                                   ),
                                 ),
                               ),
@@ -221,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: OutlinedButton.styleFrom(
                               minimumSize: const Size.fromHeight(52),
                               side: const BorderSide(
-                                color: BranchColors.outlineVariant,
+                                color: ClientColors.outline,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18),

@@ -30,14 +30,16 @@ class _DriverHomeShellState extends State<DriverHomeShell> {
     ];
 
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: BranchGlassBackground(
+        colors: ClientColors.glassBackgroundColors,
+        orbColors: ClientColors.glassOrbColors,
         child: Scaffold(
           backgroundColor: Colors.transparent,
           extendBody: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            foregroundColor: BranchColors.onSurface,
+            foregroundColor: ClientColors.text,
             scrolledUnderElevation: 0,
             automaticallyImplyLeading: false,
             title: Text(tabs[_index].$1),

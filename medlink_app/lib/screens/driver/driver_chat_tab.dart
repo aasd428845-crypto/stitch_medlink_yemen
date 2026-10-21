@@ -49,14 +49,14 @@ class _DriverChatTabState extends State<DriverChatTab> {
               Icon(
                 Icons.error_outline_rounded,
                 size: 48,
-                color: AppColors.error,
+                color: ClientColors.danger,
               ),
               const SizedBox(height: 16),
               Text(
                 chat.error!,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  color: AppColors.onSurfaceVariant,
+                  color: ClientColors.textMuted,
                   fontSize: 15,
                 ),
               ),
@@ -95,7 +95,7 @@ class _DriverChatTabState extends State<DriverChatTab> {
                         const Icon(
                           Icons.chat_bubble_outline_rounded,
                           size: 44,
-                          color: BranchColors.primary,
+                          color: ClientColors.primary,
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
@@ -129,7 +129,7 @@ class _DriverChatTabState extends State<DriverChatTab> {
                       child: ListTile(
                         leading: const PastelIconBadge(
                           icon: Icons.chat_bubble_outline_rounded,
-                          color: BranchColors.primary,
+                          color: ClientColors.primary,
                           size: 44,
                           iconSize: 20,
                           shape: BoxShape.circle,
@@ -170,7 +170,7 @@ class _DriverChatTabState extends State<DriverChatTab> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text('تعذر فتح المحادثة: $e'),
-                                  backgroundColor: AppColors.error,
+                                  backgroundColor: ClientColors.danger,
                                 ),
                               );
                             }

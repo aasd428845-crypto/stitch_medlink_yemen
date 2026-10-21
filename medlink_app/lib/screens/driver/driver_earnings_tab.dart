@@ -113,7 +113,7 @@ class _DriverEarningsTabState extends State<DriverEarningsTab> {
                           icon: Icons.payments_rounded,
                           label: l10n.driverTotalEarningsLabel,
                           value: '${ctrl.totalEarnings.toStringAsFixed(0)} ر.ي',
-                          color: BranchColors.primary,
+                          color: ClientColors.primary,
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
@@ -122,7 +122,7 @@ class _DriverEarningsTabState extends State<DriverEarningsTab> {
                           icon: Icons.local_shipping_rounded,
                           label: l10n.driverTotalDeliveries,
                           value: '${ctrl.deliveredCount}',
-                          color: BranchColors.success,
+                          color: ClientColors.success,
                         ),
                       ),
                     ],
@@ -142,13 +142,13 @@ class _DriverEarningsTabState extends State<DriverEarningsTab> {
                             const Icon(
                               Icons.account_balance_wallet_outlined,
                               size: 48,
-                              color: BranchColors.outline,
+                              color: ClientColors.outline,
                             ),
                             const SizedBox(height: AppSpacing.md),
                             Text(
                               l10n.driverNoEarnings,
                               style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(color: BranchColors.onSurfaceVariant),
+                                  ?.copyWith(color: ClientColors.textMuted),
                             ),
                           ],
                         ),
@@ -159,7 +159,7 @@ class _DriverEarningsTabState extends State<DriverEarningsTab> {
                     Text(
                       l10n.driverOrderEarning,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: BranchColors.onSurfaceVariant,
+                        color: ClientColors.textMuted,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
@@ -200,7 +200,11 @@ class _RatingSummaryCard extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Row(
           children: [
-            const Icon(Icons.star_rounded, color: BranchColors.warning, size: 28),
+            const Icon(
+              Icons.star_rounded,
+              color: ClientColors.warning,
+              size: 28,
+            ),
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Column(
@@ -209,7 +213,7 @@ class _RatingSummaryCard extends StatelessWidget {
                   Text(
                     l10n.ratingAverageLabel,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: ClientColors.textMuted,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -219,7 +223,7 @@ class _RatingSummaryCard extends StatelessWidget {
                         : '${average!.toStringAsFixed(1)} / 5.0',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: AppColors.warning,
+                      color: ClientColors.warning,
                     ),
                   ),
                 ],
@@ -232,13 +236,13 @@ class _RatingSummaryCard extends StatelessWidget {
                   '$count',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: AppColors.primary,
+                    color: ClientColors.primary,
                   ),
                 ),
                 Text(
                   l10n.ratingCountLabel,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: ClientColors.textMuted,
                   ),
                 ),
               ],
@@ -271,15 +275,17 @@ class _PeriodChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primary : AppColors.surfaceContainerLow,
+          color: selected
+              ? ClientColors.primarySoft
+              : ClientColors.surfaceMuted,
           borderRadius: BorderRadius.circular(AppRadius.lg),
-          border: selected ? null : Border.all(color: AppColors.outlineVariant),
+          border: selected ? null : Border.all(color: ClientColors.outline),
         ),
         alignment: Alignment.center,
         child: Text(
           label,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: selected ? AppColors.onPrimary : AppColors.onSurfaceVariant,
+            color: selected ? ClientColors.primary : ClientColors.textMuted,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -324,9 +330,9 @@ class _SummaryCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             Text(
               label,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: ClientColors.textMuted),
             ),
           ],
         ),
@@ -364,7 +370,7 @@ class _CommissionCard extends StatelessWidget {
               margin: const EdgeInsets.only(left: AppSpacing.sm),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isPaid ? AppColors.success : AppColors.warning,
+                color: isPaid ? ClientColors.success : ClientColors.warning,
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
@@ -381,7 +387,7 @@ class _CommissionCard extends StatelessWidget {
                   Text(
                     dateStr,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: ClientColors.textMuted,
                     ),
                   ),
                 ],
@@ -393,14 +399,14 @@ class _CommissionCard extends StatelessWidget {
                 Text(
                   '${commission.amount.toStringAsFixed(0)} ر.ي',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: AppColors.primary,
+                    color: ClientColors.primary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
                   'من ${commission.orderTotalAmount.toStringAsFixed(0)} ر.ي',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: ClientColors.textMuted,
                   ),
                 ),
               ],

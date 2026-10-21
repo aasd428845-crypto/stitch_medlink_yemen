@@ -26,7 +26,7 @@ class BranchDashboardTab extends StatelessWidget {
     final branch = context.watch<BranchController>();
 
     return RefreshIndicator(
-      color: BranchColors.glassHeroGradient.first,
+      color: ClientColors.primary,
       backgroundColor: Colors.white,
       onRefresh: () async {
         await branch.loadOrders();
@@ -46,6 +46,7 @@ class BranchDashboardTab extends StatelessWidget {
               title: 'لوحة الفرع',
               subtitle:
                   'مركز التحكم اليومي بالطلبات والمخزون والسائقين والفواتير.',
+              gradient: ClientColors.heroGradient,
             ),
             const SizedBox(height: 10),
 
@@ -59,7 +60,9 @@ class BranchDashboardTab extends StatelessWidget {
             BranchSectionTitle(
               title: 'ملخص اليوم',
               icon: LucideIcons.barChart2,
-              iconColor: BranchColors.glassHeroGradient.first,
+              iconColor: ClientColors.primary,
+              accentColors: const [ClientColors.primary],
+              titleColor: ClientColors.navy,
             ),
             const SizedBox(height: 10),
             _MetricGrid(
@@ -74,7 +77,9 @@ class BranchDashboardTab extends StatelessWidget {
             BranchSectionTitle(
               title: 'الوصول السريع',
               icon: LucideIcons.zap,
-              iconColor: BranchColors.metricOrangeGradient.first,
+              iconColor: ClientColors.warning,
+              accentColors: const [ClientColors.primary],
+              titleColor: ClientColors.navy,
             ),
             const SizedBox(height: 10),
             _QuickActionsRow(onNavigate: onNavigate),
@@ -84,7 +89,9 @@ class BranchDashboardTab extends StatelessWidget {
             BranchSectionTitle(
               title: 'الإحصائيات والتقارير',
               icon: LucideIcons.pieChart,
-              iconColor: BranchColors.metricBlueGradient.first,
+              iconColor: ClientColors.primary,
+              accentColors: const [ClientColors.primary],
+              titleColor: ClientColors.navy,
             ),
             const SizedBox(height: 10),
             _StatsBento(onNavigate: onNavigate),
@@ -96,7 +103,9 @@ class BranchDashboardTab extends StatelessWidget {
               action: 'كل الطلبات',
               onAction: () => onNavigate?.call(1),
               icon: LucideIcons.clipboardList,
-              iconColor: BranchColors.metricGreenGradient.first,
+              iconColor: ClientColors.success,
+              accentColors: const [ClientColors.primary],
+              titleColor: ClientColors.navy,
             ),
             const SizedBox(height: 10),
             if (branch.isLoadingOrders && branch.orders.isEmpty)
@@ -157,25 +166,29 @@ class _MetricGrid extends StatelessWidget {
           label: l10n.branchDashboardNewOrders,
           value: '$newOrders',
           icon: LucideIcons.bell,
-          color: BranchColors.warning,
+          color: ClientColors.warning,
+          gradient: const [ClientColors.warning],
         ),
         BranchMetricTile(
           label: l10n.branchDashboardInProgress,
           value: '$inProgress',
           icon: LucideIcons.truck,
-          color: BranchColors.primary,
+          color: ClientColors.primary,
+          gradient: const [ClientColors.primary],
         ),
         BranchMetricTile(
           label: l10n.branchDashboardCompletedToday,
           value: '$completedToday',
           icon: LucideIcons.checkCircle,
-          color: BranchColors.success,
+          color: ClientColors.success,
+          gradient: const [ClientColors.success],
         ),
-        const BranchMetricTile(
+        BranchMetricTile(
           label: 'مراقبة الفرع',
           value: 'مباشر',
           icon: LucideIcons.activity,
-          color: BranchColors.primaryContainer,
+          color: ClientColors.primary.withValues(alpha: .1),
+          gradient: const [ClientColors.primaryDark],
         ),
       ],
     );
@@ -197,8 +210,8 @@ class _QuickActionsRow extends StatelessWidget {
           child: BranchQuickAction(
             icon: LucideIcons.receipt,
             label: 'الفواتير',
-            color: BranchColors.primary,
-            gradient: BranchColors.pastelBluGradient,
+            color: ClientColors.primary,
+            gradient: [ClientColors.primary],
             onTap: () => onNavigate?.call(3),
           ),
         ),
@@ -207,8 +220,8 @@ class _QuickActionsRow extends StatelessWidget {
           child: BranchQuickAction(
             icon: LucideIcons.boxes,
             label: 'المخزون',
-            color: BranchColors.success,
-            gradient: BranchColors.pastelGreenGradient,
+            color: ClientColors.success,
+            gradient: [ClientColors.success],
             onTap: () => onNavigate?.call(2),
           ),
         ),
@@ -217,8 +230,8 @@ class _QuickActionsRow extends StatelessWidget {
           child: BranchQuickAction(
             icon: LucideIcons.users,
             label: 'السائقون',
-            color: BranchColors.warning,
-            gradient: BranchColors.pastelAmberGradient,
+            color: ClientColors.warning,
+            gradient: [ClientColors.warning],
             onTap: () => onNavigate?.call(4),
           ),
         ),
@@ -227,8 +240,8 @@ class _QuickActionsRow extends StatelessWidget {
           child: BranchQuickAction(
             icon: LucideIcons.messageCircle,
             label: 'المحادثات',
-            color: BranchColors.primaryContainer,
-            gradient: BranchColors.pastelVioletGradient,
+            color: ClientColors.primary.withValues(alpha: .1),
+            gradient: [ClientColors.primaryDark],
             onTap: () => onNavigate?.call(5),
           ),
         ),
@@ -260,8 +273,8 @@ class _StatsBento extends StatelessWidget {
             children: [
               PastelIconBadge(
                 icon: LucideIcons.trendingUp,
-                color: BranchColors.primary,
-                gradient: BranchColors.metricBlueGradient,
+                color: ClientColors.primary,
+                gradient: [ClientColors.primary],
                 shape: BoxShape.circle,
                 size: 52,
                 iconSize: 24,
@@ -271,19 +284,21 @@ class _StatsBento extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('مبيعات هذا الشهر',
-                        style: Theme.of(context).textTheme.labelMedium),
+                    Text(
+                      'مبيعات هذا الشهر',
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
                     const SizedBox(height: 4),
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.centerRight,
                       child: Text(
                         '${branch.salesThisMonth.toStringAsFixed(0)} ﷼',
-                        style:
-                            Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: BranchColors.onSurface,
-                                ),
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: ClientColors.text,
+                            ),
                       ),
                     ),
                   ],
@@ -292,13 +307,15 @@ class _StatsBento extends StatelessWidget {
               const SizedBox(width: 8),
               // Growth badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: isUp
-                        ? BranchColors.metricGreenGradient
-                        : [BranchColors.error, BranchColors.danger],
+                        ? [ClientColors.success]
+                        : [ClientColors.danger, ClientColors.danger],
                   ),
                   borderRadius: BorderRadius.circular(99),
                 ),
@@ -325,7 +342,7 @@ class _StatsBento extends StatelessWidget {
                 icon: LucideIcons.checkCircle,
                 label: 'طلبات مكتملة هذا الشهر',
                 value: '${branch.completedThisMonth}',
-                gradient: BranchColors.metricGreenGradient,
+                gradient: [ClientColors.success],
               ),
             ),
             const SizedBox(width: 10),
@@ -334,7 +351,7 @@ class _StatsBento extends StatelessWidget {
                 icon: LucideIcons.shieldCheck,
                 label: 'دقة التخصيص',
                 value: '${branch.allocationAccuracyPercent}%',
-                gradient: BranchColors.metricBlueGradient,
+                gradient: [ClientColors.primary],
               ),
             ),
           ],
@@ -351,8 +368,8 @@ class _StatsBento extends StatelessWidget {
                 children: [
                   PastelIconBadge(
                     icon: LucideIcons.barChart2,
-                    color: BranchColors.primary,
-                    gradient: BranchColors.glassPrimaryGradient,
+                    color: ClientColors.primary,
+                    gradient: [ClientColors.primary],
                     shape: BoxShape.circle,
                     size: 36,
                     iconSize: 16,
@@ -361,8 +378,8 @@ class _StatsBento extends StatelessWidget {
                   Text(
                     'سرعة التسليم (آخر ٧ أيام)',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ],
               ),
@@ -387,30 +404,30 @@ class _StatsBento extends StatelessWidget {
                       children: [
                         PastelIconBadge(
                           icon: LucideIcons.award,
-                          color: BranchColors.warning,
-                          gradient: BranchColors.metricOrangeGradient,
+                          color: ClientColors.warning,
+                          gradient: [ClientColors.warning],
                           shape: BoxShape.circle,
                           size: 32,
                           iconSize: 14,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text('أفضل السائقين',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.copyWith(fontWeight: FontWeight.w800)),
+                          child: Text(
+                            'أفضل السائقين',
+                            style: Theme.of(context).textTheme.labelLarge
+                                ?.copyWith(fontWeight: FontWeight.w800),
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 12),
                     if (branch.topDrivers.isEmpty)
-                      Text('لا توجد توصيلات بعد',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
-                              ?.copyWith(
-                                  color: BranchColors.onSurfaceVariant))
+                      Text(
+                        'لا توجد توصيلات بعد',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: ClientColors.textMuted,
+                        ),
+                      )
                     else
                       for (final (i, d) in branch.topDrivers.indexed)
                         Padding(
@@ -422,42 +439,53 @@ class _StatsBento extends StatelessWidget {
                                 height: 24,
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                    colors: BranchColors.metricOrangeGradient,
+                                    colors: [ClientColors.warning],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Center(
-                                  child: Text('${i + 1}',
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 11)),
+                                  child: Text(
+                                    '${i + 1}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 11,
+                                    ),
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 8),
                               Expanded(
-                                child: Text(d.name,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium),
+                                child: Text(
+                                  d.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.labelMedium,
+                                ),
                               ),
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 3),
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: BranchColors.primary
-                                      .withValues(alpha: .10),
+                                  color: ClientColors.primary.withValues(
+                                    alpha: .10,
+                                  ),
                                   borderRadius: BorderRadius.circular(99),
                                 ),
-                                child: Text('${d.count}',
-                                    style: TextStyle(
-                                        color: BranchColors.primary,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 11)),
+                                child: Text(
+                                  '${d.count}',
+                                  style: TextStyle(
+                                    color: ClientColors.primary,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 11,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -476,19 +504,19 @@ class _StatsBento extends StatelessWidget {
                       children: [
                         PastelIconBadge(
                           icon: LucideIcons.alertTriangle,
-                          color: BranchColors.warning,
-                          gradient: BranchColors.metricOrangeGradient,
+                          color: ClientColors.warning,
+                          gradient: [ClientColors.warning],
                           shape: BoxShape.circle,
                           size: 32,
                           iconSize: 14,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text('تنبيهات المخزون',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.copyWith(fontWeight: FontWeight.w800)),
+                          child: Text(
+                            'تنبيهات المخزون',
+                            style: Theme.of(context).textTheme.labelLarge
+                                ?.copyWith(fontWeight: FontWeight.w800),
+                          ),
                         ),
                       ],
                     ),
@@ -497,14 +525,14 @@ class _StatsBento extends StatelessWidget {
                       icon: LucideIcons.alertCircle,
                       label: 'منخفض / نفد',
                       count: branch.lowStockCount,
-                      gradient: BranchColors.metricOrangeGradient,
+                      gradient: [ClientColors.warning],
                     ),
                     const SizedBox(height: 8),
                     _AlertRow(
                       icon: LucideIcons.clock,
                       label: 'تنتهي قريباً',
                       count: branch.expiringSoonCount,
-                      gradient: BranchColors.metricBlueGradient,
+                      gradient: [ClientColors.primary],
                     ),
                     const SizedBox(height: 12),
                     SizedBox(
@@ -542,18 +570,18 @@ class _StatsBento extends StatelessWidget {
                         value: branch.paidRatioPercent / 100,
                         strokeWidth: 8,
                         strokeCap: StrokeCap.round,
-                        backgroundColor:
-                            BranchColors.metricBlueGradient.first
-                                .withValues(alpha: .12),
+                        backgroundColor: ClientColors.primary.withValues(
+                          alpha: .12,
+                        ),
                         valueColor: const AlwaysStoppedAnimation<Color>(
-                          BranchColors.primary,
+                          ClientColors.primary,
                         ),
                       ),
                     ),
                     Text(
                       '${branch.paidRatioPercent}%',
                       style: const TextStyle(
-                        color: BranchColors.onSurface,
+                        color: ClientColors.text,
                         fontWeight: FontWeight.w900,
                         fontSize: 16,
                       ),
@@ -570,8 +598,8 @@ class _StatsBento extends StatelessWidget {
                       children: [
                         PastelIconBadge(
                           icon: LucideIcons.dollarSign,
-                          color: BranchColors.success,
-                          gradient: BranchColors.metricGreenGradient,
+                          color: ClientColors.success,
+                          gradient: [ClientColors.success],
                           shape: BoxShape.circle,
                           size: 30,
                           iconSize: 14,
@@ -579,9 +607,7 @@ class _StatsBento extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           'رؤى مالية',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
+                          style: Theme.of(context).textTheme.titleSmall
                               ?.copyWith(fontWeight: FontWeight.w800),
                         ),
                       ],
@@ -593,23 +619,26 @@ class _StatsBento extends StatelessWidget {
                       '${branch.pendingCount + branch.overdueCount} فاتورة قيد الانتظار.',
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            height: 1.6,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(height: 1.6),
                     ),
                     if (branch.overdueCount > 0) ...[
                       const SizedBox(height: 6),
                       Row(
                         children: [
-                          const Icon(LucideIcons.alertCircle,
-                              color: BranchColors.error, size: 13),
+                          const Icon(
+                            LucideIcons.alertCircle,
+                            color: ClientColors.danger,
+                            size: 13,
+                          ),
                           const SizedBox(width: 5),
                           Expanded(
                             child: Text(
                               '${branch.overdueCount} فاتورة متأخرة',
                               maxLines: 1,
                               style: const TextStyle(
-                                color: BranchColors.error,
+                                color: ClientColors.danger,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -659,7 +688,9 @@ class _GlassBentoCard extends StatelessWidget {
               color: Colors.white.withValues(alpha: .75),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                  color: Colors.white.withValues(alpha: .5), width: 1.2),
+                color: Colors.white.withValues(alpha: .5),
+                width: 1.2,
+              ),
             ),
             child: child,
           ),
@@ -708,18 +739,18 @@ class _MiniStat extends StatelessWidget {
                   child: Text(
                     value,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w900,
-                          color: BranchColors.onSurface,
-                        ),
+                      fontWeight: FontWeight.w900,
+                      color: ClientColors.text,
+                    ),
                   ),
                 ),
                 Text(
                   label,
                   maxLines: 2,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: BranchColors.onSurfaceVariant,
-                        height: 1.4,
-                      ),
+                    color: ClientColors.textMuted,
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),
@@ -759,13 +790,14 @@ class _AlertRow extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: Text(label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context)
-                  .textTheme
-                  .labelMedium
-                  ?.copyWith(color: BranchColors.onSurfaceVariant)),
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(
+              context,
+            ).textTheme.labelMedium?.copyWith(color: ClientColors.textMuted),
+          ),
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
@@ -803,14 +835,11 @@ class _GradientButton extends StatelessWidget {
         height: 36,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: BranchColors.glassPrimaryGradient,
-          ),
+          gradient: const LinearGradient(colors: [ClientColors.primary]),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color:
-                  BranchColors.glassPrimaryGradient.first.withValues(alpha: .35),
+              color: ClientColors.primary.withValues(alpha: .35),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -854,7 +883,7 @@ class _WeeklyChart extends StatelessWidget {
                     '${d.count}',
                     maxLines: 1,
                     style: TextStyle(
-                      color: BranchColors.metricBlueGradient.first,
+                      color: ClientColors.primary,
                       fontSize: 9,
                       fontWeight: FontWeight.w800,
                     ),
@@ -871,11 +900,8 @@ class _WeeklyChart extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: d.count > 0
-                            ? BranchColors.glassPrimaryGradient
-                            : [
-                                BranchColors.outlineVariant,
-                                BranchColors.outlineVariant
-                              ],
+                            ? [ClientColors.primary]
+                            : [ClientColors.outline, ClientColors.outline],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
@@ -883,11 +909,12 @@ class _WeeklyChart extends StatelessWidget {
                       boxShadow: d.count > 0
                           ? [
                               BoxShadow(
-                                color: BranchColors.glassPrimaryGradient.first
-                                    .withValues(alpha: .3),
+                                color: ClientColors.primary.withValues(
+                                  alpha: .3,
+                                ),
                                 blurRadius: 8,
                                 offset: const Offset(0, 3),
-                              )
+                              ),
                             ]
                           : null,
                     ),
@@ -898,7 +925,7 @@ class _WeeklyChart extends StatelessWidget {
                   weekdays[d.day.weekday - 1],
                   maxLines: 1,
                   style: const TextStyle(
-                    color: BranchColors.onSurfaceVariant,
+                    color: ClientColors.textMuted,
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
                   ),
@@ -926,7 +953,9 @@ class _EmptyOrders extends StatelessWidget {
             color: Colors.white.withValues(alpha: .72),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-                color: Colors.white.withValues(alpha: .45), width: 1.2),
+              color: Colors.white.withValues(alpha: .45),
+              width: 1.2,
+            ),
           ),
           child: Column(
             children: [
@@ -935,17 +964,20 @@ class _EmptyOrders extends StatelessWidget {
                 height: 56,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: BranchColors.outlineVariant.withValues(alpha: .4),
+                  color: ClientColors.outline.withValues(alpha: .4),
                 ),
-                child: const Icon(LucideIcons.inbox,
-                    color: BranchColors.onSurfaceVariant, size: 26),
+                child: const Icon(
+                  LucideIcons.inbox,
+                  color: ClientColors.textMuted,
+                  size: 26,
+                ),
               ),
               const SizedBox(height: 14),
               Text(
                 'لا توجد طلبات حديثة',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 6),
               Text(

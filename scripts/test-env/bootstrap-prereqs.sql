@@ -40,3 +40,17 @@ alter table storage.objects enable row level security;
 
 grant usage on schema storage to anon, authenticated, service_role;
 grant all on storage.buckets, storage.objects to authenticated, service_role;
+
+-- NOTE (PHASE 64): the supabase/postgres image provisions the full Supabase
+-- `auth` schema natively at init — auth.users, auth.uid() (reads the singular
+-- request.jwt.claim.sub GUC, matching ph61 TEST #8b), auth.role(), and the
+-- anon/authenticated/service_role roles. GoTrue is NOT required for schema
+-- bootstrap. We therefore stub nothing auth-related and never override auth.uid().
+
+-- The bare image leaves a stub `graphql.increment_schema_version()` function
+-- plus a ddl_command_end event trigger that calls it on every DDL statement,
+-- but it never registers the pg_graphql extension — so
+-- `graphql.seq_schema_version` is missing and any ALTER TABLE/CREATE TABLE
+-- errors out. Completing the extension registration creates the sequence and
+-- makes the DDL event trigger a no-op-safe normal call. Isolated scratch only.
+create extension if not exists pg_graphql;

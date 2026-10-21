@@ -24,13 +24,13 @@ class ChatMessageBubble extends StatelessWidget {
         ),
         constraints: const BoxConstraints(maxWidth: 280),
         decoration: BoxDecoration(
-          color: isMe ? AppColors.primary : AppColors.surfaceContainerLow,
+          color: isMe ? ClientColors.primary : ClientColors.surfaceMuted,
           borderRadius: BorderRadius.circular(AppRadius.md),
         ),
         child: Text(
           message.content,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: isMe ? AppColors.onPrimary : AppColors.onSurface,
+            color: isMe ? Colors.white : ClientColors.text,
           ),
         ),
       ),

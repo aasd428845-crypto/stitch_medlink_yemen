@@ -62,8 +62,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: BranchGlassBackground(
+        colors: ClientColors.glassBackgroundColors,
+        orbColors: ClientColors.glassOrbColors,
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: SafeArea(
@@ -84,7 +86,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           Icon(
                             Icons.lock_reset_rounded,
                             size: 56,
-                            color: AppColors.primary,
+                            color: ClientColors.primary,
                           ),
                           const SizedBox(height: AppSpacing.md),
                           Text(
@@ -97,9 +99,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           Text(
                             l10n.changePasswordSubtitle,
                             style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: BranchColors.onSurfaceVariant,
-                                ),
+                                ?.copyWith(color: ClientColors.textMuted),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: AppSpacing.xl),

@@ -23,9 +23,7 @@ class NotificationTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        color: isUnread
-            ? AppColors.primaryContainer.withValues(alpha: 0.25)
-            : Colors.transparent,
+        color: isUnread ? ClientColors.primarySoft : Colors.transparent,
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
           vertical: AppSpacing.sm,
@@ -45,9 +43,7 @@ class NotificationTile extends StatelessWidget {
                 height: 8,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isUnread
-                      ? AppColors.primary
-                      : Colors.transparent,
+                  color: isUnread ? ClientColors.primary : Colors.transparent,
                 ),
               ),
             ),
@@ -56,16 +52,15 @@ class NotificationTile extends StatelessWidget {
             Container(
               width: 42,
               height: 42,
-              margin:
-                  const EdgeInsetsDirectional.only(end: AppSpacing.sm),
+              margin: const EdgeInsetsDirectional.only(end: AppSpacing.sm),
               decoration: BoxDecoration(
-                color: AppColors.primaryContainer,
+                color: ClientColors.primarySoft,
                 borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: Icon(
                 _iconForRole(notification.targetRole),
                 size: 20,
-                color: AppColors.primary,
+                color: ClientColors.primary,
               ),
             ),
 
@@ -77,8 +72,7 @@ class NotificationTile extends StatelessWidget {
                   Text(
                     notification.title,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight:
-                          isUnread ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight: isUnread ? FontWeight.w700 : FontWeight.w500,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -87,7 +81,7 @@ class NotificationTile extends StatelessWidget {
                   Text(
                     notification.body,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: ClientColors.textMuted,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -96,7 +90,7 @@ class NotificationTile extends StatelessWidget {
                   Text(
                     _formatDate(notification.createdAt),
                     style: theme.textTheme.labelSmall?.copyWith(
-                      color: AppColors.outline,
+                      color: ClientColors.textMuted,
                     ),
                   ),
                 ],

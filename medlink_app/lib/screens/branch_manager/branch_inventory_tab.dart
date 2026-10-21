@@ -34,7 +34,8 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
-        (_) => context.read<BranchController>().loadCatalog());
+      (_) => context.read<BranchController>().loadCatalog(),
+    );
   }
 
   @override
@@ -86,8 +87,7 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
       final productNameColumn = column('product_name');
       final quantityColumn = column('quantity');
       final expiryColumn = column('expiry_date');
-      if (quantityColumn < 0 ||
-          productIdColumn < 0 && productNameColumn < 0) {
+      if (quantityColumn < 0 || productIdColumn < 0 && productNameColumn < 0) {
         throw const FormatException(
           'يجب أن يحتوي الملف على product_id أو product_name و quantity.',
         );
@@ -99,8 +99,8 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
         final row = rows[index];
         String valueAt(int columnIndex) =>
             columnIndex >= 0 && columnIndex < row.length
-                ? row[columnIndex].toString().trim()
-                : '';
+            ? row[columnIndex].toString().trim()
+            : '';
 
         final productId = valueAt(productIdColumn);
         final productName = valueAt(productNameColumn);
@@ -113,7 +113,9 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
         }
         final quantity = int.tryParse(valueAt(quantityColumn));
         final expiryText = valueAt(expiryColumn);
-        final expiry = expiryText.isEmpty ? null : DateTime.tryParse(expiryText);
+        final expiry = expiryText.isEmpty
+            ? null
+            : DateTime.tryParse(expiryText);
 
         if (product == null ||
             quantity == null ||
@@ -134,24 +136,27 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
       if (!context.mounted) return;
       await showDialog<void>(
         context: context,
-        builder: (dialogContext) => AlertDialog(
-          title: const Text('اكتمل الاستيراد'),
-          content: Text(
-            'تم استيراد $imported دفعة${errors.isEmpty ? '' : '\nتعذر استيراد ${errors.length} سطر.'}',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('حسناً'),
+        builder: (dialogContext) => Theme(
+          data: AppTheme.clientLight,
+          child: AlertDialog(
+            title: const Text('اكتمل الاستيراد'),
+            content: Text(
+              'تم استيراد $imported دفعة${errors.isEmpty ? '' : '\nتعذر استيراد ${errors.length} سطر.'}',
             ),
-          ],
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('حسناً'),
+              ),
+            ],
+          ),
         ),
       );
     } catch (error) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('تعذر استيراد الملف: $error')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('تعذر استيراد الملف: $error')));
     }
   }
 
@@ -160,28 +165,31 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
     final branch = context.read<BranchController>();
     await showDialog(
       context: context,
-      builder: (dialogCtx) => AlertDialog(
-        title: Text('تعديل الكمية — ${row.name}'),
-        content: TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(labelText: 'الكمية'),
+      builder: (dialogCtx) => Theme(
+        data: AppTheme.clientLight,
+        child: AlertDialog(
+          title: Text('تعديل الكمية — ${row.name}'),
+          content: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(labelText: 'الكمية'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx),
+              child: const Text('إلغاء'),
+            ),
+            FilledButton(
+              onPressed: () async {
+                final qty = int.tryParse(controller.text.trim());
+                if (qty == null || qty < 0) return;
+                await branch.setProductQuantity(row.productId, qty);
+                if (dialogCtx.mounted) Navigator.pop(dialogCtx);
+              },
+              child: const Text('حفظ'),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogCtx),
-            child: const Text('إلغاء'),
-          ),
-          FilledButton(
-            onPressed: () async {
-              final qty = int.tryParse(controller.text.trim());
-              if (qty == null || qty < 0) return;
-              await branch.setProductQuantity(row.productId, qty);
-              if (dialogCtx.mounted) Navigator.pop(dialogCtx);
-            },
-            child: const Text('حفظ'),
-          ),
-        ],
       ),
     );
   }
@@ -193,140 +201,153 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (sheetCtx) => ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: .92),
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(28)),
-            ),
-            padding: EdgeInsets.only(
-              left: AppSpacing.lg,
-              right: AppSpacing.lg,
-              top: AppSpacing.lg,
-              bottom: MediaQuery.viewInsetsOf(sheetCtx).bottom + AppSpacing.lg,
-            ),
-            child: StatefulBuilder(
-              builder: (sheetCtx, setSheet) => Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Handle
-                  Center(
-                    child: Container(
-                      width: 36,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: BranchColors.outlineVariant,
-                        borderRadius: BorderRadius.circular(99),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      PastelIconBadge(
-                        icon: LucideIcons.packagePlus,
-                        color: BranchColors.primary,
-                        gradient: BranchColors.metricBlueGradient,
-                        shape: BoxShape.circle,
-                        size: 42,
-                        iconSize: 18,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'دفعة جديدة — ${row.name}',
-                          style: Theme.of(sheetCtx)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w800),
+      builder: (sheetCtx) => Theme(
+        data: AppTheme.clientLight,
+        child: ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: .92),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(28),
+                ),
+              ),
+              padding: EdgeInsets.only(
+                left: AppSpacing.lg,
+                right: AppSpacing.lg,
+                top: AppSpacing.lg,
+                bottom:
+                    MediaQuery.viewInsetsOf(sheetCtx).bottom + AppSpacing.lg,
+              ),
+              child: StatefulBuilder(
+                builder: (sheetCtx, setSheet) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Handle
+                    Center(
+                      child: Container(
+                        width: 36,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: ClientColors.outline,
+                          borderRadius: BorderRadius.circular(99),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(LucideIcons.x),
-                        onPressed: () => Navigator.pop(sheetCtx),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  _GlassTextField(
-                    controller: qtyCtrl,
-                    label: 'الكمية المضافة',
-                    icon: LucideIcons.hash,
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  // Date picker button
-                  GestureDetector(
-                    onTap: () async {
-                      final picked = await showDatePicker(
-                        context: sheetCtx,
-                        initialDate: expiry ?? DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate:
-                            DateTime.now().add(const Duration(days: 730)),
-                      );
-                      if (picked != null) setSheet(() => expiry = picked);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 14),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                            color: Colors.grey.shade200, width: 1),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(LucideIcons.calendar,
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        PastelIconBadge(
+                          icon: LucideIcons.packagePlus,
+                          color: ClientColors.primary,
+                          gradient: [ClientColors.primary],
+                          shape: BoxShape.circle,
+                          size: 42,
+                          iconSize: 18,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'دفعة جديدة — ${row.name}',
+                            style: Theme.of(sheetCtx).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(LucideIcons.x),
+                          onPressed: () => Navigator.pop(sheetCtx),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    _GlassTextField(
+                      controller: qtyCtrl,
+                      label: 'الكمية المضافة',
+                      icon: LucideIcons.hash,
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    // Date picker button
+                    GestureDetector(
+                      onTap: () async {
+                        final picked = await showDatePicker(
+                          context: sheetCtx,
+                          initialDate: expiry ?? DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime.now().add(
+                            const Duration(days: 730),
+                          ),
+                        );
+                        if (picked != null) setSheet(() => expiry = picked);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          color: ClientColors.surfaceMuted,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: ClientColors.outline,
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              LucideIcons.calendar,
                               size: 18,
-                              color: BranchColors.onSurfaceVariant),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              expiry == null
-                                  ? 'تاريخ انتهاء الصلاحية (اختياري)'
-                                  : 'الانتهاء: ${expiry!.year}-${expiry!.month.toString().padLeft(2, '0')}-${expiry!.day.toString().padLeft(2, '0')}',
-                              style: TextStyle(
-                                color: expiry == null
-                                    ? BranchColors.onSurfaceVariant
-                                    : BranchColors.onSurface,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
+                              color: ClientColors.textMuted,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                expiry == null
+                                    ? 'تاريخ انتهاء الصلاحية (اختياري)'
+                                    : 'الانتهاء: ${expiry!.year}-${expiry!.month.toString().padLeft(2, '0')}-${expiry!.day.toString().padLeft(2, '0')}',
+                                style: TextStyle(
+                                  color: expiry == null
+                                      ? ClientColors.textMuted
+                                      : ClientColors.text,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
-                          ),
-                          if (expiry != null)
-                            GestureDetector(
-                              onTap: () => setSheet(() => expiry = null),
-                              child: const Icon(LucideIcons.x,
+                            if (expiry != null)
+                              GestureDetector(
+                                onTap: () => setSheet(() => expiry = null),
+                                child: const Icon(
+                                  LucideIcons.x,
                                   size: 16,
-                                  color: BranchColors.onSurfaceVariant),
-                            ),
-                        ],
+                                  color: ClientColors.textMuted,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  _GradientSaveButton(
-                    label: 'إضافة الدفعة',
-                    gradient: BranchColors.metricBlueGradient,
-                    onPressed: () async {
-                      final qty = int.tryParse(qtyCtrl.text.trim());
-                      if (qty == null || qty <= 0) return;
-                      await context.read<BranchController>().addStockBatch(
+                    const SizedBox(height: AppSpacing.lg),
+                    _GradientSaveButton(
+                      label: 'إضافة الدفعة',
+                      gradient: [ClientColors.primary],
+                      onPressed: () async {
+                        final qty = int.tryParse(qtyCtrl.text.trim());
+                        if (qty == null || qty <= 0) return;
+                        await context.read<BranchController>().addStockBatch(
                           productId: row.productId,
                           quantity: qty,
-                          expiryDate: expiry);
-                      if (sheetCtx.mounted) Navigator.pop(sheetCtx);
-                    },
-                  ),
-                ],
+                          expiryDate: expiry,
+                        );
+                        if (sheetCtx.mounted) Navigator.pop(sheetCtx);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -345,7 +366,7 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
       children: [
         Expanded(
           child: RefreshIndicator(
-            color: BranchColors.glassHeroGradient.first,
+            color: ClientColors.primary,
             backgroundColor: Colors.white,
             onRefresh: branch.loadCatalog,
             child: ListView(
@@ -355,8 +376,8 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
                 // Hero header
                 const BranchManagerHero(
                   title: 'المخزون',
-                  subtitle:
-                      'راقب مستويات المخزون وأضف دفعات جديدة بسهولة.',
+                  subtitle: 'راقب مستويات المخزون وأضف دفعات جديدة بسهولة.',
+                  gradient: ClientColors.heroGradient,
                 ),
                 const SizedBox(height: 12),
 
@@ -364,17 +385,22 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
                 GestureDetector(
                   onTap: () => _bulkImport(context),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: BranchColors.pastelVioletGradient,
+                        colors: [ClientColors.primaryDark],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: BranchColors.pastelVioletGradient.first.withValues(alpha: .25),
+                          color: ClientColors.primaryDark.withValues(
+                            alpha: .25,
+                          ),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
@@ -383,11 +409,16 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(LucideIcons.upload, color: Colors.white, size: 18),
+                        const Icon(
+                          LucideIcons.upload,
+                          color: Colors.white,
+                          size: 18,
+                        ),
                         const SizedBox(width: 10),
                         Text(
                           '📤 استيراد بالجملة (CSV)',
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          style: Theme.of(context).textTheme.labelLarge
+                              ?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w800,
                               ),
@@ -419,7 +450,7 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
                       _InventoryFilterCard(
                         label: 'الكل',
                         icon: LucideIcons.layoutGrid,
-                        gradient: BranchColors.glassHeroGradient,
+                        gradient: [ClientColors.primary],
                         selected: _filter == 'all',
                         onTap: () => setState(() {
                           _filter = 'all';
@@ -429,7 +460,7 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
                       _InventoryFilterCard(
                         label: 'متوفر',
                         icon: LucideIcons.checkCircle,
-                        gradient: BranchColors.metricGreenGradient,
+                        gradient: [ClientColors.success],
                         selected: _filter == 'available',
                         onTap: () => setState(() {
                           _filter = 'available';
@@ -439,7 +470,7 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
                       _InventoryFilterCard(
                         label: 'مخزون منخفض',
                         icon: LucideIcons.alertTriangle,
-                        gradient: BranchColors.metricOrangeGradient,
+                        gradient: [ClientColors.warning],
                         selected: _filter == 'low',
                         onTap: () => setState(() {
                           _filter = 'low';
@@ -449,7 +480,7 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
                       _InventoryFilterCard(
                         label: 'تنتهي قريباً',
                         icon: LucideIcons.clock,
-                        gradient: BranchColors.metricBlueGradient,
+                        gradient: [ClientColors.primary],
                         selected: _filter == 'expiring',
                         onTap: () => setState(() {
                           _filter = 'expiring';
@@ -459,7 +490,7 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
                       _InventoryFilterCard(
                         label: 'نفد',
                         icon: LucideIcons.xCircle,
-                        gradient: [BranchColors.error, BranchColors.danger],
+                        gradient: [ClientColors.danger, ClientColors.danger],
                         selected: _filter == 'out',
                         onTap: () => setState(() {
                           _filter = 'out';
@@ -497,11 +528,9 @@ class _BranchInventoryTabState extends State<BranchInventoryTab> {
                 if (filtered.length > _visible) ...[
                   const SizedBox(height: 10),
                   _GradientSaveButton(
-                    label:
-                        'عرض المزيد (${filtered.length - _visible} متبقي)',
-                    gradient: BranchColors.glassPrimaryGradient,
-                    onPressed: () =>
-                        setState(() => _visible += _pageSize),
+                    label: 'عرض المزيد (${filtered.length - _visible} متبقي)',
+                    gradient: [ClientColors.primary],
+                    onPressed: () => setState(() => _visible += _pageSize),
                   ),
                 ],
               ],
@@ -539,8 +568,7 @@ class _InventoryFilterCard extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 220),
           curve: Curves.easeOut,
-          padding:
-              const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             gradient: selected
                 ? LinearGradient(
@@ -549,8 +577,7 @@ class _InventoryFilterCard extends StatelessWidget {
                     end: Alignment.bottomRight,
                   )
                 : null,
-            color:
-                selected ? null : Colors.white.withValues(alpha: .80),
+            color: selected ? null : Colors.white.withValues(alpha: .80),
             borderRadius: BorderRadius.circular(99),
             border: Border.all(
               color: selected
@@ -565,24 +592,22 @@ class _InventoryFilterCard extends StatelessWidget {
                     : Colors.black.withValues(alpha: .04),
                 blurRadius: selected ? 12 : 6,
                 offset: const Offset(0, 3),
-              )
+              ),
             ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon,
-                  size: 14,
-                  color: selected
-                      ? Colors.white
-                      : BranchColors.onSurfaceVariant),
+              Icon(
+                icon,
+                size: 14,
+                color: selected ? Colors.white : ClientColors.textMuted,
+              ),
               const SizedBox(width: 6),
               Text(
                 label,
                 style: TextStyle(
-                  color: selected
-                      ? Colors.white
-                      : BranchColors.onSurfaceVariant,
+                  color: selected ? Colors.white : ClientColors.textMuted,
                   fontWeight: FontWeight.w700,
                   fontSize: 12,
                 ),
@@ -610,11 +635,11 @@ class _CatalogCard extends StatelessWidget {
 
   (String label, List<Color> gradient) get _statusInfo {
     if (row.isOutOfStock) {
-      return ('نفد', [BranchColors.error, BranchColors.danger]);
+      return ('نفد', [ClientColors.danger, ClientColors.danger]);
     }
-    if (row.isLowStock) return ('منخفض', BranchColors.metricOrangeGradient);
-    if (row.isExpiringSoon) return ('تنتهي قريباً', BranchColors.metricBlueGradient);
-    return ('متوفر', BranchColors.metricGreenGradient);
+    if (row.isLowStock) return ('منخفض', [ClientColors.warning]);
+    if (row.isExpiringSoon) return ('تنتهي قريباً', [ClientColors.primary]);
+    return ('متوفر', [ClientColors.success]);
   }
 
   @override
@@ -637,8 +662,7 @@ class _CatalogCard extends StatelessWidget {
             offset: const Offset(0, 2),
           ),
         ],
-        border: Border.all(
-            color: Colors.grey.shade100, width: 1),
+        border: Border.all(color: ClientColors.outline, width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -660,11 +684,14 @@ class _CatalogCard extends StatelessWidget {
                     color: gradient.first.withValues(alpha: .30),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
-                  )
+                  ),
                 ],
               ),
-              child: const Icon(LucideIcons.pill,
-                  size: 22, color: Colors.white),
+              child: const Icon(
+                LucideIcons.pill,
+                size: 22,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(width: 12),
 
@@ -678,38 +705,37 @@ class _CatalogCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: BranchColors.onSurface,
-                        ),
+                      fontWeight: FontWeight.w800,
+                      color: ClientColors.text,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(LucideIcons.package,
-                          size: 12,
-                          color: BranchColors.onSurfaceVariant),
+                      Icon(
+                        LucideIcons.package,
+                        size: 12,
+                        color: ClientColors.textMuted,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '${row.quantity} ${row.unit}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelSmall
-                            ?.copyWith(
-                                color: BranchColors.onSurfaceVariant),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: ClientColors.textMuted,
+                        ),
                       ),
                       if (row.nearestExpiry != null) ...[
                         const SizedBox(width: 8),
-                        Icon(LucideIcons.calendar,
-                            size: 12,
-                            color: BranchColors.onSurfaceVariant),
+                        Icon(
+                          LucideIcons.calendar,
+                          size: 12,
+                          color: ClientColors.textMuted,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           row.nearestExpiry!.substring(0, 10),
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
-                              ?.copyWith(
-                                  color: BranchColors.onSurfaceVariant),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(color: ClientColors.textMuted),
                         ),
                       ],
                     ],
@@ -720,8 +746,7 @@ class _CatalogCard extends StatelessWidget {
 
             // Status badge
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: gradient,
@@ -734,15 +759,16 @@ class _CatalogCard extends StatelessWidget {
                     color: gradient.first.withValues(alpha: .25),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
-                  )
+                  ),
                 ],
               ),
               child: Text(
                 label,
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w800),
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
             ),
             const SizedBox(width: 4),
@@ -751,13 +777,13 @@ class _CatalogCard extends StatelessWidget {
             IconButton(
               tooltip: 'تعديل الكمية',
               icon: const Icon(LucideIcons.pencil, size: 18),
-              color: BranchColors.onSurfaceVariant,
+              color: ClientColors.textMuted,
               onPressed: onEdit,
             ),
             IconButton(
               tooltip: 'دفعة جديدة',
               icon: const Icon(LucideIcons.plusCircle, size: 20),
-              color: BranchColors.primary,
+              color: ClientColors.primary,
               onPressed: onBatch,
             ),
           ],
@@ -791,29 +817,34 @@ class _GlassTextField extends StatelessWidget {
       keyboardType: keyboardType,
       onChanged: onChanged,
       style: const TextStyle(
-          color: BranchColors.onSurface, fontWeight: FontWeight.w600),
+        color: ClientColors.text,
+        fontWeight: FontWeight.w600,
+      ),
       decoration: InputDecoration(
         hintText: label,
         hintStyle: const TextStyle(
-            color: BranchColors.onSurfaceVariant, fontWeight: FontWeight.w400),
-        prefixIcon: Icon(icon, size: 18, color: BranchColors.onSurfaceVariant),
+          color: ClientColors.textMuted,
+          fontWeight: FontWeight.w400,
+        ),
+        prefixIcon: Icon(icon, size: 18, color: ClientColors.textMuted),
         filled: true,
-        fillColor: Colors.grey.shade100,
+        fillColor: ClientColors.surfaceMuted,
         isDense: true,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
+          borderSide: BorderSide(color: ClientColors.outline, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
+          borderSide: BorderSide(color: ClientColors.outline, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(
-              color: BranchColors.glassHeroGradient.first, width: 1.5),
+          borderSide: BorderSide(color: ClientColors.primary, width: 1.5),
         ),
       ),
     );
@@ -852,7 +883,7 @@ class _GradientSaveButton extends StatelessWidget {
               color: gradient.first.withValues(alpha: .35),
               blurRadius: 14,
               offset: const Offset(0, 5),
-            )
+            ),
           ],
         ),
         child: Text(
@@ -884,7 +915,7 @@ class _EmptyInventory extends StatelessWidget {
             color: Colors.black.withValues(alpha: .04),
             blurRadius: 16,
             offset: const Offset(0, 6),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -895,30 +926,37 @@ class _EmptyInventory extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: const LinearGradient(
-                  colors: BranchColors.metricGreenGradient,
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight),
+                colors: [ClientColors.success],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: BranchColors.metricGreenGradient.first
-                      .withValues(alpha: .3),
+                  color: ClientColors.success.withValues(alpha: .3),
                   blurRadius: 16,
                   offset: const Offset(0, 6),
-                )
+                ),
               ],
             ),
-            child: const Icon(LucideIcons.packageSearch,
-                color: Colors.white, size: 26),
+            child: const Icon(
+              LucideIcons.packageSearch,
+              color: Colors.white,
+              size: 26,
+            ),
           ),
           const SizedBox(height: 14),
-          Text('لا توجد أصناف مطابقة',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  )),
+          Text(
+            'لا توجد أصناف مطابقة',
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 6),
-          Text('جرّب تغيير الفلتر أو كلمة البحث.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall),
+          Text(
+            'جرّب تغيير الفلتر أو كلمة البحث.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ],
       ),
     );

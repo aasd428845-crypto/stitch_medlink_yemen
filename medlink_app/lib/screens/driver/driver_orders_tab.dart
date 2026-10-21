@@ -89,15 +89,13 @@ class _DriverOrdersTabState extends State<DriverOrdersTab> {
                           const Icon(
                             Icons.local_shipping_outlined,
                             size: 48,
-                            color: BranchColors.outline,
+                            color: ClientColors.outline,
                           ),
                           const SizedBox(height: AppSpacing.md),
                           Text(
                             l10n.driverNoOrders,
                             style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: BranchColors.onSurfaceVariant,
-                                ),
+                                ?.copyWith(color: ClientColors.textMuted),
                           ),
                         ],
                       ),
@@ -167,7 +165,7 @@ class _SegmentButton extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: selected ? BranchColors.primary : Colors.transparent,
+              color: selected ? ClientColors.primary : Colors.transparent,
               width: 3,
             ),
           ),
@@ -176,9 +174,7 @@ class _SegmentButton extends StatelessWidget {
         child: Text(
           label,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: selected
-                ? BranchColors.primary
-                : BranchColors.onSurfaceVariant,
+            color: selected ? ClientColors.primary : ClientColors.textMuted,
             fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
           ),
         ),
@@ -245,7 +241,7 @@ class _DriverOrderCard extends StatelessWidget {
                   const Icon(
                     Icons.person_outline,
                     size: 16,
-                    color: BranchColors.onSurfaceVariant,
+                    color: ClientColors.textMuted,
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   Text(clientName, style: theme.textTheme.bodyMedium),
@@ -259,14 +255,14 @@ class _DriverOrderCard extends StatelessWidget {
                   const Icon(
                     Icons.location_on_outlined,
                     size: 16,
-                    color: BranchColors.onSurfaceVariant,
+                    color: ClientColors.textMuted,
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   Expanded(
                     child: Text(
                       address,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: BranchColors.onSurfaceVariant,
+                        color: ClientColors.textMuted,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -282,7 +278,7 @@ class _DriverOrderCard extends StatelessWidget {
                     const Icon(
                       Icons.schedule_outlined,
                       size: 16,
-                      color: BranchColors.onSurfaceVariant,
+                      color: ClientColors.textMuted,
                     ),
                     const SizedBox(width: AppSpacing.xs),
                     Text(
@@ -290,7 +286,7 @@ class _DriverOrderCard extends StatelessWidget {
                           .replaceFirst('T', ' ')
                           .substring(0, 16),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: BranchColors.onSurfaceVariant,
+                        color: ClientColors.textMuted,
                       ),
                     ),
                   ],
@@ -339,13 +335,13 @@ class _DriverOrderCard extends StatelessWidget {
                   Text(
                     '$itemCount ${l10n.driverOrderItems}',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: BranchColors.onSurfaceVariant,
+                      color: ClientColors.textMuted,
                     ),
                   ),
                   Text(
                     '${order.totalAmount.toStringAsFixed(0)} ر.ي',
                     style: theme.textTheme.titleSmall?.copyWith(
-                      color: BranchColors.primary,
+                      color: ClientColors.primary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -373,20 +369,20 @@ class _StatusChip extends StatelessWidget {
     final (label, color, background) = switch (status) {
       'assigned' => (
         l10n.driverFilterAssigned,
-        BranchColors.primary,
-        BranchColors.secondaryContainer,
+        ClientColors.primary,
+        ClientColors.primarySoft,
       ),
       'in_progress' => (
         l10n.driverFilterInProgress,
-        BranchColors.warning,
-        BranchColors.warningContainer,
+        ClientColors.warning,
+        ClientColors.warning.withValues(alpha: .14),
       ),
       'delivered' => (
         l10n.driverFilterDelivered,
-        BranchColors.success,
-        BranchColors.successContainer,
+        ClientColors.success,
+        ClientColors.success.withValues(alpha: .14),
       ),
-      _ => (status, BranchColors.outline, BranchColors.surfaceVariant),
+      _ => (status, ClientColors.textMuted, ClientColors.surfaceMuted),
     };
 
     return Container(

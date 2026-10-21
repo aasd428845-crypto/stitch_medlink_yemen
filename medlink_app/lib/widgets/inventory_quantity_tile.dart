@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../models/inventory_item.dart';
 import '../utils/theme.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// One product row inside the branch inventory tab: name, quantity, a
 /// green/yellow/red stock-level indicator, and an edit button.
@@ -17,9 +18,9 @@ class InventoryQuantityTile extends StatelessWidget {
   final VoidCallback onEdit;
 
   Color _levelColor() {
-    if (item.quantity <= 0) return BranchColors.error;
-    if (item.quantity < 10) return BranchColors.warning;
-    return BranchColors.success;
+    if (item.quantity <= 0) return ClientColors.danger;
+    if (item.quantity < 10) return ClientColors.warning;
+    return ClientColors.success;
   }
 
   @override
@@ -63,7 +64,7 @@ class InventoryQuantityTile extends StatelessWidget {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.edit_outlined),
+              icon: const Icon(LucideIcons.edit),
               onPressed: onEdit,
             ),
           ],

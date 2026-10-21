@@ -28,68 +28,69 @@ class _PendingApprovalScreenState extends State<PendingApprovalScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: BranchGlassBackground(
+        colors: ClientColors.glassBackgroundColors,
+        orbColors: ClientColors.glassOrbColors,
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 380),
-                child: GlassCard(
-                  padding: const EdgeInsets.all(AppSpacing.xl),
-                  borderRadius: 30,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const AppLogo(size: 64),
-                      const SizedBox(height: AppSpacing.lg),
-                      Container(
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        decoration: BoxDecoration(
-                          color: AppColors.warningContainer,
-                          shape: BoxShape.circle,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 380),
+                  child: GlassCard(
+                    padding: const EdgeInsets.all(AppSpacing.xl),
+                    borderRadius: 30,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const AppLogo(size: 64),
+                        const SizedBox(height: AppSpacing.lg),
+                        Container(
+                          padding: const EdgeInsets.all(AppSpacing.md),
+                          decoration: BoxDecoration(
+                            color: ClientColors.warning.withValues(alpha: .14),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.hourglass_top_rounded,
+                            color: ClientColors.warning,
+                            size: 36,
+                          ),
                         ),
-                        child: const Icon(
-                          Icons.hourglass_top_rounded,
-                          color: AppColors.warning,
-                          size: 36,
+                        const SizedBox(height: AppSpacing.lg),
+                        Text(
+                          l10n.pendingApprovalTitle,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      Text(
-                        l10n.pendingApprovalTitle,
-                        style: Theme.of(context).textTheme.headlineSmall,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      Text(
-                        l10n.pendingApprovalMessage,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: BranchColors.onSurfaceVariant,
+                        const SizedBox(height: AppSpacing.sm),
+                        Text(
+                          l10n.pendingApprovalMessage,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: ClientColors.textMuted),
                         ),
-                      ),
-                      const SizedBox(height: AppSpacing.xl),
-                      AppPrimaryButton(
-                        label: l10n.pendingApprovalRefresh,
-                        isLoading: _isRefreshing,
-                        onPressed: _refresh,
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      TextButton(
-                        onPressed: () =>
-                            context.read<AuthController>().signOut(),
-                        child: Text(l10n.logoutButton),
-                      ),
-                    ],
+                        const SizedBox(height: AppSpacing.xl),
+                        AppPrimaryButton(
+                          label: l10n.pendingApprovalRefresh,
+                          isLoading: _isRefreshing,
+                          onPressed: _refresh,
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        TextButton(
+                          onPressed: () =>
+                              context.read<AuthController>().signOut(),
+                          child: Text(l10n.logoutButton),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
           ),
         ),
       ),

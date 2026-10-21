@@ -58,123 +58,122 @@ class _BonusWalletScreenState extends State<BonusWalletScreen> {
     final l10n = AppLocalizations.of(context)!;
     final wallet = context.watch<BonusWalletController>();
 
-    return Scaffold(
-      backgroundColor: ClientColors.background,
-      appBar: AppBar(
-        title: Text(l10n.bonusWalletTitle),
+    return Theme(
+      data: AppTheme.clientLight,
+      child: Scaffold(
         backgroundColor: ClientColors.background,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            tooltip: l10n.bonusRefresh,
-            onPressed: wallet.isLoading ? null : wallet.loadWallet,
-          ),
-        ],
-      ),
-      body: Builder(
-        builder: (context) {
-          if (wallet.isLoading && wallet.funds == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (wallet.error != null && wallet.funds == null) {
-            return _WalletError(
-              message: wallet.error!,
-              onRetry: wallet.loadWallet,
-            );
-          }
-
-          final funds = wallet.funds;
-          final recent = wallet.entries.take(5).toList();
-
-          return RefreshIndicator(
-            onRefresh: wallet.loadWallet,
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
-              children: [
-                _BalanceHero(
-                  available: funds?.available ?? 0,
-                  reserved: funds?.reserved ?? 0,
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: FilledButton.icon(
-                        onPressed: () =>
-                            context.push('/client/bonus-redeem'),
-                        icon: const Icon(
-                          Icons.shopping_bag_outlined,
-                          size: 20,
-                        ),
-                        label: Text(l10n.bonusRedeemTitle),
-                        style: FilledButton.styleFrom(
-                          minimumSize: const Size.fromHeight(48),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () =>
-                            context.push('/client/bonus-withdraw'),
-                        icon: const Icon(
-                          Icons.payments_outlined,
-                          size: 20,
-                        ),
-                        label: Text(l10n.bonusWithdrawTitle),
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(48),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: TextButton.icon(
-                    onPressed: () =>
-                        context.push('/client/bonus-requests'),
-                    icon: const Icon(Icons.receipt_long_rounded, size: 20),
-                    label: Text(l10n.bonusRequestsTitle),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ClientSectionTitle(
-                  title: l10n.bonusRecentActivity,
-                  icon: Icons.history_rounded,
-                  action: l10n.bonusViewAll,
-                  onAction: () => context.push('/client/bonus-history'),
-                ),                const SizedBox(height: 8),
-                if (recent.isEmpty)
-                  ClientCard(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Center(
-                        child: Text(
-                          l10n.bonusEmptyHistory,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
-                    ),
-                  )
-                else
-                  ...recent.map(
-                    (e) => _LedgerTile(
-                      entry: e,
-                      onTap: () => context.push('/client/bonus-history'),
-                    ),
-                  ),
-              ],
+        appBar: AppBar(
+          title: Text(l10n.bonusWalletTitle),
+          backgroundColor: ClientColors.background,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh_rounded),
+              tooltip: l10n.bonusRefresh,
+              onPressed: wallet.isLoading ? null : wallet.loadWallet,
             ),
-          );
-        },
+          ],
+        ),
+        body: Builder(
+          builder: (context) {
+            if (wallet.isLoading && wallet.funds == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (wallet.error != null && wallet.funds == null) {
+              return _WalletError(
+                message: wallet.error!,
+                onRetry: wallet.loadWallet,
+              );
+            }
+
+            final funds = wallet.funds;
+            final recent = wallet.entries.take(5).toList();
+
+            return RefreshIndicator(
+              onRefresh: wallet.loadWallet,
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+                children: [
+                  _BalanceHero(
+                    available: funds?.available ?? 0,
+                    reserved: funds?.reserved ?? 0,
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FilledButton.icon(
+                          onPressed: () => context.push('/client/bonus-redeem'),
+                          icon: const Icon(
+                            Icons.shopping_bag_outlined,
+                            size: 20,
+                          ),
+                          label: Text(l10n.bonusRedeemTitle),
+                          style: FilledButton.styleFrom(
+                            minimumSize: const Size.fromHeight(48),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () =>
+                              context.push('/client/bonus-withdraw'),
+                          icon: const Icon(Icons.payments_outlined, size: 20),
+                          label: Text(l10n.bonusWithdrawTitle),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(48),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton.icon(
+                      onPressed: () => context.push('/client/bonus-requests'),
+                      icon: const Icon(Icons.receipt_long_rounded, size: 20),
+                      label: Text(l10n.bonusRequestsTitle),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ClientSectionTitle(
+                    title: l10n.bonusRecentActivity,
+                    icon: Icons.history_rounded,
+                    action: l10n.bonusViewAll,
+                    onAction: () => context.push('/client/bonus-history'),
+                  ),
+                  const SizedBox(height: 8),
+                  if (recent.isEmpty)
+                    ClientCard(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Center(
+                          child: Text(
+                            l10n.bonusEmptyHistory,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    ...recent.map(
+                      (e) => _LedgerTile(
+                        entry: e,
+                        onTap: () => context.push('/client/bonus-history'),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

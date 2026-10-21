@@ -11,6 +11,7 @@ import '../../widgets/order_status_chip.dart';
 import '../../widgets/rate_driver_sheet.dart';
 import '../../widgets/driver_location_map.dart';
 import 'client_design.dart';
+import '../../services/supabase_bootstrap.dart';
 import 'order_cancel_section.dart';
 import 'order_discount_section.dart';
 
@@ -51,6 +52,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       if (mounted) setState(() => _isLoading = false);
     }
   }
+
+
+
 
   Future<void> _loadRating() async {
     try {
@@ -381,8 +385,11 @@ class _OrderContent extends StatelessWidget {
                       ],
                     ),
                     subtitle: Text('${l10n.quantityLabel}: ${item.quantity}'),
-                    trailing: Text(
-                      item.isBonus
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          item.isBonus
                           ? '0 ﷼'
                           : '${(item.quantity * item.unitPrice).toStringAsFixed(0)} ﷼',
                       style: TextStyle(
@@ -391,6 +398,10 @@ class _OrderContent extends StatelessWidget {
                             ? ClientColors.success
                             : ClientColors.primary,
                       ),
+                        ),
+                        const SizedBox(width: 8),
+                        _RemoveItemButton(orderId: order.id, itemId: item.id, onAfterRemoval: () => onDiscountChanged()),
+                      ],
                     ),
                   );
                 },
@@ -488,6 +499,9 @@ class _OrderContent extends StatelessWidget {
             status: order.status,
             onChanged: onDiscountChanged,
           ),
+          _AvailabilityResume(orderId: order.id, onChanged: () => onDiscountChanged()),
+          _WaitingAction(orderId: order.id, status: order.status, onChanged: () => onDiscountChanged()),
+          _AlternativePicker(orderId: order.id),
           if (isDelivered) ...[
             const SizedBox(height: 16),
             SizedBox(
@@ -559,3 +573,244 @@ class _RatingDisplay extends StatelessWidget {
     );
   }
 }
+class _RemoveItemButton extends StatefulWidget {
+  const _RemoveItemButton({required this.orderId, required this.itemId, required this.onAfterRemoval});
+  final String orderId;
+  final String itemId;
+  final VoidCallback onAfterRemoval;
+  @override
+  State<_RemoveItemButton> createState() => _RemoveItemButtonState();
+}
+
+class _RemoveItemButtonState extends State<_RemoveItemButton> {
+  bool _busy = false;
+
+  Future<void> _remove() async {
+    final key = '${widget.orderId}_remove_${widget.itemId}_${DateTime.now().microsecondsSinceEpoch}';
+    setState(() => _busy = true);
+    try {
+      await supabase.rpc('modify_order_item', params: {
+        'p_order_id': widget.orderId,
+        'p_order_item_id': widget.itemId,
+        'p_operation': 'remove',
+        'p_idempotency_key': key,
+      });
+      widget.onAfterRemoval();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تمت إزالة المنتج من الطلب.')));
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _confirm() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('تأكيد الإزالة'),
+        content: const Text('سيتم حذف المنتج من الطلب. قد يتغير إجمالي الطلب وقد يعاد احتساب خصم Bonus. أي refund مستحق سيعالجه النظام.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('إلغاء')),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('حذف')),
+        ],
+      ),
+    );
+    if (confirmed == true) await _remove();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _busy
+        ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+        : IconButton(onPressed: _confirm, icon: const Icon(Icons.delete_outline));
+  }
+}
+
+class _AvailabilityResume extends StatefulWidget {
+  const _AvailabilityResume({required this.orderId, required this.onChanged});
+  final String orderId;
+  final VoidCallback onChanged;
+  @override
+  State<_AvailabilityResume> createState() => _AvailabilityResumeState();
+}
+
+class _AvailabilityResumeState extends State<_AvailabilityResume> {
+  bool _busy = false;
+  bool _hasAvailable = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _refresh();
+  }
+
+  Future<void> _refresh() async {
+    try {
+      final res = await supabase
+          .from('order_shortage_events')
+          .select()
+          .eq('order_id', widget.orderId)
+          .eq('event', 'available_again');
+      setState(() => _hasAvailable = (res as List<dynamic>).isNotEmpty);
+    } catch (_) {}
+  }
+
+  Future<void> _confirm() async {
+    setState(() => _busy = true);
+    try {
+      await supabase.rpc('confirm_order_resume', params: {
+        'p_order_id': widget.orderId,
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم تأكيد متابعة الطلب')));
+        widget.onChanged();
+      }
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_hasAvailable) return const SizedBox.shrink();
+    return Card(
+      color: Colors.amber.shade50,
+      child: ListTile(
+        leading: const Icon(Icons.inventory_outlined, color: Colors.green),
+        title: const Text('المنتج أصبح متوفرًا'),
+        subtitle: const Text('الطلب لم يُستأنف تلقائيًا. يمكنك تأكيد متابعة الطلب.'),
+        trailing: _busy
+            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+            : TextButton(onPressed: _confirm, child: const Text('تأكيد المتابعة')),
+      ),
+    );
+  }
+}
+
+class _WaitingAction extends StatefulWidget {
+  const _WaitingAction({required this.orderId, required this.status, required this.onChanged});
+  final String orderId;
+  final String status;
+  final VoidCallback onChanged;
+  @override
+  _WaitingActionState createState() => _WaitingActionState();
+}
+
+class _WaitingActionState extends State<_WaitingAction> {
+  bool _busy = false;
+  Future<void> _mark() async {
+    setState(() => _busy = true);
+    try {
+      await supabase.rpc('set_order_waiting', params: {
+        'p_order_id': widget.orderId,
+        'p_reason': 'انتظار توفر المنتج',
+      });
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم وضع الطلب في حالة الانتظار')));
+      widget.onChanged();
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.status == 'waiting' || widget.status == 'delivered' || widget.status == 'cancelled') return const SizedBox.shrink();
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.hourglass_top_rounded),
+        title: const Text('انتظار توفر المنتج'),
+        subtitle: const Text('سيبقى الطلب في انتظار العميل دون auto-reactivation'),
+        trailing: _busy
+            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+            : TextButton(onPressed: _mark, child: const Text('انتظار')),
+      ),
+    );
+  }
+}
+
+class _AlternativePicker extends StatefulWidget {
+  const _AlternativePicker({required this.orderId});
+  final String orderId;
+  @override
+  _AlternativePickerState createState() => _AlternativePickerState();
+}
+
+class _AlternativePickerState extends State<_AlternativePicker> {
+  bool _loading = true;
+  String? _error;
+  List<Map<String, dynamic>> _rows = [];
+  final Set<String> _busy = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _refresh();
+  }
+
+  Future<void> _refresh() async {
+    setState(() { _loading = true; _error = null; });
+    try {
+      final res = await supabase
+          .from('order_alternatives')
+          .select()
+          .eq('order_id', widget.orderId)
+          .order('created_at');
+      if (!mounted) return;
+      setState(() { _rows = (res as List<dynamic>).map((e) => Map<String, dynamic>.from(e)).toList(); });
+    } catch (e) {
+      if (mounted) setState(() => _error = e.toString());
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _select(String id) async {
+    setState(() => _busy.add(id));
+    try {
+      await supabase.rpc('select_order_alternative', params: {'p_alt_id': id});
+      await _refresh();
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم اختيار البديل')));
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) setState(() => _busy.remove(id));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) return const SizedBox.shrink();
+    final active = _rows.where((e) => e['status'] != 'REJECTED').toList();
+    if (active.isEmpty) return const SizedBox.shrink();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('بدائل المنتجات', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            ...active.map((row) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(children: [
+                Expanded(child: Text('الحالة: ${row['status']}')),
+                if (row['status'] == 'PROPOSED')
+                  TextButton(
+                    onPressed: _busy.contains(row['id']) ? null : () => _select(row['id']),
+                    child: Text(_busy.contains(row['id']) ? 'جارٍ...' : 'اختيار هذا البديل'),
+                  ),
+              ]),
+            )),
+            if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

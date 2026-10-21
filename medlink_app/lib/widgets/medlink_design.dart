@@ -105,14 +105,9 @@ class GlassPanel extends StatelessWidget {
           child: Container(
             padding: padding,
             decoration: BoxDecoration(
-              color:
-                  color ??
-                  AppColors.surfaceContainerLow.withValues(alpha: 0.74),
+              color: color ?? ClientColors.surface.withValues(alpha: 0.74),
               borderRadius: BorderRadius.circular(radius),
-              border: Border.all(
-                color:
-                    borderColor ?? AppColors.onSurface.withValues(alpha: 0.10),
-              ),
+              border: Border.all(color: borderColor ?? ClientColors.outline),
             ),
             child: child,
           ),
@@ -250,7 +245,7 @@ class SectionHeading extends StatelessWidget {
             width: 4,
             height: 22,
             decoration: BoxDecoration(
-              color: AppColors.primary,
+              color: ClientColors.primary,
               borderRadius: BorderRadius.circular(AppRadius.full),
             ),
           ),

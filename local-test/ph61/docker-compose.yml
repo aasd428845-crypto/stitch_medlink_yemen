@@ -64,3 +64,19 @@ services:
         condition: service_healthy
     env_file:
       - .postgrest.env
+
+  ph61_kong:
+    image: public.ecr.aws/supabase/kong:2.8.1
+    container_name: ph61_kong
+    restart: "no"
+    networks:
+      - ph61_net
+    ports:
+      - "127.0.0.1:55400:8000"
+    volumes:
+      - ./kong.yml:/kong/kong.yml:ro
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /kong/kong.yml
+      KONG_PROXY_LISTEN: "0.0.0.0:8000"
+      KONG_ADMIN_LISTEN: "off"

@@ -70,7 +70,7 @@ class _RateDriverSheetState extends State<RateDriverSheet> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context)!.rateDriverSuccess),
-          backgroundColor: AppColors.success,
+          backgroundColor: ClientColors.success,
         ),
       );
     } catch (e) {
@@ -108,7 +108,7 @@ class _RateDriverSheetState extends State<RateDriverSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.outlineVariant,
+                color: ClientColors.outline,
                 borderRadius: BorderRadius.circular(AppRadius.full),
               ),
             ),
@@ -127,7 +127,7 @@ class _RateDriverSheetState extends State<RateDriverSheet> {
           Text(
             l10n.rateDriverPrompt,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: ClientColors.textMuted,
             ),
             textAlign: TextAlign.center,
           ),
@@ -148,8 +148,8 @@ class _RateDriverSheetState extends State<RateDriverSheet> {
                         : Icons.star_outline_rounded,
                     size: 42,
                     color: _selectedRating >= star
-                        ? AppColors.warning
-                        : AppColors.outlineVariant,
+                        ? ClientColors.warning
+                        : ClientColors.outline,
                   ),
                 ),
               );
@@ -161,10 +161,7 @@ class _RateDriverSheetState extends State<RateDriverSheet> {
           TextField(
             controller: _commentController,
             maxLines: 3,
-            decoration: InputDecoration(
-              hintText: l10n.rateDriverCommentHint,
-              border: const OutlineInputBorder(),
-            ),
+            decoration: InputDecoration(hintText: l10n.rateDriverCommentHint),
           ),
           const SizedBox(height: AppSpacing.sm),
 
@@ -172,8 +169,9 @@ class _RateDriverSheetState extends State<RateDriverSheet> {
           if (_error != null) ...[
             Text(
               _error!,
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: AppColors.error),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: ClientColors.danger,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.sm),
@@ -181,8 +179,7 @@ class _RateDriverSheetState extends State<RateDriverSheet> {
 
           // Submit button
           FilledButton(
-            onPressed:
-                (_selectedRating == 0 || _isSubmitting) ? null : _submit,
+            onPressed: (_selectedRating == 0 || _isSubmitting) ? null : _submit,
             child: _isSubmitting
                 ? const SizedBox(
                     width: 20,

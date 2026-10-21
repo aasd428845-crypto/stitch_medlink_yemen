@@ -58,13 +58,13 @@ class CartItemTile extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.successContainer,
+                        color: ClientColors.success.withValues(alpha: .14),
                         borderRadius: BorderRadius.circular(AppRadius.full),
                       ),
                       child: Text(
                         l10n.autoBonusBadge,
                         style: theme.textTheme.labelMedium?.copyWith(
-                          color: AppColors.success,
+                          color: ClientColors.success,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -84,8 +84,8 @@ class CartItemTile extends StatelessWidget {
                         : '${item.unitPrice.toStringAsFixed(0)} ﷼',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: item.isBonus
-                          ? AppColors.success
-                          : AppColors.primary,
+                          ? ClientColors.success
+                          : ClientColors.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -101,7 +101,7 @@ class CartItemTile extends StatelessWidget {
                   'x${item.quantity}',
                   style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: AppColors.success,
+                    color: ClientColors.success,
                   ),
                 ),
               )
@@ -135,11 +135,8 @@ class CartItemTile extends StatelessWidget {
 
   Widget _placeholder() {
     return Container(
-      color: AppColors.surfaceContainerLow,
-      child: const Icon(
-        Icons.medication_outlined,
-        color: AppColors.outlineVariant,
-      ),
+      color: ClientColors.surfaceMuted,
+      child: const Icon(Icons.medication_outlined, color: ClientColors.outline),
     );
   }
 }

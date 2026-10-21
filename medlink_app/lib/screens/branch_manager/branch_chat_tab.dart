@@ -61,8 +61,8 @@ class _BranchChatTabState extends State<BranchChatTab> {
             mainAxisSize: MainAxisSize.min,
             children: [
               PastelIconBadge(
-                icon: Icons.error_outline_rounded,
-                color: BranchColors.error,
+                icon: LucideIcons.alertCircle,
+                color: ClientColors.danger,
                 size: 56,
                 iconSize: 28,
                 shape: BoxShape.circle,
@@ -77,7 +77,7 @@ class _BranchChatTabState extends State<BranchChatTab> {
               FilledButton.icon(
                 onPressed: () =>
                     context.read<ChatController>().loadBranchRooms(branchId),
-                icon: const Icon(Icons.refresh_rounded),
+                icon: const Icon(LucideIcons.refreshCw),
                 label: const Text('إعادة المحاولة'),
               ),
             ],
@@ -99,6 +99,7 @@ class _BranchChatTabState extends State<BranchChatTab> {
         const BranchManagerHero(
           title: 'المحادثات',
           subtitle: 'تواصل سريع مع السائقين لمتابعة الطلبات.',
+          gradient: ClientColors.heroGradient,
         ),
         const SizedBox(height: 20),
 
@@ -112,16 +113,14 @@ class _BranchChatTabState extends State<BranchChatTab> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: BranchColors.metricBlueGradient,
+                colors: [ClientColors.primary],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(99),
               boxShadow: [
                 BoxShadow(
-                  color: BranchColors.metricBlueGradient.first.withValues(
-                    alpha: .28,
-                  ),
+                  color: ClientColors.primary.withValues(alpha: .28),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -188,9 +187,7 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: BranchColors.metricBlueGradient.first.withValues(
-                  alpha: .08,
-                ),
+                color: ClientColors.primary.withValues(alpha: .08),
                 blurRadius: 18,
                 offset: const Offset(0, 6),
               ),
@@ -212,16 +209,14 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
                   height: 52,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: BranchColors.metricBlueGradient,
+                      colors: [ClientColors.primary],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: BranchColors.metricBlueGradient.first.withValues(
-                          alpha: .30,
-                        ),
+                        color: ClientColors.primary.withValues(alpha: .30),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -244,7 +239,7 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
                         driverName,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: BranchColors.onSurface,
+                          color: ClientColors.text,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -256,14 +251,15 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
                               vertical: 3,
                             ),
                             decoration: BoxDecoration(
-                              color: BranchColors.glassHeroGradient.first
-                                  .withValues(alpha: .10),
+                              color: ClientColors.primary.withValues(
+                                alpha: .10,
+                              ),
                               borderRadius: BorderRadius.circular(99),
                             ),
                             child: Text(
                               orderId,
                               style: TextStyle(
-                                color: BranchColors.glassHeroGradient.first,
+                                color: ClientColors.primary,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 11,
                               ),
@@ -287,7 +283,7 @@ class _ChatRoomCardState extends State<_ChatRoomCard> {
                   child: const Icon(
                     LucideIcons.chevronLeft,
                     size: 16,
-                    color: BranchColors.onSurfaceVariant,
+                    color: ClientColors.textMuted,
                   ),
                 ),
               ],
@@ -330,15 +326,13 @@ class _ChatEmptyState extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: const LinearGradient(
-                    colors: BranchColors.metricBlueGradient,
+                    colors: [ClientColors.primary],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: BranchColors.metricBlueGradient.first.withValues(
-                        alpha: .30,
-                      ),
+                      color: ClientColors.primary.withValues(alpha: .30),
                       blurRadius: 18,
                       offset: const Offset(0, 6),
                     ),

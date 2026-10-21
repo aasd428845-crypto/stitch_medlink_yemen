@@ -77,18 +77,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          foregroundColor: BranchColors.onSurface,
+          foregroundColor: ClientColors.text,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () => context.go('/login'),
           ),
         ),
         body: BranchGlassBackground(
+          colors: ClientColors.glassBackgroundColors,
+          orbColors: ClientColors.glassOrbColors,
           child: SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -114,9 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Text(
                             l10n.registerSubtitle,
                             style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: BranchColors.onSurfaceVariant,
-                                ),
+                                ?.copyWith(color: ClientColors.textMuted),
                           ),
                           const SizedBox(height: 24),
                           if (_errorMessage != null) ...[
@@ -176,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             children: [
                               Checkbox(
                                 value: _acceptedTerms,
-                                activeColor: BranchColors.primary,
+                                activeColor: ClientColors.primary,
                                 onChanged: (v) =>
                                     setState(() => _acceptedTerms = v ?? false),
                               ),
@@ -189,7 +189,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       child: Text(
                                         l10n.termsAndConditions,
                                         style: const TextStyle(
-                                          color: BranchColors.primary,
+                                          color: ClientColors.primary,
                                           decoration: TextDecoration.underline,
                                         ),
                                       ),
@@ -204,8 +204,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onPressed: _isSubmitting ? null : _submit,
                             style: FilledButton.styleFrom(
                               minimumSize: const Size.fromHeight(52),
-                              backgroundColor: BranchColors.primaryContainer,
-                              foregroundColor: BranchColors.onPrimary,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18),
                               ),
@@ -216,7 +214,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     width: 20,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      color: BranchColors.onPrimary,
+                                      color: Colors.white,
                                     ),
                                   )
                                 : Text(

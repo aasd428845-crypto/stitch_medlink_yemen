@@ -132,128 +132,131 @@ class _BonusWithdrawScreenState extends State<BonusWithdrawScreen> {
     final l10n = AppLocalizations.of(context)!;
     final wallet = context.watch<BonusWalletController>();
 
-    return Scaffold(
-      backgroundColor: ClientColors.background,
-      appBar: AppBar(
-        title: Text(l10n.bonusWithdrawTitle),
+    return Theme(
+      data: AppTheme.clientLight,
+      child: Scaffold(
         backgroundColor: ClientColors.background,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
-        children: [
-          ClientCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClientSectionTitle(
-                  title: l10n.bonusAvailable,
-                  icon: Icons.account_balance_wallet_rounded,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${wallet.funds?.available ?? 0}',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
+        appBar: AppBar(
+          title: Text(l10n.bonusWithdrawTitle),
+          backgroundColor: ClientColors.background,
+        ),
+        body: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+          children: [
+            ClientCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClientSectionTitle(
+                    title: l10n.bonusAvailable,
+                    icon: Icons.account_balance_wallet_rounded,
                   ),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    '${wallet.funds?.available ?? 0}',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          ClientCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.bonusAmountLabel,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _amountCtrl,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
+            const SizedBox(height: 16),
+            ClientCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.bonusAmountLabel,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
-                  decoration: InputDecoration(
-                    hintText: '0',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _amountCtrl,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
                     ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 12,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  l10n.bonusMethodLabel,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _methodCtrl,
-                  decoration: InputDecoration(
-                    hintText: l10n.bonusMethodHint,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 12,
+                    decoration: InputDecoration(
+                      hintText: '0',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  l10n.bonusNotesLabel,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _notesCtrl,
-                  maxLines: 2,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 12,
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.bonusMethodLabel,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _methodCtrl,
+                    decoration: InputDecoration(
+                      hintText: l10n.bonusMethodHint,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.bonusNotesLabel,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _notesCtrl,
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          if (_formError != null) ...[
-            const SizedBox(height: 8),
-            Text(
-              _formError!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: ClientColors.danger,
+            if (_formError != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                _formError!,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: ClientColors.danger),
+              ),
+            ],
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              onPressed: wallet.isSubmitting ? null : _confirm,
+              icon: wallet.isSubmitting
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.payments_outlined),
+              label: Text(l10n.bonusSubmitWithdrawal),
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(52),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                ),
               ),
             ),
           ],
-          const SizedBox(height: 16),
-          FilledButton.icon(
-            onPressed: wallet.isSubmitting ? null : _confirm,
-            icon: wallet.isSubmitting
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.payments_outlined),
-            label: Text(l10n.bonusSubmitWithdrawal),
-            style: FilledButton.styleFrom(
-              minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -277,9 +280,9 @@ class _ReviewRow extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
               textAlign: TextAlign.end,
             ),
           ),

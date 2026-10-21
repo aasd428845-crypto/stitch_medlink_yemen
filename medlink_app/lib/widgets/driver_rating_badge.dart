@@ -28,7 +28,7 @@ class DriverRatingBadge extends StatelessWidget {
         height: 22,
         width: 70,
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLow,
+          color: ClientColors.surfaceMuted,
           borderRadius: BorderRadius.circular(AppRadius.full),
         ),
       );
@@ -38,17 +38,16 @@ class DriverRatingBadge extends StatelessWidget {
     if (count == 0) {
       return Container(
         padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm, vertical: 2),
+          horizontal: AppSpacing.sm,
+          vertical: 2,
+        ),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLow,
+          color: ClientColors.surfaceMuted,
           borderRadius: BorderRadius.circular(AppRadius.full),
         ),
         child: Text(
           noRatingsLabel,
-          style: const TextStyle(
-            fontSize: 10,
-            color: AppColors.onSurfaceVariant,
-          ),
+          style: const TextStyle(fontSize: 10, color: ClientColors.textMuted),
         ),
       );
     }
@@ -57,22 +56,24 @@ class DriverRatingBadge extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm, vertical: 2),
+        horizontal: AppSpacing.sm,
+        vertical: 2,
+      ),
       decoration: BoxDecoration(
-        color: AppColors.warningContainer,
+        color: ClientColors.warning.withValues(alpha: .14),
         borderRadius: BorderRadius.circular(AppRadius.full),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.star_rounded, size: 13, color: AppColors.warning),
+          const Icon(Icons.star_rounded, size: 13, color: ClientColors.warning),
           const SizedBox(width: 2),
           Text(
             '$avgStr · $count',
             style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: AppColors.warning,
+              color: ClientColors.warning,
             ),
           ),
         ],

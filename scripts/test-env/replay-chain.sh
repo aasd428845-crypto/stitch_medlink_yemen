@@ -11,7 +11,7 @@ REPO="/home/adman/stitch_medlink_yemen"
 CONTAINER="medlink_ph51_test"
 ROOT_MIG="$REPO/supabase/migrations"
 WEB_MIG="$REPO/Medlik-Waap/supabase/migrations"
-STOP_AT="${1:-0022}"   # "0022" = pre-fix tip; "0023" = include the fix migration
+STOP_AT="${1:-0022}"   # "0022" = pre-fix tip; "0023" = +fix; "0024" = +posted-journal fix; "0030" = +E1 GL config (0028/0029/0030)
 
 # --- guard: refuse anything that resembles a production target ---------------
 for banned in lmkomzqioneuyvatzsov hhqhoqwpebnmfuhwhllw; do
@@ -65,9 +65,37 @@ R 0016
 # Bonus core + earn engine + discounts + cancellation: R-0017 .. R-0022
 R 0017; R 0018; R 0019; R 0020; R 0021; R 0022
 
-if [[ "$STOP_AT" == "0023" ]]; then
+if [[ "$STOP_AT" == "0023" || "$STOP_AT" == "0024" || "$STOP_AT" == "0030" ]]; then
   echo "--> R-0023 (the fix)"
   exec_sql < "$ROOT_MIG/0023_bonus_rule_max_earn_contract_fix.sql"
+fi
+
+if [[ "$STOP_AT" == "0024" || "$STOP_AT" == "0030" ]]; then
+  echo "--> R-0024 (posted/pending triggers)"
+  exec_sql < "$ROOT_MIG/0024_fix_posted_journal_posting.sql"
+fi
+
+# Chain-integrity assertion (PHASE 72): at the fixed tip the four guard
+# functions must carry the corrected 0024 bodies and the three protection
+# triggers must exist. Fails closed (ON_ERROR_STOP aborts the script) if the
+# chain stopped early or a legacy W-0008/W-0010 fragment was applied on top of
+# 0024. Read-only; see scripts/test-env/ph72-chain-integrity.sql.
+if [[ "$STOP_AT" == "0024" || "$STOP_AT" == "0030" ]]; then
+  echo "== chain integrity assertion (ph72) =="
+  exec_sql < "$REPO/scripts/test-env/ph72-chain-integrity.sql"
+fi
+
+# PHASE 4B — E1 → GL fully-configurable account policy (0028/0029/0030).
+# 0028 = fail-closed decision hook + AFTER INSERT trigger (PENDING request);
+# 0029 = director role→account map + journal leg layout; 0030 = the director
+# post RPC (reads debit/credit codes from the per-earn snapshot — no hardcode).
+if [[ "$STOP_AT" == "0030" ]]; then
+  echo "--> R-0028 (E1 decision hook + trigger)"
+  exec_sql < "$ROOT_MIG/0028_bonus_earn_gl_integration.sql"
+  echo "--> R-0029 (role→account map + journal leg layout)"
+  exec_sql < "$ROOT_MIG/0029_bonus_role_account_mapping.sql"
+  echo "--> R-0030 (director GL post RPC)"
+  exec_sql < "$ROOT_MIG/0030_bonus_earn_gl_posting.sql"
 fi
 
 echo "== DONE at $STOP_AT =="

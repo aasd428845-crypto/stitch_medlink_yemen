@@ -9,6 +9,7 @@ import '../../utils/theme.dart';
 import '../../widgets/app_primary_button.dart';
 import '../../widgets/app_text_field.dart';
 import '../../widgets/error_banner.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Bottom sheet for managing an existing driver: activate/suspend account and
 /// reset password. The branch manager stays signed in throughout.
@@ -105,10 +106,10 @@ class _ManageDriverSheetState extends State<ManageDriverSheet> {
             children: [
               CircleAvatar(
                 backgroundColor:
-                    isActive ? BranchColors.successContainer : BranchColors.warningContainer,
+                    isActive ? ClientColors.success.withValues(alpha: .1) : ClientColors.warning.withValues(alpha: .1),
                 child: Icon(
-                  Icons.local_shipping_rounded,
-                  color: isActive ? BranchColors.success : BranchColors.warning,
+                  LucideIcons.truck,
+                  color: isActive ? ClientColors.success : ClientColors.warning,
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -131,7 +132,7 @@ class _ManageDriverSheetState extends State<ManageDriverSheet> {
               ),
               _StatusBadge(status: driver.accountStatus),
               IconButton(
-                icon: const Icon(Icons.close),
+                icon: const Icon(LucideIcons.x),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],
@@ -146,18 +147,18 @@ class _ManageDriverSheetState extends State<ManageDriverSheet> {
           // ── Activate / Suspend ──────────────────────────────────────────
           OutlinedButton.icon(
             icon: Icon(
-              isActive ? Icons.pause_circle_outline : Icons.check_circle_outline,
-              color: isActive ? BranchColors.warning : BranchColors.success,
+              isActive ? LucideIcons.pauseCircle : LucideIcons.checkCircle,
+              color: isActive ? ClientColors.warning : ClientColors.success,
             ),
             label: Text(
               isActive ? l10n.driverSuspend : l10n.driverActivate,
               style: TextStyle(
-                color: isActive ? BranchColors.warning : BranchColors.success,
+                color: isActive ? ClientColors.warning : ClientColors.success,
               ),
             ),
             style: OutlinedButton.styleFrom(
               side: BorderSide(
-                color: isActive ? BranchColors.warning : BranchColors.success,
+                color: isActive ? ClientColors.warning : ClientColors.success,
               ),
             ),
             onPressed: _loadingStatus ? null : _toggleStatus,
@@ -166,7 +167,7 @@ class _ManageDriverSheetState extends State<ManageDriverSheet> {
 
           // ── Reset Password ──────────────────────────────────────────────
           OutlinedButton.icon(
-            icon: const Icon(Icons.lock_reset_rounded),
+            icon: const Icon(LucideIcons.lock),
             label: Text(l10n.driverResetPassword),
             onPressed: () => setState(() => _showReset = !_showReset),
           ),
@@ -182,7 +183,7 @@ class _ManageDriverSheetState extends State<ManageDriverSheet> {
                     label: l10n.driverResetPasswordNew,
                     controller: _newPasswordCtrl,
                     obscureText: true,
-                    prefixIcon: Icons.lock_outline,
+                    prefixIcon: LucideIcons.lock,
                     validator: (v) {
                       if (v == null || v.trim().isEmpty) {
                         return l10n.validationRequired;
@@ -198,7 +199,7 @@ class _ManageDriverSheetState extends State<ManageDriverSheet> {
                     label: l10n.driverResetPasswordConfirm,
                     controller: _confirmCtrl,
                     obscureText: true,
-                    prefixIcon: Icons.lock_outline,
+                    prefixIcon: LucideIcons.lock,
                     validator: (v) {
                       if (v == null || v.trim().isEmpty) {
                         return l10n.validationRequired;
@@ -238,18 +239,18 @@ class _StatusBadge extends StatelessWidget {
     final (label, bg, fg) = switch (status) {
       AccountStatus.active => (
           l10n.driverStatusActive,
-          BranchColors.successContainer,
-          BranchColors.success,
+          ClientColors.success.withValues(alpha: .1),
+          ClientColors.success,
         ),
       AccountStatus.suspended => (
           l10n.driverStatusSuspended,
-          BranchColors.warningContainer,
-          BranchColors.warning,
+          ClientColors.warning.withValues(alpha: .1),
+          ClientColors.warning,
         ),
       _ => (
           l10n.driverStatusPending,
-          BranchColors.secondaryContainer,
-          BranchColors.secondary,
+          ClientColors.primaryDark.withValues(alpha: .1),
+          ClientColors.primaryDark,
         ),
     };
     return Container(

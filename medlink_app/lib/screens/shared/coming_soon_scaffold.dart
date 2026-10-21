@@ -30,12 +30,12 @@ class ComingSoonBody extends StatelessWidget {
               padding: const EdgeInsets.all(AppSpacing.md),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.violet.withValues(alpha: 0.14),
+                color: ClientColors.navy.withValues(alpha: 0.14),
               ),
               child: const Icon(
                 Icons.construction_rounded,
                 size: 34,
-                color: AppColors.violet,
+                color: ClientColors.navy,
               ),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -44,9 +44,9 @@ class ComingSoonBody extends StatelessWidget {
             Text(
               l10n.comingSoon,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: ClientColors.textMuted),
             ),
           ],
         ),
@@ -76,6 +76,8 @@ class MissingAccountDataBody extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
         child: GlassPanel(
+          color: ClientColors.surface.withValues(alpha: .74),
+          borderColor: ClientColors.outline,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -83,12 +85,12 @@ class MissingAccountDataBody extends StatelessWidget {
                 padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.warning.withValues(alpha: 0.14),
+                  color: ClientColors.warning.withValues(alpha: 0.14),
                 ),
                 child: const Icon(
                   Icons.account_tree_outlined,
                   size: 34,
-                  color: AppColors.warning,
+                  color: ClientColors.warning,
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
@@ -101,9 +103,9 @@ class MissingAccountDataBody extends StatelessWidget {
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: ClientColors.textMuted),
               ),
             ],
           ),

@@ -11,8 +11,10 @@ class TermsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: BranchGlassBackground(
+        colors: ClientColors.glassBackgroundColors,
+        orbColors: ClientColors.glassOrbColors,
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(title: Text(l10n.termsAndConditions)),

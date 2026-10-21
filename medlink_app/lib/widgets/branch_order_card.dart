@@ -4,6 +4,7 @@ import '../l10n/app_localizations.dart';
 import '../models/order.dart';
 import '../utils/theme.dart';
 import 'order_status_chip.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BranchOrderCard extends StatelessWidget {
   const BranchOrderCard({
@@ -35,15 +36,15 @@ class BranchOrderCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 2),
       decoration: BoxDecoration(
-        color: BranchColors.surfaceContainerLowest.withValues(alpha: .74),
+        color: ClientColors.surface.withValues(alpha: .74),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: BranchColors.onPrimary.withValues(alpha: .7),
+          color: Colors.white.withValues(alpha: .7),
           width: 1.1,
         ),
         boxShadow: [
           BoxShadow(
-            color: BranchColors.primary.withValues(alpha: .06),
+            color: ClientColors.primary.withValues(alpha: .06),
             blurRadius: 22,
             offset: const Offset(0, 9),
           ),
@@ -63,12 +64,12 @@ class BranchOrderCard extends StatelessWidget {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color: BranchColors.primary.withValues(alpha: .10),
+                      color: ClientColors.primary.withValues(alpha: .10),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: const Icon(
-                      Icons.receipt_long_rounded,
-                      color: BranchColors.primary,
+                      LucideIcons.receipt,
+                      color: ClientColors.primary,
                       size: 21,
                     ),
                   ),
@@ -82,7 +83,7 @@ class BranchOrderCard extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.titleSmall?.copyWith(
-                            color: BranchColors.onSurface,
+                            color: ClientColors.text,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -90,7 +91,7 @@ class BranchOrderCard extends StatelessWidget {
                         Text(
                           '${l10n.orderNumber} ${order.id.substring(0, 8)}',
                           style: theme.textTheme.labelSmall?.copyWith(
-                            color: BranchColors.onSurfaceVariant,
+                            color: ClientColors.textMuted,
                           ),
                         ),
                       ],
@@ -99,8 +100,8 @@ class BranchOrderCard extends StatelessWidget {
                   OrderStatusChip(status: order.status),
                   const SizedBox(width: 4),
                   const Icon(
-                    Icons.chevron_left_rounded,
-                    color: BranchColors.onSurfaceVariant,
+                    LucideIcons.chevronLeft,
+                    color: ClientColors.textMuted,
                   ),
                 ],
               ),
@@ -109,9 +110,9 @@ class BranchOrderCard extends StatelessWidget {
                 Row(
                   children: [
                     const Icon(
-                      Icons.location_on_outlined,
+                      LucideIcons.mapPin,
                       size: 16,
-                      color: BranchColors.onSurfaceVariant,
+                      color: ClientColors.textMuted,
                     ),
                     const SizedBox(width: 6),
                     Expanded(
@@ -120,7 +121,7 @@ class BranchOrderCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: BranchColors.onSurfaceVariant,
+                          color: ClientColors.textMuted,
                         ),
                       ),
                     ),
@@ -131,30 +132,30 @@ class BranchOrderCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 decoration: BoxDecoration(
-                  color: BranchColors.surfaceContainerLow,
+                  color: ClientColors.surfaceMuted,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Row(
                   children: [
                     const Icon(
-                      Icons.payments_outlined,
+                      LucideIcons.banknote,
                       size: 17,
-                      color: BranchColors.primary,
+                      color: ClientColors.primary,
                     ),
                     const SizedBox(width: 7),
                     Text(
                       '${order.totalAmount.toStringAsFixed(0)} ﷼',
                       style: theme.textTheme.titleSmall?.copyWith(
-                        color: BranchColors.onSurface,
+                        color: ClientColors.text,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                     const Spacer(),
                     if (order.assignedDriver?.name?.isNotEmpty == true) ...[
                       const Icon(
-                        Icons.local_shipping_outlined,
+                        LucideIcons.truck,
                         size: 16,
-                        color: BranchColors.onSurfaceVariant,
+                        color: ClientColors.textMuted,
                       ),
                       const SizedBox(width: 5),
                       Flexible(
@@ -163,7 +164,7 @@ class BranchOrderCard extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.labelSmall?.copyWith(
-                            color: BranchColors.onSurfaceVariant,
+                            color: ClientColors.textMuted,
                           ),
                         ),
                       ),
@@ -179,24 +180,24 @@ class BranchOrderCard extends StatelessWidget {
                   children: [
                     if (order.status == 'pending')
                       _ActionButton(
-                        icon: Icons.auto_awesome_rounded,
+                        icon: LucideIcons.sparkles,
                         label: 'تخصيص',
                         onTap: onAllocate,
                       ),
                     if (order.status == 'pending')
                       _ActionButton(
-                        icon: Icons.person_add_alt_1_rounded,
+                        icon: LucideIcons.userPlus,
                         label: l10n.branchAssignDriver,
                         onTap: onAssignDriver,
                       ),
                     _ActionButton(
-                      icon: Icons.compare_arrows_rounded,
+                      icon: LucideIcons.arrowLeftRight,
                       label: l10n.branchTransferOrder,
                       onTap: onTransfer,
                     ),
                     if (order.status == 'pending')
                       _ActionButton(
-                        icon: Icons.close_rounded,
+                        icon: LucideIcons.x,
                         label: l10n.branchRejectOrder,
                         onTap: onReject,
                         danger: true,
@@ -227,7 +228,7 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = danger ? BranchColors.error : BranchColors.primary;
+    final color = danger ? ClientColors.danger : ClientColors.primary;
     return OutlinedButton.icon(
       onPressed: onTap,
       icon: Icon(icon, size: 16, color: color),

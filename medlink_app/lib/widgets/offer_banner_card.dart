@@ -70,9 +70,8 @@ class OfferBannerCard extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.tertiary,
-                          borderRadius:
-                              BorderRadius.circular(AppRadius.full),
+                          color: ClientColors.primary,
+                          borderRadius: BorderRadius.circular(AppRadius.full),
                         ),
                         child: Text(
                           offer.discountText!,
@@ -118,10 +117,7 @@ class OfferBannerCard extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [
-            AppColors.primaryContainer,
-            AppColors.primary,
-          ],
+          colors: ClientColors.heroGradient,
         ),
       ),
     );

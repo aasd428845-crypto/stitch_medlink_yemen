@@ -8,6 +8,7 @@ import '../../widgets/app_primary_button.dart';
 import '../../widgets/app_text_field.dart';
 import '../../widgets/error_banner.dart';
 import 'branch_manager_design.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Standalone invoice creation for the branch manager: pick a client,
 /// set the amount and due date, then insert into `invoices` (policy
@@ -90,12 +91,12 @@ class _BranchInvoiceCreateSheetState extends State<BranchInvoiceCreateSheet> {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: BranchColors.heroGradient),
+                  gradient: LinearGradient(colors: [ClientColors.primary]),
                   borderRadius: BorderRadius.circular(13),
                 ),
                 child: const Icon(
-                  Icons.receipt_long_rounded,
-                  color: BranchColors.onPrimary,
+                  LucideIcons.receipt,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(width: 12),
@@ -108,7 +109,7 @@ class _BranchInvoiceCreateSheetState extends State<BranchInvoiceCreateSheet> {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close_rounded),
+                icon: const Icon(LucideIcons.x),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],
@@ -124,10 +125,10 @@ class _BranchInvoiceCreateSheetState extends State<BranchInvoiceCreateSheet> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 DropdownButtonFormField<String>(
-                  value: _clientId,
+                  initialValue: _clientId,
                   decoration: const InputDecoration(
                     labelText: 'العميل',
-                    prefixIcon: Icon(Icons.person_outline),
+                    prefixIcon: Icon(LucideIcons.user),
                   ),
                   items: [
                     for (final c in branch.clients)
@@ -146,7 +147,7 @@ class _BranchInvoiceCreateSheetState extends State<BranchInvoiceCreateSheet> {
                   label: 'المبلغ (﷼)',
                   controller: _amountCtrl,
                   keyboardType: TextInputType.number,
-                  prefixIcon: Icons.payments_outlined,
+                  prefixIcon: LucideIcons.banknote,
                   validator: (v) {
                     final n = double.tryParse(v?.trim() ?? '');
                     if (v == null || v.trim().isEmpty) return 'المبلغ مطلوب';
@@ -156,7 +157,7 @@ class _BranchInvoiceCreateSheetState extends State<BranchInvoiceCreateSheet> {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 OutlinedButton.icon(
-                  icon: const Icon(Icons.event_rounded, size: 18),
+                  icon: const Icon(LucideIcons.calendar, size: 18),
                   label: Text(
                     _dueDate == null
                         ? 'تاريخ الاستحقاق (اختياري)'
@@ -202,10 +203,10 @@ class InvoiceStatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (label, color) = switch (invoice.status) {
-      'paid' => ('مسدد', BranchColors.success),
-      'cancelled' => ('ملغي', BranchColors.onSurfaceVariant),
-      _ when invoice.isOverdue => ('متأخر', BranchColors.error),
-      _ => ('معلّق', BranchColors.warning),
+      'paid' => ('مسدد', ClientColors.success),
+      'cancelled' => ('ملغي', ClientColors.textMuted),
+      _ when invoice.isOverdue => ('متأخر', ClientColors.danger),
+      _ => ('معلّق', ClientColors.warning),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
@@ -240,8 +241,10 @@ class InvoiceStatusChip extends StatelessWidget {
 void showInvoiceDetail(BuildContext context, Invoice invoice) {
   showModalBottomSheet<void>(
     context: context,
-    builder: (_) => Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+    builder: (_) => Theme(
+      data: AppTheme.clientLight,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -257,7 +260,7 @@ void showInvoiceDetail(BuildContext context, Invoice invoice) {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close_rounded),
+                icon: const Icon(LucideIcons.x),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],
@@ -299,6 +302,7 @@ void showInvoiceDetail(BuildContext context, Invoice invoice) {
         ],
       ),
     ),
+    ),
   );
 }
 
@@ -319,7 +323,7 @@ class _DetailRow extends StatelessWidget {
           Text(
             label,
             style: const TextStyle(
-              color: BranchColors.onSurfaceVariant,
+              color: ClientColors.textMuted,
               fontSize: 13,
             ),
           ),
@@ -327,7 +331,7 @@ class _DetailRow extends StatelessWidget {
               Text(
                 value,
                 style: const TextStyle(
-                  color: BranchColors.onSurface,
+                  color: ClientColors.text,
                   fontWeight: FontWeight.w700,
                 ),
               ),

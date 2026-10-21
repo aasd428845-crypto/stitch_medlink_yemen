@@ -33,10 +33,12 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: BranchGlassBackground(
+          colors: ClientColors.glassBackgroundColors,
+          orbColors: ClientColors.glassOrbColors,
           child: SafeArea(
             child: Center(
               child: GlassCard(
@@ -57,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen>
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: BranchColors.primary.withValues(
+                              color: ClientColors.primary.withValues(
                                 alpha: .14 + (_controller.value * .12),
                               ),
                               blurRadius: 22,
@@ -74,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen>
                       'MedLink',
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(
-                            color: BranchColors.primary,
+                            color: ClientColors.primary,
                             fontWeight: FontWeight.w900,
                             letterSpacing: .4,
                           ),
@@ -86,9 +88,9 @@ class _SplashScreenState extends State<SplashScreen>
                       child: CircularProgressIndicator(
                         strokeWidth: 2.8,
                         valueColor: const AlwaysStoppedAnimation(
-                          BranchColors.primary,
+                          ClientColors.primary,
                         ),
-                        backgroundColor: BranchColors.primary.withValues(
+                        backgroundColor: ClientColors.primary.withValues(
                           alpha: .15,
                         ),
                       ),

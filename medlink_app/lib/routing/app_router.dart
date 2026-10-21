@@ -63,8 +63,8 @@ GoRouter buildRouter(AuthController authController) {
           final l10n = AppLocalizations.of(context)!;
           return AccountStatusScreen(
             icon: Icons.block_rounded,
-            iconColor: AppColors.error,
-            iconBackground: AppColors.errorContainer,
+            iconColor: ClientColors.danger,
+            iconBackground: ClientColors.danger.withValues(alpha: .14),
             title: l10n.rejectedTitle,
             message: l10n.rejectedMessage,
           );
@@ -76,8 +76,8 @@ GoRouter buildRouter(AuthController authController) {
           final l10n = AppLocalizations.of(context)!;
           return AccountStatusScreen(
             icon: Icons.pause_circle_outline_rounded,
-            iconColor: AppColors.warning,
-            iconBackground: AppColors.warningContainer,
+            iconColor: ClientColors.warning,
+            iconBackground: ClientColors.warning.withValues(alpha: .14),
             title: l10n.suspendedTitle,
             message: l10n.suspendedMessage,
           );
@@ -93,8 +93,8 @@ GoRouter buildRouter(AuthController authController) {
           final l10n = AppLocalizations.of(context)!;
           return AccountStatusScreen(
             icon: Icons.admin_panel_settings_outlined,
-            iconColor: AppColors.secondary,
-            iconBackground: AppColors.secondaryContainer,
+            iconColor: ClientColors.navy,
+            iconBackground: ClientColors.navy.withValues(alpha: .14),
             title: l10n.directorNotSupportedTitle,
             message: l10n.directorNotSupportedMessage,
           );

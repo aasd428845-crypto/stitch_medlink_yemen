@@ -4,11 +4,7 @@ import '../utils/theme.dart';
 
 /// Accordion tile for a single FAQ entry (question + answer).
 class FaqTile extends StatefulWidget {
-  const FaqTile({
-    super.key,
-    required this.question,
-    required this.answer,
-  });
+  const FaqTile({super.key, required this.question, required this.answer});
 
   final String question;
   final String answer;
@@ -49,7 +45,7 @@ class _FaqTileState extends State<FaqTile> {
                     duration: const Duration(milliseconds: 200),
                     child: const Icon(
                       Icons.keyboard_arrow_down_rounded,
-                      color: AppColors.primary,
+                      color: ClientColors.primary,
                     ),
                   ),
                 ],
@@ -61,7 +57,7 @@ class _FaqTileState extends State<FaqTile> {
                   child: Text(
                     widget.answer,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: ClientColors.textMuted,
                       height: 1.6,
                     ),
                   ),

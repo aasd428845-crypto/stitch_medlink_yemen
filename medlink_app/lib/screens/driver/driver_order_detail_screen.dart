@@ -86,7 +86,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l10n.driverUpdateError),
-          backgroundColor: AppColors.error,
+          backgroundColor: ClientColors.danger,
         ),
       );
     }
@@ -106,8 +106,10 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     if (order == null) {
       // Edge case: arrived here before orders loaded
       return Theme(
-        data: AppTheme.branchManagerLight,
+        data: AppTheme.clientLight,
         child: BranchGlassBackground(
+          colors: ClientColors.glassBackgroundColors,
+          orbColors: ClientColors.glassOrbColors,
           child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(title: Text(l10n.driverOrderDetailTitle)),
@@ -120,8 +122,10 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     final shortId = '#${order.id.substring(0, 8).toUpperCase()}';
 
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: BranchGlassBackground(
+        colors: ClientColors.glassBackgroundColors,
+        orbColors: ClientColors.glassOrbColors,
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(title: Text(shortId)),
@@ -143,7 +147,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                         trailing: IconButton(
                           icon: const Icon(
                             Icons.call_outlined,
-                            color: AppColors.primary,
+                            color: ClientColors.primary,
                           ),
                           onPressed: () async {
                             final uri = Uri(
@@ -218,7 +222,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.successContainer,
+                                    color: ClientColors.success.withValues(
+                                      alpha: .14,
+                                    ),
                                     borderRadius: BorderRadius.circular(
                                       AppRadius.sm,
                                     ),
@@ -228,7 +234,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelSmall
-                                        ?.copyWith(color: AppColors.success),
+                                        ?.copyWith(color: ClientColors.success),
                                   ),
                                 ),
                               Expanded(
@@ -240,9 +246,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                               Text(
                                 '× ${item.quantity}',
                                 style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: AppColors.onSurfaceVariant,
-                                    ),
+                                    ?.copyWith(color: ClientColors.textMuted),
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               Text(
@@ -272,7 +276,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                             '${order.totalAmount.toStringAsFixed(0)} ر.ي',
                             style: Theme.of(context).textTheme.titleSmall
                                 ?.copyWith(
-                                  color: AppColors.primary,
+                                  color: ClientColors.primary,
                                   fontWeight: FontWeight.w700,
                                 ),
                           ),
@@ -368,7 +372,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                       height: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: AppColors.onPrimary,
+                        color: Colors.white,
                       ),
                     )
                   : Icon(icon),
@@ -376,8 +380,8 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               style: FilledButton.styleFrom(
                 minimumSize: const Size.fromHeight(52),
                 backgroundColor: order.status == 'in_progress'
-                    ? AppColors.success
-                    : AppColors.primary,
+                    ? ClientColors.success
+                    : ClientColors.primary,
               ),
             ),
           ],
@@ -415,7 +419,7 @@ class _SectionCard extends StatelessWidget {
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Row(
               children: [
-                Icon(icon, size: 18, color: AppColors.primary),
+                Icon(icon, size: 18, color: ClientColors.primary),
                 const SizedBox(width: AppSpacing.sm),
                 Text(
                   title,
@@ -458,16 +462,16 @@ class _InfoRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, size: 16, color: AppColors.onSurfaceVariant),
+          Icon(icon, size: 16, color: ClientColors.textMuted),
           const SizedBox(width: AppSpacing.sm),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 label,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelSmall?.copyWith(color: ClientColors.textMuted),
               ),
               Text(value, style: Theme.of(context).textTheme.bodyMedium),
             ],

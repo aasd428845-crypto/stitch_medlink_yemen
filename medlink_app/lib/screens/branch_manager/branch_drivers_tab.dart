@@ -12,27 +12,28 @@ import '../../widgets/error_banner.dart';
 import 'branch_manager_design.dart';
 import 'create_driver_sheet.dart';
 import 'manage_driver_sheet.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BranchDriversTab extends StatelessWidget {
   const BranchDriversTab({super.key});
 
   void _create(BuildContext c) => showModalBottomSheet<void>(
-        context: c,
-        isScrollControlled: true,
-        builder: (_) => ChangeNotifierProvider.value(
-          value: c.read<BranchController>(),
-          child: const CreateDriverSheet(),
-        ),
-      );
+    context: c,
+    isScrollControlled: true,
+    builder: (_) => ChangeNotifierProvider.value(
+      value: c.read<BranchController>(),
+      child: const CreateDriverSheet(),
+    ),
+  );
 
   void _manage(BuildContext c, UserProfile d) => showModalBottomSheet<void>(
-        context: c,
-        isScrollControlled: true,
-        builder: (_) => ChangeNotifierProvider.value(
-          value: c.read<BranchController>(),
-          child: ManageDriverSheet(driver: d),
-        ),
-      );
+    context: c,
+    isScrollControlled: true,
+    builder: (_) => ChangeNotifierProvider.value(
+      value: c.read<BranchController>(),
+      child: ManageDriverSheet(driver: d),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -58,42 +59,52 @@ class BranchDriversTab extends StatelessWidget {
                       title: 'إدارة المندوبين',
                       subtitle:
                           'راقب توفر السائقين وأداء التوصيل وإسناد الطلبات من شاشة واحدة.',
+                      gradient: ClientColors.heroGradient,
                     ),
                     const SizedBox(height: 16),
-                    Row(children: [
-                      Expanded(
-                        child: BranchMetricTile(
-                          label: 'إجمالي السائقين',
-                          value: '${b.drivers.length}',
-                          icon: Icons.groups_rounded,
-                          color: BranchColors.primary,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: BranchMetricTile(
+                            label: 'إجمالي السائقين',
+                            value: '${b.drivers.length}',
+                            icon: LucideIcons.users,
+                            color: ClientColors.primary,
+                            gradient: const [ClientColors.primary],
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: BranchMetricTile(
-                          label: 'متاحون الآن',
-                          value: '$available',
-                          icon: Icons.person_rounded,
-                          color: BranchColors.success,
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: BranchMetricTile(
+                            label: 'متاحون الآن',
+                            value: '$available',
+                            icon: LucideIcons.user,
+                            color: ClientColors.success,
+                            gradient: const [ClientColors.success],
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: BranchMetricTile(
-                          label: 'في مهام نشطة',
-                          value: '$busy',
-                          icon: Icons.route_rounded,
-                          color: BranchColors.warning,
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: BranchMetricTile(
+                            label: 'في مهام نشطة',
+                            value: '$busy',
+                            icon: LucideIcons.route,
+                            color: ClientColors.warning,
+                            gradient: const [ClientColors.warning],
+                          ),
                         ),
-                      ),
-                    ]),
+                      ],
+                    ),
                     const SizedBox(height: 24),
                     if (b.driversError != null) ...[
                       ErrorBanner(message: b.driversError!),
                       const SizedBox(height: 12),
                     ],
-                    BranchSectionTitle(title: 'السائقون'),
+                    BranchSectionTitle(
+                      title: 'السائقون',
+                      accentColors: const [ClientColors.primary],
+                      titleColor: ClientColors.navy,
+                    ),
                     const SizedBox(height: 10),
                     if (b.isLoadingDrivers && b.drivers.isEmpty)
                       const Padding(
@@ -104,25 +115,28 @@ class BranchDriversTab extends StatelessWidget {
                       BranchManagerSurface(
                         child: Padding(
                           padding: const EdgeInsets.all(24),
-                          child: Column(children: [
-                            const Icon(
-                              Icons.local_shipping_outlined,
-                              size: 42,
-                              color: BranchColors.primary,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              l10n.branchNoDrivers,
-                              style: const TextStyle(
-                                  color: BranchColors.onSurfaceVariant),
-                            ),
-                            const SizedBox(height: 14),
-                            FilledButton.icon(
-                              icon: const Icon(Icons.add),
-                              label: Text(l10n.driverCreateTitle),
-                              onPressed: () => _create(context),
-                            ),
-                          ]),
+                          child: Column(
+                            children: [
+                              const Icon(
+                                LucideIcons.truck,
+                                size: 42,
+                                color: ClientColors.primary,
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                l10n.branchNoDrivers,
+                                style: const TextStyle(
+                                  color: ClientColors.textMuted,
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              FilledButton.icon(
+                                icon: const Icon(LucideIcons.plus),
+                                label: Text(l10n.driverCreateTitle),
+                                onPressed: () => _create(context),
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     else
@@ -141,11 +155,13 @@ class BranchDriversTab extends StatelessWidget {
                   bottom: 110,
                   child: FloatingActionButton.extended(
                     onPressed: () => _create(context),
-                    backgroundColor: BranchColors.primary,
-                    foregroundColor: BranchColors.onPrimary,
-                    icon: const Icon(Icons.person_add_alt_1_rounded),
-                    label: const Text('إضافة سائق',
-                        style: TextStyle(fontWeight: FontWeight.w800)),
+                    backgroundColor: ClientColors.primary,
+                    foregroundColor: Colors.white,
+                    icon: const Icon(LucideIcons.userPlus),
+                    label: const Text(
+                      'إضافة سائق',
+                      style: TextStyle(fontWeight: FontWeight.w800),
+                    ),
                   ),
                 ),
               ],
@@ -196,7 +212,7 @@ class _DriverCardState extends State<_DriverCard> {
   Widget build(BuildContext c) {
     final l = AppLocalizations.of(c)!;
     final active = widget.driver.accountStatus == AccountStatus.active;
-    final color = widget.isBusy ? BranchColors.warning : BranchColors.success;
+    final color = widget.isBusy ? ClientColors.warning : ClientColors.success;
 
     return BranchManagerSurface(
       margin: const EdgeInsets.only(bottom: 10),
@@ -204,87 +220,91 @@ class _DriverCardState extends State<_DriverCard> {
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
         onTap: widget.onTap,
-        child: Row(children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: .12),
-              shape: BoxShape.circle,
+        child: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: .12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(LucideIcons.truck, color: color),
             ),
-            child: Icon(Icons.local_shipping_rounded, color: color),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.driver.name?.isNotEmpty == true
-                      ? widget.driver.name!
-                      : widget.driver.email,
-                  style: const TextStyle(
-                    color: BranchColors.onSurface,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                if (widget.driver.phone?.isNotEmpty == true)
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    widget.driver.phone!,
+                    widget.driver.name?.isNotEmpty == true
+                        ? widget.driver.name!
+                        : widget.driver.email,
                     style: const TextStyle(
-                      color: BranchColors.onSurfaceVariant,
-                      fontSize: 12,
+                      color: ClientColors.text,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
-                const SizedBox(height: 5),
-                DriverRatingBadge(
-                  average: rating?.average,
-                  count: rating?.count ?? 0,
-                  noRatingsLabel: l.noRatingsYet,
-                ),
-              ],
+                  if (widget.driver.phone?.isNotEmpty == true)
+                    Text(
+                      widget.driver.phone!,
+                      style: const TextStyle(
+                        color: ClientColors.textMuted,
+                        fontSize: 12,
+                      ),
+                    ),
+                  const SizedBox(height: 5),
+                  DriverRatingBadge(
+                    average: rating?.average,
+                    count: rating?.count ?? 0,
+                    noRatingsLabel: l.noRatingsYet,
+                  ),
+                ],
+              ),
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: .12),
-                  borderRadius: BorderRadius.circular(99),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 9,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: .12),
+                    borderRadius: BorderRadius.circular(99),
+                  ),
+                  child: Text(
+                    widget.isBusy
+                        ? l.branchDriverBusy
+                        : l.branchDriverAvailable,
+                    style: TextStyle(
+                      color: color,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 11,
+                    ),
+                  ),
                 ),
-                child: Text(
-                  widget.isBusy ? l.branchDriverBusy : l.branchDriverAvailable,
-                  style: TextStyle(
-                    color: color,
-                    fontWeight: FontWeight.w800,
+                if (!active)
+                  Text(
+                    l.driverStatusSuspended,
+                    style: const TextStyle(
+                      color: ClientColors.warning,
+                      fontSize: 10,
+                    ),
+                  ),
+                Text(
+                  '${widget.activeCount} ${l.branchDriverActiveOrders}',
+                  style: const TextStyle(
+                    color: ClientColors.textMuted,
                     fontSize: 11,
                   ),
                 ),
-              ),
-              if (!active)
-                Text(
-                  l.driverStatusSuspended,
-                  style: const TextStyle(
-                    color: BranchColors.warning,
-                    fontSize: 10,
-                  ),
-                ),
-              Text(
-                '${widget.activeCount} ${l.branchDriverActiveOrders}',
-                style: const TextStyle(
-                  color: BranchColors.onSurfaceVariant,
-                  fontSize: 11,
-                ),
-              ),
-            ],
-          ),
-          const Icon(
-            Icons.chevron_left_rounded,
-            color: BranchColors.onSurfaceVariant,
-          ),
-        ]),
+              ],
+            ),
+            const Icon(LucideIcons.chevronLeft, color: ClientColors.textMuted),
+          ],
+        ),
       ),
     );
   }

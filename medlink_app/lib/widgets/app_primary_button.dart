@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../utils/theme.dart';
-
 class AppPrimaryButton extends StatelessWidget {
   const AppPrimaryButton({
     super.key,
@@ -24,7 +22,7 @@ class AppPrimaryButton extends StatelessWidget {
               width: 22,
               child: CircularProgressIndicator(
                 strokeWidth: 2.4,
-                color: AppColors.onPrimary,
+                color: Colors.white,
               ),
             )
           : Text(label),

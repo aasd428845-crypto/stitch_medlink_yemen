@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../utils/theme.dart';
 import '../branch_manager/branch_manager_design.dart';
 
-/// Glass surface card for driver screens — uses BranchColors tokens only.
+/// Glass surface card for driver screens — uses shared client tokens only.
 /// Rule: NO raw Color() here.
 class DriverSurface extends StatelessWidget {
   const DriverSurface({
@@ -27,7 +27,7 @@ class DriverSurface extends StatelessWidget {
 }
 
 /// Gradient hero banner for the driver role.
-/// Uses glassHeroGradient (violet→pink→sky) — same as branch manager.
+/// Uses the client hero gradient (deep teal → teal → navy).
 class DriverHero extends StatelessWidget {
   const DriverHero({super.key, required this.title, required this.subtitle});
 
@@ -57,11 +57,11 @@ class DriverHero extends StatelessWidget {
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
           stops: [0.0, 0.5, 1.0],
-          colors: BranchColors.glassHeroGradient,
+          colors: ClientColors.heroGradient,
         ),
         boxShadow: [
           BoxShadow(
-            color: BranchColors.glassHeroGradient.first.withValues(alpha: .35),
+            color: ClientColors.heroGradient.first.withValues(alpha: .35),
             blurRadius: 36,
             offset: const Offset(0, 14),
           ),

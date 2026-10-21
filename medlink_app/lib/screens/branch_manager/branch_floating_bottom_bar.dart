@@ -49,11 +49,12 @@ class BranchFloatingBottomBar extends StatelessWidget {
               color: Colors.white.withValues(alpha: .78),
               borderRadius: BorderRadius.circular(32),
               border: Border.all(
-                  color: Colors.white.withValues(alpha: .55), width: 1.2),
+                color: Colors.white.withValues(alpha: .55),
+                width: 1.2,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: BranchColors.glassHeroGradient.first
-                      .withValues(alpha: .08),
+                  color: ClientColors.navy.withValues(alpha: .08),
                   blurRadius: 32,
                   spreadRadius: 0,
                   offset: const Offset(0, 12),
@@ -152,19 +153,17 @@ class _CentralFabState extends State<_CentralFab>
               gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: BranchColors.glassWarmGradient,
+                colors: [ClientColors.primary],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: BranchColors.glassWarmGradient.first
-                      .withValues(alpha: .55),
+                  color: ClientColors.primary.withValues(alpha: .55),
                   blurRadius: 20,
                   offset: const Offset(0, 6),
                 ),
               ],
             ),
-            child: const Icon(LucideIcons.plus,
-                color: Colors.white, size: 26),
+            child: const Icon(LucideIcons.plus, color: Colors.white, size: 26),
           ),
         ),
       ),
@@ -197,11 +196,13 @@ class _BarItem extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 240),
         curve: Curves.easeOutCubic,
-        padding:
-            EdgeInsets.symmetric(horizontal: showLabel ? 12 : 8, vertical: 8),
+        padding: EdgeInsets.symmetric(
+          horizontal: showLabel ? 12 : 8,
+          vertical: 8,
+        ),
         decoration: BoxDecoration(
           color: selected
-              ? BranchColors.glassHeroGradient.first.withValues(alpha: .10)
+              ? ClientColors.primary.withValues(alpha: .10)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(22),
         ),
@@ -214,9 +215,7 @@ class _BarItem extends StatelessWidget {
               curve: Curves.easeOutBack,
               child: Icon(
                 item.icon,
-                color: selected
-                    ? BranchColors.glassHeroGradient.first
-                    : BranchColors.onSurfaceVariant,
+                color: selected ? ClientColors.primary : ClientColors.textMuted,
                 size: 22,
               ),
             ),
@@ -229,9 +228,7 @@ class _BarItem extends StatelessWidget {
               height: 3,
               decoration: BoxDecoration(
                 gradient: selected
-                    ? const LinearGradient(
-                        colors: BranchColors.glassHeroGradient,
-                      )
+                    ? const LinearGradient(colors: [ClientColors.primary])
                     : null,
                 color: selected ? null : Colors.transparent,
                 borderRadius: BorderRadius.circular(99),
@@ -243,10 +240,9 @@ class _BarItem extends StatelessWidget {
                 duration: const Duration(milliseconds: 200),
                 style: TextStyle(
                   color: selected
-                      ? BranchColors.glassHeroGradient.first
-                      : BranchColors.onSurfaceVariant,
-                  fontWeight:
-                      selected ? FontWeight.w800 : FontWeight.w600,
+                      ? ClientColors.primary
+                      : ClientColors.textMuted,
+                  fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
                   fontSize: 10,
                 ),
                 child: Text(item.label),
@@ -263,10 +259,7 @@ class _BarItem extends StatelessWidget {
 
 /// A single destination in the floating bar.
 class BranchBottomBarItem {
-  const BranchBottomBarItem({
-    required this.icon,
-    required this.label,
-  });
+  const BranchBottomBarItem({required this.icon, required this.label});
 
   final IconData icon;
   final String label;

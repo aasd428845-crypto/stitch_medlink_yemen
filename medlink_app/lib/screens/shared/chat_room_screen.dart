@@ -58,7 +58,12 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       });
       _scrollToEnd();
     } catch (e) {
-      if (mounted) setState(() { _loading = false; _error = e.toString(); });
+      if (mounted) {
+        setState(() {
+          _loading = false;
+          _error = e.toString();
+        });
+      }
     }
   }
 
@@ -86,7 +91,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('تعذر إرسال الرسالة'),
-            backgroundColor: AppColors.error,
+            backgroundColor: ClientColors.danger,
           ),
         );
       }
@@ -107,94 +112,115 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final myId = Supabase.instance.client.auth.currentUser?.id;
-    return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Theme(
+      data: AppTheme.clientLight,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.orderNumber),
+              Text(
+                widget.otherPartyName,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+        ),
+        body: Column(
           children: [
-            Text(widget.orderNumber),
-            Text(
-              widget.otherPartyName,
-              style: Theme.of(context).textTheme.bodySmall,
+            Expanded(
+              child: _loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _error != null
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppSpacing.md),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.error_outline_rounded,
+                              size: 40,
+                              color: ClientColors.danger,
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            Text(
+                              'تعذر تحميل المحادثة',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              _error!,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: ClientColors.textMuted),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            FilledButton.icon(
+                              onPressed: () {
+                                setState(() {
+                                  _loading = true;
+                                  _error = null;
+                                });
+                                _initialize();
+                              },
+                              icon: const Icon(Icons.refresh_rounded),
+                              label: const Text('إعادة المحاولة'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : _messages.isEmpty
+                  ? Center(child: Text(l10n.chatEmptyRoom))
+                  : ListView.builder(
+                      controller: _scroll,
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      itemCount: _messages.length,
+                      itemBuilder: (_, index) => ChatMessageBubble(
+                        message: _messages[index],
+                        isMe: _messages[index].senderId == myId,
+                      ),
+                    ),
+            ),
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.sm),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _input,
+                        textInputAction: TextInputAction.send,
+                        onSubmitted: (_) => _send(),
+                        decoration: InputDecoration(
+                          hintText: l10n.chatMessageHint,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    IconButton.filled(
+                      onPressed: _sending ? null : _send,
+                      icon: _sending
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Icon(Icons.send_rounded),
+                      tooltip: l10n.chatSendButton,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _loading
-                ? const Center(child: CircularProgressIndicator())
-                : _error != null
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.md),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.error_outline_rounded, size: 40, color: AppColors.error),
-                          const SizedBox(height: AppSpacing.sm),
-                          Text('تعذر تحميل المحادثة', style: Theme.of(context).textTheme.titleSmall),
-                          const SizedBox(height: AppSpacing.xs),
-                          Text(_error!, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.onSurfaceVariant), textAlign: TextAlign.center),
-                          const SizedBox(height: AppSpacing.md),
-                          FilledButton.icon(
-                            onPressed: () { setState(() { _loading = true; _error = null; }); _initialize(); },
-                            icon: const Icon(Icons.refresh_rounded),
-                            label: const Text('إعادة المحاولة'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                : _messages.isEmpty
-                ? Center(child: Text(l10n.chatEmptyRoom))
-                : ListView.builder(
-                    controller: _scroll,
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    itemCount: _messages.length,
-                    itemBuilder: (_, index) => ChatMessageBubble(
-                      message: _messages[index],
-                      isMe: _messages[index].senderId == myId,
-                    ),
-                  ),
-          ),
-          SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _input,
-                      textInputAction: TextInputAction.send,
-                      onSubmitted: (_) => _send(),
-                      decoration: InputDecoration(
-                        hintText: l10n.chatMessageHint,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  IconButton.filled(
-                    onPressed: _sending ? null : _send,
-                    icon: _sending
-                        ? const SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: AppColors.onPrimary,
-                            ),
-                          )
-                        : const Icon(Icons.send_rounded),
-                    tooltip: l10n.chatSendButton,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -55,8 +55,7 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
     ];
 
     final branchId = context.watch<AuthController>().profile?.branchId;
-    final unreadCount =
-        context.watch<NotificationController>().unreadCount;
+    final unreadCount = context.watch<NotificationController>().unreadCount;
 
     final tabs = [
       BranchDashboardTab(onNavigate: _select),
@@ -68,8 +67,10 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
     ];
 
     return Theme(
-      data: AppTheme.branchManagerLight,
+      data: AppTheme.clientLight,
       child: BranchGlassBackground(
+        colors: ClientColors.glassBackgroundColors,
+        orbColors: ClientColors.glassOrbColors,
         child: Scaffold(
           backgroundColor: Colors.transparent,
           extendBody: true,
@@ -103,10 +104,9 @@ class _BranchManagerHomeShellState extends State<BranchManagerHomeShell> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             gradient: const LinearGradient(
-                              colors: BranchColors.glassWarmGradient,
+                              colors: [ClientColors.warning],
                             ),
-                            border:
-                                Border.all(color: Colors.white, width: 1.5),
+                            border: Border.all(color: Colors.white, width: 1.5),
                           ),
                           child: Text(
                             unreadCount > 9 ? '9+' : '$unreadCount',

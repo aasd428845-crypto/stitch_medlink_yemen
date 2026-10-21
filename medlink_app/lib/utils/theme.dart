@@ -229,7 +229,31 @@ class ClientColors {
   static const textMuted = Color(0xFF66788A);
   static const outline = Color(0xFFD7E2E2);
   static const success = Color(0xFF16805C);
+  static const warning = Color(0xFFB45309);
   static const danger = Color(0xFFC53030);
+
+  /// Soft three-stop gradient for the shared frosted background when it is
+  /// rendered with the client palette (splash / help for non-client roles).
+  static const glassBackgroundColors = <Color>[
+    surface,
+    background,
+    surfaceMuted,
+  ];
+
+  /// Five pastel glow colors for the glass background's decorative orbs
+  /// (sky, mint, pink, violet, peach order) — client-tinted variants.
+  static const glassOrbColors = <Color>[
+    primarySoft,
+    surfaceMuted,
+    primarySoft,
+    surfaceMuted,
+    primarySoft,
+  ];
+
+  /// Three-stop hero gradient (deep teal → teal → navy) mirroring the client
+  /// home hero — reused by the branch-manager tabs so their hero headers
+  /// match the client palette.
+  static const heroGradient = <Color>[primaryDark, primary, navy];
 }
 
 class AppRadius {
@@ -496,6 +520,66 @@ class AppTheme {
       textTheme: base.textTheme.apply(
         bodyColor: ClientColors.text,
         displayColor: ClientColors.text,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: ClientColors.surface.withValues(alpha: .7),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: 14,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          borderSide: const BorderSide(color: ClientColors.outline),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          borderSide: const BorderSide(color: ClientColors.outline),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          borderSide: const BorderSide(color: ClientColors.primary, width: 1.4),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          borderSide: const BorderSide(color: ClientColors.danger),
+        ),
+        labelStyle: base.textTheme.bodyMedium?.copyWith(
+          color: ClientColors.textMuted,
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: base.filledButtonTheme.style?.copyWith(
+          backgroundColor: const WidgetStatePropertyAll(ClientColors.primary),
+          foregroundColor: const WidgetStatePropertyAll(Colors.white),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: base.elevatedButtonTheme.style?.copyWith(
+          backgroundColor: const WidgetStatePropertyAll(ClientColors.primary),
+          foregroundColor: const WidgetStatePropertyAll(Colors.white),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: base.outlinedButtonTheme.style?.copyWith(
+          foregroundColor: const WidgetStatePropertyAll(ClientColors.primary),
+          side: const WidgetStatePropertyAll(
+            BorderSide(color: ClientColors.outline),
+          ),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: base.textButtonTheme.style?.copyWith(
+          foregroundColor: const WidgetStatePropertyAll(ClientColors.primary),
+        ),
+      ),
+      dividerTheme: base.dividerTheme.copyWith(color: ClientColors.outline),
+      dialogTheme: base.dialogTheme.copyWith(
+        backgroundColor: ClientColors.surface.withValues(alpha: .94),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28),
+          side: BorderSide(color: ClientColors.outline.withValues(alpha: .72)),
+        ),
       ),
     );
   }

@@ -22,12 +22,36 @@ class BranchOrdersTab extends StatelessWidget {
     final branch = context.watch<BranchController>();
 
     final filters = <String?, _FilterDef>{
-      null: _FilterDef(label: l10n.branchOrderFilterAll, icon: LucideIcons.layoutGrid, gradient: BranchColors.glassHeroGradient),
-      'pending': _FilterDef(label: l10n.branchOrderFilterPending, icon: LucideIcons.clock, gradient: BranchColors.metricOrangeGradient),
-      'assigned': _FilterDef(label: l10n.branchOrderFilterAssigned, icon: LucideIcons.userCheck, gradient: BranchColors.metricBlueGradient),
-      'in_progress': _FilterDef(label: l10n.branchOrderFilterInProgress, icon: LucideIcons.truck, gradient: BranchColors.metricPurpleGradient),
-      'delivered': _FilterDef(label: l10n.branchOrderFilterDelivered, icon: LucideIcons.checkCircle, gradient: BranchColors.metricGreenGradient),
-      'cancelled': _FilterDef(label: l10n.branchOrderFilterCancelled, icon: LucideIcons.xCircle, gradient: [BranchColors.error, BranchColors.danger]),
+      null: _FilterDef(
+        label: l10n.branchOrderFilterAll,
+        icon: LucideIcons.layoutGrid,
+        gradient: [ClientColors.primary],
+      ),
+      'pending': _FilterDef(
+        label: l10n.branchOrderFilterPending,
+        icon: LucideIcons.clock,
+        gradient: [ClientColors.warning],
+      ),
+      'assigned': _FilterDef(
+        label: l10n.branchOrderFilterAssigned,
+        icon: LucideIcons.userCheck,
+        gradient: [ClientColors.primary],
+      ),
+      'in_progress': _FilterDef(
+        label: l10n.branchOrderFilterInProgress,
+        icon: LucideIcons.truck,
+        gradient: [ClientColors.primaryDark],
+      ),
+      'delivered': _FilterDef(
+        label: l10n.branchOrderFilterDelivered,
+        icon: LucideIcons.checkCircle,
+        gradient: [ClientColors.success],
+      ),
+      'cancelled': _FilterDef(
+        label: l10n.branchOrderFilterCancelled,
+        icon: LucideIcons.xCircle,
+        gradient: [ClientColors.danger, ClientColors.danger],
+      ),
     };
 
     return Column(
@@ -38,6 +62,7 @@ class BranchOrdersTab extends StatelessWidget {
           child: BranchManagerHero(
             title: 'الطلبات',
             subtitle: 'استعرض وأدر جميع طلبات الفرع بسهولة.',
+            gradient: ClientColors.heroGradient,
           ),
         ),
 
@@ -70,18 +95,21 @@ class BranchOrdersTab extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                      colors: BranchColors.glassHeroGradient),
+                    colors: [ClientColors.primary],
+                  ),
                   borderRadius: BorderRadius.circular(99),
                   boxShadow: [
                     BoxShadow(
-                      color: BranchColors.glassHeroGradient.first
-                          .withValues(alpha: .25),
+                      color: ClientColors.primary.withValues(alpha: .25),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
-                    )
+                    ),
                   ],
                 ),
                 child: Text(
@@ -100,7 +128,7 @@ class BranchOrdersTab extends StatelessWidget {
         // ── Orders List ────────────────────────────────────────────────────
         Expanded(
           child: RefreshIndicator(
-            color: BranchColors.glassHeroGradient.first,
+            color: ClientColors.primary,
             backgroundColor: Colors.white,
             onRefresh: branch.loadOrders,
             child: ListView(
@@ -203,7 +231,7 @@ class _GlassFilterChip extends StatelessWidget {
                   : Colors.black.withValues(alpha: .04),
               blurRadius: selected ? 14 : 6,
               offset: const Offset(0, 4),
-            )
+            ),
           ],
         ),
         child: Row(
@@ -212,13 +240,13 @@ class _GlassFilterChip extends StatelessWidget {
             Icon(
               icon,
               size: 14,
-              color: selected ? Colors.white : BranchColors.onSurfaceVariant,
+              color: selected ? Colors.white : ClientColors.textMuted,
             ),
             const SizedBox(width: 6),
             Text(
               label,
               style: TextStyle(
-                color: selected ? Colors.white : BranchColors.onSurfaceVariant,
+                color: selected ? Colors.white : ClientColors.textMuted,
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
               ),
@@ -247,7 +275,9 @@ class _EmptyOrders extends StatelessWidget {
               color: Colors.white.withValues(alpha: .75),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                  color: Colors.white.withValues(alpha: .5), width: 1.2),
+                color: Colors.white.withValues(alpha: .5),
+                width: 1.2,
+              ),
             ),
             child: Column(
               children: [
@@ -257,28 +287,30 @@ class _EmptyOrders extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: const LinearGradient(
-                        colors: BranchColors.metricBlueGradient,
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight),
+                      colors: [ClientColors.primary],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: BranchColors.metricBlueGradient.first
-                            .withValues(alpha: .3),
+                        color: ClientColors.primary.withValues(alpha: .3),
                         blurRadius: 16,
                         offset: const Offset(0, 6),
-                      )
+                      ),
                     ],
                   ),
-                  child:
-                      const Icon(LucideIcons.inbox, color: Colors.white, size: 28),
+                  child: const Icon(
+                    LucideIcons.inbox,
+                    color: Colors.white,
+                    size: 28,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'لا توجد طلبات في هذه الحالة',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(fontWeight: FontWeight.w800),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 6),
                 Text(

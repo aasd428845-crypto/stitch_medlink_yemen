@@ -8,6 +8,7 @@ import '../../services/branch_service.dart';
 import '../../utils/theme.dart';
 import '../../widgets/order_status_chip.dart';
 import 'branch_order_actions.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Full order detail for the branch manager: client + address, item list
 /// (including bonus lines), driver assignment, and a status-change action
@@ -58,7 +59,9 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (dialogCtx) => AlertDialog(
+      builder: (dialogCtx) => Theme(
+        data: AppTheme.clientLight,
+        child: AlertDialog(
         title: Text(l10n.branchChangeStatus),
         content: Text(l10n.branchStatusUpdateConfirm),
         actions: [
@@ -71,6 +74,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
             child: Text(l10n.branchChangeStatus),
           ),
         ],
+        ),
       ),
     );
     if (confirmed != true || !mounted) return;
@@ -97,14 +101,14 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.error_outline_rounded,
-                          size: 48, color: BranchColors.error),
+                      const Icon(LucideIcons.alertCircle,
+                          size: 48, color: ClientColors.danger),
                       const SizedBox(height: AppSpacing.sm),
                       Text(_error!, style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: AppSpacing.md),
                       FilledButton.icon(
                         onPressed: _load,
-                        icon: const Icon(Icons.refresh_rounded),
+                        icon: const Icon(LucideIcons.refreshCw),
                         label: Text(l10n.retry),
                       ),
                     ],
@@ -147,7 +151,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.phone_outlined, size: 16, color: BranchColors.onSurfaceVariant),
+                        const Icon(LucideIcons.phone, size: 16, color: ClientColors.textMuted),
                         const SizedBox(width: 4),
                         Text(order.client!.phone!, style: theme.textTheme.bodySmall),
                       ],
@@ -158,8 +162,8 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.location_on_outlined,
-                            size: 16, color: BranchColors.onSurfaceVariant),
+                        const Icon(LucideIcons.mapPin,
+                            size: 16, color: ClientColors.textMuted),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(order.deliveryAddress!.addressText,
@@ -179,7 +183,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
           const SizedBox(height: AppSpacing.sm),
           Card(
             child: ListTile(
-              leading: const Icon(Icons.local_shipping_outlined),
+              leading: const Icon(LucideIcons.truck),
               title: Text(
                 order.assignedDriver?.name?.isNotEmpty == true
                     ? order.assignedDriver!.name!
@@ -208,8 +212,8 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                     ListTile(
                       dense: true,
                       leading: item.isBonus
-                          ? const Icon(Icons.card_giftcard_rounded, color: BranchColors.warning)
-                          : const Icon(Icons.medication_outlined),
+                          ? const Icon(LucideIcons.gift, color: ClientColors.warning)
+                          : const Icon(LucideIcons.pill),
                       title: Text(item.product?.name ?? '—'),
                       subtitle: Text('${l10n.orderItemsCount}: ${item.quantity}'),
                       trailing: Text(
@@ -218,7 +222,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                             : '${(item.unitPrice * item.quantity).toStringAsFixed(0)} ﷼',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: item.isBonus ? BranchColors.warning : null,
+                          color: item.isBonus ? ClientColors.warning : null,
                         ),
                       ),
                     ),
@@ -233,7 +237,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
                         Text(
                           '${order.totalAmount.toStringAsFixed(0)} ﷼',
                           style: theme.textTheme.headlineSmall
-                              ?.copyWith(color: BranchColors.primary, fontWeight: FontWeight.w700),
+                              ?.copyWith(color: ClientColors.primary, fontWeight: FontWeight.w700),
                         ),
                       ],
                     ),
@@ -247,7 +251,7 @@ class _BranchOrderDetailScreenState extends State<BranchOrderDetailScreen> {
           if (nextStatus != null)
             ElevatedButton.icon(
               onPressed: () => _changeStatus(nextStatus),
-              icon: const Icon(Icons.arrow_forward_rounded),
+              icon: const Icon(LucideIcons.arrowRight),
               label: Text(l10n.branchChangeStatus),
             ),
         ],

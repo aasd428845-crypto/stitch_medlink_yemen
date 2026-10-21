@@ -8,6 +8,7 @@ import '../../utils/theme.dart';
 import '../../widgets/app_primary_button.dart';
 import '../../widgets/app_text_field.dart';
 import '../../widgets/error_banner.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Modal bottom sheet that lets a branch manager create a new driver account.
 /// On success it shows the credentials the manager should share with the
@@ -73,8 +74,10 @@ class _CreateDriverSheetState extends State<CreateDriverSheet> {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        icon: const Icon(Icons.check_circle_rounded, color: BranchColors.success, size: 40),
+      builder: (ctx) => Theme(
+        data: AppTheme.clientLight,
+        child: AlertDialog(
+          icon: const Icon(LucideIcons.circleCheck, color: ClientColors.success, size: 40),
         title: Text(l10n.driverCreatedSuccess),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -104,6 +107,7 @@ class _CreateDriverSheetState extends State<CreateDriverSheet> {
             child: const Text('موافق'),
           ),
         ],
+      ),
       ),
     );
   }
@@ -139,7 +143,7 @@ class _CreateDriverSheetState extends State<CreateDriverSheet> {
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(LucideIcons.x),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
@@ -152,7 +156,7 @@ class _CreateDriverSheetState extends State<CreateDriverSheet> {
             AppTextField(
               label: l10n.nameLabel,
               controller: _nameCtrl,
-              prefixIcon: Icons.person_outline,
+              prefixIcon: LucideIcons.user,
               validator: (v) =>
                   v == null || v.trim().isEmpty ? l10n.validationRequired : null,
             ),
@@ -161,7 +165,7 @@ class _CreateDriverSheetState extends State<CreateDriverSheet> {
               label: l10n.emailLabel,
               controller: _emailCtrl,
               keyboardType: TextInputType.emailAddress,
-              prefixIcon: Icons.email_outlined,
+              prefixIcon: LucideIcons.mail,
               validator: (v) {
                 if (v == null || v.trim().isEmpty) return l10n.validationRequired;
                 if (!v.contains('@')) return l10n.validationEmailInvalid;
@@ -173,14 +177,14 @@ class _CreateDriverSheetState extends State<CreateDriverSheet> {
               label: l10n.phoneLabel,
               controller: _phoneCtrl,
               keyboardType: TextInputType.phone,
-              prefixIcon: Icons.phone_outlined,
+              prefixIcon: LucideIcons.phone,
             ),
             const SizedBox(height: AppSpacing.md),
             AppTextField(
               label: l10n.driverTempPasswordLabel,
               controller: _passwordCtrl,
               obscureText: true,
-              prefixIcon: Icons.lock_outline,
+              prefixIcon: LucideIcons.lock,
               validator: (v) {
                 if (v == null || v.trim().isEmpty) return l10n.validationRequired;
                 if (v.trim().length < 6) return l10n.validationPasswordShort;
@@ -228,7 +232,7 @@ class _CredentialRow extends StatelessWidget {
         ),
         IconButton(
           tooltip: 'نسخ',
-          icon: const Icon(Icons.copy_rounded, size: 17),
+          icon: const Icon(LucideIcons.copy, size: 17),
           visualDensity: VisualDensity.compact,
           onPressed: onCopy,
         ),

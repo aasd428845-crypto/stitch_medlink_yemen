@@ -8,9 +8,14 @@ class DriverOrdersV2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Column(children: [
-      DriverHero(title: l10n.driverOrdersLabel, subtitle: l10n.driverHeroSubtitle),
-      const Expanded(child: DriverOrdersTab()),
-    ]);
+    return Column(
+      children: [
+        DriverHero(
+          title: l10n.driverOrdersLabel,
+          subtitle: l10n.driverHeroSubtitle,
+        ),
+        const Expanded(child: DriverOrdersTab()),
+      ],
+    );
   }
 }

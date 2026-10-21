@@ -6,6 +6,7 @@ import '../../utils/theme.dart';
 import '../../widgets/error_banner.dart';
 import 'branch_invoice_create_sheet.dart';
 import 'branch_manager_design.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BranchInvoicesTab extends StatefulWidget {
   const BranchInvoicesTab({super.key});
@@ -21,7 +22,8 @@ class _BranchInvoicesTabState extends State<BranchInvoicesTab> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
-        (_) => context.read<BranchController>().loadInvoices());
+      (_) => context.read<BranchController>().loadInvoices(),
+    );
   }
 
   @override
@@ -55,6 +57,7 @@ class _BranchInvoicesTabState extends State<BranchInvoicesTab> {
                   title: 'الفواتير',
                   subtitle:
                       'سجل المبيعات الحقيقي للفرع — الفواتير، الدفعات، والمتأخرات في مكان واحد.',
+                  gradient: ClientColors.heroGradient,
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -63,8 +66,9 @@ class _BranchInvoicesTabState extends State<BranchInvoicesTab> {
                       child: BranchMetricTile(
                         label: 'إجمالي المبيعات',
                         value: '${branch.invoicesTotal.toStringAsFixed(0)} ﷼',
-                        icon: Icons.payments_rounded,
-                        color: BranchColors.primary,
+                        icon: LucideIcons.banknote,
+                        color: ClientColors.primary,
+                        gradient: const [ClientColors.primary],
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -72,8 +76,9 @@ class _BranchInvoicesTabState extends State<BranchInvoicesTab> {
                       child: BranchMetricTile(
                         label: 'مدفوعة',
                         value: '${branch.invoicesPaid.toStringAsFixed(0)} ﷼',
-                        icon: Icons.task_alt_rounded,
-                        color: BranchColors.success,
+                        icon: LucideIcons.checkCircle,
+                        color: ClientColors.success,
+                        gradient: const [ClientColors.success],
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -81,8 +86,9 @@ class _BranchInvoicesTabState extends State<BranchInvoicesTab> {
                       child: BranchMetricTile(
                         label: 'متأخرة',
                         value: '${branch.overdueCount}',
-                        icon: Icons.schedule_rounded,
-                        color: BranchColors.error,
+                        icon: LucideIcons.clock,
+                        color: ClientColors.danger,
+                        gradient: const [ClientColors.danger],
                       ),
                     ),
                   ],
@@ -94,9 +100,11 @@ class _BranchInvoicesTabState extends State<BranchInvoicesTab> {
                     isScrollControlled: true,
                     builder: (_) => const BranchInvoiceCreateSheet(),
                   ),
-                  icon: const Icon(Icons.add_rounded),
-                  label: const Text('إنشاء فاتورة',
-                      style: TextStyle(fontWeight: FontWeight.w800)),
+                  icon: const Icon(LucideIcons.plus),
+                  label: const Text(
+                    'إنشاء فاتورة',
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
                   style: FilledButton.styleFrom(
                     minimumSize: const Size.fromHeight(46),
                   ),
@@ -111,15 +119,15 @@ class _BranchInvoicesTabState extends State<BranchInvoicesTab> {
                   onChanged: (v) => setState(() => _query = v),
                   decoration: InputDecoration(
                     hintText: 'ابحث بالعميل أو رقم الفاتورة…',
-                    prefixIcon: const Icon(Icons.search_rounded),
+                    prefixIcon: const Icon(LucideIcons.search),
                     isDense: true,
                     filled: true,
-                     fillColor: BranchColors.surfaceContainerLowest.withValues(alpha: .72),
+                    fillColor: ClientColors.surface.withValues(alpha: .72),
                     border: OutlineInputBorder(
-                       borderRadius: BorderRadius.circular(18),
-                       borderSide: BorderSide(
-                         color: BranchColors.onPrimary.withValues(alpha: .7),
-                       ),
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide(
+                        color: Colors.white.withValues(alpha: .7),
+                      ),
                     ),
                   ),
                 ),
@@ -134,24 +142,34 @@ class _BranchInvoicesTabState extends State<BranchInvoicesTab> {
                     margin: const EdgeInsets.only(top: 20),
                     child: Padding(
                       padding: const EdgeInsets.all(26),
-                      child: Column(children: [
-                        const Icon(Icons.receipt_long_outlined,
-                            size: 40, color: BranchColors.onSurfaceVariant),
-                        const SizedBox(height: 10),
-                        const Text('لا توجد فواتير',
+                      child: Column(
+                        children: [
+                          const Icon(
+                            LucideIcons.receipt,
+                            size: 40,
+                            color: ClientColors.textMuted,
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'لا توجد فواتير',
                             style: TextStyle(
-                                color: BranchColors.onSurface,
-                                fontWeight: FontWeight.w700)),
-                        const SizedBox(height: 4),
-                        Text(
-                          query.isEmpty
-                              ? 'أنشئ أول فاتورة للفرع أو انتظر طلبات التخصيص.'
-                              : 'لا توجد نتائج مطابقة للبحث.',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: BranchColors.onSurfaceVariant, fontSize: 12),
-                        ),
-                      ]),
+                              color: ClientColors.text,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            query.isEmpty
+                                ? 'أنشئ أول فاتورة للفرع أو انتظر طلبات التخصيص.'
+                                : 'لا توجد نتائج مطابقة للبحث.',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: ClientColors.textMuted,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 else
@@ -189,11 +207,14 @@ class _InvoiceCard extends StatelessWidget {
               width: 46,
               height: 46,
               decoration: BoxDecoration(
-                color: BranchColors.primary.withValues(alpha: .10),
+                color: ClientColors.primary.withValues(alpha: .10),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: const Icon(Icons.receipt_long_rounded,
-                  color: BranchColors.primary, size: 22),
+              child: const Icon(
+                LucideIcons.receipt,
+                color: ClientColors.primary,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -205,14 +226,17 @@ class _InvoiceCard extends StatelessWidget {
                         ? invoice.clientName
                         : 'عميل',
                     style: const TextStyle(
-                        color: BranchColors.onSurface,
-                        fontWeight: FontWeight.w800),
+                      color: ClientColors.text,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     '#${invoice.id.substring(0, 8).toUpperCase()} · ${invoice.createdAt?.substring(0, 10) ?? ''}',
                     style: const TextStyle(
-                        color: BranchColors.onSurfaceVariant, fontSize: 12),
+                      color: ClientColors.textMuted,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
@@ -220,17 +244,19 @@ class _InvoiceCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('${invoice.amount.toStringAsFixed(0)} ﷼',
-                    style: const TextStyle(
-                        color: BranchColors.primary,
-                        fontWeight: FontWeight.w800)),
+                Text(
+                  '${invoice.amount.toStringAsFixed(0)} ﷼',
+                  style: const TextStyle(
+                    color: ClientColors.primary,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
                 const SizedBox(height: 4),
                 InvoiceStatusChip(invoice: invoice),
               ],
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.chevron_left_rounded,
-                color: BranchColors.onSurfaceVariant),
+            const Icon(LucideIcons.chevronLeft, color: ClientColors.textMuted),
           ],
         ),
       ),

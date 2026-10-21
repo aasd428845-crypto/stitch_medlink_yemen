@@ -14,31 +14,31 @@ class OrderStatusChip extends StatelessWidget {
 
     final (label, bg, fg) = switch (status) {
       'pending' => (
-          l10n.orderStatusPending,
-          AppColors.warningContainer,
-          AppColors.warning
-        ),
+        l10n.orderStatusPending,
+        ClientColors.navy.withValues(alpha: .12),
+        ClientColors.navy,
+      ),
       'assigned' => (
-          l10n.orderStatusAssigned,
-          AppColors.secondaryContainer,
-          AppColors.onSecondaryContainer
-        ),
+        l10n.orderStatusAssigned,
+        ClientColors.primarySoft,
+        ClientColors.primary,
+      ),
       'in_progress' => (
-          l10n.orderStatusInProgress,
-          AppColors.primaryContainer,
-          AppColors.onPrimaryContainer
-        ),
+        l10n.orderStatusInProgress,
+        ClientColors.warning.withValues(alpha: .14),
+        ClientColors.warning,
+      ),
       'delivered' => (
-          l10n.orderStatusDelivered,
-          AppColors.successContainer,
-          AppColors.success
-        ),
+        l10n.orderStatusDelivered,
+        ClientColors.success.withValues(alpha: .14),
+        ClientColors.success,
+      ),
       'cancelled' => (
-          l10n.orderStatusCancelled,
-          AppColors.errorContainer,
-          AppColors.error
-        ),
-      _ => (status, AppColors.surfaceContainer, AppColors.onSurfaceVariant),
+        l10n.orderStatusCancelled,
+        ClientColors.danger.withValues(alpha: .14),
+        ClientColors.danger,
+      ),
+      _ => (status, ClientColors.surfaceMuted, ClientColors.textMuted),
     };
 
     return Container(
@@ -53,9 +53,9 @@ class OrderStatusChip extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: fg,
-              fontWeight: FontWeight.w700,
-            ),
+          color: fg,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }

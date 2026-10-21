@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -207,9 +208,9 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: const BoxDecoration(
-              color: BranchColors.surfaceContainer,
+              color: ClientColors.surfaceMuted,
               border: Border(
-                bottom: BorderSide(color: BranchColors.outlineVariant),
+                bottom: BorderSide(color: ClientColors.outline),
               ),
             ),
             child: Row(
@@ -227,13 +228,13 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
                       Text(
                         'الطلب ${widget.order.id.substring(0, 8).toUpperCase()} • $clientName',
                         style: const TextStyle(
-                            color: BranchColors.onSurfaceVariant, fontSize: 12),
+                            color: ClientColors.textMuted, fontSize: 12),
                       ),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close_rounded),
+                  icon: const Icon(LucideIcons.x),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
@@ -248,21 +249,21 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: BranchColors.primary.withValues(alpha: .05),
+                    color: ClientColors.primary.withValues(alpha: .05),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: BranchColors.primary.withValues(alpha: .20)),
+                    border: Border.all(color: ClientColors.primary.withValues(alpha: .20)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Row(
                         children: [
-                          Icon(Icons.auto_awesome_rounded,
-                              color: BranchColors.primary, size: 20),
+                          Icon(LucideIcons.sparkles,
+                              color: ClientColors.primary, size: 20),
                           SizedBox(width: 8),
                           Text('محرك التخصيص الذكي',
                               style: TextStyle(
-                                  color: BranchColors.primary,
+                                  color: ClientColors.primary,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: .5)),
                         ],
@@ -306,7 +307,7 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
                 const SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: BranchColors.outlineVariant),
+                    border: Border.all(color: ClientColors.outline),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   clipBehavior: Clip.antiAlias,
@@ -315,30 +316,30 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 10),
-                        color: BranchColors.surfaceContainerLow,
+                        color: ClientColors.surfaceMuted,
                         child: Row(
                           children: const [
                             Expanded(flex: 3, child: Text('اسم المنتج',
                                 style: TextStyle(
-                                    color: BranchColors.onSurfaceVariant,
+                                    color: ClientColors.textMuted,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11))),
                             Expanded(child: Text('الإجمالي',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    color: BranchColors.onSurfaceVariant,
+                                    color: ClientColors.textMuted,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11))),
                             Expanded(flex: 2, child: Text('في المخزن',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    color: BranchColors.onSurfaceVariant,
+                                    color: ClientColors.textMuted,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11))),
                             Expanded(flex: 2, child: Text('المخصص',
                                 textAlign: TextAlign.end,
                                 style: TextStyle(
-                                    color: BranchColors.onSurfaceVariant,
+                                    color: ClientColors.textMuted,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11))),
                           ],
@@ -378,7 +379,7 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
                   const SizedBox(height: 16),
                   Text(
                     _error!,
-                    style: const TextStyle(color: BranchColors.error, fontSize: 13),
+                    style: const TextStyle(color: ClientColors.danger, fontSize: 13),
                   ),
                 ],
                 const SizedBox(height: 12),
@@ -389,9 +390,9 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: const BoxDecoration(
-              color: BranchColors.surfaceContainerLow,
+              color: ClientColors.surfaceMuted,
               border: Border(
-                top: BorderSide(color: BranchColors.outlineVariant),
+                top: BorderSide(color: ClientColors.outline),
               ),
             ),
             child: Column(
@@ -399,12 +400,12 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
               children: [
                 Text('تاريخ التسليم المتوقع',
                     style: const TextStyle(
-                        color: BranchColors.onSurfaceVariant,
+                        color: ClientColors.textMuted,
                         fontSize: 11,
                         fontWeight: FontWeight.w800)),
                 const SizedBox(height: 6),
                 OutlinedButton.icon(
-                  icon: const Icon(Icons.event_rounded, size: 18),
+                  icon: const Icon(LucideIcons.calendar, size: 18),
                   label: Text(
                     _deliveryDate == null
                         ? 'اختر التاريخ'
@@ -431,8 +432,8 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
                           width: 18,
                           height: 18,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2, color: BranchColors.onPrimary))
-                      : const Icon(Icons.check_circle_rounded, size: 18),
+                              strokeWidth: 2, color: Colors.white))
+                      : const Icon(LucideIcons.circleCheck, size: 18),
                   label: Text(
                       _busy ? 'جارٍ التنفيذ…' : '✅ تأكيد التخصيص وإصدار الفاتورة'),
                   style: FilledButton.styleFrom(
@@ -444,7 +445,7 @@ class _BranchAllocateSheetState extends State<BranchAllocateSheet> {
                   const Text(
                     'بعض الأصناف تتجاوز الكمية المتوفرة — استخدم النقل الذكي أو عدّل الكميات.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: BranchColors.warning, fontSize: 12),
+                    style: TextStyle(color: ClientColors.warning, fontSize: 12),
                   ),
                 ],
               ],
@@ -489,13 +490,13 @@ class _ItemRow extends StatelessWidget {
     final sufficient = row.available >= row.required;
     final withinStock = allocated <= row.available;
     final chipColor = sufficient
-        ? BranchColors.success
-        : BranchColors.error;
+        ? ClientColors.success
+        : ClientColors.danger;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: BranchColors.outlineVariant)),
+        border: Border(bottom: BorderSide(color: ClientColors.outline)),
       ),
       child: Row(
         children: [
@@ -508,20 +509,20 @@ class _ItemRow extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        color: BranchColors.onSurface,
+                        color: ClientColors.text,
                         fontWeight: FontWeight.w700,
                         fontSize: 13)),
                 const SizedBox(height: 2),
                 Text('مدفوع ${row.paidQuantity} + بونص ${row.bonusQuantity}',
                     style: const TextStyle(
-                        color: BranchColors.onSurfaceVariant, fontSize: 10)),
+                        color: ClientColors.textMuted, fontSize: 10)),
               ],
             ),
           ),
           Expanded(
             child: Text('${row.required}',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: BranchColors.onSurface, fontSize: 13)),
+                style: const TextStyle(color: ClientColors.text, fontSize: 13)),
           ),
           Expanded(
             flex: 2,
@@ -551,13 +552,13 @@ class _ItemRow extends StatelessWidget {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: withinStock ? BranchColors.outline : BranchColors.error,
+                    color: withinStock ? ClientColors.outline : ClientColors.danger,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: withinStock ? BranchColors.outline : BranchColors.error,
+                    color: withinStock ? ClientColors.outline : ClientColors.danger,
                     width: withinStock ? 1 : 2,
                   ),
                 ),
@@ -589,11 +590,11 @@ class _StrategyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = filled ? BranchColors.onPrimary : BranchColors.primary;
-    final bg = filled ? BranchColors.primary : BranchColors.surfaceContainerLowest;
+    final fg = filled ? Colors.white : ClientColors.primary;
+    final bg = filled ? ClientColors.primary : ClientColors.surface;
     final border = filled
         ? null
-        : Border.all(color: BranchColors.primary, width: 2);
+        : Border.all(color: ClientColors.primary, width: 2);
     return Opacity(
       opacity: enabled ? 1 : .45,
       child: Material(
@@ -618,7 +619,7 @@ class _StrategyButton extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(hint,
                     style: TextStyle(
-                        color: filled ? fg.withValues(alpha: .85) : BranchColors.onSurfaceVariant,
+                        color: filled ? fg.withValues(alpha: .85) : ClientColors.textMuted,
                         fontSize: 10)),
               ],
             ),
@@ -641,13 +642,13 @@ class _ManualButton extends StatelessWidget {
       onPressed: onTap,
       style: OutlinedButton.styleFrom(
         minimumSize: const Size.fromHeight(44),
-        side: const BorderSide(color: BranchColors.outlineVariant),
-        backgroundColor: BranchColors.surfaceContainerLowest,
+        side: const BorderSide(color: ClientColors.outline),
+        backgroundColor: ClientColors.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Text(label,
           style: const TextStyle(
-              color: BranchColors.secondary, fontWeight: FontWeight.w700)),
+              color: ClientColors.primaryDark, fontWeight: FontWeight.w700)),
     );
   }
 }

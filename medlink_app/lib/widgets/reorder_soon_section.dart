@@ -75,8 +75,9 @@ class _MiniProductCard extends StatelessWidget {
             SizedBox(
               height: 88,
               child: ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(AppRadius.lg),
+                ),
                 child: product.imageUrl != null
                     ? Image.network(
                         product.imageUrl!,
@@ -94,7 +95,7 @@ class _MiniProductCard extends StatelessWidget {
                   Text(
                     product.name,
                     style: theme.textTheme.labelMedium?.copyWith(
-                      color: AppColors.onSurface,
+                      color: ClientColors.text,
                       fontWeight: FontWeight.w600,
                     ),
                     maxLines: 1,
@@ -106,10 +107,11 @@ class _MiniProductCard extends StatelessWidget {
                     children: [
                       Text(
                         '${product.unitPrice.toStringAsFixed(0)} ﷼',
-                        style: (priceStyle ?? theme.textTheme.bodyMedium)?.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style: (priceStyle ?? theme.textTheme.bodyMedium)
+                            ?.copyWith(
+                              color: ClientColors.primary,
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                       SizedBox(
                         width: 28,
@@ -118,7 +120,7 @@ class _MiniProductCard extends StatelessWidget {
                           onPressed: onAdd,
                           style: FilledButton.styleFrom(
                             padding: EdgeInsets.zero,
-                            backgroundColor: AppColors.primaryContainer,
+                            backgroundColor: ClientColors.primary,
                             shape: const CircleBorder(),
                           ),
                           child: const Icon(Icons.add_rounded, size: 18),
@@ -137,12 +139,12 @@ class _MiniProductCard extends StatelessWidget {
 
   Widget _imagePlaceholder() {
     return Container(
-      color: AppColors.surfaceContainerLow,
+      color: ClientColors.surfaceMuted,
       child: const Center(
         child: Icon(
           Icons.medication_outlined,
           size: 32,
-          color: AppColors.outlineVariant,
+          color: ClientColors.outline,
         ),
       ),
     );

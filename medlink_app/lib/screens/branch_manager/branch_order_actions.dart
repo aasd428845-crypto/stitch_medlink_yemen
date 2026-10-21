@@ -16,7 +16,14 @@ void showAllocateSheet(BuildContext context, OrderModel order) {
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    builder: (_) => BranchAllocateSheet(order: order),
+    backgroundColor: ClientColors.background,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+    ),
+    builder: (_) => Theme(
+      data: AppTheme.clientLight,
+      child: BranchAllocateSheet(order: order),
+    ),
   );
 }
 
@@ -39,40 +46,43 @@ Future<void> showAssignDriverDialog(
 
   await showDialog(
     context: context,
-    builder: (dialogCtx) => StatefulBuilder(
-      builder: (dialogCtx, setState) => AlertDialog(
-        title: Text(l10n.branchAssignDriver),
-        content: DropdownButtonFormField<String>(
-          value: selectedDriverId,
-          decoration: InputDecoration(labelText: l10n.branchSelectDriver),
-          items: [
-            for (final d in drivers)
-              DropdownMenuItem(
-                value: d.id,
-                child: Text(
-                  branch.isDriverBusy(d.id)
-                      ? '${d.name ?? d.email} (${l10n.branchDriverBusy})'
-                      : d.name ?? d.email,
+    builder: (dialogCtx) => Theme(
+      data: AppTheme.clientLight,
+      child: StatefulBuilder(
+        builder: (dialogCtx, setState) => AlertDialog(
+          title: Text(l10n.branchAssignDriver),
+          content: DropdownButtonFormField<String>(
+            initialValue: selectedDriverId,
+            decoration: InputDecoration(labelText: l10n.branchSelectDriver),
+            items: [
+              for (final d in drivers)
+                DropdownMenuItem(
+                  value: d.id,
+                  child: Text(
+                    branch.isDriverBusy(d.id)
+                        ? '${d.name ?? d.email} (${l10n.branchDriverBusy})'
+                        : d.name ?? d.email,
+                  ),
                 ),
-              ),
+            ],
+            onChanged: (v) => setState(() => selectedDriverId = v),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx),
+              child: const Text('إلغاء'),
+            ),
+            FilledButton(
+              onPressed: selectedDriverId == null
+                  ? null
+                  : () async {
+                      await branch.assignDriver(order.id, selectedDriverId!);
+                      if (dialogCtx.mounted) Navigator.pop(dialogCtx);
+                    },
+              child: Text(l10n.branchAssignDriver),
+            ),
           ],
-          onChanged: (v) => setState(() => selectedDriverId = v),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogCtx),
-            child: const Text('إلغاء'),
-          ),
-          FilledButton(
-            onPressed: selectedDriverId == null
-                ? null
-                : () async {
-                    await branch.assignDriver(order.id, selectedDriverId!);
-                    if (dialogCtx.mounted) Navigator.pop(dialogCtx);
-                  },
-            child: Text(l10n.branchAssignDriver),
-          ),
-        ],
       ),
     ),
   );
@@ -97,33 +107,36 @@ Future<void> showTransferOrderDialog(
 
   await showDialog(
     context: context,
-    builder: (dialogCtx) => StatefulBuilder(
-      builder: (dialogCtx, setState) => AlertDialog(
-        title: Text(l10n.branchTransferOrder),
-        content: DropdownButtonFormField<String>(
-          value: selectedBranchId,
-          decoration: InputDecoration(labelText: l10n.branchSelectBranch),
-          items: [
-            for (final b in branches)
-              DropdownMenuItem(value: b.id, child: Text(b.name)),
+    builder: (dialogCtx) => Theme(
+      data: AppTheme.clientLight,
+      child: StatefulBuilder(
+        builder: (dialogCtx, setState) => AlertDialog(
+          title: Text(l10n.branchTransferOrder),
+          content: DropdownButtonFormField<String>(
+            initialValue: selectedBranchId,
+            decoration: InputDecoration(labelText: l10n.branchSelectBranch),
+            items: [
+              for (final b in branches)
+                DropdownMenuItem(value: b.id, child: Text(b.name)),
+            ],
+            onChanged: (v) => setState(() => selectedBranchId = v),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx),
+              child: const Text('إلغاء'),
+            ),
+            FilledButton(
+              onPressed: selectedBranchId == null
+                  ? null
+                  : () async {
+                      await branch.transferOrder(order.id, selectedBranchId!);
+                      if (dialogCtx.mounted) Navigator.pop(dialogCtx);
+                    },
+              child: Text(l10n.branchConfirmTransfer),
+            ),
           ],
-          onChanged: (v) => setState(() => selectedBranchId = v),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogCtx),
-            child: const Text('إلغاء'),
-          ),
-          FilledButton(
-            onPressed: selectedBranchId == null
-                ? null
-                : () async {
-                    await branch.transferOrder(order.id, selectedBranchId!);
-                    if (dialogCtx.mounted) Navigator.pop(dialogCtx);
-                  },
-            child: Text(l10n.branchConfirmTransfer),
-          ),
-        ],
       ),
     ),
   );
@@ -135,7 +148,10 @@ Future<void> showRejectOrderConfirm(
 ) async {
   await showDialog<bool>(
     context: context,
-    builder: (dialogCtx) => _RejectOrderDialog(order: order),
+    builder: (dialogCtx) => Theme(
+      data: AppTheme.clientLight,
+      child: _RejectOrderDialog(order: order),
+    ),
   );
 }
 
@@ -219,7 +235,7 @@ class _RejectOrderDialogState extends State<_RejectOrderDialog> {
               Text(
                 _error!,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: BranchColors.error,
+                      color: ClientColors.danger,
                     ),
               ),
             ],
@@ -233,7 +249,7 @@ class _RejectOrderDialogState extends State<_RejectOrderDialog> {
           child: const Text('إلغاء'),
         ),
         FilledButton(
-          style: FilledButton.styleFrom(backgroundColor: BranchColors.error),
+          style: FilledButton.styleFrom(backgroundColor: ClientColors.danger),
           onPressed: _submitting ? null : _submit,
           child: _submitting
               ? const SizedBox(

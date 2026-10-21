@@ -14,51 +14,76 @@ import '../../utils/theme.dart';
 /// Soft pastel gradient + floating decorative orbs behind all branch content.
 /// Place this behind a [Scaffold]'s body so the glass blur reads correctly.
 class BranchGlassBackground extends StatelessWidget {
-  const BranchGlassBackground({super.key, required this.child});
+  const BranchGlassBackground({
+    super.key,
+    required this.child,
+    this.colors,
+    this.orbColors,
+  });
 
   final Widget child;
 
+  /// Optional three-stop gradient override — defaults to the branch glass
+  /// tokens so existing screens are unaffected.
+  final List<Color>? colors;
+
+  /// Optional five glow colors (sky, mint, pink, violet, peach order) —
+  /// defaults to the branch orbs.
+  final List<Color>? orbColors;
+
   @override
   Widget build(BuildContext context) {
+    final gradientColors =
+        colors ??
+        const [
+          BranchColors.glassBackgroundStart,
+          BranchColors.glassBackgroundMiddle,
+          BranchColors.glassBackgroundEnd,
+        ];
+    final orbs =
+        orbColors ??
+        const [
+          BranchColors.orbSky,
+          BranchColors.orbMint,
+          BranchColors.orbPink,
+          BranchColors.orbViolet,
+          BranchColors.orbPeach,
+        ];
     return DecoratedBox(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          stops: [0.0, 0.5, 1.0],
-          colors: [
-            BranchColors.glassBackgroundStart,
-            BranchColors.glassBackgroundMiddle,
-            BranchColors.glassBackgroundEnd,
-          ],
+          stops: const [0.0, 0.5, 1.0],
+          colors: gradientColors,
         ),
       ),
       child: Stack(
         children: [
-          const Positioned(
+          Positioned(
             top: -90,
             right: -70,
-            child: _Orb(size: 260, color: BranchColors.orbSky),
+            child: _Orb(size: 260, color: orbs[0]),
           ),
-          const Positioned(
+          Positioned(
             top: 160,
             left: -80,
-            child: _Orb(size: 220, color: BranchColors.orbMint),
+            child: _Orb(size: 220, color: orbs[1]),
           ),
-          const Positioned(
+          Positioned(
             top: 380,
             right: -60,
-            child: _Orb(size: 200, color: BranchColors.orbPink),
+            child: _Orb(size: 200, color: orbs[2]),
           ),
-          const Positioned(
+          Positioned(
             bottom: 120,
             left: -70,
-            child: _Orb(size: 220, color: BranchColors.orbViolet),
+            child: _Orb(size: 220, color: orbs[3]),
           ),
-          const Positioned(
+          Positioned(
             bottom: 280,
             right: 50,
-            child: _Orb(size: 150, color: BranchColors.orbPeach),
+            child: _Orb(size: 150, color: orbs[4]),
           ),
           child,
         ],
@@ -112,7 +137,7 @@ class GlassLoadingState extends StatelessWidget {
           children: [
             const PastelIconBadge(
               icon: Icons.auto_awesome_rounded,
-              color: BranchColors.primary,
+              color: ClientColors.primary,
               size: 56,
               iconSize: 25,
               shape: BoxShape.circle,
@@ -123,14 +148,14 @@ class GlassLoadingState extends StatelessWidget {
               height: 26,
               child: CircularProgressIndicator(
                 strokeWidth: 2.5,
-                color: BranchColors.primary,
+                color: ClientColors.primary,
               ),
             ),
             const SizedBox(height: 12),
             Text(
               message,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: BranchColors.onSurfaceVariant,
+                color: ClientColors.textMuted,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -357,11 +382,16 @@ class BranchManagerHero extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.trailing,
+    this.gradient,
   });
 
   final String title;
   final String subtitle;
   final Widget? trailing;
+
+  /// Optional gradient override — defaults to the branch hero tokens so
+  /// existing screens are unaffected.
+  final List<Color>? gradient;
 
   String get _greeting {
     final h = DateTime.now().hour;
@@ -372,19 +402,20 @@ class BranchManagerHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = gradient ?? BranchColors.glassHeroGradient;
     return Container(
       padding: const EdgeInsets.fromLTRB(22, 22, 22, 26),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(32),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          stops: [0.0, 0.5, 1.0],
-          colors: BranchColors.glassHeroGradient,
+          stops: const [0.0, 0.5, 1.0],
+          colors: colors,
         ),
         boxShadow: [
           BoxShadow(
-            color: BranchColors.glassHeroGradient.first.withValues(alpha: .35),
+            color: colors.first.withValues(alpha: .35),
             blurRadius: 36,
             offset: const Offset(0, 14),
           ),
@@ -552,12 +583,17 @@ class BranchMetricTile extends StatelessWidget {
     required this.value,
     required this.icon,
     required this.color,
+    this.gradient,
   });
 
   final String label;
   final String value;
   final IconData icon;
   final Color color;
+
+  /// Optional accent-strip gradient override — defaults to the branch
+  /// metric tokens selected from [color].
+  final List<Color>? gradient;
 
   List<Color> get _gradient {
     if (color == BranchColors.warning) return BranchColors.metricOrangeGradient;
@@ -570,12 +606,13 @@ class BranchMetricTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = gradient ?? _gradient;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: _gradient.first.withValues(alpha: .12),
+            color: colors.first.withValues(alpha: .12),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -605,7 +642,7 @@ class BranchMetricTile extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: _gradient,
+                      colors: colors,
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -822,6 +859,9 @@ class BranchSectionTitle extends StatelessWidget {
     this.onAction,
     this.icon,
     this.iconColor,
+    this.accentColors,
+    this.titleColor,
+    this.mutedColor,
   });
 
   final String title;
@@ -830,18 +870,29 @@ class BranchSectionTitle extends StatelessWidget {
   final IconData? icon;
   final Color? iconColor;
 
+  /// Optional accent-bar gradient override — defaults to the branch tokens.
+  final List<Color>? accentColors;
+
+  /// Optional title color override — defaults to `BranchColors.onSurface`.
+  final Color? titleColor;
+
+  /// Optional muted color for the icon/action — defaults to
+  /// `BranchColors.onSurfaceVariant`.
+  final Color? mutedColor;
+
   @override
   Widget build(BuildContext context) {
+    final accent = accentColors ?? BranchColors.glassHeroGradient;
     return Row(
       children: [
         Container(
           width: 5,
           height: 24,
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: BranchColors.glassHeroGradient,
+              colors: accent,
             ),
             borderRadius: BorderRadius.circular(99),
           ),
@@ -850,7 +901,7 @@ class BranchSectionTitle extends StatelessWidget {
         if (icon != null) ...[
           Icon(
             icon,
-            color: iconColor ?? BranchColors.onSurfaceVariant,
+            color: iconColor ?? mutedColor ?? BranchColors.onSurfaceVariant,
             size: 18,
           ),
           const SizedBox(width: 6),
@@ -859,7 +910,7 @@ class BranchSectionTitle extends StatelessWidget {
           child: Text(
             title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: BranchColors.onSurface,
+              color: titleColor ?? BranchColors.onSurface,
               fontWeight: FontWeight.w900,
             ),
           ),
@@ -868,7 +919,7 @@ class BranchSectionTitle extends StatelessWidget {
           TextButton(
             onPressed: onAction,
             style: TextButton.styleFrom(
-              foregroundColor: BranchColors.glassHeroGradient.first,
+              foregroundColor: mutedColor ?? accent.first,
               textStyle: Theme.of(
                 context,
               ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700),
